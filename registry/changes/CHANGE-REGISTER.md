@@ -74,7 +74,7 @@ execution_window:    2026-03-13 activation session
 rollback_plan:       Stop bridge process; gateway remains but bridge does not accept tasks;
                      no external state changed beyond Telegram test messages
 execution_status:    completed
-proof_ref:           Telegram msg_id 6 (startup notice) + git commit hash [to be filled]
+proof_ref:           Telegram msg_id 6 (startup notice) + fa59b7b
 notes:               Bootstrap mode active per CHG-002. Phase 1 exit requires: TASK-003 (model
                      selection), TASK-008 (local model install), bridge routing switch to local-primary.
                      RB-01 through RB-05 all complete. TASK-007 closed by this change.
