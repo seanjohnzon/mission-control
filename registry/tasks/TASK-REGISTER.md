@@ -357,6 +357,32 @@ notes:       Completed. All preparation items resolved. SEC-001/SEC-002 stored a
              Source: D1.1 Principle 17, D1.14 §16, D1.15 §16.
 ```
 
+```
+task_id:     TASK-017
+title:       Tool-lane model correction — OpenClaw primary, Cursor supervised, Perplexity UI-pilot
+status:      completed
+priority:    P1
+phase:       Phase 1
+assigned_to: human + OpenClaw
+proposed_by: human
+opened:      2026-03-13
+started:     2026-03-13
+completed:   2026-03-13
+change_ref:  CHG-008
+scope:       Corpus-wide correction pass to enforce the corrected tool-lane model:
+             (1) OpenClaw = primary autonomous runtime, default for approved backlog and MC buildout
+             (2) Cursor = supervised/manual engineering lane, not the autonomous runtime
+             (3) Perplexity = preferred UI-pilot for app/device/chatbox interaction (candidate)
+             (4) Indirect Cursor usage via device-mediated control is a documented access path
+             (5) Visual surfaces require human visual approval before acceptance
+             (6) Mission Control buildout defaults to OpenClaw-led execution
+dependencies: TASK-007 (bridge running)
+proof_ref:   CHG-008 + git commit TBD
+notes:       Completed. 14 files patched. Corpus now aligned to: OpenClaw first, Cursor supervised/manual,
+             Perplexity as preferred UI-pilot, indirect Cursor usage documented, human visual approval
+             for UI acceptance. No new architecture invented — correction pass only.
+```
+
 ---
 
 ## Completed Tasks

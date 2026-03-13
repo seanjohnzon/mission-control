@@ -81,6 +81,53 @@ notes:               Bootstrap mode active per CHG-002. Phase 1 exit requires: T
 ```
 
 
+### CHG-008 — Tool-Lane Model Correction (TASK-017)
+
+```
+change_id:           CHG-008
+title:               Tool-Lane Model Correction — OpenClaw primary, Cursor supervised, Perplexity UI-pilot
+category:            1 — Policy and Governance (documentation correction / tool-lane alignment)
+risk_class:          Low
+proposed_by:         human
+proposed_date:       2026-03-13
+description:         Corpus-wide correction pass to enforce the corrected tool-lane model:
+                     (A) Remove wording implying Cursor is the primary execution/build lane
+                     (B) Reinforce OpenClaw as the primary autonomous runtime and self-managed executor
+                     (C) Add explicit language that Perplexity/device-mediated access can operate
+                         Cursor Claude chat through the UI without direct API integration
+                     (D) Make Perplexity the preferred UI-pilot lane for app/device/chatbox interaction
+                     (E) Keep Perplexity as optional fallback/operator, not the orchestration brain
+                     (F) Add human visual-approval boundary for UI/surfaces
+                     (G) No new architecture — correction pass only
+scope:               docs/D1.1, D1.2, D1.3, D1.4, D1.5, D1.8, D1.11, D1.12, D1.15,
+                     docs/D2.0, D2.1, D5.6, D5.7,
+                     registry/tasks/TASK-REGISTER, registry/changes/CHANGE-REGISTER
+affected_documents:  D1.1, D1.2, D1.3, D1.4, D1.5, D1.8, D1.11, D1.12, D1.15, D2.0, D2.1, D5.6, D5.7
+affected_capabilities: CAP-006 (notes updated — 4 candidate roles including UI-pilot),
+                       CAP-007 (notes updated — indirect Cursor usage as documented use case)
+affected_secrets:    null
+approval_status:     approved
+approved_by:         human
+approved_date:       2026-03-13
+execution_window:    2026-03-13 — documentation only; no operational state change
+rollback_plan:       git revert — no operational state affected
+execution_status:    completed
+proof_ref:           TASK-017 + git commit TBD
+notes:               After this patch, the corpus is aligned to:
+                     - OpenClaw = primary autonomous runtime, default for backlog and MC buildout
+                     - Cursor = supervised/manual engineering lane, not autonomous runtime
+                     - Perplexity = preferred UI-pilot for app/device/chatbox interaction (candidate)
+                     - Indirect Cursor usage via device-mediated control = documented access path
+                     - Visual surfaces require human visual approval before acceptance
+                     - Mission Control buildout defaults to OpenClaw-led execution
+                     New sections added: D1.5 §15.5 (indirect Cursor usage), D1.5 §15.6 (visual
+                     approval boundary), D1.3 BRG-TRL-05 (visual approval requirement).
+                     New workflow candidate: WF-008 (indirect Cursor usage via device-mediated control).
+                     14 files patched. TASK-017 closed.
+```
+
+---
+
 ### CHG-007 — Local Inference Activation (TASK-003, TASK-008)
 
 ```
