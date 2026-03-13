@@ -65,19 +65,19 @@ notes:       Completed per D2.0 RB-01. 25 files committed. .gitignore excludes s
 ```
 task_id:     TASK-002
 title:       Mac Mini hardware survey (RAM, CPU, disk)
-status:      open
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
+started:     2026-03-13
+completed:   2026-03-13
 change_ref:  null
 scope:       Mac Mini: run system_profiler or About This Mac; record RAM, CPU model, available disk in D1.6 §4 and MAC-MINI-BASELINE.md
 dependencies: none
-proof_ref:   null — set to updated D1.6 §4 Mac Mini table commit hash
-notes:       Required to unblock local model selection (TASK-003). BRG-INF-03 in D1.3. During bootstrap, Anthropic cloud inference is the primary lane — see D1.5 §9 bootstrap exception and D1.3 BRG-INF-01. Must be completed before Phase 1 exit.
+proof_ref:   MAC-MINI-BASELINE.md §1 filled — Apple M4, 16 GB RAM, 245.1 GB storage
+notes:       Completed. Apple M4, 16 GB RAM, 245.1 GB APFS (119.7 GB free). Unblocks TASK-003 (local model selection).
 ```
 
 ```
