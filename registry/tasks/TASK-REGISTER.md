@@ -47,19 +47,19 @@ Tasks that must be completed before bridge can start (RB-01 through RB-05).
 ```
 task_id:     TASK-001
 title:       Git init and first commit (RB-01)
-status:      open
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
+started:     2026-03-13
+completed:   2026-03-13
 change_ref:  CHG-001
 scope:       mission-control git repository initialization; .gitignore; first commit of D1.x–D5.x corpus + registry scaffolding
 dependencies: none
-proof_ref:   null — set to git commit hash on completion
-notes:       Execute per D2.0 RB-01. Must complete before any other task produces a committed artifact.
+proof_ref:   06a08e3
+notes:       Completed per D2.0 RB-01. 25 files committed. .gitignore excludes secrets. SEC-001 and SEC-002 active at time of commit.
 ```
 
 ```
@@ -333,13 +333,13 @@ notes:       Do not draft workflows from speculation. Workflows are promoted fro
 ```
 task_id:     TASK-016
 title:       Activation Pack preparation (AP-00) before Phase 1 runbooks
-status:      open
+status:      in-progress
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-13
-started:     null
+started:     2026-03-13
 completed:   null
 change_ref:  CHG-005
 scope:       Human-side preparation before RB-01 through RB-05: confirm Anthropic API key is accessible,

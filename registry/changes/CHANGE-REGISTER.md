@@ -280,8 +280,8 @@ approved_by:         human
 approved_date:       2026-03-11
 execution_window:    same session — Low risk, documentation only
 rollback_plan:       git revert the patch commit — no operational state affected
-execution_status:    partially-completed
-proof_ref:           git commit hash [to be filled on commit]
+execution_status:    completed
+proof_ref:           06a08e3
 notes:               First controlled change under D1.15. Establishes the change record workflow.
                      Workflow candidate: if documentation consistency patches recur (3+), surface
                      as a D5.6 workflow candidate per D1.15 §8.5.
