@@ -110,7 +110,7 @@ execution_window:    2026-03-13 activation session
 rollback_plan:       Stop Ollama; remove models via ollama rm; revert bridge routing to
                      cloud-primary (CHG-002 bootstrap exception re-opened)
 execution_status:    completed
-proof_ref:           Nano stability: 20/20 PASS 115ms avg 2.2GB RAM; Mid stability: 20/20 PASS 2.1s avg 4.6GB RAM; Telegram msg_id 11; git commit TBD
+proof_ref:           Nano stability: 20/20 PASS 115ms avg 2.2GB RAM; Mid stability: 20/20 PASS 2.1s avg 4.6GB RAM; Telegram msg_id 11; 94e9135
 notes:               Closes bootstrap exception opened in CHG-002. BRG-INF-01 satisfied.
                      D1.6 §14 Steps 1-5 complete. Mac Mini running both Local-Nano and
                      Local-Mid. Cloud inference (CAP-001) remains as fallback per D1.5 §12.
