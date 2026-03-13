@@ -83,19 +83,19 @@ notes:       Completed. Apple M4, 16 GB RAM, 245.1 GB APFS (119.7 GB free). Unbl
 ```
 task_id:     TASK-003
 title:       Select and install Mac Mini local inference model (Local-Nano)
-status:      blocked
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: unassigned
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null — new CHG record required when model is selected
+started:     2026-03-13
+completed:   2026-03-13
+change_ref:  CHG-007
 scope:       Select Local-Nano model; select serving stack (Ollama / llama.cpp / other); install; run stability check; update D1.6 §4 and D1.5 §9
 dependencies: TASK-002 (hardware survey must confirm RAM and disk first)
-proof_ref:   null
-notes:       Blocked by TASK-002. BRG-INF-01 requires at least one local model before Phase 1 exits. Bridge may operate on cloud inference (Anthropic) during bootstrap. See D1.3 BRG-INF-01 bootstrap note and D1.5 §9 bootstrap exception. Must complete before Phase 1 declared complete.
+proof_ref:   Ollama 0.17.7 installed; qwen2.5:3b (Local-Nano) + qwen2.5:7b (Local-Mid) both 20/20 stability PASS; Telegram msg_id 11
+notes:       Completed. Stack: Ollama 0.17.7 with Metal acceleration. Local-Nano: qwen2.5:3b (3B, 1.9GB, ~115ms routing-class). Local-Mid: qwen2.5:7b (7B, 4.7GB, ~2.1s orchestration-class). Both within RAM budget (9.6GB ceiling). Gateway stable throughout. BRG-INF-01 satisfied.
 ```
 
 ```
@@ -182,19 +182,19 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 ```
 task_id:     TASK-008
 title:       Install Local-Nano model on Mac Mini (bridge inference)
-status:      blocked
+status:      completed
 priority:    P1
 phase:       Phase 1
-assigned_to: unassigned
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null — new CHG record required when ready
+started:     2026-03-13
+completed:   2026-03-13
+change_ref:  CHG-007
 scope:       Per TASK-003 outcome: install selected model and serving stack; run D1.6 stability check; switch bridge routing from cloud-primary to local-primary; update D1.5 §9 and D1.6 §4
 dependencies: TASK-003 (model selection), TASK-007 (bridge running — bridge validates the switch)
-proof_ref:   null
-notes:       Satisfies D1.3 BRG-INF-01 and D1.5 §9 local model requirement. Closes the bootstrap exception opened in CHG-002. Phase 1 cannot be declared complete without this task closed.
+proof_ref:   Stability tests: qwen2.5:3b 20/20 PASS (115ms avg, 2.2GB RAM), qwen2.5:7b 20/20 PASS (2.1s avg, 4.6GB RAM); gateway responsive 0 failures; Telegram msg_id 11
+notes:       Completed. Ollama 0.17.7 installed at /Applications/Ollama.app, serving on :11434. Both Local-Nano and Local-Mid models installed and passing stability tests. RAM usage well within 9.6GB budget (60% of 16GB). Bootstrap exception (CHG-002) closed. BRG-INF-01 satisfied. Bridge routing: LOCAL-PRIMARY.
 ```
 
 ```

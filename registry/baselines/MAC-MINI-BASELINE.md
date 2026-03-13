@@ -50,7 +50,7 @@ All services in this table must be running during normal production operation.
 | OpenClaw gateway | Port 18789 (loopback or LAN) | LaunchAgent (auto-start on login) | Gateway not responding to health check |
 | SSH daemon | Port 22 (or non-standard port — CONFIRM) | System Preferences → Sharing → Remote Login | SSH connection refused from authorized machine |
 | Screen Sharing daemon | Port 5900 (VNC) | System Preferences → Sharing → Screen Sharing | Screen Sharing connection refused |
-| Local LLM inference service | Port [TBD — CONFIRM when model selected per D1.6] | LaunchAgent or manual start during Phase 1 | Inference not responding; latency > 3x baseline |
+| Local LLM inference service (Ollama) | Port 11434 (localhost) | Ollama.app (auto-start on login) | Inference not responding; latency > 3x baseline (baseline: Nano 115ms, Mid 2.1s) |
 
 **Services that must NOT be running (undeclared processes):**
 - No experiment processes
@@ -119,9 +119,9 @@ These values are observed during normal operation. Values significantly outside 
 | Resource | Expected Baseline | Drift Threshold |
 |---|---|---|
 | CPU (idle with gateway active) | < 5% sustained | > 10% CPU sustained with no declared task |
-| RAM (gateway + LLM loaded) | [CONFIRM during Phase 1 operation] | > 90% sustained |
-| Disk free | [CONFIRM — should leave room for logs, memory commits] | < 10% free |
-| LLM inference latency | [CONFIRM baseline — TBD until model is selected] | > 3x baseline for same prompt class |
+| RAM (gateway + LLM loaded) | ~4.6 GB with Mid loaded (qwen2.5:7b); ~2.2 GB with Nano (qwen2.5:3b) | > 90% sustained (> 14.4 GB) |
+| Disk free | 113 GB (after Nano 1.9GB + Mid 4.7GB models installed) | < 10% free (< 24.5 GB) |
+| LLM inference latency | Nano: 115ms (routing-class); Mid: 2.1s (orchestration-class) | > 3x baseline for same prompt class |
 
 ---
 

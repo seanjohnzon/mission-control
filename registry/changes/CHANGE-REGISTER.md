@@ -81,6 +81,44 @@ notes:               Bootstrap mode active per CHG-002. Phase 1 exit requires: T
 ```
 
 
+### CHG-007 — Local Inference Activation (TASK-003, TASK-008)
+
+```
+change_id:           CHG-007
+title:               Local Inference Activation — Ollama + qwen2.5 Nano/Mid on Mac Mini
+category:            5 — Agent Configuration Activation (D1.15 §4.5)
+risk_class:          Medium
+proposed_by:         human
+proposed_date:       2026-03-13
+description:         Install and validate local inference on Mac Mini to close the bootstrap
+                     exception (CHG-002) and satisfy BRG-INF-01. Stack: Ollama 0.17.7 with
+                     Metal acceleration. Models: qwen2.5:3b (Local-Nano, 3B params, 1.9GB)
+                     and qwen2.5:7b (Local-Mid, 7B params, 4.7GB). Both models passed D1.6
+                     §5 stability test: 20/20 consecutive calls, 0 gateway failures, RAM
+                     within 9.6GB budget. Bridge routing switched from cloud-primary (bootstrap)
+                     to local-primary. Phase 1 local inference requirement satisfied.
+scope:               Mac Mini: Ollama installation, model pulls, stability testing, bridge
+                     routing switch; D1.6 §4 survey update; D1.5 §9 bootstrap exception close;
+                     MAC-MINI-BASELINE §3/§8 updates; D5.7 CAP-008; TASK-003/TASK-008 closure
+affected_documents:  D1.5, D1.6, D5.7, MAC-MINI-BASELINE, TASK-REGISTER, CHANGE-REGISTER
+affected_capabilities: CAP-008 (new — Ollama local inference), CAP-001 (demoted from primary to fallback)
+affected_secrets:    null (Ollama is local, no API key required)
+approval_status:     approved
+approved_by:         human
+approved_date:       2026-03-13
+execution_window:    2026-03-13 activation session
+rollback_plan:       Stop Ollama; remove models via ollama rm; revert bridge routing to
+                     cloud-primary (CHG-002 bootstrap exception re-opened)
+execution_status:    completed
+proof_ref:           Nano stability: 20/20 PASS 115ms avg 2.2GB RAM; Mid stability: 20/20 PASS 2.1s avg 4.6GB RAM; Telegram msg_id 11; git commit TBD
+notes:               Closes bootstrap exception opened in CHG-002. BRG-INF-01 satisfied.
+                     D1.6 §14 Steps 1-5 complete. Mac Mini running both Local-Nano and
+                     Local-Mid. Cloud inference (CAP-001) remains as fallback per D1.5 §12.
+                     Ollama serves on :11434, models stored at ~/.ollama/models/.
+```
+
+---
+
 ## Change History
 
 ### CHG-005 — Access Minimization and Tool-Lane Execution Patch
