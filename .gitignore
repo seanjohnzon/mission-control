@@ -1,0 +1,30 @@
+# Secrets and credentials
+.env
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+keychain-export*
+secrets-export*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Model weights and large binaries
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.ckpt
+
+# Debug output
+*.log
+debug-output/
+scratch/
+tmp/
+
+# Local config not for tracking
+local.config
