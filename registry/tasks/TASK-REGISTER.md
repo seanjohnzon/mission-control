@@ -101,37 +101,37 @@ notes:       Blocked by TASK-002. BRG-INF-01 requires at least one local model b
 ```
 task_id:     TASK-004
 title:       Telegram bot setup and SEC-002 activation (RB-02)
-status:      open
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
+started:     2026-03-13
+completed:   2026-03-13
 change_ref:  null — new CHG record required (secrets scope change per D1.15 §4.8)
 scope:       Create Telegram bot via BotFather; register SEC-002 metadata; store token in Mac Mini keychain; test message; activate SEC-002 and CAP-002
 dependencies: TASK-001 (git init — registry must exist to commit metadata)
-proof_ref:   null — set to Telegram test message confirmation + git commit hash
-notes:       Execute per D2.0 RB-02. Required before bridge can communicate activation problems during RB-03.
+proof_ref:   Telegram test msg_id 4 delivered to chat 5690946175 + SEC-002 active in keychain
+notes:       Completed per D2.0 RB-02. Bot: @CihanHawkBot. Ops-channel: private chat with human (chat_id 5690946175). Test message confirmed.
 ```
 
 ```
 task_id:     TASK-005
 title:       Anthropic API key registration and activation (RB-03)
-status:      open
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
+started:     2026-03-13
+completed:   2026-03-13
 change_ref:  null — new CHG record required (secrets scope change per D1.15 §4.8)
 scope:       Register SEC-001 metadata; store key in Mac Mini keychain; test inference call; activate SEC-001 and CAP-001
 dependencies: TASK-004 (Telegram must be active so bridge can report RB-03 problems)
-proof_ref:   null — set to inference test confirmation + git commit hash
-notes:       Execute per D2.0 RB-03. Cloud inference (Anthropic) serves as bridge's primary inference lane during Phase 1 bootstrap until TASK-003 completes. See D1.5 §9 bootstrap exception.
+proof_ref:   Anthropic API test response "INFERENCE OK" (claude-sonnet-4-6) + SEC-001 active in keychain
+notes:       Completed per D2.0 RB-03. Inference confirmed: claude-sonnet-4-6 responding. Telegram notice sent (msg_id 5). Bootstrap mode: cloud inference active as primary lane until TASK-003 completes.
 ```
 
 ```

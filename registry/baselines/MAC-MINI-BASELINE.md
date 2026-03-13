@@ -154,8 +154,8 @@ The following conditions indicate the machine has drifted from baseline. Bridge 
 | .gitignore in place | Secrets not tracked | Yes — verified no secrets staged | 2026-03-13 | OpenClaw |
 | SEC-001 loadable | Keychain entry present (no value check) | Yes — mc-bridge-anthropic-api-key found | 2026-03-13 | OpenClaw |
 | SEC-002 loadable | Keychain entry present (no value check) | Yes — mc-bridge-telegram-bot-token found | 2026-03-13 | OpenClaw |
-| Telegram bot responds | Bridge posts startup notice | [PENDING — test after bridge startup] | [date] | |
+| Telegram bot responds | Bridge posts startup notice | Yes — test message delivered (msg_id 4, 5) | 2026-03-13 | OpenClaw |
 
-**Baseline verification status:** `PARTIAL — 8/10 rows verified; LaunchAgent and Telegram bot test pending`
+**Baseline verification status:** `PARTIAL — 9/10 rows verified; LaunchAgent pending`
 **Verification completed date:** [fill when all rows confirmed]
 **Verified by:** human + OpenClaw joint verification (2026-03-13)
