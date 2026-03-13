@@ -112,7 +112,7 @@ approved_date:       2026-03-13
 execution_window:    2026-03-13 — documentation only; no operational state change
 rollback_plan:       git revert — no operational state affected
 execution_status:    completed
-proof_ref:           TASK-017 + git commit TBD
+proof_ref:           TASK-017 + 00ec0c8
 notes:               After this patch, the corpus is aligned to:
                      - OpenClaw = primary autonomous runtime, default for backlog and MC buildout
                      - Cursor = supervised/manual engineering lane, not autonomous runtime

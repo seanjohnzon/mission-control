@@ -377,7 +377,7 @@ scope:       Corpus-wide correction pass to enforce the corrected tool-lane mode
              (5) Visual surfaces require human visual approval before acceptance
              (6) Mission Control buildout defaults to OpenClaw-led execution
 dependencies: TASK-007 (bridge running)
-proof_ref:   CHG-008 + git commit TBD
+proof_ref:   CHG-008 + 00ec0c8
 notes:       Completed. 14 files patched. Corpus now aligned to: OpenClaw first, Cursor supervised/manual,
              Perplexity as preferred UI-pilot, indirect Cursor usage documented, human visual approval
              for UI acceptance. No new architecture invented — correction pass only.
