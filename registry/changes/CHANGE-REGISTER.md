@@ -48,6 +48,39 @@ _None._
 
 ---
 
+### CHG-006 — Phase 1 Bootstrap Activation (RB-05)
+
+```
+change_id:           CHG-006
+title:               Phase 1 Bootstrap Activation — Bridge startup and validation cycle
+category:            5 — Agent Configuration Activation (D1.15 §4.5)
+risk_class:          Medium
+proposed_by:         human
+proposed_date:       2026-03-13
+description:         First bridge activation on Mac Mini in bootstrap mode. Gateway confirmed
+                     healthy on port 18789. Inference routed to Anthropic cloud (CAP-001/SEC-001)
+                     under CHG-002 bootstrap exception. Telegram ops-channel active (CAP-002/SEC-002).
+                     Mission Control accessible. Backlog scanned. Startup notice posted.
+                     Phase 1 ACTIVATED — not yet COMPLETE (local LLM required before exit).
+scope:               Mac Mini bridge agent activation; OpenClaw gateway; Telegram ops-channel;
+                     Anthropic cloud inference (bootstrap); Mission Control registry access
+affected_documents:  D2.0 RB-05, TASK-REGISTER, CHANGE-REGISTER, MAC-MINI-BASELINE
+affected_capabilities: CAP-001 (active, bootstrap), CAP-002 (active)
+affected_secrets:    SEC-001, SEC-002 (both active and loadable)
+approval_status:     approved
+approved_by:         human
+approved_date:       2026-03-13
+execution_window:    2026-03-13 activation session
+rollback_plan:       Stop bridge process; gateway remains but bridge does not accept tasks;
+                     no external state changed beyond Telegram test messages
+execution_status:    completed
+proof_ref:           Telegram msg_id 6 (startup notice) + git commit hash [to be filled]
+notes:               Bootstrap mode active per CHG-002. Phase 1 exit requires: TASK-003 (model
+                     selection), TASK-008 (local model install), bridge routing switch to local-primary.
+                     RB-01 through RB-05 all complete. TASK-007 closed by this change.
+```
+
+
 ## Change History
 
 ### CHG-005 — Access Minimization and Tool-Lane Execution Patch

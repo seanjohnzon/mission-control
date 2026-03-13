@@ -155,19 +155,22 @@ notes:       Completed per D2.0 RB-04. All 10 verification rows confirmed. Sleep
 ```
 task_id:     TASK-007
 title:       Bridge startup and Phase 1 activation (RB-05)
-status:      blocked
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human + bridge
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null — new CHG record required (agent configuration activation per D1.15 §4.5)
+started:     2026-03-13
+completed:   2026-03-13
+change_ref:  CHG-006
 scope:       Configure bridge OpenClaw workspace; start bridge; run validation cycle; receive startup Telegram message; confirm backlog scan; declare Phase 1 operational
 dependencies: TASK-001, TASK-004, TASK-005, TASK-006
-proof_ref:   null — set to Telegram startup message screenshot + git commit hash
-notes:       Execute per D2.0 RB-05. Local inference (TASK-003) is NOT a prerequisite for bridge startup — bridge operates on Anthropic cloud inference during bootstrap. Local inference must be completed before Phase 1 is DECLARED COMPLETE (not before bridge starts).
+proof_ref:   Telegram msg_id 6 (startup notice) + inference self-check OK + backlog scan posted
+notes:       Completed per D2.0 RB-05. All 7 steps passed. Gateway healthy, inference confirmed
+             (claude-sonnet-4-6, bootstrap mode), Telegram ops-channel active, Mission Control
+             accessible, backlog scanned, CHG-006 recorded. Phase 1 ACTIVATED in bootstrap mode.
+             Phase 1 NOT YET COMPLETE — TASK-003/008 (local LLM) must close before exit.
 ```
 
 ---
@@ -333,14 +336,14 @@ notes:       Do not draft workflows from speculation. Workflows are promoted fro
 ```
 task_id:     TASK-016
 title:       Activation Pack preparation (AP-00) before Phase 1 runbooks
-status:      in-progress
+status:      completed
 priority:    P0
 phase:       Phase 1
 assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-13
 started:     2026-03-13
-completed:   null
+completed:   2026-03-13
 change_ref:  CHG-005
 scope:       Human-side preparation before RB-01 through RB-05: confirm Anthropic API key is accessible,
              create Telegram bot via @BotFather and have token ready, make Discord activation decision
@@ -348,10 +351,9 @@ scope:       Human-side preparation before RB-01 through RB-05: confirm Anthropi
              Mac Mini DHCP reservation status. No files committed — this is a human-side checklist step.
              Governs: D2.0 AP-00 pre-runbook checklist.
 dependencies: none
-proof_ref:   null — completion is self-declared by human before starting RB-01. Human states "AP-00 complete"
-             in Telegram or Mission Control session notes.
-notes:       Must complete before RB-01 begins. Ensures no mid-runbook interruptions for credential
-             retrieval, policy decisions, or capability pre-decisions. See D2.0 AP-00 for full checklist.
+proof_ref:   AP-00 through RB-05 all completed in single activation session 2026-03-13
+notes:       Completed. All preparation items resolved. SEC-001/SEC-002 stored and active. Git remote:
+             local-only. Discord: deferred. DHCP reservation: pending (Wi-Fi DHCP active).
              Source: D1.1 Principle 17, D1.14 §16, D1.15 §16.
 ```
 
