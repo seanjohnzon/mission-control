@@ -137,19 +137,19 @@ notes:       Completed per D2.0 RB-03. Inference confirmed: claude-sonnet-4-6 re
 ```
 task_id:     TASK-006
 title:       Mac Mini baseline verification (RB-04)
-status:      open
+status:      completed
 priority:    P0
 phase:       Phase 1
-assigned_to: human
+assigned_to: human + OpenClaw
 proposed_by: human
 opened:      2026-03-11
-started:     null
-completed:   null
+started:     2026-03-13
+completed:   2026-03-13
 change_ref:  null
 scope:       Walk MAC-MINI-BASELINE.md §10 verification table row by row; fill confirmed values; set status to VERIFIED; commit
 dependencies: TASK-001, TASK-004, TASK-005
-proof_ref:   null — set to committed baseline file with VERIFIED status + git commit hash
-notes:       Execute per D2.0 RB-04. Hardware survey items (TASK-002) may partially overlap — run both on same session.
+proof_ref:   MAC-MINI-BASELINE.md §10 all rows verified + baseline status VERIFIED
+notes:       Completed per D2.0 RB-04. All 10 verification rows confirmed. Sleep disabled, gateway healthy, secrets loadable, Telegram confirmed, git initialized. SSH deferred (Screen Sharing active). Wi-Fi active, Ethernet deferred.
 ```
 
 ```

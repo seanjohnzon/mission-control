@@ -84,8 +84,8 @@ On machine reboot, the following must occur in order:
 5. Bridge posts startup notice via Telegram: `[STARTUP] Mac Mini online. Bridge ready.`
 6. Bridge runs daily digest if startup occurs near digest window
 
-**LaunchAgent plist path:** `~/Library/LaunchAgents/[openclaw-gateway.plist — CONFIRM filename]`
-**LaunchAgent installed:** [CONFIRM and fill]
+**LaunchAgent plist path:** `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
+**LaunchAgent installed:** Yes — verified running (PID 4254, health OK on :18789)
 
 ---
 
@@ -146,7 +146,7 @@ The following conditions indicate the machine has drifted from baseline. Bridge 
 | Check | Expected | Actual | Date | Verified By |
 |---|---|---|---|---|
 | Sleep disabled | Never sleep | sleep 0 confirmed (pmset) | 2026-03-13 | OpenClaw |
-| LaunchAgent installed and running | OpenClaw gateway auto-starts | [CONFIRM] | [date] | |
+| LaunchAgent installed and running | OpenClaw gateway auto-starts | Yes — ai.openclaw.gateway (PID 4254), health OK on :18789 | 2026-03-13 | OpenClaw |
 | SSH accessible from LAN | Connection accepted | Deferred — sshd not running; Screen Sharing used instead | 2026-03-13 | OpenClaw |
 | Screen Sharing accessible | Connection accepted | Active (screensharingd running, confirmed preventing sleep) | 2026-03-13 | human + OpenClaw |
 | LAN IP reserved | Static DHCP reservation active | Wi-Fi DHCP 10.0.0.167 — no reservation yet; Ethernet not connected | 2026-03-13 | OpenClaw |
@@ -156,6 +156,6 @@ The following conditions indicate the machine has drifted from baseline. Bridge 
 | SEC-002 loadable | Keychain entry present (no value check) | Yes — mc-bridge-telegram-bot-token found | 2026-03-13 | OpenClaw |
 | Telegram bot responds | Bridge posts startup notice | Yes — test message delivered (msg_id 4, 5) | 2026-03-13 | OpenClaw |
 
-**Baseline verification status:** `PARTIAL — 9/10 rows verified; LaunchAgent pending`
+**Baseline verification status:** `VERIFIED — all 10 rows confirmed`
 **Verification completed date:** [fill when all rows confirmed]
 **Verified by:** human + OpenClaw joint verification (2026-03-13)
