@@ -383,11 +383,64 @@ notes:       Completed. 14 files patched. Corpus now aligned to: OpenClaw first,
              for UI acceptance. No new architecture invented — correction pass only.
 ```
 
+```
+task_id:     TASK-018
+title:       MC buildout — Missing D5.x documents + Bridge Runbook + daily digest
+status:      completed
+priority:    P1
+phase:       Phase 1
+assigned_to: bridge
+proposed_by: bridge
+opened:      2026-03-13
+started:     2026-03-13
+completed:   2026-03-13
+change_ref:  null
+scope:       Write missing Mission Control documents required by D1.1 §6:
+             D5.1-INTAKE-LANES.md, D5.2-SKILL-REGISTRY.md, D5.3-LEGACY-ASSET-REGISTER.md,
+             D5.4-EXPERIMENT-REGISTRY.md, D5.5-WORKFLOW-MIGRATION-PLAN.md, D2.2-BRIDGE-RUNBOOK.md.
+             Set up daily morning digest cron (9am EDT). Update Phase 0/1 exit criteria checkboxes.
+             Create memory/continuity files.
+dependencies: TASK-007 (bridge running)
+proof_ref:   bb1a0ca
+notes:       6 new docs committed. Bridge Runbook satisfies Phase 1 exit criterion "D2.1 BRIDGE-RUNBOOK.md
+             written" (filed as D2.2 since D2.1 is Activation Pack). Daily digest cron active (job
+             f7102d3d, 9am EDT daily, isolated session). D5.3 and D5.5 are blocked on Desktop but
+             framework/templates created. EXP-001 (local inference) and EXP-002 (Perplexity) logged
+             in D5.4. Phase 0/1 exit criteria updated to reflect actual completion state.
+```
+
+```
+task_id:     TASK-019
+title:       Phase 1 exit criteria reconciliation and checkpoint
+status:      in-progress
+priority:    P1
+phase:       Phase 1
+assigned_to: bridge
+proposed_by: bridge
+opened:      2026-03-13
+started:     2026-03-13
+completed:   null
+change_ref:  null
+scope:       Review all Phase 1 exit criteria. Update checkboxes to reflect actual state.
+             Identify remaining unchecked items and classify as: (a) completable by bridge,
+             (b) blocked on human decision, (c) blocked on physical action. Document gap
+             analysis and recommended next actions.
+dependencies: TASK-018
+proof_ref:   null
+notes:       Phase 1 exit analysis:
+             DONE: API key, local inference, routing policy, agent defined, Telegram,
+             directive receipt, D1.2/D1.3/D1.4, Bridge Runbook
+             BLOCKED (human): TASK-009 (git remote), TASK-010 (Discord)
+             BLOCKED (physical): Basement switch, Ethernet IP, DHCP reservation
+             BLOCKED (Desktop): Legacy asset audit, n8n triage, commerce/dashboard/bot triage
+             REMAINING BRIDGE WORK: Continued MC buildout, operational procedures, monitoring
+```
+
 ---
 
 ## Completed Tasks
 
-_None yet._
+_Completed P0/P1 tasks are listed in their original sections above._
 
 ---
 
