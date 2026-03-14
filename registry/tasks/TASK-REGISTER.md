@@ -436,6 +436,33 @@ notes:       Phase 1 exit analysis:
              REMAINING BRIDGE WORK: Continued MC buildout, operational procedures, monitoring
 ```
 
+```
+task_id:     TASK-020
+title:       Local-first routing correction — heartbeat, digest, and background tasks
+status:      in-progress
+priority:    P1
+phase:       Phase 1
+assigned_to: bridge
+proposed_by: bridge
+opened:      2026-03-13
+started:     2026-03-13
+completed:   null
+change_ref:  null — CHG required if config changes succeed
+scope:       Correct routing so operational background tasks use local inference:
+             (1) Update daily digest cron to use ollama/qwen2.5:7b
+             (2) Configure heartbeat with local model
+             (3) Test local model as OpenClaw agent model for simple tasks
+             (4) Document results and limitations
+             (5) If local works: apply as default for background work
+             (6) If local doesn't work as agent: document why and use cheapest cloud alternative
+dependencies: TASK-008 (local inference installed), CHG-007 (models active)
+proof_ref:   null — set to routing audit + config change commit
+notes:       Opened by routing audit (ROUTING-AUDIT.md). Current state: 0% local utilization.
+             All 5 guardrail checks FAIL. qwen2.5:7b confirmed tool-call-capable via direct
+             Ollama API test. Next: test as OpenClaw agent model for cron/heartbeat.
+             Estimated monthly savings if successful: $17-67.
+```
+
 ---
 
 ## Completed Tasks
