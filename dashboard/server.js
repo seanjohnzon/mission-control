@@ -198,18 +198,20 @@ async function handleModelOps() {
   // Fetch local models from Ollama
   const ollamaData = await fetchJSON('http://127.0.0.1:11434/api/tags');
   const localModels = [];
+  const localRoleMap = {
+    'qwen2.5:7b': { status: 'installed-configured', role: 'Local workhorse — digest, maintenance, build/docs' },
+    'qwen2.5:3b': { status: 'installed-configured', role: 'Local lightweight — heartbeat, hygiene' }
+  };
   if (ollamaData && ollamaData.models) {
     for (const m of ollamaData.models) {
       const name = m.name || '';
-      let status = 'installed-unused';
-      if (name.includes('qwen2.5:7b') || name === 'qwen2.5:7b') {
-        status = 'installed-configured';
-      }
+      const mapping = localRoleMap[name] || { status: 'installed-unused', role: '—' };
       const paramSize = m.details?.parameter_size || '—';
       localModels.push({
         id: name,
         provider: 'Ollama (local)',
-        status,
+        status: mapping.status,
+        role: mapping.role,
         directCost: '$0',
         infraCost: 'not yet modeled',
         paramSize
@@ -217,16 +219,51 @@ async function handleModelOps() {
     }
   }
 
+  const runtime = {
+    activeDefault: "anthropic/claude-opus-4-6",
+    routerMode: "manual — category map defined, verification in progress",
+    cloudModels: [
+      {id: "claude-opus-4-6", provider: "Anthropic", status: "escalation-only", role: "Escalation / orchestrator", costIn: "$15/MTok", costOut: "$75/MTok", cacheRead: "$1.50/MTok", cacheWrite: "$18.75/MTok", notes: "Not default for routine categories. Used for complex orchestration and escalation."},
+      {id: "claude-sonnet-4-6", provider: "Anthropic", status: "available — intended baseline", role: "Cloud baseline for complex categories", costIn: "$3/MTok", costOut: "$15/MTok", cacheRead: "$0.30/MTok", cacheWrite: "$3.75/MTok", notes: "Intended default for build/debug, research, visual/UI, interactive, repair."}
+    ],
+    localModels
+  };
+
+  const routingMap = [
+    {category: "heartbeat", intended: "ollama/qwen2.5:3b", fallback: "ollama/qwen2.5:7b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "digest", intended: "ollama/qwen2.5:7b", fallback: "ollama/qwen2.5:3b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "hygiene", intended: "ollama/qwen2.5:3b", fallback: "ollama/qwen2.5:7b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "maintenance", intended: "ollama/qwen2.5:7b", fallback: "ollama/qwen2.5:3b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "build/docs", intended: "ollama/qwen2.5:7b", fallback: "claude-sonnet-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 2, successRate: "100%", spend: "~$0.04", taskIds: ["TASK-018","TASK-020"], status: "mismatch — used Opus, intended local"},
+    {category: "build/debug", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "research", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"},
+    {category: "visual/UI generation", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 3, successRate: "100%", spend: "~$0.10", taskIds: ["mc-dashboard-build","mc-dashboard-v2","mc-visual-refinement"], status: "mismatch — used Opus, intended Sonnet"},
+    {category: "interactive", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 1, successRate: "100%", spend: "~$0.03", taskIds: ["main-session"], status: "mismatch — used Opus, intended Sonnet"},
+    {category: "repair", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6 + Claude Code", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "not yet verified"}
+  ];
+
+  // Read verification results from a file if it exists
+  let verificationResults = [];
+  try {
+    const vr = fs.readFileSync(path.join(MC_ROOT, 'registry/routing/verification-results.json'), 'utf8');
+    verificationResults = JSON.parse(vr);
+  } catch { verificationResults = []; }
+
+  const routingHealth = {
+    currentPolicy: "Category-to-model map defined. Heartbeat→3b, digest/maintenance/build-docs→7b (local). Build-debug/research/visual/interactive/repair→Sonnet 4.6 (cloud). Opus 4.6 = escalation-only.",
+    localSuccessRate: "not yet measured — verification in progress",
+    cloudFallbackCount: 0,
+    rollbackCount: 0,
+    modelFailureCount: 1,
+    modelFailureNote: "1 auth failure on first startup (resolved)",
+    canaryStatus: "not deployed — sequential verification phase",
+    recommendation: "Complete category verification. Fix mismatches. Then run 48h canary before broader rollout."
+  };
+
   return {
-    runtime: {
-      activeDefault: 'anthropic/claude-opus-4-6',
-      routerMode: 'manual — not yet tuned',
-      cloudModels: [
-        { id: 'claude-opus-4-6', provider: 'Anthropic', status: 'active-default', costIn: '$15/MTok', costOut: '$75/MTok' },
-        { id: 'claude-sonnet-4-6', provider: 'Anthropic', status: 'available-planned', costIn: '$3/MTok', costOut: '$15/MTok' }
-      ],
-      localModels
-    },
+    runtime,
+    routingMap,
+    verificationResults,
     ledger: [
       { ts: '2026-03-13 20:48', taskId: 'session-start', category: 'interactive', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'default model — no routing rules', success: true, fallback: false },
       { ts: '2026-03-13 21:01', taskId: 'TASK-018', category: 'build/docs', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'complex doc authoring — cloud appropriate', success: true, fallback: false },
@@ -243,31 +280,7 @@ async function handleModelOps() {
       projectedMonthly: '$3-82',
       projectedConfidence: 'wide range — insufficient data'
     },
-    categories: {
-      note: 'Breakdown based on today\'s reconstructed ledger. Live categorization not yet instrumented.',
-      items: [
-        { category: 'heartbeat', model: 'ollama/qwen2.5:7b', provider: 'Ollama (local)', runCount: 0, note: 'configured, first run pending' },
-        { category: 'digest', model: 'ollama/qwen2.5:7b', provider: 'Ollama (local)', runCount: 0, note: 'configured, first run 2026-03-14 09:00' },
-        { category: 'hygiene', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
-        { category: 'maintenance', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
-        { category: 'build/docs', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 2, note: 'TASK-018, TASK-020' },
-        { category: 'build/debug', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
-        { category: 'research', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
-        { category: 'visual/UI generation', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 3, note: 'dashboard builds' },
-        { category: 'interactive', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 1, note: 'main session' },
-        { category: 'repair', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' }
-      ]
-    },
-    routingHealth: {
-      currentPolicy: 'Manual — default cloud model, no routing rules. Heartbeat + digest configured for local.',
-      localSuccessRate: 'not yet measured — 0 local runs completed',
-      cloudFallbackCount: 0,
-      rollbackCount: 0,
-      modelFailureCount: 1,
-      modelFailureNote: '1 auth failure on first startup (resolved)',
-      canaryStatus: 'not deployed',
-      recommendation: 'Run heartbeat + digest on local for 48h. If stable, expand local routing to maintenance + hygiene.'
-    }
+    routingHealth
   };
 }
 

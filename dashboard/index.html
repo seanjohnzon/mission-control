@@ -581,25 +581,31 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <div class="card mb">
           <h3 style="margin-bottom:12px">Available Models</h3>
           <table>
-            <thead><tr><th>Model</th><th>Provider</th><th>Status</th><th>Cost (In/Out)</th><th>Notes</th></tr></thead>
+            <thead><tr><th>Model</th><th>Provider</th><th>Status</th><th>Role</th><th>Cost (In)</th><th>Cost (Out)</th><th>Cache Read</th><th>Notes</th></tr></thead>
             <tbody id="mo-models-table"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Section B: Usage Ledger -->
+      <!-- Section C: Category Routing Map -->
       <div class="modelops-section">
-        <div class="modelops-section-header">Usage Ledger</div>
-        <div class="mo-info-banner" id="mo-ledger-banner">⚠️ Ledger is manually reconstructed. Live per-request instrumentation not yet available.</div>
+        <div class="modelops-section-header">Category → Model Routing Map</div>
+        <div class="mo-info-banner" style="background:rgba(88,166,255,0.1);border-left-color:var(--blue);margin-bottom:12px">ℹ️ Intended routing defined. Sequential verification in progress. Opus 4.6 reserved for escalation only.</div>
         <div class="card mb" style="overflow-x:auto">
           <table>
-            <thead><tr><th>Time</th><th>Task</th><th>Category</th><th>Agent</th><th>Model</th><th>Provider</th><th>Local?</th><th>Reason</th><th>Status</th><th>Fallback?</th></tr></thead>
-            <tbody id="mo-ledger-table"></tbody>
+            <thead><tr><th>Category</th><th>Intended Model</th><th>Fallback</th><th>Escalation</th><th>Last Used</th><th>Runs</th><th>Success</th><th>Spend</th><th>Status</th></tr></thead>
+            <tbody id="mo-routing-map-table"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Section C: Cost + Projection -->
+      <!-- Section D: Verification Results -->
+      <div class="modelops-section">
+        <div class="modelops-section-header">Category Verification Log</div>
+        <div id="mo-verification-results"></div>
+      </div>
+
+      <!-- Section B: Cost + Projection -->
       <div class="modelops-section">
         <div class="modelops-section-header">Cost + Projection</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
@@ -625,14 +631,14 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <div style="font-size:12px;color:var(--text2);font-style:italic;padding:0 4px">Cost estimates derived from Anthropic published pricing + session token counts. ±10% variance from actual billing.</div>
       </div>
 
-      <!-- Section D: Task Category Breakdown -->
+      <!-- Usage Ledger -->
       <div class="modelops-section">
-        <div class="modelops-section-header">Task Category Breakdown</div>
-        <div class="mo-info-banner" id="mo-cat-banner" style="margin-bottom:12px"></div>
-        <div class="card mb">
+        <div class="modelops-section-header">Usage Ledger</div>
+        <div class="mo-info-banner" id="mo-ledger-banner">⚠️ Ledger is manually reconstructed. Live per-request instrumentation not yet available.</div>
+        <div class="card mb" style="overflow-x:auto">
           <table>
-            <thead><tr><th>Category</th><th>Model</th><th>Provider</th><th>Runs</th><th>Notes</th></tr></thead>
-            <tbody id="mo-categories-table"></tbody>
+            <thead><tr><th>Time</th><th>Task</th><th>Category</th><th>Agent</th><th>Model</th><th>Provider</th><th>Local?</th><th>Reason</th><th>Status</th><th>Fallback?</th></tr></thead>
+            <tbody id="mo-ledger-table"></tbody>
           </table>
         </div>
       </div>
@@ -949,26 +955,58 @@ async function loadModelOps() {
   const mode = rt.routerMode;
   document.getElementById('mo-router-mode').textContent = mode;
   const badge = document.getElementById('mo-router-badge');
-  if (mode.includes('manual')) { badge.textContent = 'MANUAL'; badge.className = 'badge badge-red'; }
+  if (mode.includes('manual')) { badge.textContent = 'MANUAL'; badge.className = 'badge badge-yellow'; }
   else if (mode.includes('canary')) { badge.textContent = 'CANARY'; badge.className = 'badge badge-yellow'; }
   else { badge.textContent = 'LOCAL-FIRST'; badge.className = 'badge badge-green'; }
 
   // Models table
   const allModels = [...rt.cloudModels.map(m => ({...m, type: 'cloud'})), ...rt.localModels.map(m => ({...m, type: 'local'}))];
   const statusBadge = (s) => {
-    if (s === 'active-default') return '<span class="badge badge-green">active-default</span>';
-    if (s === 'available-planned') return '<span class="badge badge-blue">planned</span>';
+    if (s === 'escalation-only') return '<span class="badge badge-orange">escalation-only</span>';
+    if (s === 'available — intended baseline') return '<span class="badge badge-blue">intended baseline</span>';
     if (s === 'installed-configured') return '<span class="badge badge-teal">configured</span>';
     if (s === 'installed-unused') return '<span class="badge badge-yellow">unused</span>';
     return `<span class="badge badge-gray">${s}</span>`;
   };
   document.getElementById('mo-models-table').innerHTML = allModels.map(m => {
-    const cost = m.type === 'cloud' ? `${m.costIn} / ${m.costOut}` : `${m.directCost}`;
-    const notes = m.type === 'local' ? `${m.paramSize || '—'} · Infra: ${m.infraCost || '—'}` : '';
-    return `<tr><td>${m.id}</td><td>${m.provider}</td><td>${statusBadge(m.status)}</td><td>${cost}</td><td class="text2">${notes}</td></tr>`;
+    const costIn = m.costIn || (m.type === 'local' ? '$0' : '—');
+    const costOut = m.costOut || (m.type === 'local' ? '$0' : '—');
+    const cacheRead = m.cacheRead || (m.type === 'local' ? '—' : '—');
+    const role = m.role || '—';
+    const notes = m.notes || (m.type === 'local' ? `${m.paramSize || '—'} · Infra: ${m.infraCost || '—'}` : '');
+    return `<tr><td>${m.id}</td><td>${m.provider}</td><td>${statusBadge(m.status)}</td><td class="text2" style="font-size:12px">${role}</td><td>${costIn}</td><td>${costOut}</td><td>${cacheRead}</td><td class="text2" style="font-size:12px">${notes}</td></tr>`;
   }).join('');
 
-  // Section B: Usage Ledger
+  // Routing Map
+  if (data.routingMap) {
+    const routingStatusBadge = (s) => {
+      if (s === 'not yet verified') return '<span class="badge badge-gray">not yet verified</span>';
+      if (s === 'verified') return '<span class="badge badge-green">verified</span>';
+      if (s.startsWith('mismatch')) return `<span class="badge badge-red">${s}</span>`;
+      if (s === 'canary') return '<span class="badge badge-yellow">canary</span>';
+      if (s === 'active') return '<span class="badge badge-green">active</span>';
+      if (s === 'degraded') return '<span class="badge badge-red">degraded</span>';
+      return `<span class="badge badge-gray">${s}</span>`;
+    };
+    document.getElementById('mo-routing-map-table').innerHTML = data.routingMap.map(r => {
+      const lastUsedMismatch = r.lastUsed !== '—' && r.runs > 0 && r.lastUsed !== r.intended;
+      const lastUsedStyle = lastUsedMismatch ? ' style="background:rgba(248,81,73,0.1)"' : '';
+      return `<tr><td><strong>${r.category}</strong></td><td>${r.intended}</td><td>${r.fallback}</td><td>${r.escalation}</td><td${lastUsedStyle}>${r.lastUsed}</td><td>${r.runs}</td><td>${r.successRate}</td><td>${r.spend}</td><td>${routingStatusBadge(r.status)}</td></tr>`;
+    }).join('');
+  }
+
+  // Verification Results
+  const vrEl = document.getElementById('mo-verification-results');
+  if (data.verificationResults && data.verificationResults.length > 0) {
+    vrEl.innerHTML = `<div class="card mb" style="overflow-x:auto"><table>
+      <thead><tr><th>Category</th><th>Intended Model</th><th>Actual Model</th><th>Provider</th><th>Local?</th><th>Fallback?</th><th>Success?</th><th>Est. Cost</th><th>Notes</th></tr></thead>
+      <tbody>${data.verificationResults.map(v => `<tr><td>${v.category||''}</td><td>${v.intended||''}</td><td>${v.actual||''}</td><td>${v.provider||''}</td><td>${v.local?'✅':'❌'}</td><td>${v.fallback?'⚠️ Yes':'No'}</td><td>${v.success?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--red)">✗</span>'}</td><td>${v.estCost||'—'}</td><td class="text2">${v.notes||''}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+  } else {
+    vrEl.innerHTML = '<div class="card mb" style="padding:24px;text-align:center;color:var(--text2)">No verification runs completed yet. Sequential verification in progress.</div>';
+  }
+
+  // Usage Ledger
   document.getElementById('mo-ledger-table').innerHTML = data.ledger.map(l => {
     const localBadge = l.local ? '<span class="badge badge-green">LOCAL</span>' : '<span class="badge badge-gray">CLOUD</span>';
     const statusIcon = l.success ? '<span style="color:var(--green)">✓</span>' : '<span style="color:var(--red)">✗</span>';
@@ -976,30 +1014,17 @@ async function loadModelOps() {
     return `<tr><td style="white-space:nowrap">${l.ts}</td><td>${l.taskId}</td><td>${l.category}</td><td>${l.agent}</td><td>${l.model}</td><td>${l.provider}</td><td>${localBadge}</td><td style="font-size:11px">${l.reason}</td><td>${statusIcon}</td><td>${fallback}</td></tr>`;
   }).join('');
 
-  // Section C: Cost
+  // Cost
   document.getElementById('mo-cost-today').textContent = data.cost.todayCloud;
   document.getElementById('mo-cost-conf').textContent = 'estimated';
   document.getElementById('mo-cost-proj').textContent = data.cost.projectedMonthly;
   document.getElementById('mo-cost-proj-conf').textContent = 'wide range';
 
-  // Section D: Categories
-  document.getElementById('mo-cat-banner').textContent = data.categories.note;
-  document.getElementById('mo-categories-table').innerHTML = data.categories.items.map(c => {
-    const isMuted = c.model === '—';
-    const isConfigured = c.runCount === 0 && c.model !== '—';
-    const modelText = isMuted ? '<span class="text2" style="font-style:italic">—</span>' : c.model;
-    const provText = isMuted ? '<span class="text2" style="font-style:italic">—</span>' : c.provider;
-    const noteText = isMuted ? '<span class="text2" style="font-style:italic">' + c.note + '</span>'
-      : isConfigured ? '<span style="color:var(--blue)">' + c.note + '</span>'
-      : c.note;
-    return `<tr><td>${c.category}</td><td>${modelText}</td><td>${provText}</td><td>${c.runCount}</td><td style="font-size:12px">${noteText}</td></tr>`;
-  }).join('');
-
-  // Section E: Routing Health
+  // Routing Health
   const rh = data.routingHealth;
   document.getElementById('mo-routing-health').innerHTML = `
     <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Routing Policy</span><span>${rh.currentPolicy}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Routing Policy</span><span style="max-width:65%;text-align:right">${rh.currentPolicy}</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Local Success Rate</span><span>${rh.localSuccessRate}</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Cloud Fallback Count</span><span>${rh.cloudFallbackCount}</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Rollback Count</span><span>${rh.rollbackCount}</span></div>
