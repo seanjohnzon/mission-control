@@ -7,9 +7,10 @@
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg: #0d1117; --sidebar: #161b22; --card: #21262d; --border: #30363d;
+  --bg: #0f1119; --sidebar: #141620; --card: #1a1d2e; --border: #2a2d3d;
   --text: #e6edf3; --text2: #8b949e; --blue: #58a6ff; --green: #3fb950;
-  --red: #f85149; --yellow: #d29922; --orange: #f0883e;
+  --red: #f85149; --yellow: #d29922; --orange: #f0883e; --purple: #8b5cf6;
+  --teal: #2dd4bf; --pink: #ec4899;
 }
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
 a { color: var(--blue); text-decoration: none; }
@@ -20,10 +21,11 @@ a { color: var(--blue); text-decoration: none; }
 .sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid var(--border); }
 .sidebar-header h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
 .sidebar-header .subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.sidebar-footer .gw-status { display: flex; align-items: center; gap: 6px; }
 .nav { flex: 1; padding: 8px 0; }
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.15s; }
 .nav-item:hover { background: rgba(88,166,255,0.06); color: var(--text); }
-.nav-item.active { background: rgba(88,166,255,0.1); color: var(--text); border-left-color: var(--blue); }
+.nav-item.active { background: rgba(88,166,255,0.14); color: var(--text); border-left-color: var(--blue); }
 .nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
 .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text2); }
 
@@ -32,12 +34,14 @@ a { color: var(--blue); text-decoration: none; }
 .tab-panel.active { display: block; }
 
 /* Cards & Utils */
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.15s; }
+.card:hover { border-color: #3d4158; }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 .card-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
 @media (max-width: 1100px) { .card-row { grid-template-columns: repeat(2, 1fr); } }
 .card h3 { font-size: 13px; color: var(--text2); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 .card .val { font-size: 24px; font-weight: 600; }
+.card .val-lg { font-size: 32px; font-weight: 700; }
 .section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
@@ -66,11 +70,17 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .kanban-col-header { padding: 10px 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .kanban-col-header .count { background: var(--border); color: var(--text2); font-size: 11px; padding: 1px 7px; border-radius: 10px; }
 .kanban-cards { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
-.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: default; transition: border-color 0.15s; }
-.kanban-card:hover { border-color: var(--text2); }
+.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: default; transition: border-color 0.15s; }
+.kanban-card:hover { border-color: #3d4158; }
 .kanban-card .task-id { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
-.kanban-card .task-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.35; }
+.kanban-card .task-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; line-height: 1.35; display: flex; align-items: center; gap: 8px; }
+.kanban-card .task-title .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.kanban-card .task-desc { font-size: 12px; color: var(--text2); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .kanban-card .task-meta { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.kanban-card .task-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+.kanban-card .task-footer .assignee { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+.kanban-card .task-footer .assignee .avatar-circle { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.kanban-card .task-footer .timestamp { font-size: 10px; color: var(--text2); }
 .kanban-card.p0 { border-left: 3px solid var(--red); }
 .kanban-card.p1 { border-left: 3px solid var(--orange); }
 .kanban-card.p2 { border-left: 3px solid var(--blue); }
@@ -93,6 +103,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
 .proj-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
 .proj-card .desc { color: var(--text2); font-size: 13px; margin-bottom: 12px; }
+.proj-card .proj-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.proj-card .proj-footer .proj-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
 .proj-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
 .proj-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
 .proj-status.planned { background: rgba(88,166,255,0.15); color: var(--blue); }
@@ -105,9 +117,16 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .mem-tab { padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.15s; }
 .mem-tab:hover { color: var(--text); }
 .mem-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-.mem-entry { margin-bottom: 16px; }
+.mem-timeline { position: relative; padding-left: 24px; }
+.mem-timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--border); border-radius: 1px; }
+.mem-entry { margin-bottom: 16px; position: relative; }
+.mem-timeline .mem-entry::before { content: ''; position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid var(--bg); }
 .mem-entry .date { font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
-.mem-content { font-size: 13px; line-height: 1.6; color: var(--text2); white-space: pre-wrap; }
+.mem-content { font-size: 13px; line-height: 1.6; color: var(--text2); }
+.mem-content .md-header { color: var(--text); font-weight: 600; font-size: 14px; margin: 10px 0 4px; }
+.mem-content .md-bold { font-weight: 600; color: var(--text); }
+.mem-content .md-list { padding-left: 16px; margin: 4px 0; }
+.mem-content .md-list li { margin: 2px 0; }
 .mem-content h1, .mem-content h2, .mem-content h3 { color: var(--text); margin: 12px 0 6px; }
 .mem-section { margin-bottom: 16px; }
 .mem-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
@@ -124,9 +143,11 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .doc-reader { overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
 
 /* Office */
-.office-floor { position: relative; width: 700px; height: 480px; background: #1a1f27; border: 2px solid var(--border); border-radius: 12px; margin: 0 auto; overflow: hidden; }
-.office-floor .floor-tile { position: absolute; background: repeating-conic-gradient(#1e2430 0% 25%, #1a1f27 0% 50%) 0 0 / 20px 20px; width: 100%; height: 100%; opacity: 0.5; }
-.desk { position: absolute; background: #2d333b; border: 2px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; text-align: center; }
+.office-floor { position: relative; width: 740px; height: 520px; background: #151822; border: 2px solid var(--border); border-radius: 12px; margin: 0 auto; overflow: hidden; }
+.office-floor .floor-tile { position: absolute; background: repeating-conic-gradient(#1a1f2e 0% 25%, #151822 0% 50%) 0 0 / 20px 20px; width: 100%; height: 100%; opacity: 0.5; }
+.desk { position: absolute; background: #1e2235; border: 2px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; transition: all 0.2s; }
+.desk.desk-online { border-color: rgba(63,185,80,0.35); box-shadow: 0 0 16px rgba(63,185,80,0.1); }
+.desk.desk-offline { opacity: 0.45; }
 .desk .agent-icon { font-size: 24px; margin-bottom: 4px; }
 .desk .agent-name { font-size: 12px; font-weight: 600; }
 .desk .agent-role { font-size: 10px; color: var(--text2); }
@@ -140,14 +161,30 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
 .org-line { width: 2px; height: 32px; background: var(--border); }
 .org-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-.team-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; min-width: 200px; }
-.team-card .avatar { font-size: 32px; margin-bottom: 8px; }
+.team-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px 20px; text-align: center; min-width: 220px; position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
+.team-card:hover { border-color: #3d4158; }
+.team-card.glow-blue { border-color: rgba(88,166,255,0.3); box-shadow: 0 0 20px rgba(88,166,255,0.08); }
+.team-card.glow-teal { border-color: rgba(45,212,191,0.3); box-shadow: 0 0 20px rgba(45,212,191,0.08); }
+.team-card.glow-orange { border-color: rgba(240,136,62,0.3); box-shadow: 0 0 20px rgba(240,136,62,0.08); }
+.team-card.glow-yellow { border-color: rgba(210,153,34,0.3); box-shadow: 0 0 20px rgba(210,153,34,0.08); }
+.team-card .avatar { font-size: 28px; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
 .team-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-.team-card .machine { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
-.team-card .roles { font-size: 12px; color: var(--blue); margin-bottom: 8px; }
+.team-card .machine { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.team-card .agent-desc { font-size: 11px; color: var(--text2); line-height: 1.4; margin-bottom: 10px; max-width: 220px; margin-left: auto; margin-right: auto; }
+.team-card .roles { font-size: 11px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+.team-card .roles .role-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-weight: 500; border: 1px solid; }
+.team-card .role-pill.blue { color: var(--blue); border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.08); }
+.team-card .role-pill.teal { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.08); }
+.team-card .role-pill.orange { color: var(--orange); border-color: rgba(240,136,62,0.3); background: rgba(240,136,62,0.08); }
+.team-card .role-pill.yellow { color: var(--yellow); border-color: rgba(210,153,34,0.3); background: rgba(210,153,34,0.08); }
+.team-card .role-pill.purple { color: var(--purple); border-color: rgba(139,92,246,0.3); background: rgba(139,92,246,0.08); }
 .team-card .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .team-card .status-badge.online { background: rgba(63,185,80,0.15); color: var(--green); }
 .team-card .status-badge.offline { background: rgba(139,148,158,0.15); color: var(--text2); }
+.team-card .role-card-link { display: block; text-align: right; margin-top: 12px; font-size: 11px; color: var(--text2); font-weight: 500; letter-spacing: 0.5px; }
+.team-card .role-card-link:hover { color: var(--blue); }
+.org-divider { width: 100%; max-width: 700px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.org-divider::before, .org-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .tool-lanes { margin-top: 32px; width: 100%; max-width: 700px; }
 .tool-lanes h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
 .tool-lane { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
@@ -155,7 +192,10 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .tool-lane .tool-desc { color: var(--text2); }
 
 /* LLM Usage */
-.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 12px 0; }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 12px 0; }
+.bar-legend { display: flex; gap: 16px; margin-top: 12px; font-size: 12px; color: var(--text2); }
+.bar-legend .legend-item { display: flex; align-items: center; gap: 6px; }
+.bar-legend .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
 .bar-chart .bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; }
 .bar-chart .bar-stack { display: flex; flex-direction: column-reverse; width: 100%; max-width: 40px; }
 .bar-chart .bar { min-height: 2px; }
@@ -182,7 +222,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
   <aside class="sidebar">
     <div class="sidebar-header">
       <h1>⚡ Mission Control</h1>
-      <div class="subtitle">Autonomous AI Organization</div>
+      <div class="subtitle">v2 • Phase 1</div>
     </div>
     <nav class="nav" id="nav">
       <div class="nav-item" data-tab="mission"><span class="icon">🎯</span>Mission</div>
@@ -197,7 +237,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div class="nav-item" data-tab="routing"><span class="icon">💰</span>Routing / Cost</div>
     </nav>
     <div class="sidebar-footer">
-      <div id="health-status">Checking health...</div>
+      <div class="gw-status" id="health-status"><span class="health-dot warn"></span>Checking...</div>
     </div>
   </aside>
 
@@ -274,30 +314,37 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div class="office-floor">
         <div class="floor-tile"></div>
         <!-- Whiteboard -->
-        <div class="office-item" style="top:20px;left:240px;width:220px;height:60px;background:#2d333b;border:2px solid var(--border);flex-direction:column">
-          <div style="font-size:9px;color:var(--text2);margin-bottom:2px">WHITEBOARD</div>
-          <div style="font-size:13px;font-weight:600;color:var(--blue)">Phase 1 — Bridge Online</div>
+        <div class="office-item" style="top:18px;left:220px;width:240px;height:68px;background:#1e2235;border:2px solid var(--border);flex-direction:column;border-radius:6px">
+          <div style="font-size:9px;color:var(--text2);margin-bottom:3px;letter-spacing:1px">📋 WHITEBOARD</div>
+          <div style="font-size:14px;font-weight:600;color:var(--blue)">Phase 1</div>
+          <div style="font-size:10px;color:var(--text2)">Bridge Online ✓</div>
         </div>
         <!-- Coffee machine -->
-        <div class="office-item" style="top:20px;right:30px;width:60px;height:40px;background:#2d333b;border:2px solid var(--border);flex-direction:column;font-size:16px">
-          ☕
+        <div class="office-item" style="top:18px;right:28px;width:68px;height:50px;background:#1e2235;border:2px solid var(--border);flex-direction:column;border-radius:6px">
+          <div style="font-size:22px">☕</div>
+          <div style="font-size:8px;color:var(--text2)">COFFEE</div>
         </div>
+        <!-- Plant top-left -->
+        <div class="office-item" style="top:24px;left:60px;font-size:32px">🌿</div>
         <!-- Desks -->
-        <div class="desk" style="top:140px;left:60px;width:160px;height:130px">
+        <div class="desk desk-online" style="top:130px;left:40px;width:180px;height:140px">
+          <div style="font-size:12px;margin-bottom:2px">🖥️</div>
           <div class="agent-icon">🤖</div>
           <div class="agent-name">Bridge</div>
           <div class="agent-role">Conductor · Broker</div>
           <div class="agent-machine">Mac Mini (M4)</div>
           <div class="status-light online"></div>
         </div>
-        <div class="desk" style="top:140px;left:270px;width:160px;height:130px;opacity:0.5">
+        <div class="desk desk-offline" style="top:130px;left:270px;width:180px;height:140px">
+          <div style="font-size:12px;margin-bottom:2px">🖥️</div>
           <div class="agent-icon">🤖</div>
           <div class="agent-name">Brain</div>
           <div class="agent-role">Archivist · Planner</div>
           <div class="agent-machine">Desktop</div>
           <div class="status-light offline"></div>
         </div>
-        <div class="desk" style="top:140px;left:480px;width:160px;height:130px;opacity:0.5">
+        <div class="desk desk-offline" style="top:130px;left:500px;width:180px;height:140px">
+          <div style="font-size:12px;margin-bottom:2px">🖥️</div>
           <div class="agent-icon">🤖</div>
           <div class="agent-name">Forge</div>
           <div class="agent-role">Builder · Researcher</div>
@@ -305,17 +352,17 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           <div class="status-light offline"></div>
         </div>
         <!-- Server rack -->
-        <div class="office-item" style="bottom:30px;left:60px;width:120px;height:70px;background:#2d333b;border:2px solid var(--border);flex-direction:column">
-          <div style="font-size:16px">🖥️</div>
-          <div style="font-size:9px;margin-top:2px">SERVER RACK</div>
+        <div class="office-item" style="bottom:40px;left:50px;width:130px;height:75px;background:#1e2235;border:2px solid var(--border);flex-direction:column;border-radius:6px">
+          <div style="font-size:18px">🖥️</div>
+          <div style="font-size:9px;margin-top:2px;letter-spacing:0.5px">SERVER RACK</div>
           <div style="font-size:9px;color:var(--green)">Ollama · OpenClaw</div>
         </div>
-        <!-- Plant -->
-        <div class="office-item" style="bottom:30px;right:30px;font-size:28px">🪴</div>
+        <!-- Plant bottom-right -->
+        <div class="office-item" style="bottom:40px;right:30px;font-size:32px">🪴</div>
         <!-- Door -->
-        <div class="office-item" style="bottom:0;left:310px;width:80px;height:24px;background:var(--border);border-radius:4px 4px 0 0;font-size:10px;color:var(--text2)">🚪 EXIT</div>
+        <div class="office-item" style="bottom:0;left:320px;width:80px;height:24px;background:var(--border);border-radius:4px 4px 0 0;font-size:10px;color:var(--text2)">🚪 EXIT</div>
         <!-- Floor label -->
-        <div class="office-item" style="bottom:60px;left:250px;font-size:11px;color:var(--text2);opacity:0.4">Autonomous AI HQ — Floor 1</div>
+        <div class="office-item" style="bottom:70px;left:260px;font-size:11px;color:var(--text2);opacity:0.35;letter-spacing:0.5px">Autonomous AI HQ — Floor 1</div>
       </div>
     </div>
 
@@ -323,37 +370,62 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <div class="tab-panel" id="tab-team">
       <div class="section-title">👥 Team</div>
       <div class="org-chart">
-        <div class="team-card" style="border-color:var(--yellow)">
+        <div class="org-divider">Leadership</div>
+        <div class="team-card glow-yellow">
           <div class="avatar">👤</div>
           <h3>Cihan</h3>
           <div class="machine">Human</div>
-          <div class="roles">Architect · Director · Judge</div>
+          <div class="agent-desc">Architect, Director, Judge. Sets mission, priorities, constraints, and approvals.</div>
+          <div class="roles">
+            <span class="role-pill yellow">Architect</span>
+            <span class="role-pill yellow">Director</span>
+            <span class="role-pill yellow">Judge</span>
+          </div>
           <div><span class="status-badge online">Online</span></div>
+          <a class="role-card-link" href="#">ROLE CARD →</a>
         </div>
         <div class="conn-lines">
-          <svg width="400" height="32"><line x1="200" y1="0" x2="60" y2="32" stroke="#30363d" stroke-width="2"/><line x1="200" y1="0" x2="200" y2="32" stroke="#30363d" stroke-width="2"/><line x1="200" y1="0" x2="340" y2="32" stroke="#30363d" stroke-width="2"/></svg>
+          <svg width="400" height="32"><line x1="200" y1="0" x2="60" y2="32" stroke="#2a2d3d" stroke-width="2"/><line x1="200" y1="0" x2="200" y2="32" stroke="#2a2d3d" stroke-width="2"/><line x1="200" y1="0" x2="340" y2="32" stroke="#2a2d3d" stroke-width="2"/></svg>
         </div>
+        <div class="org-divider">Operations</div>
         <div class="org-row">
-          <div class="team-card">
+          <div class="team-card glow-blue">
             <div class="avatar">🤖</div>
             <h3>Bridge</h3>
             <div class="machine">Mac Mini (M4)</div>
-            <div class="roles">Conductor · Broker</div>
+            <div class="agent-desc">Routing, scheduling, comms brokering, gateway management. The operational backbone.</div>
+            <div class="roles">
+              <span class="role-pill blue">Conductor</span>
+              <span class="role-pill blue">Broker</span>
+            </div>
             <div><span class="status-badge online">Online</span></div>
+            <a class="role-card-link" href="#">ROLE CARD →</a>
           </div>
-          <div class="team-card" style="opacity:0.6">
+          <div class="team-card glow-teal" style="opacity:0.7">
             <div class="avatar">🤖</div>
             <h3>Brain</h3>
             <div class="machine">Desktop</div>
-            <div class="roles">Archivist · Planner · Merchant</div>
+            <div class="agent-desc">Memory, planning, commerce, knowledge synthesis. The thinking engine.</div>
+            <div class="roles">
+              <span class="role-pill teal">Archivist</span>
+              <span class="role-pill teal">Planner</span>
+              <span class="role-pill teal">Merchant</span>
+            </div>
             <div><span class="status-badge offline">Offline</span></div>
+            <a class="role-card-link" href="#">ROLE CARD →</a>
           </div>
-          <div class="team-card" style="opacity:0.6">
+          <div class="team-card glow-orange" style="opacity:0.7">
             <div class="avatar">🤖</div>
             <h3>Forge</h3>
             <div class="machine">GPU3060</div>
-            <div class="roles">Builder · Critic · Researcher</div>
+            <div class="agent-desc">Build, QA, research, local inference workloads. The production floor.</div>
+            <div class="roles">
+              <span class="role-pill orange">Builder</span>
+              <span class="role-pill orange">Critic</span>
+              <span class="role-pill orange">Researcher</span>
+            </div>
             <div><span class="status-badge offline">Offline</span></div>
+            <a class="role-card-link" href="#">ROLE CARD →</a>
           </div>
         </div>
         <div class="tool-lanes">
@@ -369,14 +441,18 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <div class="tab-panel" id="tab-llm">
       <div class="section-title">📊 LLM Usage</div>
       <div class="card-row" id="llm-summary">
-        <div class="card"><h3>Today's Spend</h3><div class="val" id="llm-cost">...</div></div>
-        <div class="card"><h3>Cloud Requests</h3><div class="val" id="llm-cloud">—</div></div>
-        <div class="card"><h3>Local Requests</h3><div class="val" id="llm-local">0</div></div>
-        <div class="card"><h3>Local Util</h3><div class="val" id="llm-util">...</div></div>
+        <div class="card"><h3>Today's Spend</h3><div class="val-lg" id="llm-cost">...</div></div>
+        <div class="card"><h3>Cloud Requests</h3><div class="val-lg" id="llm-cloud">—</div></div>
+        <div class="card"><h3>Local Requests</h3><div class="val-lg" id="llm-local">0</div></div>
+        <div class="card"><h3>Local Util</h3><div class="val-lg" id="llm-util">...</div></div>
       </div>
       <div class="card mb">
         <h3 style="margin-bottom:12px">7-Day Trend</h3>
         <div class="bar-chart" id="llm-chart"></div>
+        <div class="bar-legend">
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--blue)"></div>Cloud</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--green)"></div>Local</div>
+        </div>
       </div>
       <div class="card mb">
         <h3 style="margin-bottom:12px">Model Breakdown</h3>
@@ -458,8 +534,7 @@ async function loadHealth() {
   olEl.innerHTML = `<span class="health-dot ${h.ollama.ok?'ok':'err'}"></span>${h.ollama.ok ? h.ollama.models.length+' models' : 'unreachable'}`;
   dkEl.innerHTML = `<span class="health-dot ${parseInt(h.disk.percent)>90?'err':'ok'}"></span>${h.disk.used} / ${h.disk.total} (${h.disk.percent})`;
   document.getElementById('health-status').innerHTML =
-    `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>Gateway ${h.gateway.ok?'OK':'Down'} · ` +
-    `<span class="health-dot ${h.ollama.ok?'ok':'err'}"></span>Ollama ${h.ollama.ok?'OK':'Down'}`;
+    `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>Gateway ${h.gateway.ok?'OK':'Down'}`;
 
   // Git
   const act = await api('/api/activity');
@@ -504,10 +579,16 @@ async function loadTasks() {
     colEl.className = 'kanban-col';
     colEl.innerHTML = `<div class="kanban-col-header">${col.title}<span class="count">${col.tasks.length}</span></div><div class="kanban-cards" id="col-${key}"></div>`;
     const cardsEl = colEl.querySelector('.kanban-cards');
+    const dotColors = { backlog: 'var(--text2)', todo: 'var(--blue)', inprogress: 'var(--purple)', blocked: 'var(--yellow)', done: 'var(--green)' };
+    const dotColor = dotColors[key] || 'var(--text2)';
     for (const t of col.tasks) {
       const pClass = t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog';
       const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
-      const assignIcon = (t.assigned || '').includes('bridge') ? '🤖' : (t.assigned || '').includes('human') ? '👤' : '❓';
+      const assignName = t.assigned || 'unassigned';
+      const assignInitial = assignName.charAt(0).toUpperCase();
+      const assignColor = assignName.includes('bridge') ? 'var(--blue)' : assignName.includes('human') ? 'var(--yellow)' : 'var(--text2)';
+      const descHtml = t.notes ? `<div class="task-desc">${escapeHtml(t.notes)}</div>` : '';
+      const ts = t.created ? new Date(t.created).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
       let deps = '';
       if (t.dependencies && t.dependencies !== 'none') {
         deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${t.dependencies}</div>`;
@@ -516,13 +597,17 @@ async function loadTasks() {
       card.className = `kanban-card ${pClass}`;
       card.innerHTML = `
         <div class="task-id">${t.id}</div>
-        <div class="task-title">${t.title}</div>
+        <div class="task-title"><span class="status-dot" style="background:${dotColor}"></span>${t.title}</div>
+        ${descHtml}
         <div class="task-meta">
           <span class="badge ${pBadge}">${t.priority}</span>
-          <span class="badge badge-gray">${assignIcon} ${t.assigned || 'unassigned'}</span>
           ${t.phase ? `<span class="badge badge-blue">${t.phase}</span>` : ''}
         </div>
         ${deps}
+        <div class="task-footer">
+          <div class="assignee"><span class="avatar-circle" style="background:${assignColor}">${assignInitial}</span>${assignName}</div>
+          <div class="timestamp">${ts}</div>
+        </div>
       `;
       cardsEl.appendChild(card);
     }
@@ -588,7 +673,13 @@ async function loadProjects() {
   const data = await api('/api/projects');
   if (!data) return;
   const grid = document.getElementById('projects-grid');
-  grid.innerHTML = data.projects.map(p => `
+  const progressMap = {'Mission Control':60,'Bridge Runtime':90,'Telegram Integration':95,'Discord Integration':0,'One Piece':10,'Local Inference':85,'Desktop Integration':0};
+  grid.innerHTML = data.projects.map(p => {
+    const prog = progressMap[p.name] !== undefined ? progressMap[p.name] : (p.progress || 0);
+    const assignee = p.owner || p.lead || 'bridge';
+    const initial = assignee.charAt(0).toUpperCase();
+    const avatarColor = assignee.includes('bridge') ? 'var(--blue)' : assignee.includes('forge') ? 'var(--orange)' : assignee.includes('brain') ? 'var(--teal)' : 'var(--yellow)';
+    return `
     <div class="proj-card">
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
         <h3>${p.name}</h3>
@@ -596,10 +687,13 @@ async function loadProjects() {
       </div>
       <div class="desc">${p.desc}</div>
       ${p.phase ? `<div style="font-size:11px;color:var(--text2);margin-bottom:8px">${p.phase}</div>` : ''}
-      <div class="progress-bar"><div class="fill" style="width:${p.progress}%"></div></div>
-      <div style="font-size:11px;color:var(--text2);margin-top:4px">${p.progress}% complete</div>
-    </div>
-  `).join('');
+      <div class="progress-bar"><div class="fill" style="width:${prog}%"></div></div>
+      <div class="proj-footer">
+        <div class="proj-avatar" style="background:${avatarColor}">${initial}</div>
+        <span style="font-size:11px;color:var(--text2)">${prog}% complete</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // Memory
@@ -608,12 +702,12 @@ async function loadMemory() {
 
   const dailyEl = document.getElementById('mem-daily');
   if (daily && daily.daily && daily.daily.length) {
-    dailyEl.innerHTML = daily.daily.map(d => `
+    dailyEl.innerHTML = '<div class="mem-timeline">' + daily.daily.map(d => `
       <div class="mem-entry card mb">
         <div class="date">📅 ${d.date}</div>
-        <div class="mem-content">${escapeHtml(d.content)}</div>
+        <div class="mem-content">${renderMemMarkdown(d.content)}</div>
       </div>
-    `).join('');
+    `).join('') + '</div>';
   } else {
     dailyEl.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No daily journal entries found.</div>';
   }
@@ -646,6 +740,21 @@ function switchMemTab(tab) {
 
 function escapeHtml(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMemMarkdown(raw) {
+  let s = escapeHtml(raw);
+  // ### headers
+  s = s.replace(/^### (.+)$/gm, '<div class="md-header">$1</div>');
+  s = s.replace(/^## (.+)$/gm, '<div class="md-header" style="font-size:15px">$1</div>');
+  // **bold**
+  s = s.replace(/\*\*(.+?)\*\*/g, '<span class="md-bold">$1</span>');
+  // bullet lists: group consecutive - lines
+  s = s.replace(/(^- .+$(\n|$))+/gm, function(match) {
+    const items = match.trim().split('\n').map(l => '<li>' + l.replace(/^- /, '') + '</li>').join('');
+    return '<ul class="md-list">' + items + '</ul>';
+  });
+  return s;
 }
 
 // Docs
@@ -701,7 +810,7 @@ async function loadRouting() {
       const total = parseFloat((t.total||'$0').replace(/[^0-9.]/g,'')) || 0;
       const cloud = parseFloat((t.cloud||'$0').replace(/[^0-9.]/g,'')) || 0;
       const local = parseFloat((t.local||'$0').replace(/[^0-9.]/g,'')) || 0;
-      const h = Math.max(4, (total / maxVal) * 120);
+      const h = Math.max(4, (total / maxVal) * 170);
       const cloudH = total > 0 ? (cloud / total) * h : 0;
       const localH = h - cloudH;
       const dateLabel = t.date.split('-').slice(1).join('/');
