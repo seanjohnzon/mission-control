@@ -194,6 +194,83 @@ function handleActivity() {
   return { commits, lastHeartbeat: null, lastDigest: null };
 }
 
+async function handleModelOps() {
+  // Fetch local models from Ollama
+  const ollamaData = await fetchJSON('http://127.0.0.1:11434/api/tags');
+  const localModels = [];
+  if (ollamaData && ollamaData.models) {
+    for (const m of ollamaData.models) {
+      const name = m.name || '';
+      let status = 'installed-unused';
+      if (name.includes('qwen2.5:7b') || name === 'qwen2.5:7b') {
+        status = 'installed-configured';
+      }
+      const paramSize = m.details?.parameter_size || '—';
+      localModels.push({
+        id: name,
+        provider: 'Ollama (local)',
+        status,
+        directCost: '$0',
+        infraCost: 'not yet modeled',
+        paramSize
+      });
+    }
+  }
+
+  return {
+    runtime: {
+      activeDefault: 'anthropic/claude-opus-4-6',
+      routerMode: 'manual — not yet tuned',
+      cloudModels: [
+        { id: 'claude-opus-4-6', provider: 'Anthropic', status: 'active-default', costIn: '$15/MTok', costOut: '$75/MTok' },
+        { id: 'claude-sonnet-4-6', provider: 'Anthropic', status: 'available-planned', costIn: '$3/MTok', costOut: '$15/MTok' }
+      ],
+      localModels
+    },
+    ledger: [
+      { ts: '2026-03-13 20:48', taskId: 'session-start', category: 'interactive', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'default model — no routing rules', success: true, fallback: false },
+      { ts: '2026-03-13 21:01', taskId: 'TASK-018', category: 'build/docs', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'complex doc authoring — cloud appropriate', success: true, fallback: false },
+      { ts: '2026-03-13 21:55', taskId: 'TASK-020', category: 'build/audit', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'complex analysis — cloud appropriate', success: true, fallback: false },
+      { ts: '2026-03-13 22:31', taskId: 'mc-dashboard-build', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false },
+      { ts: '2026-03-13 22:44', taskId: 'mc-dashboard-v2', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false },
+      { ts: '2026-03-13 22:50', taskId: 'mc-visual-refinement', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false }
+    ],
+    ledgerNote: 'ledger is manually reconstructed — live instrumentation not yet available',
+    cost: {
+      todayCloud: '$0.17',
+      todayLocal: '$0.00',
+      confidence: 'estimated — incomplete instrumentation',
+      projectedMonthly: '$3-82',
+      projectedConfidence: 'wide range — insufficient data'
+    },
+    categories: {
+      note: 'Breakdown based on today\'s reconstructed ledger. Live categorization not yet instrumented.',
+      items: [
+        { category: 'heartbeat', model: 'ollama/qwen2.5:7b', provider: 'Ollama (local)', runCount: 0, note: 'configured, first run pending' },
+        { category: 'digest', model: 'ollama/qwen2.5:7b', provider: 'Ollama (local)', runCount: 0, note: 'configured, first run 2026-03-14 09:00' },
+        { category: 'hygiene', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
+        { category: 'maintenance', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
+        { category: 'build/docs', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 2, note: 'TASK-018, TASK-020' },
+        { category: 'build/debug', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
+        { category: 'research', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' },
+        { category: 'visual/UI generation', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 3, note: 'dashboard builds' },
+        { category: 'interactive', model: 'claude-opus-4-6', provider: 'Anthropic', runCount: 1, note: 'main session' },
+        { category: 'repair', model: '—', provider: '—', runCount: 0, note: 'not yet instrumented' }
+      ]
+    },
+    routingHealth: {
+      currentPolicy: 'Manual — default cloud model, no routing rules. Heartbeat + digest configured for local.',
+      localSuccessRate: 'not yet measured — 0 local runs completed',
+      cloudFallbackCount: 0,
+      rollbackCount: 0,
+      modelFailureCount: 1,
+      modelFailureNote: '1 auth failure on first startup (resolved)',
+      canaryStatus: 'not deployed',
+      recommendation: 'Run heartbeat + digest on local for 48h. If stable, expand local routing to maintenance + hygiene.'
+    }
+  };
+}
+
 const PROJECTS = [
   { name: 'Mission Control', desc: 'Operational dashboard and governance system', status: 'active', phase: 'Phase 1', progress: 60 },
   { name: 'Bridge Runtime', desc: 'OpenClaw autonomous agent on Mac Mini', status: 'active', phase: 'Operational', progress: 90 },
@@ -224,6 +301,10 @@ const server = http.createServer(async (req, res) => {
     res.end(JSON.stringify({ tasks }));
   } else if (p === '/api/routing') {
     const data = parseRouting();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/model-ops') {
+    const data = await handleModelOps();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
   } else if (p === '/api/activity') {
