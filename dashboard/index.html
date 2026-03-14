@@ -696,7 +696,9 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <!-- Section C: Category Routing Map -->
       <div class="modelops-section">
         <div class="modelops-section-header">Category → Model Routing Map</div>
-        <div class="mo-info-banner" style="background:rgba(88,166,255,0.1);border-left-color:var(--blue);margin-bottom:12px">ℹ️ Intended routing defined. Sequential verification in progress. Opus 4.6 reserved for escalation only.</div>
+        <div class="mo-info-banner" style="background:rgba(248,81,73,0.08);border-left:3px solid var(--red);padding:12px 16px;margin-bottom:16px;border-radius:0 6px 6px 0;font-size:13px;">
+          <strong>⚠️ Prior verification runs superseded.</strong> Tests run 2026-03-14 00:46 were executed inside a subagent (depth limit prevented local model spawning). Only heartbeat has been directly verified. Direct top-level verification in progress for remaining categories.
+        </div>
         <div class="card mb" style="overflow-x:auto">
           <table>
             <thead><tr><th>Category</th><th>Intended Model</th><th>Fallback</th><th>Escalation</th><th>Last Used</th><th>Runs</th><th>Success</th><th>Spend</th><th>Status</th></tr></thead>
@@ -707,7 +709,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
       <!-- Section D: Verification Results -->
       <div class="modelops-section">
-        <div class="modelops-section-header">Category Verification Log</div>
+        <div class="modelops-section-header">Verification Log — Direct Runs Only</div>
+        <div style="color:var(--text2);font-size:12px;margin-bottom:10px">Only top-level direct spawns count. Sub-subagent tests are marked SUPERSEDED.</div>
         <div id="mo-verification-results"></div>
       </div>
 
@@ -1086,13 +1089,15 @@ async function loadModelOps() {
   // Routing Map
   if (data.routingMap) {
     const routingStatusBadge = (s) => {
-      if (s === 'not yet verified') return '<span class="badge badge-gray">not yet verified</span>';
-      if (s === 'verified') return '<span class="badge badge-green">verified</span>';
-      if (s.startsWith('mismatch')) return `<span class="badge badge-red">${s}</span>`;
-      if (s === 'canary') return '<span class="badge badge-yellow">canary</span>';
-      if (s === 'active') return '<span class="badge badge-green">active</span>';
-      if (s === 'degraded') return '<span class="badge badge-red">degraded</span>';
-      return `<span class="badge badge-gray">${s}</span>`;
+      let statusBadge, statusClass;
+      if (s.includes('directly verified')) { statusBadge = 'verified ✓'; statusClass = 'badge-green'; }
+      else if (s.includes('superseded') || s.includes('needs re-verify')) { statusBadge = 'needs re-verify'; statusClass = 'badge-red'; }
+      else if (s.includes('mismatch')) { statusBadge = 'mismatch'; statusClass = 'badge-orange'; }
+      else if (s.includes('canary')) { statusBadge = 'canary'; statusClass = 'badge-yellow'; }
+      else if (s.includes('active')) { statusBadge = 'active'; statusClass = 'badge-green'; }
+      else if (s.includes('degraded')) { statusBadge = 'degraded'; statusClass = 'badge-red'; }
+      else { statusBadge = 'pending'; statusClass = 'badge-gray'; }
+      return `<span class="badge ${statusClass}">${statusBadge}</span>`;
     };
     document.getElementById('mo-routing-map-table').innerHTML = data.routingMap.map(r => {
       const lastUsedMismatch = r.lastUsed !== '—' && r.runs > 0 && r.lastUsed !== r.intended;
