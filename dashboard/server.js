@@ -5,208 +5,252 @@ const { execSync } = require('child_process');
 
 const PORT = 18800;
 const MC_ROOT = path.resolve(__dirname, '..');
-const TASK_FILE = path.join(MC_ROOT, 'registry/tasks/TASK-REGISTER.md');
-const COST_FILE = path.join(MC_ROOT, 'registry/routing/COST-DASHBOARD.md');
+const WORKSPACE = '/Users/minicihan/.openclaw/workspace';
 
-function tryExec(cmd, timeout = 5000) {
-  try {
-    return execSync(cmd, { timeout, encoding: 'utf8' }).trim();
-  } catch (e) {
-    return null;
-  }
+function safeRead(p) {
+  try { return fs.readFileSync(p, 'utf8'); } catch { return ''; }
 }
 
-function tryFetch(url, timeout = 3000) {
-  return new Promise(resolve => {
+function safeJSON(fn) {
+  try { return fn(); } catch (e) { return { error: e.message }; }
+}
+
+async function fetchJSON(url, timeout = 3000) {
+  return new Promise((resolve) => {
     const mod = url.startsWith('https') ? require('https') : require('http');
-    const req = mod.get(url, { timeout }, res => {
-      let data = '';
-      res.on('data', c => data += c);
-      res.on('end', () => resolve({ status: res.statusCode, data }));
+    const req = mod.get(url, { timeout }, (res) => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        try { resolve(JSON.parse(d)); } catch { resolve({ raw: d }); }
+      });
     });
     req.on('error', () => resolve(null));
     req.on('timeout', () => { req.destroy(); resolve(null); });
   });
 }
 
-async function getHealth() {
-  const [gw, ollama] = await Promise.all([
-    tryFetch('http://127.0.0.1:18789/health'),
-    tryFetch('http://127.0.0.1:11434/api/tags')
-  ]);
-
-  const diskRaw = tryExec('df -h /');
-  let disk = null;
-  if (diskRaw) {
-    const lines = diskRaw.split('\n');
-    if (lines.length >= 2) {
-      const parts = lines[1].split(/\s+/);
-      disk = { size: parts[1], used: parts[2], avail: parts[3], capacity: parts[4] };
-    }
-  }
-
-  const uptime = tryExec('uptime');
-
-  return {
-    timestamp: new Date().toISOString(),
-    gateway: gw ? { up: gw.status === 200, status: gw.status, data: tryParseJSON(gw.data) } : { up: false },
-    ollama: ollama ? { up: ollama.status === 200, status: ollama.status, data: tryParseJSON(ollama.data) } : { up: false },
-    disk,
-    uptime
-  };
-}
-
-function tryParseJSON(s) {
-  try { return JSON.parse(s); } catch { return s; }
-}
-
 function parseTasks() {
-  let content;
-  try { content = fs.readFileSync(TASK_FILE, 'utf8'); } catch { return { error: 'File not found' }; }
-
-  const blocks = content.match(/```[\s\S]*?```/g) || [];
+  const raw = safeRead(path.join(MC_ROOT, 'registry/tasks/TASK-REGISTER.md'));
   const tasks = [];
-
-  for (const block of blocks) {
-    const inner = block.replace(/^```\s*/, '').replace(/\s*```$/, '');
-    const task = {};
-    for (const line of inner.split('\n')) {
-      const m = line.match(/^(\w[\w_]*):\s+(.+)$/);
-      if (m) task[m[1].trim()] = m[2].trim();
+  const blocks = raw.split(/^```$/m);
+  for (let i = 0; i < blocks.length; i++) {
+    const b = blocks[i].trim();
+    if (!b.startsWith('task_id:')) continue;
+    const t = {};
+    for (const line of b.split('\n')) {
+      const m = line.match(/^(\w+):\s+(.+)$/);
+      if (m) {
+        const key = m[1].trim();
+        const val = m[2].trim();
+        if (key === 'task_id') t.id = val;
+        else if (key === 'title') t.title = val;
+        else if (key === 'status') t.status = val;
+        else if (key === 'priority') t.priority = val;
+        else if (key === 'phase') t.phase = val;
+        else if (key === 'assigned_to') t.assigned = val;
+        else if (key === 'dependencies') t.dependencies = val;
+        else if (key === 'notes') t.notes = val;
+      }
     }
-    if (task.task_id) tasks.push(task);
+    if (t.id) tasks.push(t);
   }
-
-  const active = tasks.filter(t => t.status === 'in-progress');
-  const blocked = tasks.filter(t => t.status === 'blocked');
-  const open = tasks.filter(t => t.status === 'open');
-  const completed = tasks.filter(t => t.status === 'completed');
-  const cancelled = tasks.filter(t => t.status === 'cancelled');
-
-  return { tasks, summary: { active: active.length, blocked: blocked.length, open: open.length, completed: completed.length, cancelled: cancelled.length }, active, blocked, open, completed };
+  return tasks;
 }
 
 function parseRouting() {
-  let content;
-  try { content = fs.readFileSync(COST_FILE, 'utf8'); } catch { return { error: 'File not found' }; }
+  const cost = safeRead(path.join(MC_ROOT, 'registry/routing/COST-DASHBOARD.md'));
+  const audit = safeRead(path.join(MC_ROOT, 'registry/routing/ROUTING-AUDIT.md'));
 
-  // Extract today's cost
-  const costMatch = content.match(/\*\*Total estimated cost\*\*\s*\|\s*\*\*([^*]+)\*\*/);
-  const localUtilMatch = content.match(/Local utilization rate\s*\|\s*\*\*([^*]+)\*\*/);
-  const projCloudMatch = content.match(/### Current Trajectory[\s\S]*?\*\*Total projected\*\*\s*\|\s*\*\*([^*]+)\*\*/);
-  const projLocalMatch = content.match(/### Target Trajectory[\s\S]*?\*\*Total projected\*\*\s*\|\s*\*\*([^*]+)\*\*/);
-  const savingsMatch = content.match(/Estimated Monthly Savings[^*]*\*\*([^*]+)\*\*/);
+  // Parse today cost
+  let todayCost = '$0.00';
+  const costMatch = cost.match(/\*\*Total estimated cost\*\*\s*\|\s*\*\*([^*]+)\*\*/);
+  if (costMatch) todayCost = costMatch[1].trim();
 
-  // Parse 7-day trend table — search entire content for date rows
-  const trendData = [];
-  const trendRows = content.match(/\| 2\d{3}-\d{2}-\d{2}\s*\|[^\n]+/g) || [];
-  for (const row of trendRows) {
-    const cols = row.split('|').map(c => c.trim()).filter(Boolean);
-    if (cols.length >= 5 && cols[0].match(/^\d{4}-\d{2}-\d{2}$/)) {
-      trendData.push({ date: cols[0], cloud: cols[1], local: cols[2], perplexity: cols[3], total: cols[4] });
-    }
-  }
+  // Parse local utilization
+  let localUtilization = '0%';
+  const localMatch = cost.match(/Local utilization rate\s*\|\s*\*\*([^*]+)\*\*/);
+  if (localMatch) localUtilization = localMatch[1].trim();
 
-  // Parse alerts
-  const alerts = [];
-  const alertSection = content.match(/## Alerts[\s\S]*?(?=\n## |$)/);
-  if (alertSection) {
-    const alertLines = alertSection[0].match(/- [🔴🟡🟢].+/g) || [];
-    alerts.push(...alertLines.map(l => l.replace(/^- /, '')));
-  }
-
-  // Parse routing compliance
-  const compliance = [];
-  const compSection = content.match(/## Routing Compliance[\s\S]*?(?=\n## |$)/);
-  if (compSection) {
-    const compRows = compSection[0].match(/\| .+→.+\|.+\|.+\|/g) || [];
-    for (const row of compRows) {
+  // Parse 7-day trend
+  const trend = [];
+  const trendSection = cost.split('## 7-Day Trend')[1];
+  if (trendSection) {
+    const rows = trendSection.split('\n').filter(l => l.match(/^\|\s*2026-/));
+    for (const row of rows) {
       const cols = row.split('|').map(c => c.trim()).filter(Boolean);
-      if (cols.length >= 3) compliance.push({ check: cols[0], status: cols[1], action: cols[2] });
+      if (cols.length >= 5) {
+        trend.push({ date: cols[0], cloud: cols[1], local: cols[2], perplexity: cols[3], total: cols[4] });
+      }
     }
   }
+
+  // Parse guardrails from audit
+  const guardrails = [];
+  const guardrailNames = ['heartbeat', 'digest', 'hygiene', 'summaries', 'maintenance'];
+  for (const name of guardrailNames) {
+    const hasPass = audit.toLowerCase().includes(name) && audit.includes('✅');
+    guardrails.push({ name, status: 'fail', evidence: 'See ROUTING-AUDIT.md' });
+  }
+
+  // Parse monthly projection
+  let projectedCloud = '$20-82';
+  const projMatch = cost.match(/\*\*Total projected\*\*\s*\|\s*\*\*([^*]+)\*\*/);
+  if (projMatch) projectedCloud = projMatch[1].trim();
 
   return {
-    todayCost: costMatch ? costMatch[1] : 'N/A',
-    localUtilization: localUtilMatch ? localUtilMatch[1] : 'N/A',
-    projectedCloud: projCloudMatch ? projCloudMatch[1] : 'N/A',
-    projectedLocal: projLocalMatch ? projLocalMatch[1] : 'N/A',
-    estimatedSavings: savingsMatch ? savingsMatch[1] : 'N/A',
-    trend: trendData,
-    alerts,
-    compliance
+    todayCost,
+    localUtilization,
+    projectedCloud,
+    projectedLocal: '$3-15',
+    estimatedSavings: '$17-67/mo',
+    trend,
+    guardrails,
+    auditSummary: audit.split('## 2.')[0] || ''
   };
 }
 
-function getActivity() {
-  const gitLog = tryExec(`git -C "${MC_ROOT}" log --oneline -10 --format="%h %s (%ar)"`);
-  const commits = gitLog ? gitLog.split('\n').filter(Boolean) : [];
-
-  // Check for heartbeat/digest timestamps
-  let lastHeartbeat = null;
-  let lastDigest = null;
+function parseMemoryDaily() {
+  const memDir = path.join(WORKSPACE, 'memory');
+  const daily = [];
   try {
-    const memDir = path.join(MC_ROOT, '..', '.openclaw', 'workspace', 'memory');
-    if (fs.existsSync(path.join(memDir, 'heartbeat-state.json'))) {
-      const hb = JSON.parse(fs.readFileSync(path.join(memDir, 'heartbeat-state.json'), 'utf8'));
-      lastHeartbeat = hb.lastChecks ? JSON.stringify(hb.lastChecks) : null;
+    const files = fs.readdirSync(memDir).filter(f => f.endsWith('.md')).sort().reverse();
+    for (const f of files) {
+      const content = safeRead(path.join(memDir, f));
+      const date = f.replace('.md', '');
+      daily.push({ date, content });
+    }
+  } catch {}
+  return { daily };
+}
+
+function parseMemoryLong() {
+  const raw = safeRead(path.join(WORKSPACE, 'MEMORY.md'));
+  const sections = [];
+  if (!raw) return { sections };
+  const parts = raw.split(/^## /m);
+  for (const part of parts.slice(1)) {
+    const lines = part.split('\n');
+    const title = lines[0].trim();
+    const content = lines.slice(1).join('\n').trim();
+    sections.push({ title, content });
+  }
+  return { sections };
+}
+
+function parseDocs() {
+  const docsDir = path.join(MC_ROOT, 'docs');
+  const docs = [];
+  try {
+    const files = fs.readdirSync(docsDir).filter(f => f.endsWith('.md')).sort();
+    for (const f of files) {
+      const fp = path.join(docsDir, f);
+      const content = safeRead(fp);
+      const stat = fs.statSync(fp);
+      const titleMatch = content.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : f;
+      let group = 'Other';
+      if (f.startsWith('D1.')) group = 'D1.x — Organization';
+      else if (f.startsWith('D2.')) group = 'D2.x — Runbooks';
+      else if (f.startsWith('D5.')) group = 'D5.x — Improvement';
+      docs.push({ filename: f, title, group, lastModified: stat.mtime.toISOString(), content });
+    }
+  } catch {}
+  return { docs };
+}
+
+async function handleHealth() {
+  const [gw, ollama] = await Promise.all([
+    fetchJSON('http://127.0.0.1:18789/health'),
+    fetchJSON('http://127.0.0.1:11434/api/tags')
+  ]);
+
+  let disk = { total: '?', used: '?', free: '?', percent: '?' };
+  try {
+    const df = execSync('df -h /').toString();
+    const lines = df.trim().split('\n');
+    if (lines.length > 1) {
+      const parts = lines[1].split(/\s+/);
+      disk = { total: parts[1], used: parts[2], free: parts[3], percent: parts[4] };
     }
   } catch {}
 
   return {
-    timestamp: new Date().toISOString(),
-    commits,
-    lastHeartbeat,
-    lastDigest
+    gateway: { ok: !!gw, status: gw ? 'healthy' : 'unreachable' },
+    ollama: { ok: !!(ollama && ollama.models), models: ollama?.models?.map(m => m.name) || [] },
+    disk
   };
 }
 
+function handleActivity() {
+  let commits = [];
+  try {
+    const log = execSync(`git -C "${MC_ROOT}" log --oneline -10 2>/dev/null`).toString();
+    commits = log.trim().split('\n').filter(Boolean).map(l => {
+      const [hash, ...rest] = l.split(' ');
+      return { hash, message: rest.join(' ') };
+    });
+  } catch {}
+  return { commits, lastHeartbeat: null, lastDigest: null };
+}
+
+const PROJECTS = [
+  { name: 'Mission Control', desc: 'Operational dashboard and governance system', status: 'active', phase: 'Phase 1', progress: 60 },
+  { name: 'Bridge Runtime', desc: 'OpenClaw autonomous agent on Mac Mini', status: 'active', phase: 'Operational', progress: 90 },
+  { name: 'Telegram Integration', desc: '@CihanHawkBot ops-channel', status: 'active', phase: 'Connected', progress: 100 },
+  { name: 'Discord Integration', desc: 'Community/team channel', status: 'planned', phase: 'Awaiting decision (TASK-010)', progress: 0 },
+  { name: 'One Piece', desc: '(placeholder project)', status: 'planned', phase: '', progress: 0 },
+  { name: 'Local Inference', desc: 'Ollama qwen2.5 on Mac Mini', status: 'active', phase: '2 models installed', progress: 75 },
+  { name: 'Desktop Integration', desc: 'Brain agent on Desktop machine', status: 'planned', phase: 'Blocked (TASK-011)', progress: 0 }
+];
+
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const p = url.pathname;
 
-  if (url.pathname === '/' || url.pathname === '/index.html') {
-    try {
-      const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(html);
-    } catch (e) {
-      res.writeHead(500); res.end('index.html not found');
-    }
-    return;
-  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
-  if (url.pathname === '/api/health') {
-    const data = await getHealth();
+  if (p === '/' || p === '/index.html') {
+    const html = safeRead(path.join(__dirname, 'index.html'));
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(html);
+  } else if (p === '/api/health') {
+    const data = await handleHealth();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
-    return;
-  }
-
-  if (url.pathname === '/api/tasks') {
-    const data = parseTasks();
+  } else if (p === '/api/tasks') {
+    const tasks = parseTasks();
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(data));
-    return;
-  }
-
-  if (url.pathname === '/api/routing') {
+    res.end(JSON.stringify({ tasks }));
+  } else if (p === '/api/routing') {
     const data = parseRouting();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
-    return;
-  }
-
-  if (url.pathname === '/api/activity') {
-    const data = getActivity();
+  } else if (p === '/api/activity') {
+    const data = handleActivity();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
-    return;
+  } else if (p === '/api/memory') {
+    const data = parseMemoryDaily();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/memory-long') {
+    const data = parseMemoryLong();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/docs') {
+    const data = parseDocs();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/projects') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ projects: PROJECTS }));
+  } else {
+    res.writeHead(404);
+    res.end('Not found');
   }
-
-  res.writeHead(404);
-  res.end('Not found');
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Mission Control dashboard running at http://127.0.0.1:${PORT}`);
+  console.log(`Mission Control v2 running at http://127.0.0.1:${PORT}`);
 });

@@ -3,413 +3,733 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mission Control</title>
+<title>Mission Control v2</title>
 <style>
-  :root {
-    --bg: #1a1a2e;
-    --surface: #16213e;
-    --surface2: #0f3460;
-    --text: #e0e0e0;
-    --text-dim: #8892a4;
-    --green: #4ade80;
-    --yellow: #fbbf24;
-    --red: #f87171;
-    --blue: #60a5fa;
-    --purple: #a78bfa;
-    --border: #2a2a4a;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'Menlo', monospace;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 16px;
-  }
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    margin-bottom: 16px;
-    background: var(--surface);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
-  header h1 span { color: var(--blue); }
-  #last-update { font-size: 12px; color: var(--text-dim); }
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 16px;
-  }
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    overflow: hidden;
-  }
-  .panel-full { grid-column: 1 / -1; }
-  .panel h2 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  .status-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .status-row:last-child { border-bottom: none; }
-  .status-label { font-size: 13px; }
-  .status-value { font-size: 13px; font-weight: 500; }
-  .dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-  .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
-  .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d1117; --sidebar: #161b22; --card: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --blue: #58a6ff; --green: #3fb950;
+  --red: #f85149; --yellow: #d29922; --orange: #f0883e;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
+a { color: var(--blue); text-decoration: none; }
 
-  .metric-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .metric {
-    background: var(--bg);
-    border-radius: 6px;
-    padding: 12px;
-    text-align: center;
-  }
-  .metric .val {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--blue);
-  }
-  .metric .label {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+/* Layout */
+.app { display: flex; height: 100vh; }
+.sidebar { width: 240px; min-width: 240px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid var(--border); }
+.sidebar-header h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+.sidebar-header .subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.nav { flex: 1; padding: 8px 0; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.15s; }
+.nav-item:hover { background: rgba(88,166,255,0.06); color: var(--text); }
+.nav-item.active { background: rgba(88,166,255,0.1); color: var(--text); border-left-color: var(--blue); }
+.nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text2); }
 
-  .bar-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    height: 80px;
-    padding-top: 8px;
-  }
-  .bar-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    justify-content: flex-end;
-  }
-  .bar {
-    width: 100%;
-    max-width: 32px;
-    background: var(--blue);
-    border-radius: 3px 3px 0 0;
-    min-height: 2px;
-    transition: height 0.3s;
-  }
-  .bar-label {
-    font-size: 9px;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
+.content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
-  .task-group { margin-bottom: 12px; }
-  .task-group-title {
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .task-count {
-    background: var(--bg);
-    padding: 1px 7px;
-    border-radius: 10px;
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-  .task-item {
-    font-size: 12px;
-    padding: 5px 8px;
-    margin: 3px 0;
-    background: var(--bg);
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .task-item .tid { color: var(--purple); font-weight: 600; min-width: 65px; }
-  .task-item .ttitle { flex: 1; }
-  .task-item .tpri { color: var(--text-dim); font-size: 11px; }
+/* Cards & Utils */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.card-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+@media (max-width: 1100px) { .card-row { grid-template-columns: repeat(2, 1fr); } }
+.card h3 { font-size: 13px; color: var(--text2); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.card .val { font-size: 24px; font-weight: 600; }
+.section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+.badge-orange { background: rgba(240,136,62,0.15); color: var(--orange); }
+.badge-blue { background: rgba(88,166,255,0.15); color: var(--blue); }
+.badge-gray { background: rgba(139,148,158,0.15); color: var(--text2); }
+.badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.health-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.health-dot.ok { background: var(--green); }
+.health-dot.err { background: var(--red); }
+.health-dot.warn { background: var(--yellow); }
+.mt { margin-top: 20px; }
+.mb { margin-bottom: 20px; }
+.text2 { color: var(--text2); }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.hero { background: linear-gradient(135deg, #161b22, #1a2332); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+.hero h2 { font-size: 20px; margin-bottom: 12px; }
+.hero p { color: var(--text2); font-size: 15px; line-height: 1.6; max-width: 700px; }
 
-  .commit-list { list-style: none; }
-  .commit-list li {
-    font-size: 12px;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
-  }
-  .commit-list li:last-child { border-bottom: none; }
-  .commit-hash { color: var(--purple); }
-  .commit-time { color: var(--text-dim); font-size: 11px; }
+/* Kanban */
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; height: calc(100vh - 80px); }
+.kanban-col { min-width: 260px; width: 260px; flex-shrink: 0; display: flex; flex-direction: column; }
+.kanban-col-header { padding: 10px 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.kanban-col-header .count { background: var(--border); color: var(--text2); font-size: 11px; padding: 1px 7px; border-radius: 10px; }
+.kanban-cards { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
+.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: default; transition: border-color 0.15s; }
+.kanban-card:hover { border-color: var(--text2); }
+.kanban-card .task-id { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
+.kanban-card .task-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.35; }
+.kanban-card .task-meta { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.kanban-card.p0 { border-left: 3px solid var(--red); }
+.kanban-card.p1 { border-left: 3px solid var(--orange); }
+.kanban-card.p2 { border-left: 3px solid var(--blue); }
+.kanban-card.backlog { border-left: 3px solid var(--text2); }
 
-  .alert-item {
-    font-size: 12px;
-    padding: 6px 8px;
-    margin: 3px 0;
-    background: var(--bg);
-    border-radius: 4px;
-    line-height: 1.4;
-  }
+/* Calendar */
+.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.cal-header h2 { font-size: 18px; min-width: 200px; }
+.cal-header button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.cal-header button:hover { background: var(--border); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cal-day-name { background: var(--sidebar); padding: 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; }
+.cal-day { background: var(--bg); padding: 8px; min-height: 80px; font-size: 12px; }
+.cal-day.other { color: var(--text2); opacity: 0.3; }
+.cal-day.today { background: rgba(88,166,255,0.08); }
+.cal-day .day-num { font-weight: 600; margin-bottom: 4px; }
+.cal-day.today .day-num { color: var(--blue); }
 
-  .timestamps {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 24px;
-  }
-  .timestamps .ts {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-  .timestamps .ts strong { color: var(--text); }
+/* Projects */
+.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.proj-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.proj-card .desc { color: var(--text2); font-size: 13px; margin-bottom: 12px; }
+.proj-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+.proj-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
+.proj-status.planned { background: rgba(88,166,255,0.15); color: var(--blue); }
+.proj-status.paused { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
 
-  @media (max-width: 768px) {
-    .grid { grid-template-columns: 1fr; }
-    .panel-full { grid-column: 1; }
-  }
+/* Memory */
+.mem-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.mem-tab { padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.mem-tab:hover { color: var(--text); }
+.mem-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.mem-entry { margin-bottom: 16px; }
+.mem-entry .date { font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
+.mem-content { font-size: 13px; line-height: 1.6; color: var(--text2); white-space: pre-wrap; }
+.mem-content h1, .mem-content h2, .mem-content h3 { color: var(--text); margin: 12px 0 6px; }
+.mem-section { margin-bottom: 16px; }
+.mem-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+
+/* Docs */
+.docs-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 100px); }
+.docs-list { overflow-y: auto; }
+.doc-group { margin-bottom: 16px; }
+.doc-group h3 { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.doc-row { padding: 8px 12px; cursor: pointer; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; transition: background 0.1s; }
+.doc-row:hover { background: rgba(88,166,255,0.06); }
+.doc-row.active { background: rgba(88,166,255,0.1); color: var(--blue); }
+.doc-row .modified { font-size: 11px; color: var(--text2); }
+.doc-reader { overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+
+/* Office */
+.office-floor { position: relative; width: 700px; height: 480px; background: #1a1f27; border: 2px solid var(--border); border-radius: 12px; margin: 0 auto; overflow: hidden; }
+.office-floor .floor-tile { position: absolute; background: repeating-conic-gradient(#1e2430 0% 25%, #1a1f27 0% 50%) 0 0 / 20px 20px; width: 100%; height: 100%; opacity: 0.5; }
+.desk { position: absolute; background: #2d333b; border: 2px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; text-align: center; }
+.desk .agent-icon { font-size: 24px; margin-bottom: 4px; }
+.desk .agent-name { font-size: 12px; font-weight: 600; }
+.desk .agent-role { font-size: 10px; color: var(--text2); }
+.desk .agent-machine { font-size: 10px; color: var(--text2); }
+.desk .status-light { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; }
+.desk .status-light.online { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.desk .status-light.offline { background: #484f58; }
+.office-item { position: absolute; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text2); border-radius: 4px; }
+
+/* Team */
+.org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
+.org-line { width: 2px; height: 32px; background: var(--border); }
+.org-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.team-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; min-width: 200px; }
+.team-card .avatar { font-size: 32px; margin-bottom: 8px; }
+.team-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.team-card .machine { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.team-card .roles { font-size: 12px; color: var(--blue); margin-bottom: 8px; }
+.team-card .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.team-card .status-badge.online { background: rgba(63,185,80,0.15); color: var(--green); }
+.team-card .status-badge.offline { background: rgba(139,148,158,0.15); color: var(--text2); }
+.tool-lanes { margin-top: 32px; width: 100%; max-width: 700px; }
+.tool-lanes h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
+.tool-lane { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.tool-lane .tool-name { font-weight: 500; }
+.tool-lane .tool-desc { color: var(--text2); }
+
+/* LLM Usage */
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 12px 0; }
+.bar-chart .bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.bar-chart .bar-stack { display: flex; flex-direction: column-reverse; width: 100%; max-width: 40px; }
+.bar-chart .bar { min-height: 2px; }
+.bar-chart .bar.cloud { background: var(--blue); border-radius: 3px 3px 0 0; }
+.bar-chart .bar.local { background: var(--green); border-radius: 3px 3px 0 0; }
+.bar-chart .bar-label { font-size: 10px; color: var(--text2); margin-top: 6px; }
+
+/* Routing */
+.guardrail { display: flex; align-items: center; gap: 10px; padding: 10px; }
+.guardrail .check { font-size: 16px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+.conn-lines { position: relative; height: 32px; width: 100%; display: flex; justify-content: center; }
+.conn-lines svg { overflow: visible; }
 </style>
 </head>
 <body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>⚡ Mission Control</h1>
+      <div class="subtitle">Autonomous AI Organization</div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="nav-item" data-tab="mission"><span class="icon">🎯</span>Mission</div>
+      <div class="nav-item active" data-tab="tasks"><span class="icon">📋</span>Tasks</div>
+      <div class="nav-item" data-tab="calendar"><span class="icon">📅</span>Calendar</div>
+      <div class="nav-item" data-tab="projects"><span class="icon">📁</span>Projects</div>
+      <div class="nav-item" data-tab="memory"><span class="icon">🧠</span>Memory</div>
+      <div class="nav-item" data-tab="docs"><span class="icon">📚</span>Docs</div>
+      <div class="nav-item" data-tab="office"><span class="icon">🏢</span>Office</div>
+      <div class="nav-item" data-tab="team"><span class="icon">👥</span>Team</div>
+      <div class="nav-item" data-tab="llm"><span class="icon">📊</span>LLM Usage</div>
+      <div class="nav-item" data-tab="routing"><span class="icon">💰</span>Routing / Cost</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="health-status">Checking health...</div>
+    </div>
+  </aside>
 
-<header>
-  <h1>⚡ <span>MISSION CONTROL</span></h1>
-  <div id="last-update">Loading...</div>
-</header>
+  <main class="content">
+    <!-- Mission -->
+    <div class="tab-panel" id="tab-mission">
+      <div class="hero">
+        <h2>🎯 Organization Mission</h2>
+        <p>Build and operate an autonomous organization of AI agents that produces real value 24/7 without requiring constant human attention.</p>
+      </div>
+      <div class="card-row" id="mission-state">
+        <div class="card"><h3>Phase</h3><div class="val">Phase 1</div><div class="text2" style="font-size:12px;margin-top:4px">Bridge Online</div></div>
+        <div class="card"><h3>Autonomy Level</h3><div class="val">0</div><div class="text2" style="font-size:12px;margin-top:4px">Human-directed</div></div>
+        <div class="card"><h3>Active Machines</h3><div class="val">1<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Mac Mini online</div></div>
+        <div class="card"><h3>Active Agents</h3><div class="val">1<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Bridge operational</div></div>
+      </div>
+      <div class="section-title">🔑 Key Priorities</div>
+      <div id="mission-priorities" class="card mb" style="font-size:13px;line-height:2">Loading...</div>
+      <div class="section-title">🏥 System Health</div>
+      <div class="card-row" id="mission-health">
+        <div class="card"><h3>Gateway</h3><div id="h-gw">...</div></div>
+        <div class="card"><h3>Ollama</h3><div id="h-ollama">...</div></div>
+        <div class="card"><h3>Disk</h3><div id="h-disk">...</div></div>
+        <div class="card"><h3>Git</h3><div id="h-git">...</div></div>
+      </div>
+    </div>
 
-<div class="grid">
-  <!-- Panel 1: System Health -->
-  <div class="panel panel-full" id="health-panel">
-    <h2>System Health</h2>
-    <div id="health-content">Loading...</div>
-  </div>
+    <!-- Tasks (Kanban) -->
+    <div class="tab-panel active" id="tab-tasks">
+      <div class="section-title" style="margin-bottom:12px">📋 Task Board</div>
+      <div class="kanban" id="kanban"></div>
+    </div>
 
-  <!-- Panel 2: Cost & Routing -->
-  <div class="panel" id="routing-panel">
-    <h2>Cost &amp; Routing</h2>
-    <div id="routing-content">Loading...</div>
-  </div>
+    <!-- Calendar -->
+    <div class="tab-panel" id="tab-calendar">
+      <div class="cal-header">
+        <button onclick="calNav(-1)">← Prev</button>
+        <h2 id="cal-title"></h2>
+        <button onclick="calNav(1)">Next →</button>
+        <button onclick="calNav(0)">Today</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
 
-  <!-- Panel 3: Task Board -->
-  <div class="panel" id="tasks-panel">
-    <h2>Task Board</h2>
-    <div id="tasks-content">Loading...</div>
-  </div>
+    <!-- Projects -->
+    <div class="tab-panel" id="tab-projects">
+      <div class="section-title">📁 Projects</div>
+      <div class="card-grid" id="projects-grid"></div>
+    </div>
 
-  <!-- Panel 4: Recent Activity -->
-  <div class="panel panel-full" id="activity-panel">
-    <h2>Recent Activity</h2>
-    <div id="activity-content">Loading...</div>
-  </div>
+    <!-- Memory -->
+    <div class="tab-panel" id="tab-memory">
+      <div class="section-title">🧠 Memory</div>
+      <div class="mem-tabs">
+        <div class="mem-tab active" onclick="switchMemTab('daily')">📝 Daily Journal</div>
+        <div class="mem-tab" onclick="switchMemTab('long')">🧬 Long-Term Memory</div>
+      </div>
+      <div id="mem-daily"></div>
+      <div id="mem-long" style="display:none"></div>
+    </div>
+
+    <!-- Docs -->
+    <div class="tab-panel" id="tab-docs">
+      <div class="section-title">📚 Documents</div>
+      <div class="docs-layout">
+        <div class="docs-list" id="docs-list"></div>
+        <div class="doc-reader" id="doc-reader">Select a document to read</div>
+      </div>
+    </div>
+
+    <!-- Office -->
+    <div class="tab-panel" id="tab-office">
+      <div class="section-title">🏢 The Office</div>
+      <div class="office-floor">
+        <div class="floor-tile"></div>
+        <!-- Whiteboard -->
+        <div class="office-item" style="top:20px;left:240px;width:220px;height:60px;background:#2d333b;border:2px solid var(--border);flex-direction:column">
+          <div style="font-size:9px;color:var(--text2);margin-bottom:2px">WHITEBOARD</div>
+          <div style="font-size:13px;font-weight:600;color:var(--blue)">Phase 1 — Bridge Online</div>
+        </div>
+        <!-- Coffee machine -->
+        <div class="office-item" style="top:20px;right:30px;width:60px;height:40px;background:#2d333b;border:2px solid var(--border);flex-direction:column;font-size:16px">
+          ☕
+        </div>
+        <!-- Desks -->
+        <div class="desk" style="top:140px;left:60px;width:160px;height:130px">
+          <div class="agent-icon">🤖</div>
+          <div class="agent-name">Bridge</div>
+          <div class="agent-role">Conductor · Broker</div>
+          <div class="agent-machine">Mac Mini (M4)</div>
+          <div class="status-light online"></div>
+        </div>
+        <div class="desk" style="top:140px;left:270px;width:160px;height:130px;opacity:0.5">
+          <div class="agent-icon">🤖</div>
+          <div class="agent-name">Brain</div>
+          <div class="agent-role">Archivist · Planner</div>
+          <div class="agent-machine">Desktop</div>
+          <div class="status-light offline"></div>
+        </div>
+        <div class="desk" style="top:140px;left:480px;width:160px;height:130px;opacity:0.5">
+          <div class="agent-icon">🤖</div>
+          <div class="agent-name">Forge</div>
+          <div class="agent-role">Builder · Researcher</div>
+          <div class="agent-machine">GPU3060</div>
+          <div class="status-light offline"></div>
+        </div>
+        <!-- Server rack -->
+        <div class="office-item" style="bottom:30px;left:60px;width:120px;height:70px;background:#2d333b;border:2px solid var(--border);flex-direction:column">
+          <div style="font-size:16px">🖥️</div>
+          <div style="font-size:9px;margin-top:2px">SERVER RACK</div>
+          <div style="font-size:9px;color:var(--green)">Ollama · OpenClaw</div>
+        </div>
+        <!-- Plant -->
+        <div class="office-item" style="bottom:30px;right:30px;font-size:28px">🪴</div>
+        <!-- Door -->
+        <div class="office-item" style="bottom:0;left:310px;width:80px;height:24px;background:var(--border);border-radius:4px 4px 0 0;font-size:10px;color:var(--text2)">🚪 EXIT</div>
+        <!-- Floor label -->
+        <div class="office-item" style="bottom:60px;left:250px;font-size:11px;color:var(--text2);opacity:0.4">Autonomous AI HQ — Floor 1</div>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="tab-panel" id="tab-team">
+      <div class="section-title">👥 Team</div>
+      <div class="org-chart">
+        <div class="team-card" style="border-color:var(--yellow)">
+          <div class="avatar">👤</div>
+          <h3>Cihan</h3>
+          <div class="machine">Human</div>
+          <div class="roles">Architect · Director · Judge</div>
+          <div><span class="status-badge online">Online</span></div>
+        </div>
+        <div class="conn-lines">
+          <svg width="400" height="32"><line x1="200" y1="0" x2="60" y2="32" stroke="#30363d" stroke-width="2"/><line x1="200" y1="0" x2="200" y2="32" stroke="#30363d" stroke-width="2"/><line x1="200" y1="0" x2="340" y2="32" stroke="#30363d" stroke-width="2"/></svg>
+        </div>
+        <div class="org-row">
+          <div class="team-card">
+            <div class="avatar">🤖</div>
+            <h3>Bridge</h3>
+            <div class="machine">Mac Mini (M4)</div>
+            <div class="roles">Conductor · Broker</div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="opacity:0.6">
+            <div class="avatar">🤖</div>
+            <h3>Brain</h3>
+            <div class="machine">Desktop</div>
+            <div class="roles">Archivist · Planner · Merchant</div>
+            <div><span class="status-badge offline">Offline</span></div>
+          </div>
+          <div class="team-card" style="opacity:0.6">
+            <div class="avatar">🤖</div>
+            <h3>Forge</h3>
+            <div class="machine">GPU3060</div>
+            <div class="roles">Builder · Critic · Researcher</div>
+            <div><span class="status-badge offline">Offline</span></div>
+          </div>
+        </div>
+        <div class="tool-lanes">
+          <h3>🔧 Tool Lanes</h3>
+          <div class="tool-lane"><span class="tool-name">OpenClaw</span><span class="tool-desc">Primary autonomous runtime</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">Cursor</span><span class="tool-desc">Supervised engineering</span><span class="badge badge-yellow">Supervised</span></div>
+          <div class="tool-lane"><span class="tool-name">Perplexity</span><span class="tool-desc">Research / UI-pilot</span><span class="badge badge-gray">Candidate</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LLM Usage -->
+    <div class="tab-panel" id="tab-llm">
+      <div class="section-title">📊 LLM Usage</div>
+      <div class="card-row" id="llm-summary">
+        <div class="card"><h3>Today's Spend</h3><div class="val" id="llm-cost">...</div></div>
+        <div class="card"><h3>Cloud Requests</h3><div class="val" id="llm-cloud">—</div></div>
+        <div class="card"><h3>Local Requests</h3><div class="val" id="llm-local">0</div></div>
+        <div class="card"><h3>Local Util</h3><div class="val" id="llm-util">...</div></div>
+      </div>
+      <div class="card mb">
+        <h3 style="margin-bottom:12px">7-Day Trend</h3>
+        <div class="bar-chart" id="llm-chart"></div>
+      </div>
+      <div class="card mb">
+        <h3 style="margin-bottom:12px">Model Breakdown</h3>
+        <table>
+          <thead><tr><th>Model</th><th>Provider</th><th>Type</th><th>Cost Rate</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>claude-opus-4-6</td><td>Anthropic</td><td>☁️ Cloud</td><td>$15/$75 MTok</td><td><span class="badge badge-green">Active</span></td></tr>
+            <tr><td>qwen2.5:7b</td><td>Ollama (local)</td><td>🏠 Local</td><td>$0</td><td><span class="badge badge-green">Healthy</span></td></tr>
+            <tr><td>qwen2.5:3b</td><td>Ollama (local)</td><td>🏠 Local</td><td>$0</td><td><span class="badge badge-green">Healthy</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">Monthly Projection</h3>
+        <div style="display:flex;gap:20px;font-size:13px">
+          <div><span class="text2">Current trajectory (all cloud):</span> <strong id="llm-proj-cloud">$20-82</strong></div>
+          <div><span class="text2">Target (local-first):</span> <strong style="color:var(--green)" id="llm-proj-local">$3-15</strong></div>
+          <div><span class="text2">Estimated savings:</span> <strong style="color:var(--green)" id="llm-savings">$17-67/mo</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Routing / Cost -->
+    <div class="tab-panel" id="tab-routing">
+      <div class="section-title">💰 Routing & Cost</div>
+      <div class="card mb">
+        <h3 style="margin-bottom:12px">Guardrail Status</h3>
+        <div id="guardrails"></div>
+      </div>
+      <div class="card-row">
+        <div class="card"><h3>Perplexity Budget</h3><div class="val">$0<span class="text2" style="font-size:14px"> / $2</span></div></div>
+        <div class="card"><h3>Cloud Monthly Ceiling</h3><div class="val text2" style="font-size:16px">Not set</div></div>
+      </div>
+      <div class="card mb">
+        <h3 style="margin-bottom:12px">Routing Decision Log</h3>
+        <table id="routing-log">
+          <thead><tr><th>Date</th><th>Cloud</th><th>Local</th><th>Perplexity</th><th>Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:12px">Fallback Event Log</h3>
+        <div class="text2" style="font-size:13px;padding:16px;text-align:center">No fallback events recorded yet.</div>
+      </div>
+    </div>
+  </main>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
+// Tab navigation
+const navItems = document.querySelectorAll('.nav-item');
+const panels = document.querySelectorAll('.tab-panel');
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const tab = item.dataset.tab;
+    navItems.forEach(n => n.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  });
+});
 
-function dot(color) {
-  return `<span class="dot dot-${color}"></span>`;
+// API helpers
+async function api(path) {
+  try {
+    const r = await fetch(path);
+    return await r.json();
+  } catch (e) { return null; }
 }
 
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+// Health
+async function loadHealth() {
+  const h = await api('/api/health');
+  if (!h) return;
+  const gwEl = document.getElementById('h-gw');
+  const olEl = document.getElementById('h-ollama');
+  const dkEl = document.getElementById('h-disk');
+  gwEl.innerHTML = `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>${h.gateway.status}`;
+  olEl.innerHTML = `<span class="health-dot ${h.ollama.ok?'ok':'err'}"></span>${h.ollama.ok ? h.ollama.models.length+' models' : 'unreachable'}`;
+  dkEl.innerHTML = `<span class="health-dot ${parseInt(h.disk.percent)>90?'err':'ok'}"></span>${h.disk.used} / ${h.disk.total} (${h.disk.percent})`;
+  document.getElementById('health-status').innerHTML =
+    `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>Gateway ${h.gateway.ok?'OK':'Down'} · ` +
+    `<span class="health-dot ${h.ollama.ok?'ok':'err'}"></span>Ollama ${h.ollama.ok?'OK':'Down'}`;
+
+  // Git
+  const act = await api('/api/activity');
+  const gitEl = document.getElementById('h-git');
+  if (act && act.commits && act.commits.length) {
+    gitEl.innerHTML = `<span class="health-dot ok"></span>${act.commits.length} recent commits`;
+  } else {
+    gitEl.innerHTML = `<span class="health-dot warn"></span>No data`;
+  }
 }
 
-function renderHealth(d) {
-  if (!d) return 'Failed to load';
-  const gwUp = d.gateway && d.gateway.up;
-  const olUp = d.ollama && d.ollama.up;
-  const olModels = (olUp && d.ollama.data && d.ollama.data.models)
-    ? d.ollama.data.models.map(m => m.name).join(', ') : '—';
+// Tasks (Kanban)
+async function loadTasks() {
+  const data = await api('/api/tasks');
+  if (!data || !data.tasks) return;
+  const tasks = data.tasks;
 
-  let diskInfo = '—';
-  let diskColor = 'green';
-  if (d.disk) {
-    diskInfo = `${d.disk.used} / ${d.disk.size} (${d.disk.capacity} used, ${d.disk.avail} free)`;
-    const pct = parseInt(d.disk.capacity);
-    if (pct > 90) diskColor = 'red';
-    else if (pct > 75) diskColor = 'yellow';
+  const columns = {
+    backlog: { title: 'Backlog', tasks: [] },
+    todo: { title: 'To Do', tasks: [] },
+    inprogress: { title: 'In Progress', tasks: [] },
+    blocked: { title: 'Blocked', tasks: [] },
+    done: { title: 'Done', tasks: [] }
+  };
+
+  for (const t of tasks) {
+    const s = (t.status || '').toLowerCase();
+    const p = (t.priority || '').toLowerCase();
+    if (s === 'completed') columns.done.tasks.push(t);
+    else if (s === 'blocked') columns.blocked.tasks.push(t);
+    else if (s === 'in-progress') columns.inprogress.tasks.push(t);
+    else if (s === 'open' && p === 'backlog') columns.backlog.tasks.push(t);
+    else if (s === 'open') columns.todo.tasks.push(t);
+    else if (s === 'cancelled') columns.done.tasks.push(t);
+    else columns.backlog.tasks.push(t);
   }
 
-  return `
-    <div class="status-row">
-      <span class="status-label">${dot(gwUp ? 'green' : 'red')}Gateway (OpenClaw)</span>
-      <span class="status-value">${gwUp ? 'Healthy' : 'Down'}</span>
-    </div>
-    <div class="status-row">
-      <span class="status-label">${dot(olUp ? 'green' : 'red')}Ollama</span>
-      <span class="status-value">${olUp ? 'Online — ' + esc(olModels) : 'Down'}</span>
-    </div>
-    <div class="status-row">
-      <span class="status-label">${dot(diskColor)}Disk</span>
-      <span class="status-value">${esc(diskInfo)}</span>
-    </div>
-    <div class="status-row">
-      <span class="status-label">${dot('green')}Uptime</span>
-      <span class="status-value" style="font-size:11px">${d.uptime ? esc(d.uptime) : '—'}</span>
-    </div>
-    <div class="status-row">
-      <span class="status-label">Last Check</span>
-      <span class="status-value" style="font-size:11px">${new Date(d.timestamp).toLocaleString()}</span>
-    </div>
-  `;
-}
-
-function renderRouting(d) {
-  if (!d || d.error) return 'Failed to load';
-
-  const trend = d.trend || [];
-  const maxCost = Math.max(0.01, ...trend.map(t => parseFloat(t.total.replace(/[^0-9.]/g, '')) || 0));
-
-  let bars = '';
-  for (const t of trend.slice().reverse()) {
-    const val = parseFloat(t.total.replace(/[^0-9.]/g, '')) || 0;
-    const h = Math.max(2, (val / maxCost) * 60);
-    const label = t.date.slice(5);
-    bars += `<div class="bar-col"><div class="bar" style="height:${h}px" title="${t.date}: ${t.total}"></div><div class="bar-label">${label}</div></div>`;
+  const kanban = document.getElementById('kanban');
+  kanban.innerHTML = '';
+  for (const [key, col] of Object.entries(columns)) {
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.innerHTML = `<div class="kanban-col-header">${col.title}<span class="count">${col.tasks.length}</span></div><div class="kanban-cards" id="col-${key}"></div>`;
+    const cardsEl = colEl.querySelector('.kanban-cards');
+    for (const t of col.tasks) {
+      const pClass = t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog';
+      const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+      const assignIcon = (t.assigned || '').includes('bridge') ? '🤖' : (t.assigned || '').includes('human') ? '👤' : '❓';
+      let deps = '';
+      if (t.dependencies && t.dependencies !== 'none') {
+        deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${t.dependencies}</div>`;
+      }
+      const card = document.createElement('div');
+      card.className = `kanban-card ${pClass}`;
+      card.innerHTML = `
+        <div class="task-id">${t.id}</div>
+        <div class="task-title">${t.title}</div>
+        <div class="task-meta">
+          <span class="badge ${pBadge}">${t.priority}</span>
+          <span class="badge badge-gray">${assignIcon} ${t.assigned || 'unassigned'}</span>
+          ${t.phase ? `<span class="badge badge-blue">${t.phase}</span>` : ''}
+        </div>
+        ${deps}
+      `;
+      cardsEl.appendChild(card);
+    }
+    kanban.appendChild(colEl);
   }
 
-  let alertsHtml = '';
-  if (d.alerts && d.alerts.length) {
-    alertsHtml = d.alerts.map(a => `<div class="alert-item">${esc(a)}</div>`).join('');
+  // Mission priorities (top in-progress + open P0/P1)
+  const priorities = tasks.filter(t => t.status === 'in-progress' || (t.status === 'open' && (t.priority === 'P0' || t.priority === 'P1'))).slice(0, 5);
+  const priEl = document.getElementById('mission-priorities');
+  if (priorities.length) {
+    priEl.innerHTML = priorities.map(t => {
+      const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : 'badge-blue';
+      return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${t.priority}</span><strong>${t.id}</strong> — ${t.title} <span class="text2">(${t.status})</span></div>`;
+    }).join('');
+  } else {
+    priEl.textContent = 'No active priorities found.';
   }
-
-  return `
-    <div class="metric-grid">
-      <div class="metric"><div class="val">${esc(d.todayCost)}</div><div class="label">Today's Spend</div></div>
-      <div class="metric"><div class="val">${esc(d.localUtilization)}</div><div class="label">Local Util</div></div>
-      <div class="metric"><div class="val">${esc(d.projectedCloud)}</div><div class="label">Monthly (Cloud)</div></div>
-      <div class="metric"><div class="val">${esc(d.projectedLocal)}</div><div class="label">Monthly (Local-First)</div></div>
-    </div>
-    <div style="margin-bottom:8px;font-size:11px;color:var(--text-dim)">7-Day Cost Trend</div>
-    <div class="bar-chart">${bars}</div>
-    ${alertsHtml ? '<div style="margin-top:12px;font-size:11px;color:var(--text-dim)">Alerts</div>' + alertsHtml : ''}
-  `;
 }
 
-function renderTasks(d) {
-  if (!d || d.error) return 'Failed to load';
+// Calendar
+let calDate = new Date();
+function renderCal() {
+  const now = new Date();
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
 
-  function taskList(tasks, limit) {
-    if (!tasks || !tasks.length) return '<div style="font-size:12px;color:var(--text-dim);padding:4px 0">None</div>';
-    return tasks.slice(0, limit || 10).map(t => `
-      <div class="task-item">
-        <span class="tid">${esc(t.task_id)}</span>
-        <span class="ttitle">${esc(t.title)}</span>
-        <span class="tpri">${esc(t.priority || '')}</span>
+  const first = new Date(y, m, 1);
+  const last = new Date(y, m + 1, 0);
+  const startDay = first.getDay();
+
+  let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+  // Fill previous month
+  const prevLast = new Date(y, m, 0).getDate();
+  for (let i = startDay - 1; i >= 0; i--) {
+    html += `<div class="cal-day other"><div class="day-num">${prevLast - i}</div></div>`;
+  }
+
+  // Current month
+  for (let d = 1; d <= last.getDate(); d++) {
+    const isToday = d === now.getDate() && m === now.getMonth() && y === now.getFullYear();
+    html += `<div class="cal-day${isToday ? ' today' : ''}"><div class="day-num">${d}</div></div>`;
+  }
+
+  // Fill next month
+  const remaining = 42 - (startDay + last.getDate());
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-day other"><div class="day-num">${i}</div></div>`;
+  }
+
+  document.getElementById('cal-grid').innerHTML = html;
+}
+function calNav(dir) {
+  if (dir === 0) calDate = new Date();
+  else calDate.setMonth(calDate.getMonth() + dir);
+  renderCal();
+}
+renderCal();
+
+// Projects
+async function loadProjects() {
+  const data = await api('/api/projects');
+  if (!data) return;
+  const grid = document.getElementById('projects-grid');
+  grid.innerHTML = data.projects.map(p => `
+    <div class="proj-card">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+        <h3>${p.name}</h3>
+        <span class="proj-status ${p.status}">${p.status}</span>
+      </div>
+      <div class="desc">${p.desc}</div>
+      ${p.phase ? `<div style="font-size:11px;color:var(--text2);margin-bottom:8px">${p.phase}</div>` : ''}
+      <div class="progress-bar"><div class="fill" style="width:${p.progress}%"></div></div>
+      <div style="font-size:11px;color:var(--text2);margin-top:4px">${p.progress}% complete</div>
+    </div>
+  `).join('');
+}
+
+// Memory
+async function loadMemory() {
+  const [daily, long] = await Promise.all([api('/api/memory'), api('/api/memory-long')]);
+
+  const dailyEl = document.getElementById('mem-daily');
+  if (daily && daily.daily && daily.daily.length) {
+    dailyEl.innerHTML = daily.daily.map(d => `
+      <div class="mem-entry card mb">
+        <div class="date">📅 ${d.date}</div>
+        <div class="mem-content">${escapeHtml(d.content)}</div>
       </div>
     `).join('');
+  } else {
+    dailyEl.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No daily journal entries found.</div>';
   }
 
-  const s = d.summary || {};
-  return `
-    <div class="metric-grid">
-      <div class="metric"><div class="val" style="color:var(--green)">${s.completed || 0}</div><div class="label">Completed</div></div>
-      <div class="metric"><div class="val" style="color:var(--blue)">${s.active || 0}</div><div class="label">Active</div></div>
-      <div class="metric"><div class="val" style="color:var(--yellow)">${s.open || 0}</div><div class="label">Open</div></div>
-      <div class="metric"><div class="val" style="color:var(--red)">${s.blocked || 0}</div><div class="label">Blocked</div></div>
-    </div>
-    <div class="task-group">
-      <div class="task-group-title">${dot('blue')}In Progress <span class="task-count">${s.active || 0}</span></div>
-      ${taskList(d.active)}
-    </div>
-    <div class="task-group">
-      <div class="task-group-title">${dot('yellow')}Open <span class="task-count">${s.open || 0}</span></div>
-      ${taskList(d.open, 5)}
-    </div>
-    <div class="task-group">
-      <div class="task-group-title">${dot('red')}Blocked <span class="task-count">${s.blocked || 0}</span></div>
-      ${taskList(d.blocked)}
-    </div>
-  `;
+  const longEl = document.getElementById('mem-long');
+  if (long && long.sections && long.sections.length) {
+    longEl.innerHTML = long.sections.map(s => `
+      <div class="mem-section card mb">
+        <h3>${escapeHtml(s.title)}</h3>
+        <div class="mem-content">${escapeHtml(s.content)}</div>
+      </div>
+    `).join('');
+  } else {
+    longEl.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No long-term memory found.</div>';
+  }
 }
 
-function renderActivity(d) {
-  if (!d) return 'Failed to load';
+function switchMemTab(tab) {
+  document.querySelectorAll('.mem-tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'daily') {
+    document.getElementById('mem-daily').style.display = '';
+    document.getElementById('mem-long').style.display = 'none';
+    document.querySelectorAll('.mem-tab')[0].classList.add('active');
+  } else {
+    document.getElementById('mem-daily').style.display = 'none';
+    document.getElementById('mem-long').style.display = '';
+    document.querySelectorAll('.mem-tab')[1].classList.add('active');
+  }
+}
 
-  let commitHtml = '<div style="font-size:12px;color:var(--text-dim)">No commits found</div>';
-  if (d.commits && d.commits.length) {
-    commitHtml = '<ul class="commit-list">' + d.commits.map(c => {
-      const m = c.match(/^(\w+)\s(.+?)(\s*\([^)]+\))?\s*$/);
-      if (m) {
-        return `<li><span class="commit-hash">${esc(m[1])}</span> ${esc(m[2])} <span class="commit-time">${m[3] ? esc(m[3]) : ''}</span></li>`;
-      }
-      return `<li>${esc(c)}</li>`;
-    }).join('') + '</ul>';
+function escapeHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Docs
+async function loadDocs() {
+  const data = await api('/api/docs');
+  if (!data || !data.docs) return;
+
+  const groups = {};
+  for (const d of data.docs) {
+    if (!groups[d.group]) groups[d.group] = [];
+    groups[d.group].push(d);
   }
 
-  return `
-    ${commitHtml}
-    <div class="timestamps">
-      <div class="ts"><strong>Last Check:</strong> ${new Date(d.timestamp).toLocaleString()}</div>
-      <div class="ts"><strong>Heartbeat:</strong> ${d.lastHeartbeat || 'Not configured'}</div>
-      <div class="ts"><strong>Digest:</strong> ${d.lastDigest || 'Pending first run'}</div>
-    </div>
-  `;
+  const listEl = document.getElementById('docs-list');
+  let html = '';
+  for (const [group, docs] of Object.entries(groups)) {
+    html += `<div class="doc-group"><h3>${group} (${docs.length})</h3>`;
+    for (const d of docs) {
+      const mod = new Date(d.lastModified).toLocaleDateString();
+      html += `<div class="doc-row" onclick="showDoc(this, '${d.filename}')" data-filename="${d.filename}"><span>${d.filename}</span><span class="modified">${mod}</span></div>`;
+    }
+    html += '</div>';
+  }
+  listEl.innerHTML = html;
+  window._docsData = data.docs;
 }
 
-async function fetchJSON(url) {
-  try {
-    const r = await fetch(url);
-    return await r.json();
-  } catch { return null; }
+function showDoc(el, filename) {
+  document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  const doc = (window._docsData || []).find(d => d.filename === filename);
+  if (doc) {
+    document.getElementById('doc-reader').textContent = doc.content;
+  }
 }
 
-async function refresh() {
-  $('last-update').textContent = 'Refreshing...';
-  const [health, routing, tasks, activity] = await Promise.all([
-    fetchJSON('/api/health'),
-    fetchJSON('/api/routing'),
-    fetchJSON('/api/tasks'),
-    fetchJSON('/api/activity')
-  ]);
+// LLM / Routing
+async function loadRouting() {
+  const data = await api('/api/routing');
+  if (!data) return;
 
-  $('health-content').innerHTML = renderHealth(health);
-  $('routing-content').innerHTML = renderRouting(routing);
-  $('tasks-content').innerHTML = renderTasks(tasks);
-  $('activity-content').innerHTML = renderActivity(activity);
-  $('last-update').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  document.getElementById('llm-cost').textContent = data.todayCost || '$0.00';
+  document.getElementById('llm-util').textContent = data.localUtilization || '0%';
+  if (data.projectedCloud) document.getElementById('llm-proj-cloud').textContent = data.projectedCloud;
+  if (data.projectedLocal) document.getElementById('llm-proj-local').textContent = data.projectedLocal;
+  if (data.estimatedSavings) document.getElementById('llm-savings').textContent = data.estimatedSavings;
+
+  // Trend chart
+  const chart = document.getElementById('llm-chart');
+  if (data.trend && data.trend.length) {
+    const maxVal = Math.max(...data.trend.map(t => parseFloat((t.total||'$0').replace(/[^0-9.]/g,'')) || 0.01));
+    chart.innerHTML = data.trend.map(t => {
+      const total = parseFloat((t.total||'$0').replace(/[^0-9.]/g,'')) || 0;
+      const cloud = parseFloat((t.cloud||'$0').replace(/[^0-9.]/g,'')) || 0;
+      const local = parseFloat((t.local||'$0').replace(/[^0-9.]/g,'')) || 0;
+      const h = Math.max(4, (total / maxVal) * 120);
+      const cloudH = total > 0 ? (cloud / total) * h : 0;
+      const localH = h - cloudH;
+      const dateLabel = t.date.split('-').slice(1).join('/');
+      return `<div class="bar-group"><div class="bar-stack"><div class="bar cloud" style="height:${cloudH}px"></div><div class="bar local" style="height:${localH}px"></div></div><div class="bar-label">${dateLabel}</div></div>`;
+    }).join('');
+  }
+
+  // Routing log table
+  const tbody = document.querySelector('#routing-log tbody');
+  if (data.trend) {
+    tbody.innerHTML = data.trend.map(t => `<tr><td>${t.date}</td><td>${t.cloud}</td><td>${t.local}</td><td>${t.perplexity}</td><td><strong>${t.total}</strong></td></tr>`).join('');
+  }
+
+  // Guardrails
+  const grEl = document.getElementById('guardrails');
+  if (data.guardrails) {
+    grEl.innerHTML = data.guardrails.map(g => {
+      const icon = g.status === 'pass' ? '✅' : '❌';
+      const cls = g.status === 'pass' ? 'badge-green' : 'badge-red';
+      return `<div class="guardrail"><span class="check">${icon}</span><span style="font-weight:500;text-transform:capitalize">${g.name}</span><span class="badge ${cls}">${g.status}</span></div>`;
+    }).join('');
+  }
 }
 
-refresh();
-setInterval(refresh, 30000);
+// Init
+(async function init() {
+  await Promise.all([loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadRouting()]);
+})();
 </script>
 </body>
 </html>
