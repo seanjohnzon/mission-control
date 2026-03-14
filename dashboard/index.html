@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Control</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --text: #e0e0e0;
+    --text-dim: #8892a4;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --border: #2a2a4a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'Menlo', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 16px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    margin-bottom: 16px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+  header h1 span { color: var(--blue); }
+  #last-update { font-size: 12px; color: var(--text-dim); }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 16px;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .panel-full { grid-column: 1 / -1; }
+  .panel h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .status-row:last-child { border-bottom: none; }
+  .status-label { font-size: 13px; }
+  .status-value { font-size: 13px; font-weight: 500; }
+  .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+  .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+  }
+  .metric .val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .metric .label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    padding-top: 8px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .bar {
+    width: 100%;
+    max-width: 32px;
+    background: var(--blue);
+    border-radius: 3px 3px 0 0;
+    min-height: 2px;
+    transition: height 0.3s;
+  }
+  .bar-label {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .task-group { margin-bottom: 12px; }
+  .task-group-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .task-count {
+    background: var(--bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .task-item {
+    font-size: 12px;
+    padding: 5px 8px;
+    margin: 3px 0;
+    background: var(--bg);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .task-item .tid { color: var(--purple); font-weight: 600; min-width: 65px; }
+  .task-item .ttitle { flex: 1; }
+  .task-item .tpri { color: var(--text-dim); font-size: 11px; }
+
+  .commit-list { list-style: none; }
+  .commit-list li {
+    font-size: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  }
+  .commit-list li:last-child { border-bottom: none; }
+  .commit-hash { color: var(--purple); }
+  .commit-time { color: var(--text-dim); font-size: 11px; }
+
+  .alert-item {
+    font-size: 12px;
+    padding: 6px 8px;
+    margin: 3px 0;
+    background: var(--bg);
+    border-radius: 4px;
+    line-height: 1.4;
+  }
+
+  .timestamps {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 24px;
+  }
+  .timestamps .ts {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .timestamps .ts strong { color: var(--text); }
+
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    .panel-full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ <span>MISSION CONTROL</span></h1>
+  <div id="last-update">Loading...</div>
+</header>
+
+<div class="grid">
+  <!-- Panel 1: System Health -->
+  <div class="panel panel-full" id="health-panel">
+    <h2>System Health</h2>
+    <div id="health-content">Loading...</div>
+  </div>
+
+  <!-- Panel 2: Cost & Routing -->
+  <div class="panel" id="routing-panel">
+    <h2>Cost &amp; Routing</h2>
+    <div id="routing-content">Loading...</div>
+  </div>
+
+  <!-- Panel 3: Task Board -->
+  <div class="panel" id="tasks-panel">
+    <h2>Task Board</h2>
+    <div id="tasks-content">Loading...</div>
+  </div>
+
+  <!-- Panel 4: Recent Activity -->
+  <div class="panel panel-full" id="activity-panel">
+    <h2>Recent Activity</h2>
+    <div id="activity-content">Loading...</div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function dot(color) {
+  return `<span class="dot dot-${color}"></span>`;
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function renderHealth(d) {
+  if (!d) return 'Failed to load';
+  const gwUp = d.gateway && d.gateway.up;
+  const olUp = d.ollama && d.ollama.up;
+  const olModels = (olUp && d.ollama.data && d.ollama.data.models)
+    ? d.ollama.data.models.map(m => m.name).join(', ') : '—';
+
+  let diskInfo = '—';
+  let diskColor = 'green';
+  if (d.disk) {
+    diskInfo = `${d.disk.used} / ${d.disk.size} (${d.disk.capacity} used, ${d.disk.avail} free)`;
+    const pct = parseInt(d.disk.capacity);
+    if (pct > 90) diskColor = 'red';
+    else if (pct > 75) diskColor = 'yellow';
+  }
+
+  return `
+    <div class="status-row">
+      <span class="status-label">${dot(gwUp ? 'green' : 'red')}Gateway (OpenClaw)</span>
+      <span class="status-value">${gwUp ? 'Healthy' : 'Down'}</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">${dot(olUp ? 'green' : 'red')}Ollama</span>
+      <span class="status-value">${olUp ? 'Online — ' + esc(olModels) : 'Down'}</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">${dot(diskColor)}Disk</span>
+      <span class="status-value">${esc(diskInfo)}</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">${dot('green')}Uptime</span>
+      <span class="status-value" style="font-size:11px">${d.uptime ? esc(d.uptime) : '—'}</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">Last Check</span>
+      <span class="status-value" style="font-size:11px">${new Date(d.timestamp).toLocaleString()}</span>
+    </div>
+  `;
+}
+
+function renderRouting(d) {
+  if (!d || d.error) return 'Failed to load';
+
+  const trend = d.trend || [];
+  const maxCost = Math.max(0.01, ...trend.map(t => parseFloat(t.total.replace(/[^0-9.]/g, '')) || 0));
+
+  let bars = '';
+  for (const t of trend.slice().reverse()) {
+    const val = parseFloat(t.total.replace(/[^0-9.]/g, '')) || 0;
+    const h = Math.max(2, (val / maxCost) * 60);
+    const label = t.date.slice(5);
+    bars += `<div class="bar-col"><div class="bar" style="height:${h}px" title="${t.date}: ${t.total}"></div><div class="bar-label">${label}</div></div>`;
+  }
+
+  let alertsHtml = '';
+  if (d.alerts && d.alerts.length) {
+    alertsHtml = d.alerts.map(a => `<div class="alert-item">${esc(a)}</div>`).join('');
+  }
+
+  return `
+    <div class="metric-grid">
+      <div class="metric"><div class="val">${esc(d.todayCost)}</div><div class="label">Today's Spend</div></div>
+      <div class="metric"><div class="val">${esc(d.localUtilization)}</div><div class="label">Local Util</div></div>
+      <div class="metric"><div class="val">${esc(d.projectedCloud)}</div><div class="label">Monthly (Cloud)</div></div>
+      <div class="metric"><div class="val">${esc(d.projectedLocal)}</div><div class="label">Monthly (Local-First)</div></div>
+    </div>
+    <div style="margin-bottom:8px;font-size:11px;color:var(--text-dim)">7-Day Cost Trend</div>
+    <div class="bar-chart">${bars}</div>
+    ${alertsHtml ? '<div style="margin-top:12px;font-size:11px;color:var(--text-dim)">Alerts</div>' + alertsHtml : ''}
+  `;
+}
+
+function renderTasks(d) {
+  if (!d || d.error) return 'Failed to load';
+
+  function taskList(tasks, limit) {
+    if (!tasks || !tasks.length) return '<div style="font-size:12px;color:var(--text-dim);padding:4px 0">None</div>';
+    return tasks.slice(0, limit || 10).map(t => `
+      <div class="task-item">
+        <span class="tid">${esc(t.task_id)}</span>
+        <span class="ttitle">${esc(t.title)}</span>
+        <span class="tpri">${esc(t.priority || '')}</span>
+      </div>
+    `).join('');
+  }
+
+  const s = d.summary || {};
+  return `
+    <div class="metric-grid">
+      <div class="metric"><div class="val" style="color:var(--green)">${s.completed || 0}</div><div class="label">Completed</div></div>
+      <div class="metric"><div class="val" style="color:var(--blue)">${s.active || 0}</div><div class="label">Active</div></div>
+      <div class="metric"><div class="val" style="color:var(--yellow)">${s.open || 0}</div><div class="label">Open</div></div>
+      <div class="metric"><div class="val" style="color:var(--red)">${s.blocked || 0}</div><div class="label">Blocked</div></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">${dot('blue')}In Progress <span class="task-count">${s.active || 0}</span></div>
+      ${taskList(d.active)}
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">${dot('yellow')}Open <span class="task-count">${s.open || 0}</span></div>
+      ${taskList(d.open, 5)}
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">${dot('red')}Blocked <span class="task-count">${s.blocked || 0}</span></div>
+      ${taskList(d.blocked)}
+    </div>
+  `;
+}
+
+function renderActivity(d) {
+  if (!d) return 'Failed to load';
+
+  let commitHtml = '<div style="font-size:12px;color:var(--text-dim)">No commits found</div>';
+  if (d.commits && d.commits.length) {
+    commitHtml = '<ul class="commit-list">' + d.commits.map(c => {
+      const m = c.match(/^(\w+)\s(.+?)(\s*\([^)]+\))?\s*$/);
+      if (m) {
+        return `<li><span class="commit-hash">${esc(m[1])}</span> ${esc(m[2])} <span class="commit-time">${m[3] ? esc(m[3]) : ''}</span></li>`;
+      }
+      return `<li>${esc(c)}</li>`;
+    }).join('') + '</ul>';
+  }
+
+  return `
+    ${commitHtml}
+    <div class="timestamps">
+      <div class="ts"><strong>Last Check:</strong> ${new Date(d.timestamp).toLocaleString()}</div>
+      <div class="ts"><strong>Heartbeat:</strong> ${d.lastHeartbeat || 'Not configured'}</div>
+      <div class="ts"><strong>Digest:</strong> ${d.lastDigest || 'Pending first run'}</div>
+    </div>
+  `;
+}
+
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(url);
+    return await r.json();
+  } catch { return null; }
+}
+
+async function refresh() {
+  $('last-update').textContent = 'Refreshing...';
+  const [health, routing, tasks, activity] = await Promise.all([
+    fetchJSON('/api/health'),
+    fetchJSON('/api/routing'),
+    fetchJSON('/api/tasks'),
+    fetchJSON('/api/activity')
+  ]);
+
+  $('health-content').innerHTML = renderHealth(health);
+  $('routing-content').innerHTML = renderRouting(routing);
+  $('tasks-content').innerHTML = renderTasks(tasks);
+  $('activity-content').innerHTML = renderActivity(activity);
+  $('last-update').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
