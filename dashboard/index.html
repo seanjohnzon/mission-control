@@ -730,9 +730,9 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           <div class="card">
             <h3>Local Compute</h3>
             <div style="margin-top:10px">
-              <div class="mo-kv"><span class="text2">Today:</span> <strong>0 runs</strong></div>
-              <div class="mo-kv"><span class="text2">Runtime:</span> <strong>0 minutes</strong></div>
-              <div class="mo-kv"><span class="text2">Direct API cost:</span> <strong>$0</strong></div>
+              <div class="mo-kv"><span class="text2">Local Runs:</span> <strong id="mo-local-runs">...</strong></div>
+              <div class="mo-kv"><span class="text2">Runtime:</span> <strong id="mo-local-runtime">...</strong></div>
+              <div class="mo-kv"><span class="text2">Direct API Cost:</span> <strong>$0.00</strong></div>
               <div class="mo-kv"><span class="text2">Infra/electricity:</span> <em class="text2">not yet modeled</em></div>
             </div>
           </div>
@@ -1088,21 +1088,28 @@ async function loadModelOps() {
 
   // Routing Map
   if (data.routingMap) {
-    const routingStatusBadge = (s) => {
-      let statusBadge, statusClass;
-      if (s.includes('directly verified')) { statusBadge = 'verified ✓'; statusClass = 'badge-green'; }
-      else if (s.includes('superseded') || s.includes('needs re-verify')) { statusBadge = 'needs re-verify'; statusClass = 'badge-red'; }
-      else if (s.includes('mismatch')) { statusBadge = 'mismatch'; statusClass = 'badge-orange'; }
-      else if (s.includes('canary')) { statusBadge = 'canary'; statusClass = 'badge-yellow'; }
-      else if (s.includes('active')) { statusBadge = 'active'; statusClass = 'badge-green'; }
-      else if (s.includes('degraded')) { statusBadge = 'degraded'; statusClass = 'badge-red'; }
-      else { statusBadge = 'pending'; statusClass = 'badge-gray'; }
-      return `<span class="badge ${statusClass}">${statusBadge}</span>`;
+    const routingStatusBadge = (status) => {
+      if (!status) return '<span class="badge badge-gray">unknown</span>';
+      const s = status.toLowerCase();
+      if (s === 'verified') return '<span class="badge badge-green">verified ✓</span>';
+      if (s.includes('via fallback')) return '<span class="badge badge-yellow">verified via fallback</span>';
+      if (s.includes('routing confirmed') && s.includes('execution failed')) return '<span class="badge badge-orange">routing confirmed, exec failed</span>';
+      if (s.includes('partially verified')) return '<span class="badge badge-yellow">partially verified</span>';
+      if (s.includes('superseded') || s.includes('needs re-verify')) return '<span class="badge badge-red">needs re-verify</span>';
+      if (s.includes('mismatch')) return '<span class="badge badge-orange">mismatch</span>';
+      if (s.includes('canary')) return '<span class="badge badge-yellow">canary</span>';
+      if (s.includes('active')) return '<span class="badge badge-green">active</span>';
+      if (s.includes('degraded')) return '<span class="badge badge-red">degraded</span>';
+      return '<span class="badge badge-gray">pending</span>';
     };
     document.getElementById('mo-routing-map-table').innerHTML = data.routingMap.map(r => {
-      const lastUsedMismatch = r.lastUsed !== '—' && r.runs > 0 && r.lastUsed !== r.intended;
-      const lastUsedStyle = lastUsedMismatch ? ' style="background:rgba(248,81,73,0.1)"' : '';
-      return `<tr><td><strong>${r.category}</strong></td><td>${r.intended}</td><td>${r.fallback}</td><td>${r.escalation}</td><td${lastUsedStyle}>${r.lastUsed}</td><td>${r.runs}</td><td>${r.successRate}</td><td>${r.spend}</td><td>${routingStatusBadge(r.status)}</td></tr>`;
+      const intendedShort = r.intended.split('/').pop();
+      const lastUsedShort = (r.lastUsed || '').split('/').pop();
+      const mismatch = r.lastUsed !== '—' && r.lastUsed !== '' && !r.lastUsed.includes(intendedShort) && !intendedShort.includes(lastUsedShort);
+      const lastUsedHtml = mismatch
+        ? `<span style="color:var(--yellow)">${r.lastUsed} ⚠️</span>`
+        : (r.lastUsed || '—');
+      return `<tr><td><strong>${r.category}</strong></td><td>${r.intended}</td><td>${r.fallback}</td><td>${r.escalation}</td><td>${lastUsedHtml}</td><td>${r.runs}</td><td>${r.successRate}</td><td>${r.spend}</td><td>${routingStatusBadge(r.status)}</td></tr>`;
     }).join('');
   }
 
@@ -1131,6 +1138,10 @@ async function loadModelOps() {
   document.getElementById('mo-cost-proj').textContent = data.cost.projectedMonthly;
   document.getElementById('mo-cost-proj-conf').textContent = 'wide range';
 
+  // Local Compute
+  document.getElementById('mo-local-runs').textContent = data.cost.localRunCount || 0;
+  document.getElementById('mo-local-runtime').textContent = (data.cost.localRuntimeMinutes || '0 min') + ' (estimated)';
+
   // Routing Health
   const rh = data.routingHealth;
   document.getElementById('mo-routing-health').innerHTML = `
@@ -1141,7 +1152,7 @@ async function loadModelOps() {
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Rollback Count</span><span>${rh.rollbackCount}</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Model Failures</span><span>${rh.modelFailureCount} <span class="text2" style="font-size:11px">(${rh.modelFailureNote})</span></span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Canary Status</span><span class="badge badge-gray">${rh.canaryStatus}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0"><span class="text2">Recommendation</span><span style="color:var(--blue);max-width:60%;text-align:right">${rh.recommendation}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;align-items:flex-start"><span class="text2" style="flex-shrink:0;margin-right:16px">Recommendation</span><div style="color:var(--blue);text-align:right;line-height:1.8">${(rh.recommendation||'').split(/(\d+\))/).reduce((acc,part,i,arr)=>{if(/^\d+\)$/.test(part)&&arr[i+1]){acc.push(part+arr[i+1]);}return acc;},[]).map(l=>`<div>${l.trim()}</div>`).join('')||rh.recommendation}</div></div>
     </div>
   `;
 }

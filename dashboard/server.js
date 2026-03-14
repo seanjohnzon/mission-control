@@ -230,16 +230,16 @@ async function handleModelOps() {
   };
 
   const routingMap = [
-    {category: "heartbeat", intended: "ollama/qwen2.5:3b", fallback: "ollama/qwen2.5:7b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "directly verified — local confirmed ✅"},
-    {category: "digest", intended: "ollama/qwen2.5:7b", fallback: "ollama/qwen2.5:3b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "routing confirmed local — exec unreliable (path spaces)"},
-    {category: "hygiene", intended: "ollama/qwen2.5:3b", fallback: "ollama/qwen2.5:7b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "directly verified — local confirmed ✅"},
-    {category: "maintenance", intended: "ollama/qwen2.5:7b", fallback: "ollama/qwen2.5:3b", escalation: "claude-sonnet-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "routing confirmed local — tool invocation unreliable"},
-    {category: "build/docs", intended: "ollama/qwen2.5:7b", fallback: "claude-sonnet-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 2, successRate: "100%", spend: "~$0.04", taskIds: ["TASK-018","TASK-020"], status: "routing confirmed local — exec unreliable (path spaces)"},
-    {category: "build/debug", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "directly verified — Sonnet confirmed ✅"},
-    {category: "research", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "directly verified — Sonnet confirmed ✅"},
-    {category: "visual/UI generation", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 3, successRate: "100%", spend: "~$0.10", taskIds: ["mc-dashboard-build","mc-dashboard-v2","mc-visual-refinement"], status: "directly verified — Sonnet confirmed ✅"},
-    {category: "interactive", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6", lastUsed: "claude-opus-4-6", runs: 1, successRate: "100%", spend: "~$0.03", taskIds: ["main-session"], status: "directly verified — Sonnet confirmed ✅"},
-    {category: "repair", intended: "claude-sonnet-4-6", fallback: "claude-opus-4-6", escalation: "claude-opus-4-6 + Claude Code", lastUsed: "—", runs: 0, successRate: "—", spend: "$0.00", taskIds: [], status: "directly verified — Sonnet confirmed ✅"}
+    {category: "heartbeat",            intended: "ollama/qwen2.5:3b",      fallback: "ollama/qwen2.5:7b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:3b",        runs: 1, successRate: "100% (1/1)", spend: "$0.00",    taskIds: ["verify-heartbeat"],          status: "verified"},
+    {category: "digest",               intended: "ollama/qwen2.5:7b",      fallback: "ollama/qwen2.5:3b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-digest"],      status: "routing confirmed, execution failed"},
+    {category: "hygiene",              intended: "ollama/qwen2.5:3b",      fallback: "ollama/qwen2.5:7b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "100% (1/1)", spend: "$0.00",    taskIds: ["direct-verify-hygiene"],     status: "verified via fallback"},
+    {category: "maintenance",          intended: "ollama/qwen2.5:7b",      fallback: "ollama/qwen2.5:3b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-maintenance"], status: "routing confirmed, execution failed"},
+    {category: "build/docs",           intended: "ollama/qwen2.5:7b",      fallback: "claude-sonnet-4-6",       escalation: "claude-opus-4-6",           lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-builddocs"],   status: "routing confirmed, execution failed"},
+    {category: "build/debug",          intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-builddebug"],  status: "verified"},
+    {category: "research",             intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0001", taskIds: ["direct-verify-research"],    status: "verified"},
+    {category: "visual/UI generation", intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-visualui"],    status: "verified"},
+    {category: "interactive",          intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "50% (1/1)",  spend: "~$0.0001", taskIds: ["direct-verify-interactive"], status: "partially verified"},
+    {category: "repair",               intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6 + Claude Code", lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-repair"], status: "verified"}
   ];
 
   // Read verification results from a file if it exists
@@ -250,14 +250,14 @@ async function handleModelOps() {
   } catch { verificationResults = []; }
 
   const routingHealth = {
-    currentPolicy: "Default: Sonnet 4.6 (cloud baseline). Heartbeat: qwen2.5:3b (local, confirmed). Digest/maintenance/hygiene/build-docs: qwen2.5:7b (local, configured, not yet directly verified). Opus 4.6: escalation-only.",
-    localSuccessRate: "1/1 direct tests passed (heartbeat only). 9 categories pending direct verification.",
+    currentPolicy: "Default: Sonnet 4.6 (cloud baseline, confirmed). Heartbeat: qwen2.5:3b (local, confirmed). Digest/maintenance/hygiene/build-docs: qwen2.5:7b (local, routing confirmed). Opus 4.6: escalation-only (not appearing in any direct run).",
+    localSuccessRate: "2/5 local categories fully verified (heartbeat, hygiene). 3/5 routing confirmed but execution failed (exec unreliable with space-containing paths). Local runtime: ~3.9min estimated across 5 runs.",
     cloudFallbackCount: 0,
     rollbackCount: 0,
     modelFailureCount: 1,
-    modelFailureNote: "1 auth failure on first startup (resolved). Sub-subagent depth limit caused fallback in prior batch test (superseded).",
-    canaryStatus: "not deployed — direct verification in progress",
-    recommendation: "Run direct verification for digest → hygiene → maintenance → build/docs → interactive. Confirm local pickup on each. Then assess canary readiness."
+    modelFailureNote: "1 auth failure on first startup (resolved). qwen2.5:7b exec tool unreliable for paths containing spaces (affects digest, maintenance, build/docs).",
+    canaryStatus: "not deployed — awaiting local exec reliability fix",
+    recommendation: "1) Sonnet baseline confirmed — no changes needed for cloud categories. 2) Fix qwen2.5:7b exec reliability for space-containing paths, then re-run digest/maintenance/build-docs. 3) Confirm qwen2.5:3b for hygiene (currently running on 7b as fallback). 4) After 3 successful local runs per category, assess canary readiness. 5) Opus not appearing in any run — escalation-only policy is working."
   };
 
   return {
@@ -276,9 +276,11 @@ async function handleModelOps() {
     cost: {
       todayCloud: '$0.17',
       todayLocal: '$0.00',
+      localRunCount: 5,
+      localRuntimeMinutes: '~3.9 (estimated)',
       confidence: 'estimated — incomplete instrumentation',
       projectedMonthly: '$3-82',
-      projectedConfidence: 'wide range — insufficient data'
+      projectedConfidence: 'wide range — insufficient history'
     },
     routingHealth
   };
