@@ -254,6 +254,72 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
 
+/* Office v2 */
+.office-tab-content { display: flex; flex-direction: column; height: calc(100vh - 60px); }
+.office-topbar { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--sidebar); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.office-topbar h2 { font-size: 15px; font-weight: 600; margin: 0; }
+.office-topbar .agent-counts { font-size: 12px; color: var(--text2); }
+.office-filter-btns { display: flex; gap: 4px; margin-left: auto; }
+.office-filter-btns button { background: transparent; border: 1px solid var(--border); color: var(--text2); padding: 3px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+.office-filter-btns button.active { background: rgba(88,166,255,0.15); border-color: var(--blue); color: var(--blue); }
+.office-canvas { display: flex; flex: 1; overflow: hidden; }
+.office-floor { flex: 1; position: relative; background: #0e1018; overflow: hidden; cursor: default; }
+.office-floor-grid { position: absolute; inset: 0; background: repeating-conic-gradient(#131621 0% 25%, #0e1018 0% 50%) 0 0 / 32px 32px; opacity: 0.6; pointer-events: none; }
+.office-activity { width: 250px; flex-shrink: 0; background: var(--sidebar); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+.office-activity-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(63,185,80,0.4); } 50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(63,185,80,0); } }
+.office-activity-feed { flex: 1; overflow-y: auto; padding: 8px; }
+.activity-entry { padding: 8px; border-radius: 6px; margin-bottom: 4px; font-size: 12px; }
+.activity-entry .act-agent { font-weight: 600; margin-right: 4px; }
+.activity-entry .act-time { color: var(--text2); font-size: 11px; float: right; }
+.activity-entry .act-action { color: var(--text2); }
+.act-bridge { color: var(--blue); }
+.act-brain { color: var(--teal); }
+.act-forge { color: var(--orange); }
+
+/* Agent Desks */
+.agent-desk { position: absolute; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+.agent-desk:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.agent-desk.state-working { border-color: rgba(63,185,80,0.4); box-shadow: 0 0 16px rgba(63,185,80,0.08); }
+.agent-desk.state-idle { opacity: 0.7; }
+.agent-desk.state-offline { opacity: 0.35; filter: grayscale(0.5); }
+.agent-desk.state-blocked { border-color: rgba(210,153,34,0.4); }
+.agent-desk.desk-selected { border-color: var(--blue); box-shadow: 0 0 20px rgba(88,166,255,0.2); }
+.desk-header { padding: 12px 14px 8px; display: flex; align-items: center; gap: 10px; }
+.desk-avatar { font-size: 28px; line-height: 1; }
+.desk-info { flex: 1; }
+.desk-name { font-size: 14px; font-weight: 600; }
+.desk-machine { font-size: 11px; color: var(--text2); }
+.desk-status-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.desk-state-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.state-working .desk-state-dot { background: var(--green); }
+.state-idle .desk-state-dot { background: var(--text2); }
+.state-offline .desk-state-dot { background: #3d3d3d; }
+.state-blocked .desk-state-dot { background: var(--yellow); }
+.desk-state-label { font-size: 11px; }
+.state-working .desk-state-label { color: var(--green); }
+.state-idle .desk-state-label { color: var(--text2); }
+.state-offline .desk-state-label { color: #555; }
+.state-blocked .desk-state-label { color: var(--yellow); }
+.desk-body { padding: 0 14px 12px; border-top: 1px solid var(--border); margin-top: 4px; }
+.desk-row { display: flex; font-size: 11px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 6px; }
+.desk-row:last-child { border-bottom: none; }
+.desk-row .dr-label { color: var(--text2); width: 62px; flex-shrink: 0; }
+.desk-row .dr-val { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.desk-row .dr-val.online { color: var(--green); }
+.desk-row .dr-val.offline { color: #555; }
+.desk-monitor { position: absolute; top: -18px; right: 14px; font-size: 18px; opacity: 0.7; }
+
+/* Office furniture v2 */
+.office-furniture { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); cursor: default; }
+.furniture-icon { font-size: 22px; line-height: 1; }
+.office-whiteboard { position: absolute; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; font-size: 11px; color: var(--text2); }
+.office-whiteboard .wb-title { font-weight: 600; color: var(--text); font-size: 12px; margin-bottom: 4px; }
+.standup-area { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.standup-table { width: 64px; height: 64px; border-radius: 50%; background: rgba(88,166,255,0.06); border: 2px dashed rgba(88,166,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(88,166,255,0.5); }
+.standup-label { font-size: 10px; color: var(--text2); }
+
 .conn-lines { position: relative; height: 32px; width: 100%; display: flex; justify-content: center; }
 .conn-lines svg { overflow: visible; }
 </style>
@@ -349,144 +415,184 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     </div>
 
     <!-- Office -->
-    <div class="tab-panel" id="tab-office">
-      <!-- Top bar -->
-      <div class="office-topbar">
-        <div class="office-topbar-title">🏢 Digital Office</div>
-        <div class="office-topbar-counts">
-          <span style="color:var(--green)">1 Working</span> · <span class="text2">0 Idle</span> · <span class="text2">2 Offline</span>
+    <div id="tab-office" class="tab-panel">
+  <div class="office-tab-content">
+    <div class="office-topbar">
+      <h2>🏢 Digital Office</h2>
+      <span class="agent-counts" id="office-counts">1 Working · 0 Idle · 2 Offline</span>
+      <div class="office-filter-btns">
+        <button class="active" onclick="filterDesks('all')">All</button>
+        <button onclick="filterDesks('working')">Working</button>
+        <button onclick="filterDesks('idle')">Idle</button>
+        <button onclick="filterDesks('blocked')">Blocked</button>
+        <button onclick="filterDesks('offline')">Offline</button>
+      </div>
+    </div>
+    <div class="office-canvas">
+      <div class="office-floor" id="office-floor">
+        <div class="office-floor-grid"></div>
+
+        <!-- Bridge Desk (online/working) -->
+        <div class="agent-desk state-working" id="desk-bridge" style="top:80px;left:60px" onclick="selectDesk('bridge')">
+          <div style="position:relative">
+            <div class="desk-monitor">🖥️</div>
+          </div>
+          <div class="desk-header">
+            <div class="desk-avatar">🤖</div>
+            <div class="desk-info">
+              <div class="desk-name">Bridge</div>
+              <div class="desk-machine">Mac Mini · M4</div>
+              <div class="desk-status-row">
+                <div class="desk-state-dot"></div>
+                <span class="desk-state-label">Working</span>
+              </div>
+            </div>
+          </div>
+          <div class="desk-body">
+            <div class="desk-row"><span class="dr-label">Model</span><span class="dr-val">claude-sonnet-4-6</span></div>
+            <div class="desk-row"><span class="dr-label">Provider</span><span class="dr-val">Anthropic</span></div>
+            <div class="desk-row"><span class="dr-label">Task</span><span class="dr-val">WS-002: verification</span></div>
+            <div class="desk-row"><span class="dr-label">Last active</span><span class="dr-val online">just now</span></div>
+            <div class="desk-row"><span class="dr-label">Roles</span><span class="dr-val">Conductor, Broker</span></div>
+          </div>
         </div>
-        <div class="office-topbar-filters">
-          <button class="office-filter active" onclick="filterDesks('all')">All</button>
-          <button class="office-filter" onclick="filterDesks('working')">Working</button>
-          <button class="office-filter" onclick="filterDesks('idle')">Idle</button>
-          <button class="office-filter" onclick="filterDesks('offline')">Offline</button>
+
+        <!-- Brain Desk (offline) -->
+        <div class="agent-desk state-offline" id="desk-brain" style="top:80px;left:330px" onclick="selectDesk('brain')">
+          <div class="desk-header">
+            <div class="desk-avatar">🧠</div>
+            <div class="desk-info">
+              <div class="desk-name">Brain</div>
+              <div class="desk-machine">Desktop · offline</div>
+              <div class="desk-status-row">
+                <div class="desk-state-dot"></div>
+                <span class="desk-state-label">Offline</span>
+              </div>
+            </div>
+          </div>
+          <div class="desk-body">
+            <div class="desk-row"><span class="dr-label">Model</span><span class="dr-val offline">—</span></div>
+            <div class="desk-row"><span class="dr-label">Provider</span><span class="dr-val offline">—</span></div>
+            <div class="desk-row"><span class="dr-label">Task</span><span class="dr-val offline">awaiting TASK-011</span></div>
+            <div class="desk-row"><span class="dr-label">Last active</span><span class="dr-val offline">never</span></div>
+            <div class="desk-row"><span class="dr-label">Roles</span><span class="dr-val">Archivist, Planner, Merchant</span></div>
+          </div>
+        </div>
+
+        <!-- Forge Desk (offline) -->
+        <div class="agent-desk state-offline" id="desk-forge" style="top:80px;left:600px" onclick="selectDesk('forge')">
+          <div class="desk-header">
+            <div class="desk-avatar">⚙️</div>
+            <div class="desk-info">
+              <div class="desk-name">Forge</div>
+              <div class="desk-machine">GPU3060 · offline</div>
+              <div class="desk-status-row">
+                <div class="desk-state-dot"></div>
+                <span class="desk-state-label">Offline</span>
+              </div>
+            </div>
+          </div>
+          <div class="desk-body">
+            <div class="desk-row"><span class="dr-label">Model</span><span class="dr-val offline">—</span></div>
+            <div class="desk-row"><span class="dr-label">Provider</span><span class="dr-val offline">—</span></div>
+            <div class="desk-row"><span class="dr-label">Task</span><span class="dr-val offline">awaiting TASK-011</span></div>
+            <div class="desk-row"><span class="dr-label">Last active</span><span class="dr-val offline">never</span></div>
+            <div class="desk-row"><span class="dr-label">Roles</span><span class="dr-val">Builder, Critic, Researcher</span></div>
+          </div>
+        </div>
+
+        <!-- Whiteboard -->
+        <div class="office-whiteboard" style="top:20px;left:270px;width:240px">
+          <div class="wb-title">📋 Phase 1 — Bridge Online</div>
+          <div>✅ Gateway running</div>
+          <div>✅ Telegram connected</div>
+          <div>🔄 Routing verification</div>
+          <div>⏳ Desktop integration</div>
+        </div>
+
+        <!-- Coffee station -->
+        <div class="office-furniture" style="top:30px;left:575px">
+          <div class="furniture-icon">☕</div>
+          <div>Coffee</div>
+        </div>
+
+        <!-- Server rack -->
+        <div class="office-furniture" style="top:25px;left:15px">
+          <div class="furniture-icon">🖥️</div>
+          <div style="text-align:center;line-height:1.3">Mac Mini<br><span style="color:var(--green)">● online</span></div>
+        </div>
+
+        <!-- Plant -->
+        <div class="office-furniture" style="top:320px;left:20px">
+          <div class="furniture-icon">🌿</div>
+          <div>Plant</div>
+        </div>
+
+        <!-- Standup area -->
+        <div class="standup-area" style="position:absolute;top:310px;left:310px">
+          <div class="standup-table">standup</div>
+          <div class="standup-label">Scrum Area</div>
+        </div>
+
+        <!-- Dashboard monitor -->
+        <div class="office-furniture" style="top:310px;left:580px">
+          <div class="furniture-icon">📊</div>
+          <div style="text-align:center;line-height:1.3">MC v2<br><span style="color:var(--green)">● live</span></div>
         </div>
       </div>
 
-      <div class="office-canvas">
-        <div class="office-floor">
-          <!-- Server rack -->
-          <div class="office-furniture" style="top:30px;left:60px;width:130px;height:70px">
-            <div style="font-size:22px">🖥️</div>
-            <div style="font-size:9px;margin-top:2px;letter-spacing:0.5px;font-weight:600">SERVER RACK</div>
-            <div style="font-size:9px;color:var(--green)">
-              <span class="health-dot ok" style="width:6px;height:6px"></span>Ollama
-              <span class="health-dot ok" style="width:6px;height:6px;margin-left:6px"></span>OpenClaw
-            </div>
-          </div>
-
-          <!-- Whiteboard -->
-          <div class="office-furniture" style="top:20px;left:280px;width:240px;height:68px">
-            <div style="font-size:9px;color:var(--text2);letter-spacing:1px">📋 WHITEBOARD</div>
-            <div style="font-size:14px;font-weight:600;color:var(--blue)">Phase 1 — Bridge Online</div>
-            <div style="font-size:10px;color:var(--text2)">✓ Operational</div>
-          </div>
-
-          <!-- Dashboard monitor -->
-          <div class="office-furniture" style="top:20px;left:480px;width:80px;height:68px">
-            <div style="font-size:18px">📊</div>
-            <div style="font-size:9px;font-weight:600">MC v2</div>
-            <div style="font-size:8px;color:var(--green)">LIVE</div>
-          </div>
-
-          <!-- Coffee -->
-          <div class="office-furniture" style="top:30px;left:560px;width:68px;height:50px">
-            <div style="font-size:24px">☕</div>
-            <div style="font-size:8px;color:var(--text2)">COFFEE</div>
-          </div>
-
-          <!-- Agent Desks -->
-          <div class="office-desk online" data-agent="bridge" data-state="working" onclick="selectAgent('bridge')" style="top:120px;left:80px">
-            <div class="desk-surface"><div class="monitor">🖥️</div></div>
-            <div class="agent-sprite online">🤖</div>
-            <div class="agent-label">
-              <span class="agent-name">Bridge</span>
-              <span class="agent-status working">Working</span>
-            </div>
-            <div class="agent-detail">
-              <div>📍 Mac Mini</div>
-              <div>🧠 claude-opus-4-6</div>
-              <div>📋 TASK-020</div>
-              <div>⏱️ Active 2m ago</div>
-            </div>
-          </div>
-
-          <div class="office-desk offline" data-agent="brain" data-state="offline" onclick="selectAgent('brain')" style="top:120px;left:340px">
-            <div class="desk-surface"><div class="monitor">🖥️</div></div>
-            <div class="agent-sprite">🤖</div>
-            <div class="agent-label">
-              <span class="agent-name">Brain</span>
-              <span class="agent-status offline-status">Offline</span>
-            </div>
-            <div class="agent-detail">
-              <div>📍 Desktop</div>
-              <div>🧠 —</div>
-              <div>📋 —</div>
-              <div>⏱️ Not deployed</div>
-            </div>
-          </div>
-
-          <div class="office-desk offline" data-agent="forge" data-state="offline" onclick="selectAgent('forge')" style="top:120px;left:600px">
-            <div class="desk-surface"><div class="monitor">🖥️</div></div>
-            <div class="agent-sprite">🤖</div>
-            <div class="agent-label">
-              <span class="agent-name">Forge</span>
-              <span class="agent-status offline-status">Offline</span>
-            </div>
-            <div class="agent-detail">
-              <div>📍 GPU3060</div>
-              <div>🧠 —</div>
-              <div>📋 —</div>
-              <div>⏱️ Not deployed</div>
-            </div>
-          </div>
-
-          <!-- Plant -->
-          <div style="position:absolute;top:320px;left:60px;font-size:36px;z-index:1">🌿</div>
-
-          <!-- Standup Area -->
-          <div style="position:absolute;top:320px;left:340px;z-index:1;text-align:center">
-            <div class="standup-table"></div>
-            <div class="standup-chairs">
-              <div class="standup-chair" style="top:-10px;left:24px"></div>
-              <div class="standup-chair" style="top:50px;left:24px"></div>
-              <div class="standup-chair" style="top:20px;left:-6px"></div>
-              <div class="standup-chair" style="top:20px;left:54px"></div>
-            </div>
-            <div style="font-size:10px;color:var(--text2);margin-top:68px;letter-spacing:0.5px">Standup Area</div>
-          </div>
-
-          <!-- Floor label -->
-          <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text2);opacity:0.25;letter-spacing:0.5px;z-index:0">Autonomous AI HQ — Floor 1</div>
+      <!-- Activity Sidebar -->
+      <div class="office-activity">
+        <div class="office-activity-header">
+          <div class="pulse-dot"></div>
+          Live Activity
         </div>
-
-        <!-- Right sidebar: Live Activity -->
-        <div class="office-sidebar">
-          <div class="office-sidebar-header">
-            <span class="pulse-dot"></span> Live Activity
+        <div class="office-activity-feed" id="office-activity-feed">
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">just now</span>
+            <div class="act-action">Running category verification</div>
           </div>
-          <div class="office-activity-feed">
-            <div class="activity-entry"><span class="activity-agent" style="color:var(--blue)">Bridge</span> <span class="text2">Committed MC-V2 dashboard</span><div class="activity-time">5m ago</div></div>
-            <div class="activity-entry"><span class="activity-agent" style="color:var(--blue)">Bridge</span> <span class="text2">Updated routing audit</span><div class="activity-time">15m ago</div></div>
-            <div class="activity-entry"><span class="activity-agent" style="color:var(--blue)">Bridge</span> <span class="text2">Wrote D5.1-D5.5 docs</span><div class="activity-time">45m ago</div></div>
-            <div class="activity-entry"><span class="activity-agent" style="color:var(--blue)">Bridge</span> <span class="text2">Configured heartbeat (local)</span><div class="activity-time">1h ago</div></div>
-            <div class="activity-entry"><span class="activity-agent" style="color:var(--blue)">Bridge</span> <span class="text2">Sent Telegram status report</span><div class="activity-time">1h ago</div></div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">2m ago</span>
+            <div class="act-action">Committed routing map to MC repo</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Agent detail panel (overlay) -->
-      <div class="agent-detail-panel" id="agent-detail-panel" style="display:none">
-        <div class="agent-detail-panel-inner">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <h3 id="adp-name" style="font-size:18px"></h3>
-            <button onclick="closeAgentPanel()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px">✕</button>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">8m ago</span>
+            <div class="act-action">Fixed Ollama auth (gateway config)</div>
           </div>
-          <div id="adp-content"></div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">15m ago</span>
+            <div class="act-action">Heartbeat verification ✅ qwen2.5:3b</div>
+          </div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">30m ago</span>
+            <div class="act-action">Deployed Model Ops tab (merged)</div>
+          </div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">45m ago</span>
+            <div class="act-action">Set default model → Sonnet 4.6</div>
+          </div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">1h ago</span>
+            <div class="act-action">Launched MC v2 dashboard</div>
+          </div>
+          <div class="activity-entry">
+            <span class="act-agent act-bridge">Bridge</span>
+            <span class="act-time">2h ago</span>
+            <div class="act-action">Configured heartbeat → local 3b</div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- Team -->
     <div class="tab-panel" id="tab-team">
@@ -1036,46 +1142,20 @@ async function loadModelOps() {
 }
 
 // Office interactions
-const agentData = {
-  bridge: { name: 'Bridge', avatar: '🤖', machine: 'Mac Mini (M4)', model: 'claude-opus-4-6', provider: 'Anthropic', task: 'TASK-020', status: 'Working', lastActivity: '2m ago', roles: ['Conductor', 'Broker'] },
-  brain: { name: 'Brain', avatar: '🤖', machine: 'Desktop', model: '—', provider: '—', task: '—', status: 'Offline', lastActivity: 'Not deployed', roles: ['Archivist', 'Planner', 'Merchant'] },
-  forge: { name: 'Forge', avatar: '🤖', machine: 'GPU3060', model: '—', provider: '—', task: '—', status: 'Offline', lastActivity: 'Not deployed', roles: ['Builder', 'Critic', 'Researcher'] }
-};
-
-function selectAgent(id) {
-  document.querySelectorAll('.office-desk').forEach(d => d.classList.remove('selected'));
-  const desk = document.querySelector(`.office-desk[data-agent="${id}"]`);
-  if (desk) desk.classList.add('selected');
-
-  const a = agentData[id];
-  if (!a) return;
-  document.getElementById('adp-name').textContent = a.avatar + ' ' + a.name;
-  document.getElementById('adp-content').innerHTML = `
-    <div class="adp-row"><span class="adp-label">Machine</span><span>${a.machine}</span></div>
-    <div class="adp-row"><span class="adp-label">Model</span><span>${a.model}</span></div>
-    <div class="adp-row"><span class="adp-label">Provider</span><span>${a.provider}</span></div>
-    <div class="adp-row"><span class="adp-label">Current Task</span><span>${a.task}</span></div>
-    <div class="adp-row"><span class="adp-label">Status</span><span>${a.status}</span></div>
-    <div class="adp-row"><span class="adp-label">Last Activity</span><span>${a.lastActivity}</span></div>
-    <div style="margin-top:12px"><span class="text2" style="font-size:12px">Roles</span><div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">${a.roles.map(r => `<span class="badge badge-blue">${r}</span>`).join('')}</div></div>
-  `;
-  document.getElementById('agent-detail-panel').style.display = 'block';
-}
-
-function closeAgentPanel() {
-  document.getElementById('agent-detail-panel').style.display = 'none';
-  document.querySelectorAll('.office-desk').forEach(d => d.classList.remove('selected'));
-}
-
-function filterDesks(filter) {
-  document.querySelectorAll('.office-filter').forEach(b => b.classList.remove('active'));
+function filterDesks(state) {
+  document.querySelectorAll('.office-filter-btns button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  document.querySelectorAll('.office-desk').forEach(d => {
-    const state = d.dataset.state;
-    if (filter === 'all') { d.style.display = ''; }
-    else if (filter === state) { d.style.display = ''; }
-    else { d.style.display = 'none'; }
+  document.querySelectorAll('.agent-desk').forEach(d => {
+    if (state === 'all') { d.style.display = ''; return; }
+    const dState = Array.from(d.classList).find(c => c.startsWith('state-'))?.replace('state-','');
+    d.style.display = (dState === state) ? '' : 'none';
   });
+}
+
+function selectDesk(agent) {
+  document.querySelectorAll('.agent-desk').forEach(d => d.classList.remove('desk-selected'));
+  const desk = document.getElementById('desk-' + agent);
+  if (desk) desk.classList.toggle('desk-selected');
 }
 
 // Init
