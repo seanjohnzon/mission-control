@@ -105,26 +105,4 @@ Estimates may differ from Anthropic billing by ±10% due to system prompt tokens
 ---
 
 _Updated by daily digest cron and during active sessions._
-_READY-FOR-VISUAL-REVIEW: See §Visual Approval below._
-
----
-
-## Visual Approval Request
-
-**Status:** READY-FOR-VISUAL-REVIEW
-
-**How to access:** Read this file at:
-`/Users/minicihan/Cursor Projects/mission-control/registry/routing/COST-DASHBOARD.md`
-Also readable via: `cat "/Users/minicihan/Cursor Projects/mission-control/registry/routing/COST-DASHBOARD.md"`
-
-**What to check:**
-1. Does the format work for you? (Tables, sections, level of detail)
-2. Is the cost breakdown clear and useful?
-3. Do you want this as a markdown file (current), or should I build a rendered HTML/web dashboard?
-4. Should the daily digest include a mini version of this?
-5. Are the projected cost ranges reasonable to you?
-
-**Decision needed:**
-- Approve format as-is, or request changes
-- Decide if you want a web-rendered dashboard (visual surface — would need separate approval)
-- Confirm whether daily digest should include cost summary
+_This is a data source file, not a visual surface. The visual dashboard is at http://127.0.0.1:18800 (when running)._
