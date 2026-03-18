@@ -717,7 +717,7 @@ notes:        Sprint 2 started 2026-03-16 22:06 EDT. Architecture shift: Franky 
 ```
 task_id:      CREW-008
 title:        3D Office — Static scene with desks and characters
-status:       complete
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -748,7 +748,7 @@ Deliverables: Running at localhost:5173 on Franky. Code in D:\\openclaw-brain\\o
 ```
 task_id:      CREW-009
 title:        3D Office — Character animations and state machine
-status:       queued
+status:       complete
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -758,7 +758,7 @@ type:         story
 parent:       EPIC-002
 estimate:     1d
 dependencies: CREW-008
-notes:        Phase D2.2 — Live gateway connection.
+notes:        Dispatched to Franky 2026-03-17 21:21 EDT. Phase D2.2 — Live gateway connection + character animations based on real agent states. Franky to spawn builder subagent.
 
 Subtasks:
 1. Create crewConfig.js with Nami/Franky/Chopper IPs, tokens, gateway ports
@@ -877,7 +877,7 @@ notes:        OAuth expires ~2026-03-25. Interactive browser login required. Run
 ```
 task_id:      CREW-014
 title:        Patch D1.2-ARCHITECTURE.md — remove Model TBD inconsistency
-status:       complete
+status:       completed
 priority:     P1
 phase:        
 assigned_to:  Franky (builder)
@@ -890,7 +890,7 @@ notes:        Chopper FAIL: doc has stale Model TBD and D1.5 not yet written ref
 ```
 task_id:      CREW-015
 title:        Patch D1.5-MODEL_POLICY.md — add Nami IP, fix OpenAI contradiction
-status:       complete
+status:       completed
 priority:     P1
 phase:        
 assigned_to:  Franky (builder)
