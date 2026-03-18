@@ -1,271 +1,547 @@
-import React, { useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Grid, Text } from '@react-three/drei'
+import React, { useRef, useState, useMemo } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls, Text, RoundedBox, Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import { CREW } from './data/crewConfig'
 import useGatewayStatus from './data/useGatewayStatus'
 
-const STATE_COLORS = {
-  idle: '#44ff44',
-  working: '#4488ff',
-  thinking: '#ffdd00',
-  offline: '#666666',
+// ?????? colour helpers ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+const STATE_COLOR = { idle: '#44DD77', working: '#4488FF', thinking: '#FFCC00', offline: '#555566' }
+const STATE_LABEL = { idle: 'Idle', working: 'Working', thinking: 'Thinking', offline: 'Offline' }
+
+// ?????? Cosmic backdrop ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function CosmicBackdrop() {
+  return (
+    <>
+      {/* Giant planet sphere peeking from bottom-right */}
+      <mesh position={[14, -10, -18]}>
+        <sphereGeometry args={[12, 32, 32]} />
+        <meshStandardMaterial color="#1B2A4A" roughness={0.9} metalness={0.1} />
+      </mesh>
+      {/* Planet ring suggestion */}
+      <mesh position={[14, -10, -18]} rotation={[0.3, 0, 0.2]}>
+        <torusGeometry args={[14, 0.35, 8, 64]} />
+        <meshStandardMaterial color="#2A3D6A" roughness={1} />
+      </mesh>
+      {/* A smaller moon */}
+      <mesh position={[-12, 8, -20]}>
+        <sphereGeometry args={[2.2, 16, 16]} />
+        <meshStandardMaterial color="#2E3A5A" roughness={1} />
+      </mesh>
+    </>
+  )
 }
 
-function AgentCharacter({ color, agentState, bodyRef }) {
-  const charColor = agentState === 'offline' ? '#444444' : color
-  const isSitting = agentState === 'working' || agentState === 'thinking'
-  const bodyY = isSitting ? 1.1 : 1.6
-  const bodyZ = isSitting ? 0.4 : 0.9
+// ?????? Office shell (floor + 3 walls, no ceiling, cutaway) ????????????????????????????????????????????????????????????
+function OfficeShell() {
+  const floorColor = '#E8DCC8'   // warm cream
+  const wallColor  = '#D4C9B4'   // slightly darker cream
+  const trimColor  = '#B8A898'   // trim/edge
 
   return (
     <group>
+      {/* Floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+        <planeGeometry args={[14, 12]} />
+        <meshStandardMaterial color={floorColor} roughness={0.8} />
+      </mesh>
+
+      {/* Floor tile lines ??? subtle grid etched in */}
+      {[-6,-4,-2,0,2,4,6].map(x => (
+        <mesh key={`fx${x}`} rotation={[-Math.PI/2,0,0]} position={[x, 0.002, 0]}>
+          <planeGeometry args={[0.04, 12]} />
+          <meshStandardMaterial color={trimColor} roughness={1} />
+        </mesh>
+      ))}
+      {[-5,-3,-1,1,3,5].map(z => (
+        <mesh key={`fz${z}`} rotation={[-Math.PI/2,0,0]} position={[0, 0.002, z]}>
+          <planeGeometry args={[14, 0.04]} />
+          <meshStandardMaterial color={trimColor} roughness={1} />
+        </mesh>
+      ))}
+
+      {/* Back wall */}
+      <mesh position={[0, 2.0, -6]} receiveShadow>
+        <planeGeometry args={[14, 4]} />
+        <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
+      </mesh>
+
+      {/* Left wall */}
+      <mesh position={[-7, 2.0, 0]} rotation={[0, Math.PI/2, 0]} receiveShadow>
+        <planeGeometry args={[12, 4]} />
+        <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
+      </mesh>
+
+      {/* Right wall (partial ??? cutaway feel) */}
+      <mesh position={[7, 2.0, 0]} rotation={[0, -Math.PI/2, 0]} receiveShadow>
+        <planeGeometry args={[12, 4]} />
+        <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
+      </mesh>
+
+      {/* Skirting board / baseboard back */}
+      <mesh position={[0, 0.08, -5.96]}>
+        <boxGeometry args={[14, 0.16, 0.06]} />
+        <meshStandardMaterial color={trimColor} />
+      </mesh>
+      {/* Skirting left */}
+      <mesh position={[-6.96, 0.08, 0]}>
+        <boxGeometry args={[0.06, 0.16, 12]} />
+        <meshStandardMaterial color={trimColor} />
+      </mesh>
+    </group>
+  )
+}
+
+// ?????? Conference table (round, warm wood) ???????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function ConfTable({ position }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.55, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.9, 0.9, 0.08, 32]} />
+        <meshStandardMaterial color="#8B6914" roughness={0.5} metalness={0.1} />
+      </mesh>
+      <mesh position={[0, 0.28, 0]} castShadow>
+        <cylinderGeometry args={[0.07, 0.12, 0.56, 12]} />
+        <meshStandardMaterial color="#6B4F10" roughness={0.6} />
+      </mesh>
+      {/* chairs around */}
+      {[0, 72, 144, 216, 288].map((deg, i) => {
+        const r = 1.25, a = (deg * Math.PI) / 180
+        return (
+          <group key={i} position={[Math.sin(a)*r, 0, Math.cos(a)*r]} rotation={[0, -a, 0]}>
+            <mesh position={[0, 0.22, 0]} castShadow>
+              <boxGeometry args={[0.38, 0.06, 0.38]} />
+              <meshStandardMaterial color="#2a2a35" />
+            </mesh>
+            <mesh position={[0, 0.48, -0.17]} castShadow>
+              <boxGeometry args={[0.38, 0.44, 0.06]} />
+              <meshStandardMaterial color="#2a2a35" />
+            </mesh>
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
+// ?????? Desk with chair + monitor ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function Desk({ position, agentColor, agentState, onClick }) {
+  const monitorGlow = agentState === 'working' ? 1.0 : agentState === 'thinking' ? 0.5 : agentState === 'offline' ? 0 : 0.15
+  const screenColor = agentState === 'offline' ? '#111' : '#001a33'
+
+  return (
+    <group position={position} onClick={onClick}>
+      {/* Desk surface */}
+      <RoundedBox args={[2.0, 0.09, 1.0]} radius={0.04} position={[0, 0.72, 0]} castShadow receiveShadow>
+        <meshStandardMaterial color="#7A5C1E" roughness={0.4} metalness={0.1} />
+      </RoundedBox>
+      {/* Legs */}
+      {[[-0.88,0.35,-0.42],[0.88,0.35,-0.42],[-0.88,0.35,0.42],[0.88,0.35,0.42]].map(([lx,ly,lz],i) => (
+        <mesh key={i} position={[lx,ly,lz]} castShadow>
+          <boxGeometry args={[0.06,0.70,0.06]} />
+          <meshStandardMaterial color="#5A3E0A" />
+        </mesh>
+      ))}
+      {/* Chair */}
+      <group position={[0, 0, 0.75]}>
+        <mesh position={[0, 0.42, 0]} castShadow>
+          <boxGeometry args={[0.55, 0.07, 0.55]} />
+          <meshStandardMaterial color="#1A1A2E" roughness={0.7} />
+        </mesh>
+        <mesh position={[0, 0.72, -0.25]} castShadow>
+          <boxGeometry args={[0.55, 0.5, 0.07]} />
+          <meshStandardMaterial color="#1A1A2E" roughness={0.7} />
+        </mesh>
+        {[[-0.24,0.19,0.22],[0.24,0.19,0.22],[-0.24,0.19,-0.22],[0.24,0.19,-0.22]].map(([lx,ly,lz],i) => (
+          <mesh key={i} position={[lx,ly,lz]}>
+            <boxGeometry args={[0.05,0.38,0.05]} />
+            <meshStandardMaterial color="#111122" />
+          </mesh>
+        ))}
+      </group>
+      {/* Monitor */}
+      <group position={[0, 0.77, -0.28]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.88, 0.52, 0.05]} />
+          <meshStandardMaterial color="#0A0A12" />
+        </mesh>
+        <mesh position={[0, 0, 0.03]}>
+          <boxGeometry args={[0.76, 0.42, 0.01]} />
+          <meshStandardMaterial color={screenColor} emissive={agentColor} emissiveIntensity={monitorGlow} />
+        </mesh>
+        {/* stand */}
+        <mesh position={[0, -0.35, 0.03]}>
+          <boxGeometry args={[0.07, 0.16, 0.07]} />
+          <meshStandardMaterial color="#222" />
+        </mesh>
+        <mesh position={[0, -0.44, 0.06]}>
+          <boxGeometry args={[0.24, 0.03, 0.16]} />
+          <meshStandardMaterial color="#222" />
+        </mesh>
+      </group>
+      {/* Keyboard hint */}
+      <mesh position={[0, 0.775, 0.12]} receiveShadow>
+        <boxGeometry args={[0.55, 0.02, 0.18]} />
+        <meshStandardMaterial color="#222233" roughness={0.9} />
+      </mesh>
+      {/* Agent color strip on desk edge */}
+      <mesh position={[0, 0.775, 0.51]}>
+        <boxGeometry args={[2.0, 0.03, 0.02]} />
+        <meshStandardMaterial color={agentColor} emissive={agentColor} emissiveIntensity={0.6} />
+      </mesh>
+    </group>
+  )
+}
+
+// ?????? Low-poly humanoid character ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function Character({ agentState, color, bodyRef }) {
+  const charColor = agentState === 'offline' ? '#444455' : color
+  const isSitting = agentState === 'working' || agentState === 'thinking'
+  const bodyY = isSitting ? 0.92 : 1.55
+  const bodyZ = isSitting ? 0.65 : 0.85
+
+  return (
+    <group>
+      {/* Torso ??? blocky box */}
       <mesh ref={bodyRef} position={[0, bodyY, bodyZ]} castShadow>
-        <capsuleGeometry args={[0.22, 0.5, 8, 16]} />
-        <meshStandardMaterial color={charColor} />
+        <boxGeometry args={[0.36, 0.44, 0.24]} />
+        <meshStandardMaterial color={charColor} roughness={0.7} />
       </mesh>
-      <mesh position={[0, bodyY + 0.6, bodyZ]} castShadow>
-        <sphereGeometry args={[0.22, 16, 16]} />
-        <meshStandardMaterial color={charColor} />
+      {/* Head */}
+      <mesh position={[0, bodyY + 0.42, bodyZ]} castShadow>
+        <boxGeometry args={[0.28, 0.28, 0.28]} />
+        <meshStandardMaterial color={charColor} roughness={0.6} />
       </mesh>
+      {/* Eyes */}
+      <mesh position={[0.07, bodyY + 0.44, bodyZ + 0.14]}>
+        <boxGeometry args={[0.05, 0.04, 0.01]} />
+        <meshStandardMaterial color="#111" />
+      </mesh>
+      <mesh position={[-0.07, bodyY + 0.44, bodyZ + 0.14]}>
+        <boxGeometry args={[0.05, 0.04, 0.01]} />
+        <meshStandardMaterial color="#111" />
+      </mesh>
+      {/* Arms */}
+      <mesh position={[0.24, bodyY + 0.06, bodyZ]} castShadow>
+        <boxGeometry args={[0.1, 0.34, 0.14]} />
+        <meshStandardMaterial color={charColor} roughness={0.7} />
+      </mesh>
+      <mesh position={[-0.24, bodyY + 0.06, bodyZ]} castShadow>
+        <boxGeometry args={[0.1, 0.34, 0.14]} />
+        <meshStandardMaterial color={charColor} roughness={0.7} />
+      </mesh>
+      {/* Legs ??? only visible when standing */}
+      {!isSitting && (
+        <>
+          <mesh position={[0.1, bodyY - 0.5, bodyZ]} castShadow>
+            <boxGeometry args={[0.14, 0.44, 0.18]} />
+            <meshStandardMaterial color={charColor} roughness={0.7} />
+          </mesh>
+          <mesh position={[-0.1, bodyY - 0.5, bodyZ]} castShadow>
+            <boxGeometry args={[0.14, 0.44, 0.18]} />
+            <meshStandardMaterial color={charColor} roughness={0.7} />
+          </mesh>
+        </>
+      )}
+      {/* Thinking bubble */}
       {agentState === 'thinking' && (
-        <Text
-          position={[0, bodyY + 1.1, bodyZ]}
-          fontSize={0.22}
-          color="#ffdd00"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.02}
-          outlineColor="#000"
-        >
-          ...
-        </Text>
+        <>
+          <mesh position={[0.2, bodyY + 0.78, bodyZ]}>
+            <sphereGeometry args={[0.05, 8, 8]} />
+            <meshStandardMaterial color="white" emissive="white" emissiveIntensity={0.4} />
+          </mesh>
+          <mesh position={[0.3, bodyY + 0.92, bodyZ]}>
+            <sphereGeometry args={[0.07, 8, 8]} />
+            <meshStandardMaterial color="white" emissive="white" emissiveIntensity={0.4} />
+          </mesh>
+          <mesh position={[0.42, bodyY + 1.08, bodyZ]}>
+            <sphereGeometry args={[0.14, 8, 8]} />
+            <meshStandardMaterial color="white" emissive="white" emissiveIntensity={0.3} />
+          </mesh>
+          <Text position={[0.42, bodyY + 1.08, bodyZ + 0.15]} fontSize={0.12} color="#333" anchorX="center" anchorY="middle">
+            ...
+          </Text>
+        </>
       )}
     </group>
   )
 }
 
-function AnimatedDesk({ agent, agentState, onClick }) {
+// ?????? Animated desk group (desk + character) ?????????????????????????????????????????????????????????????????????????????????????????????????????????
+function AgentStation({ agent, agentState, onClick }) {
   const bodyRef = useRef()
   const isSitting = agentState === 'working' || agentState === 'thinking'
-  const monitorGlow = agentState === 'working' || agentState === 'thinking' ? 0.8 : agentState === 'offline' ? 0 : 0.1
 
   useFrame(({ clock }) => {
     if (bodyRef.current && isSitting) {
-      const t = clock.getElapsedTime()
-      bodyRef.current.position.y = 1.1 + Math.sin(t * 3 * Math.PI * 2) * 0.03
+      bodyRef.current.position.y = 0.92 + Math.sin(clock.getElapsedTime() * 6.28 * 2.8) * 0.025
     }
   })
 
-  const [x, , z] = agent.position
-
+  const [px, , pz] = agent.position
   return (
-    <group position={[x, 0, z]} onClick={onClick}>
-      {/* Desk surface */}
-      <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2, 0.08, 1]} />
-        <meshStandardMaterial color="#8B6914" />
-      </mesh>
-      {/* Desk legs */}
-      {[[-0.85, 0.35, -0.4], [0.85, 0.35, -0.4], [-0.85, 0.35, 0.4], [0.85, 0.35, 0.4]].map(([lx, ly, lz], i) => (
-        <mesh key={i} position={[lx, ly, lz]} castShadow>
-          <boxGeometry args={[0.06, 0.7, 0.06]} />
-          <meshStandardMaterial color="#6B4F10" />
-        </mesh>
-      ))}
-      {/* Chair seat */}
-      <mesh position={[0, 0.45, 0.9]} castShadow>
-        <boxGeometry args={[0.7, 0.07, 0.7]} />
-        <meshStandardMaterial color="#2a2a2a" />
-      </mesh>
-      {/* Chair back */}
-      <mesh position={[0, 0.85, 1.2]} castShadow>
-        <boxGeometry args={[0.7, 0.7, 0.07]} />
-        <meshStandardMaterial color="#2a2a2a" />
-      </mesh>
-      {/* Chair legs */}
-      {[[-0.3, 0.21, 0.6], [0.3, 0.21, 0.6], [-0.3, 0.21, 1.15], [0.3, 0.21, 1.15]].map(([lx, ly, lz], i) => (
-        <mesh key={i} position={[lx, ly, lz]}>
-          <boxGeometry args={[0.05, 0.42, 0.05]} />
-          <meshStandardMaterial color="#1a1a1a" />
-        </mesh>
-      ))}
-      {/* Monitor */}
-      <mesh position={[0, 1.1, -0.35]} castShadow>
-        <boxGeometry args={[0.9, 0.55, 0.04]} />
-        <meshStandardMaterial color="#111" emissive="#001133" emissiveIntensity={monitorGlow} />
-      </mesh>
-      {/* Monitor stand */}
-      <mesh position={[0, 0.82, -0.35]}>
-        <boxGeometry args={[0.08, 0.14, 0.04]} />
-        <meshStandardMaterial color="#222" />
-      </mesh>
-      {/* Agent character */}
-      <AgentCharacter color={agent.color} agentState={agentState} bodyRef={bodyRef} />
+    <group position={[px, 0, pz]}>
+      <Desk
+        position={[0, 0, 0]}
+        agentColor={agent.color}
+        agentState={agentState}
+        onClick={onClick}
+      />
+      <Character agentState={agentState} color={agent.color} bodyRef={bodyRef} />
       {/* Name label */}
       <Text
-        position={[0, 2.8, 0.9]}
-        fontSize={0.2}
+        position={[0, 3.05, 0.85]}
+        fontSize={0.22}
         color="white"
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.02}
+        outlineWidth={0.025}
         outlineColor="#000"
+        renderOrder={10}
       >
         {agent.name}
+      </Text>
+      {/* Status dot above label */}
+      <mesh position={[0.42, 3.08, 0.85]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshStandardMaterial
+          color={STATE_COLOR[agentState] || '#555'}
+          emissive={STATE_COLOR[agentState] || '#555'}
+          emissiveIntensity={0.8}
+        />
+      </mesh>
+    </group>
+  )
+}
+
+// ?????? Decorative bookshelf on left wall ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function Bookshelf() {
+  const books = [
+    '#E74C3C','#3498DB','#2ECC71','#F39C12','#9B59B6',
+    '#1ABC9C','#E67E22','#2980B9','#27AE60','#8E44AD',
+  ]
+  return (
+    <group position={[-6.5, 0, -2]}>
+      {/* Frame */}
+      <mesh position={[0, 1.0, 0]} castShadow>
+        <boxGeometry args={[0.22, 2.0, 1.6]} />
+        <meshStandardMaterial color="#7A5C1E" roughness={0.6} />
+      </mesh>
+      {/* Books */}
+      {books.map((c, i) => (
+        <mesh key={i} position={[0.02, 0.25 + Math.floor(i/5)*0.7 + 0.06, -0.6 + (i%5)*0.26]} castShadow>
+          <boxGeometry args={[0.16, 0.6, 0.22]} />
+          <meshStandardMaterial color={c} roughness={0.8} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+// ?????? Plant ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function Plant({ position }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.2, 0]} castShadow>
+        <cylinderGeometry args={[0.18, 0.22, 0.4, 10]} />
+        <meshStandardMaterial color="#C1440E" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.52, 0]} castShadow>
+        <sphereGeometry args={[0.32, 8, 6]} />
+        <meshStandardMaterial color="#2D7A2D" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.18, 0.64, 0.08]} castShadow>
+        <sphereGeometry args={[0.18, 7, 6]} />
+        <meshStandardMaterial color="#3A9A3A" roughness={0.8} />
+      </mesh>
+    </group>
+  )
+}
+
+// ?????? Whiteboard ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function Whiteboard() {
+  return (
+    <group position={[0, 1.6, -5.88]}>
+      {/* frame */}
+      <mesh castShadow>
+        <boxGeometry args={[2.8, 1.6, 0.07]} />
+        <meshStandardMaterial color="#5C3D1E" roughness={0.7} />
+      </mesh>
+      {/* surface */}
+      <mesh position={[0, 0, 0.04]}>
+        <boxGeometry args={[2.6, 1.44, 0.02]} />
+        <meshStandardMaterial color="#F5F2EC" roughness={0.9} />
+      </mesh>
+      <Text position={[0, 0.32, 0.06]} fontSize={0.19} color="#333" anchorX="center">
+        ACTIVE TASKS
+      </Text>
+      <Text position={[0, 0.0, 0.06]} fontSize={0.13} color="#777" anchorX="center">
+        Sprint 2 ??? Phase D2
+      </Text>
+      <Text position={[0, -0.3, 0.06]} fontSize={0.11} color="#999" anchorX="center">
+        CREW-009 ???  CREW-014 ???  CREW-015 ???
       </Text>
     </group>
   )
 }
 
-function Floor() {
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-      <planeGeometry args={[20, 20]} />
-      <meshStandardMaterial color="#1a1a2e" />
-    </mesh>
-  )
-}
-
-function CameraController({ focusedAgent, orbitRef }) {
-  const { camera } = useThree()
-  const targetPos = useRef(new THREE.Vector3(0, 8, 10))
-  const targetLook = useRef(new THREE.Vector3(0, 0, 0))
-
-  useFrame(() => {
-    if (focusedAgent) {
-      const agent = CREW.find((a) => a.name === focusedAgent)
-      if (agent) {
-        const [ax, , az] = agent.position
-        targetPos.current.set(ax, 5, az + 7)
-        targetLook.current.set(ax, 1, az)
-      }
-    } else {
-      targetPos.current.set(0, 8, 10)
-      targetLook.current.set(0, 0, 0)
-    }
-    camera.position.lerp(targetPos.current, 0.05)
-    if (orbitRef.current) {
-      orbitRef.current.target.lerp(targetLook.current, 0.05)
-      orbitRef.current.update()
-    }
-  })
-
-  return null
-}
-
-function StatusBar({ statuses }) {
+// ?????? Top roster HUD (HTML overlay) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+function RosterBar({ statuses }) {
   return (
     <div style={{
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: '44px',
-      background: 'rgba(8, 8, 20, 0.92)',
-      borderTop: '1px solid rgba(100,100,200,0.3)',
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 20px',
-      gap: '20px',
-      zIndex: 100,
-      fontFamily: 'monospace',
-      fontSize: '13px',
-      backdropFilter: 'blur(4px)',
+      position: 'fixed', top: 0, left: 0, right: 0,
+      height: '52px',
+      background: 'linear-gradient(135deg, #0D2137 0%, #1A2F4A 100%)',
+      borderBottom: '1px solid rgba(100,160,255,0.25)',
+      display: 'flex', alignItems: 'center',
+      padding: '0 20px', gap: '20px',
+      zIndex: 200, fontFamily: "'Courier New', monospace",
+      boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
     }}>
-      <span style={{ color: '#FFD700', fontWeight: 'bold' }}>??? STRAW HAT HQ</span>
-      <span style={{ color: '#333' }}>|</span>
-      {statuses.map((s) => (
-        <div key={s.name} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{
-            width: '10px', height: '10px', borderRadius: '50%',
-            background: STATE_COLORS[s.state] || '#666',
-            boxShadow: `0 0 6px ${STATE_COLORS[s.state] || '#666'}`,
-            display: 'inline-block',
-            flexShrink: 0,
-          }} />
-          <span style={{ color: '#aaa' }}>{s.name}:</span>
-          <span style={{ color: STATE_COLORS[s.state] || '#666', textTransform: 'capitalize' }}>{s.state}</span>
+      {/* Logo / title */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '12px' }}>
+        <span style={{ fontSize: '20px' }}>???</span>
+        <div>
+          <div style={{ color: '#FFD700', fontWeight: 'bold', fontSize: '13px', lineHeight: 1.1 }}>STRAW HAT HQ</div>
+          <div style={{ color: '#557799', fontSize: '10px' }}>Mission Control</div>
         </div>
-      ))}
+      </div>
+
+      <div style={{ width: '1px', height: '32px', background: 'rgba(100,160,255,0.2)' }} />
+
+      {/* Agent cards */}
+      {CREW.map(agent => {
+        const st = statuses.find(s => s.name === agent.name) || { state: 'idle' }
+        const dotColor = STATE_COLOR[st.state] || '#555'
+        return (
+          <div key={agent.name} style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            background: 'rgba(255,255,255,0.04)',
+            border: `1px solid ${agent.color}33`,
+            borderRadius: '8px', padding: '5px 12px',
+          }}>
+            {/* Avatar circle */}
+            <div style={{
+              width: '28px', height: '28px', borderRadius: '50%',
+              background: agent.color,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '12px', fontWeight: 'bold', color: '#000',
+              boxShadow: `0 0 8px ${agent.color}88`,
+            }}>
+              {agent.name[0]}
+            </div>
+            <div>
+              <div style={{ color: '#EEE', fontSize: '12px', fontWeight: 'bold', lineHeight: 1.1 }}>{agent.name}</div>
+              <div style={{ color: '#889', fontSize: '10px', lineHeight: 1.1 }}>{agent.role}</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginLeft: '4px' }}>
+              <div style={{
+                width: '8px', height: '8px', borderRadius: '50%',
+                background: dotColor,
+                boxShadow: `0 0 6px ${dotColor}`,
+              }} />
+              <span style={{ color: dotColor, fontSize: '10px', textTransform: 'capitalize' }}>
+                {STATE_LABEL[st.state] || 'Idle'}
+              </span>
+            </div>
+          </div>
+        )
+      })}
+
+      <div style={{ marginLeft: 'auto', color: '#445566', fontSize: '11px' }}>
+        Phase D2 ?? Live
+      </div>
     </div>
   )
 }
 
+// ?????? Main App ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 export default function App() {
   const [focused, setFocused] = useState(null)
-  const orbitRef = useRef()
   const statuses = useGatewayStatus()
+  const orbitRef = useRef()
 
   function getState(name) {
-    return statuses.find((s) => s.name === name)?.state || 'idle'
+    return statuses.find(s => s.name === name)?.state || 'idle'
   }
 
-  function handleDeskClick(name) {
-    setFocused((prev) => (prev === name ? null : name))
+  function handleClick(name) {
+    setFocused(prev => (prev === name ? null : name))
   }
+
+  // Isometric-style initial camera: high angle, angled view
+  const CAM_POS = [12, 14, 14]
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', background: '#0a0a0f' }}>
+    <div style={{ width: '100vw', height: '100vh', background: '#060C18' }}>
+      <RosterBar statuses={statuses} />
+
       <Canvas
         shadows
-        camera={{ position: [0, 8, 10], fov: 60 }}
-        style={{ width: '100%', height: 'calc(100% - 44px)' }}
+        camera={{ position: CAM_POS, fov: 45 }}
+        style={{ width: '100%', height: '100%', paddingTop: '52px', boxSizing: 'border-box' }}
+        gl={{ antialias: true }}
       >
-        <ambientLight intensity={0.5} />
+        {/* Lighting */}
+        <ambientLight intensity={0.35} color="#C8D8F0" />
         <directionalLight
-          position={[5, 10, 5]}
-          intensity={1.0}
+          position={[8, 16, 10]}
+          intensity={1.4}
+          color="#FFF5E0"
           castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
+          shadow-mapSize={[2048, 2048]}
+          shadow-camera-near={0.5}
+          shadow-camera-far={60}
+          shadow-camera-left={-14}
+          shadow-camera-right={14}
+          shadow-camera-top={14}
+          shadow-camera-bottom={-14}
         />
-        <Floor />
-        <Grid
-          args={[20, 20]}
-          position={[0, 0.001, 0]}
-          cellSize={1}
-          cellThickness={0.5}
-          cellColor="#2a2a4a"
-          sectionSize={5}
-          sectionThickness={1}
-          sectionColor="#3a3a6a"
-          fadeDistance={30}
-          fadeStrength={1}
-          infiniteGrid={false}
-        />
-        {CREW.map((agent) => (
-          <AnimatedDesk
+        <directionalLight position={[-6, 8, -4]} intensity={0.3} color="#8899FF" />
+        <pointLight position={[0, 4, 0]} intensity={0.4} color="#FFE8C0" distance={16} />
+
+        {/* Stars field */}
+        <Stars radius={80} depth={40} count={3000} factor={3} fade speed={0.3} />
+
+        {/* Scene */}
+        <CosmicBackdrop />
+        <OfficeShell />
+        <Whiteboard />
+        <Bookshelf />
+        <Plant position={[-6.3, 0, 4.5]} />
+        <Plant position={[6.3, 0, 4.5]} />
+        <ConfTable position={[0, 0, 2.8]} />
+
+        {/* Agent stations */}
+        {CREW.map(agent => (
+          <AgentStation
             key={agent.name}
             agent={agent}
             agentState={getState(agent.name)}
-            onClick={() => handleDeskClick(agent.name)}
+            onClick={() => handleClick(agent.name)}
           />
         ))}
-        <OrbitControls ref={orbitRef} makeDefault enablePan={true} />
-        <CameraController focusedAgent={focused} orbitRef={orbitRef} />
+
+        {/* Camera */}
+        <OrbitControls
+          ref={orbitRef}
+          target={[0, 1, 0]}
+          enableDamping
+          dampingFactor={0.06}
+          minDistance={6}
+          maxDistance={32}
+          maxPolarAngle={Math.PI / 2.1}
+        />
       </Canvas>
 
-      {/* Top label */}
+      {/* Bottom hint */}
       <div style={{
-        position: 'absolute',
-        top: 16,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        background: 'rgba(0,0,0,0.65)',
-        color: '#fff',
-        padding: '8px 20px',
-        borderRadius: 8,
-        fontFamily: 'monospace',
-        fontSize: 14,
-        backdropFilter: 'blur(4px)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        position: 'fixed', bottom: '14px', right: '18px',
+        color: '#334455', fontFamily: 'monospace', fontSize: '11px',
         pointerEvents: 'none',
       }}>
-        {focused ? `Focused: ${focused}` : 'Overview ??? click a desk to focus'}
+        Click desk to focus ?? Drag to orbit ?? Scroll to zoom
       </div>
-
-      <StatusBar statuses={statuses} />
     </div>
   )
 }

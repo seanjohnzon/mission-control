@@ -1,61 +1,51 @@
 import { useState, useEffect, useRef } from 'react';
 import { CREW } from './crewConfig';
 
-const POLL_INTERVAL = 10000;
+const POLL_MS = 10000;
 
-async function fetchAgentStatus(agent) {
+async function fetchOne(agent) {
   const base = `http://${agent.ip}:${agent.port}`;
   const headers = { Authorization: `Bearer ${agent.token}` };
-
   try {
-    const healthRes = await fetch(`${base}/health`, { headers, signal: AbortSignal.timeout(5000) });
-    if (!healthRes.ok) return { name: agent.name, state: 'offline', model: null, outputTokens: 0, lastActive: null };
-
-    let state = 'idle';
-    let model = null;
-    let outputTokens = 0;
-    let lastActive = null;
-
+    const hr = await fetch(`${base}/health`, { headers, signal: AbortSignal.timeout(4000) });
+    if (!hr.ok) return { name: agent.name, state: 'offline', model: null, outputTokens: 0 };
+    let state = 'idle', model = null, outputTokens = 0;
     try {
-      const sessRes = await fetch(`${base}/api/sessions/list`, { headers, signal: AbortSignal.timeout(5000) });
-      if (sessRes.ok) {
-        const data = await sessRes.json();
-        const sessions = data.sessions || data || [];
-        const recent = Array.isArray(sessions) ? sessions[0] : null;
-        if (recent) {
-          const age = recent.age ?? (Date.now() - (recent.lastActiveAt || 0));
-          model = recent.model || null;
-          outputTokens = recent.outputTokens || 0;
-          lastActive = recent.lastActiveAt || null;
+      const sr = await fetch(`${base}/api/sessions/list`, { headers, signal: AbortSignal.timeout(4000) });
+      if (sr.ok) {
+        const data = await sr.json();
+        const sessions = Array.isArray(data) ? data : (data.sessions || []);
+        const s = sessions[0];
+        if (s) {
+          const age = s.age ?? (Date.now() - (s.lastActiveAt || 0));
+          model = s.model || null;
+          outputTokens = s.outputTokens || 0;
           if (age < 30000 && outputTokens > 0) state = 'working';
-          else if (age < 30000 && outputTokens === 0) state = 'thinking';
+          else if (age < 30000) state = 'thinking';
         }
       }
-    } catch (_) {
-      // sessions fetch failed ??? still online, just idle
-    }
-
-    return { name: agent.name, state, model, outputTokens, lastActive };
+    } catch (_) {}
+    return { name: agent.name, state, model, outputTokens };
   } catch (_) {
-    return { name: agent.name, state: 'offline', model: null, outputTokens: 0, lastActive: null };
+    return { name: agent.name, state: 'offline', model: null, outputTokens: 0 };
   }
 }
 
 export default function useGatewayStatus() {
   const [statuses, setStatuses] = useState(() =>
-    CREW.map((a) => ({ name: a.name, state: 'idle', model: null, outputTokens: 0, lastActive: null }))
+    CREW.map(a => ({ name: a.name, state: 'idle', model: null, outputTokens: 0 }))
   );
-  const timerRef = useRef(null);
+  const timer = useRef(null);
 
   async function poll() {
-    const results = await Promise.all(CREW.map(fetchAgentStatus));
+    const results = await Promise.all(CREW.map(fetchOne));
     setStatuses(results);
   }
 
   useEffect(() => {
     poll();
-    timerRef.current = setInterval(poll, POLL_INTERVAL);
-    return () => clearInterval(timerRef.current);
+    timer.current = setInterval(poll, POLL_MS);
+    return () => clearInterval(timer.current);
   }, []);
 
   return statuses;
