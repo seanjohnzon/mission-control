@@ -1,98 +1,95 @@
-import React, { useRef, useState, useMemo } from 'react'
+import React, { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Text, RoundedBox, Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import { CREW } from './data/crewConfig'
 import useGatewayStatus from './data/useGatewayStatus'
 
-// ?????? colour helpers ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-const STATE_COLOR = { idle: '#44DD77', working: '#4488FF', thinking: '#FFCC00', offline: '#555566' }
-const STATE_LABEL = { idle: 'Idle', working: 'Working', thinking: 'Thinking', offline: 'Offline' }
+// ── colour helpers ──────────────────────────────────────────────────────────
+const STATE_COLOR  = { idle: '#44DD77', working: '#4488FF', thinking: '#FFCC00', offline: '#FF4444', standby: '#888899' }
+const STATE_LABEL  = { idle: 'Idle', working: 'Working', thinking: 'Thinking', offline: 'Offline', standby: 'Standby' }
 
-// ?????? Cosmic backdrop ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Cosmic backdrop ─────────────────────────────────────────────────────────
 function CosmicBackdrop() {
   return (
     <>
-      {/* Giant planet sphere peeking from bottom-right */}
-      <mesh position={[14, -10, -18]}>
-        <sphereGeometry args={[12, 32, 32]} />
+      <mesh position={[18, -12, -22]}>
+        <sphereGeometry args={[14, 32, 32]} />
         <meshStandardMaterial color="#1B2A4A" roughness={0.9} metalness={0.1} />
       </mesh>
-      {/* Planet ring suggestion */}
-      <mesh position={[14, -10, -18]} rotation={[0.3, 0, 0.2]}>
-        <torusGeometry args={[14, 0.35, 8, 64]} />
+      <mesh position={[18, -12, -22]} rotation={[0.3, 0, 0.2]}>
+        <torusGeometry args={[17, 0.4, 8, 64]} />
         <meshStandardMaterial color="#2A3D6A" roughness={1} />
       </mesh>
-      {/* A smaller moon */}
-      <mesh position={[-12, 8, -20]}>
-        <sphereGeometry args={[2.2, 16, 16]} />
+      <mesh position={[-16, 10, -24]}>
+        <sphereGeometry args={[2.5, 16, 16]} />
         <meshStandardMaterial color="#2E3A5A" roughness={1} />
       </mesh>
     </>
   )
 }
 
-// ?????? Office shell (floor + 3 walls, no ceiling, cutaway) ????????????????????????????????????????????????????????????
+// ── Office shell — wider for 5 desks ────────────────────────────────────────
 function OfficeShell() {
-  const floorColor = '#E8DCC8'   // warm cream
-  const wallColor  = '#D4C9B4'   // slightly darker cream
-  const trimColor  = '#B8A898'   // trim/edge
+  const floorColor = '#E8DCC8'
+  const wallColor  = '#D4C9B4'
+  const trimColor  = '#B8A898'
 
   return (
     <group>
       {/* Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[14, 12]} />
+        <planeGeometry args={[20, 14]} />
         <meshStandardMaterial color={floorColor} roughness={0.8} />
       </mesh>
 
-      {/* Floor tile lines ??? subtle grid etched in */}
-      {[-6,-4,-2,0,2,4,6].map(x => (
+      {/* Floor tiles */}
+      {[-9,-7,-5,-3,-1,1,3,5,7,9].map(x => (
         <mesh key={`fx${x}`} rotation={[-Math.PI/2,0,0]} position={[x, 0.002, 0]}>
-          <planeGeometry args={[0.04, 12]} />
+          <planeGeometry args={[0.04, 14]} />
           <meshStandardMaterial color={trimColor} roughness={1} />
         </mesh>
       ))}
-      {[-5,-3,-1,1,3,5].map(z => (
+      {[-6,-4,-2,0,2,4,6].map(z => (
         <mesh key={`fz${z}`} rotation={[-Math.PI/2,0,0]} position={[0, 0.002, z]}>
-          <planeGeometry args={[14, 0.04]} />
+          <planeGeometry args={[20, 0.04]} />
           <meshStandardMaterial color={trimColor} roughness={1} />
         </mesh>
       ))}
 
       {/* Back wall */}
-      <mesh position={[0, 2.0, -6]} receiveShadow>
-        <planeGeometry args={[14, 4]} />
+      <mesh position={[0, 2.0, -7]} receiveShadow>
+        <planeGeometry args={[20, 4]} />
         <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
       </mesh>
 
       {/* Left wall */}
-      <mesh position={[-7, 2.0, 0]} rotation={[0, Math.PI/2, 0]} receiveShadow>
-        <planeGeometry args={[12, 4]} />
+      <mesh position={[-10, 2.0, 0]} rotation={[0, Math.PI/2, 0]} receiveShadow>
+        <planeGeometry args={[14, 4]} />
         <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
       </mesh>
 
-      {/* Right wall (partial ??? cutaway feel) */}
-      <mesh position={[7, 2.0, 0]} rotation={[0, -Math.PI/2, 0]} receiveShadow>
-        <planeGeometry args={[12, 4]} />
+      {/* Right wall (cutaway) */}
+      <mesh position={[10, 2.0, 0]} rotation={[0, -Math.PI/2, 0]} receiveShadow>
+        <planeGeometry args={[14, 4]} />
         <meshStandardMaterial color={wallColor} roughness={0.85} side={THREE.FrontSide} />
       </mesh>
 
-      {/* Skirting board / baseboard back */}
-      <mesh position={[0, 0.08, -5.96]}>
-        <boxGeometry args={[14, 0.16, 0.06]} />
+      {/* Skirting back */}
+      <mesh position={[0, 0.08, -6.96]}>
+        <boxGeometry args={[20, 0.16, 0.06]} />
         <meshStandardMaterial color={trimColor} />
       </mesh>
       {/* Skirting left */}
-      <mesh position={[-6.96, 0.08, 0]}>
-        <boxGeometry args={[0.06, 0.16, 12]} />
+      <mesh position={[-9.96, 0.08, 0]}>
+        <boxGeometry args={[0.06, 0.16, 14]} />
         <meshStandardMaterial color={trimColor} />
       </mesh>
     </group>
   )
 }
 
-// ?????? Conference table (round, warm wood) ???????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Conference table ─────────────────────────────────────────────────────────
 function ConfTable({ position }) {
   return (
     <group position={position}>
@@ -104,7 +101,6 @@ function ConfTable({ position }) {
         <cylinderGeometry args={[0.07, 0.12, 0.56, 12]} />
         <meshStandardMaterial color="#6B4F10" roughness={0.6} />
       </mesh>
-      {/* chairs around */}
       {[0, 72, 144, 216, 288].map((deg, i) => {
         const r = 1.25, a = (deg * Math.PI) / 180
         return (
@@ -124,25 +120,23 @@ function ConfTable({ position }) {
   )
 }
 
-// ?????? Desk with chair + monitor ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Desk ─────────────────────────────────────────────────────────────────────
 function Desk({ position, agentColor, agentState, onClick }) {
-  const monitorGlow = agentState === 'working' ? 1.0 : agentState === 'thinking' ? 0.5 : agentState === 'offline' ? 0 : 0.15
-  const screenColor = agentState === 'offline' ? '#111' : '#001a33'
+  const isOffline = agentState === 'offline' || agentState === 'standby'
+  const monitorGlow = agentState === 'working' ? 1.0 : agentState === 'thinking' ? 0.5 : isOffline ? 0 : 0.15
+  const screenColor = isOffline ? '#111' : '#001a33'
 
   return (
     <group position={position} onClick={onClick}>
-      {/* Desk surface */}
       <RoundedBox args={[2.0, 0.09, 1.0]} radius={0.04} position={[0, 0.72, 0]} castShadow receiveShadow>
         <meshStandardMaterial color="#7A5C1E" roughness={0.4} metalness={0.1} />
       </RoundedBox>
-      {/* Legs */}
       {[[-0.88,0.35,-0.42],[0.88,0.35,-0.42],[-0.88,0.35,0.42],[0.88,0.35,0.42]].map(([lx,ly,lz],i) => (
         <mesh key={i} position={[lx,ly,lz]} castShadow>
           <boxGeometry args={[0.06,0.70,0.06]} />
           <meshStandardMaterial color="#5A3E0A" />
         </mesh>
       ))}
-      {/* Chair */}
       <group position={[0, 0, 0.75]}>
         <mesh position={[0, 0.42, 0]} castShadow>
           <boxGeometry args={[0.55, 0.07, 0.55]} />
@@ -159,7 +153,6 @@ function Desk({ position, agentColor, agentState, onClick }) {
           </mesh>
         ))}
       </group>
-      {/* Monitor */}
       <group position={[0, 0.77, -0.28]}>
         <mesh castShadow>
           <boxGeometry args={[0.88, 0.52, 0.05]} />
@@ -169,7 +162,6 @@ function Desk({ position, agentColor, agentState, onClick }) {
           <boxGeometry args={[0.76, 0.42, 0.01]} />
           <meshStandardMaterial color={screenColor} emissive={agentColor} emissiveIntensity={monitorGlow} />
         </mesh>
-        {/* stand */}
         <mesh position={[0, -0.35, 0.03]}>
           <boxGeometry args={[0.07, 0.16, 0.07]} />
           <meshStandardMaterial color="#222" />
@@ -179,38 +171,46 @@ function Desk({ position, agentColor, agentState, onClick }) {
           <meshStandardMaterial color="#222" />
         </mesh>
       </group>
-      {/* Keyboard hint */}
       <mesh position={[0, 0.775, 0.12]} receiveShadow>
         <boxGeometry args={[0.55, 0.02, 0.18]} />
         <meshStandardMaterial color="#222233" roughness={0.9} />
       </mesh>
-      {/* Agent color strip on desk edge */}
+      {/* Color strip — always shows agent color, dims slightly if offline */}
       <mesh position={[0, 0.775, 0.51]}>
         <boxGeometry args={[2.0, 0.03, 0.02]} />
-        <meshStandardMaterial color={agentColor} emissive={agentColor} emissiveIntensity={0.6} />
+        <meshStandardMaterial
+          color={agentColor}
+          emissive={agentColor}
+          emissiveIntensity={isOffline ? 0.15 : 0.6}
+        />
       </mesh>
     </group>
   )
 }
 
-// ?????? Low-poly humanoid character ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Character — color always visible, just dim when offline ─────────────────
 function Character({ agentState, color, bodyRef }) {
-  const charColor = agentState === 'offline' ? '#444455' : color
-  const isSitting = agentState === 'working' || agentState === 'thinking'
-  const bodyY = isSitting ? 0.92 : 1.55
-  const bodyZ = isSitting ? 0.65 : 0.85
+  const isOffline  = agentState === 'offline'
+  const isStandby  = agentState === 'standby'
+  // Always use the agent color — just lower emissive when offline/standby
+  const charColor  = color
+  const dimFactor  = isOffline ? 0.25 : isStandby ? 0.55 : 1.0
+  const skinColor  = isOffline ? '#555' : '#F4C68A'
+  const isSitting  = agentState === 'working' || agentState === 'thinking'
+  const bodyY      = isSitting ? 0.92 : 1.55
+  const bodyZ      = isSitting ? 0.65 : 0.85
 
   return (
     <group>
-      {/* Torso ??? blocky box */}
+      {/* Torso */}
       <mesh ref={bodyRef} position={[0, bodyY, bodyZ]} castShadow>
         <boxGeometry args={[0.36, 0.44, 0.24]} />
-        <meshStandardMaterial color={charColor} roughness={0.7} />
+        <meshStandardMaterial color={charColor} roughness={0.7} emissive={charColor} emissiveIntensity={dimFactor * 0.12} />
       </mesh>
-      {/* Head */}
+      {/* Head — skin tone */}
       <mesh position={[0, bodyY + 0.42, bodyZ]} castShadow>
         <boxGeometry args={[0.28, 0.28, 0.28]} />
-        <meshStandardMaterial color={charColor} roughness={0.6} />
+        <meshStandardMaterial color={skinColor} roughness={0.6} />
       </mesh>
       {/* Eyes */}
       <mesh position={[0.07, bodyY + 0.44, bodyZ + 0.14]}>
@@ -224,22 +224,22 @@ function Character({ agentState, color, bodyRef }) {
       {/* Arms */}
       <mesh position={[0.24, bodyY + 0.06, bodyZ]} castShadow>
         <boxGeometry args={[0.1, 0.34, 0.14]} />
-        <meshStandardMaterial color={charColor} roughness={0.7} />
+        <meshStandardMaterial color={charColor} roughness={0.7} emissive={charColor} emissiveIntensity={dimFactor * 0.08} />
       </mesh>
       <mesh position={[-0.24, bodyY + 0.06, bodyZ]} castShadow>
         <boxGeometry args={[0.1, 0.34, 0.14]} />
-        <meshStandardMaterial color={charColor} roughness={0.7} />
+        <meshStandardMaterial color={charColor} roughness={0.7} emissive={charColor} emissiveIntensity={dimFactor * 0.08} />
       </mesh>
-      {/* Legs ??? only visible when standing */}
+      {/* Legs */}
       {!isSitting && (
         <>
           <mesh position={[0.1, bodyY - 0.5, bodyZ]} castShadow>
             <boxGeometry args={[0.14, 0.44, 0.18]} />
-            <meshStandardMaterial color={charColor} roughness={0.7} />
+            <meshStandardMaterial color={charColor} roughness={0.7} emissive={charColor} emissiveIntensity={dimFactor * 0.08} />
           </mesh>
           <mesh position={[-0.1, bodyY - 0.5, bodyZ]} castShadow>
             <boxGeometry args={[0.14, 0.44, 0.18]} />
-            <meshStandardMaterial color={charColor} roughness={0.7} />
+            <meshStandardMaterial color={charColor} roughness={0.7} emissive={charColor} emissiveIntensity={dimFactor * 0.08} />
           </mesh>
         </>
       )}
@@ -263,13 +263,19 @@ function Character({ agentState, color, bodyRef }) {
           </Text>
         </>
       )}
+      {/* Standby zzz */}
+      {agentState === 'standby' && (
+        <Text position={[0.3, bodyY + 0.7, bodyZ + 0.15]} fontSize={0.18} color="#8899AA" anchorX="center" anchorY="middle">
+          zzz
+        </Text>
+      )}
     </group>
   )
 }
 
-// ?????? Animated desk group (desk + character) ?????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Animated desk + character station ───────────────────────────────────────
 function AgentStation({ agent, agentState, onClick }) {
-  const bodyRef = useRef()
+  const bodyRef   = useRef()
   const isSitting = agentState === 'working' || agentState === 'thinking'
 
   useFrame(({ clock }) => {
@@ -288,7 +294,6 @@ function AgentStation({ agent, agentState, onClick }) {
         onClick={onClick}
       />
       <Character agentState={agentState} color={agent.color} bodyRef={bodyRef} />
-      {/* Name label */}
       <Text
         position={[0, 3.05, 0.85]}
         fontSize={0.22}
@@ -301,7 +306,6 @@ function AgentStation({ agent, agentState, onClick }) {
       >
         {agent.name}
       </Text>
-      {/* Status dot above label */}
       <mesh position={[0.42, 3.08, 0.85]}>
         <sphereGeometry args={[0.06, 8, 8]} />
         <meshStandardMaterial
@@ -314,20 +318,15 @@ function AgentStation({ agent, agentState, onClick }) {
   )
 }
 
-// ?????? Decorative bookshelf on left wall ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Bookshelf ────────────────────────────────────────────────────────────────
 function Bookshelf() {
-  const books = [
-    '#E74C3C','#3498DB','#2ECC71','#F39C12','#9B59B6',
-    '#1ABC9C','#E67E22','#2980B9','#27AE60','#8E44AD',
-  ]
+  const books = ['#E74C3C','#3498DB','#2ECC71','#F39C12','#9B59B6','#1ABC9C','#E67E22','#2980B9','#27AE60','#8E44AD']
   return (
-    <group position={[-6.5, 0, -2]}>
-      {/* Frame */}
+    <group position={[-9.5, 0, -3]}>
       <mesh position={[0, 1.0, 0]} castShadow>
         <boxGeometry args={[0.22, 2.0, 1.6]} />
         <meshStandardMaterial color="#7A5C1E" roughness={0.6} />
       </mesh>
-      {/* Books */}
       {books.map((c, i) => (
         <mesh key={i} position={[0.02, 0.25 + Math.floor(i/5)*0.7 + 0.06, -0.6 + (i%5)*0.26]} castShadow>
           <boxGeometry args={[0.16, 0.6, 0.22]} />
@@ -338,7 +337,7 @@ function Bookshelf() {
   )
 }
 
-// ?????? Plant ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Plants ───────────────────────────────────────────────────────────────────
 function Plant({ position }) {
   return (
     <group position={position}>
@@ -358,34 +357,27 @@ function Plant({ position }) {
   )
 }
 
-// ?????? Whiteboard ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Whiteboard ───────────────────────────────────────────────────────────────
 function Whiteboard() {
   return (
-    <group position={[0, 1.6, -5.88]}>
-      {/* frame */}
+    <group position={[0, 1.6, -6.88]}>
       <mesh castShadow>
-        <boxGeometry args={[2.8, 1.6, 0.07]} />
+        <boxGeometry args={[3.2, 1.6, 0.07]} />
         <meshStandardMaterial color="#5C3D1E" roughness={0.7} />
       </mesh>
-      {/* surface */}
       <mesh position={[0, 0, 0.04]}>
-        <boxGeometry args={[2.6, 1.44, 0.02]} />
+        <boxGeometry args={[3.0, 1.44, 0.02]} />
         <meshStandardMaterial color="#F5F2EC" roughness={0.9} />
       </mesh>
-      <Text position={[0, 0.32, 0.06]} fontSize={0.19} color="#333" anchorX="center">
-        ACTIVE TASKS
-      </Text>
-      <Text position={[0, 0.0, 0.06]} fontSize={0.13} color="#777" anchorX="center">
-        Sprint 2 ??? Phase D2
-      </Text>
-      <Text position={[0, -0.3, 0.06]} fontSize={0.11} color="#999" anchorX="center">
-        CREW-009 ???  CREW-014 ???  CREW-015 ???
-      </Text>
+      <Text position={[0, 0.36, 0.06]} fontSize={0.19} color="#333" anchorX="center">STRAW HAT HQ</Text>
+      <Text position={[0, 0.06, 0.06]} fontSize={0.13} color="#777" anchorX="center">Sprint 2 · Phase D2</Text>
+      <Text position={[0, -0.22, 0.06]} fontSize={0.11} color="#999" anchorX="center">CREW-017 ✦  CREW-021 ✦</Text>
+      <Text position={[0, -0.46, 0.06]} fontSize={0.10} color="#AAA" anchorX="center">5 crew · live gateway</Text>
     </group>
   )
 }
 
-// ?????? Top roster HUD (HTML overlay) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Top roster HUD ───────────────────────────────────────────────────────────
 function RosterBar({ statuses }) {
   return (
     <div style={{
@@ -394,53 +386,52 @@ function RosterBar({ statuses }) {
       background: 'linear-gradient(135deg, #0D2137 0%, #1A2F4A 100%)',
       borderBottom: '1px solid rgba(100,160,255,0.25)',
       display: 'flex', alignItems: 'center',
-      padding: '0 20px', gap: '20px',
+      padding: '0 16px', gap: '10px',
       zIndex: 200, fontFamily: "'Courier New', monospace",
       boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
+      overflowX: 'auto',
     }}>
-      {/* Logo / title */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '12px' }}>
-        <span style={{ fontSize: '20px' }}>???</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '8px', flexShrink: 0 }}>
+        <span style={{ fontSize: '20px' }}>⚓</span>
         <div>
           <div style={{ color: '#FFD700', fontWeight: 'bold', fontSize: '13px', lineHeight: 1.1 }}>STRAW HAT HQ</div>
           <div style={{ color: '#557799', fontSize: '10px' }}>Mission Control</div>
         </div>
       </div>
 
-      <div style={{ width: '1px', height: '32px', background: 'rgba(100,160,255,0.2)' }} />
+      <div style={{ width: '1px', height: '32px', background: 'rgba(100,160,255,0.2)', flexShrink: 0 }} />
 
-      {/* Agent cards */}
       {CREW.map(agent => {
         const st = statuses.find(s => s.name === agent.name) || { state: 'idle' }
         const dotColor = STATE_COLOR[st.state] || '#555'
         return (
           <div key={agent.name} style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
+            display: 'flex', alignItems: 'center', gap: '7px',
             background: 'rgba(255,255,255,0.04)',
             border: `1px solid ${agent.color}33`,
-            borderRadius: '8px', padding: '5px 12px',
+            borderRadius: '8px', padding: '4px 10px',
+            flexShrink: 0,
           }}>
-            {/* Avatar circle */}
             <div style={{
-              width: '28px', height: '28px', borderRadius: '50%',
+              width: '26px', height: '26px', borderRadius: '50%',
               background: agent.color,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '12px', fontWeight: 'bold', color: '#000',
+              fontSize: '11px', fontWeight: 'bold', color: '#000',
               boxShadow: `0 0 8px ${agent.color}88`,
             }}>
               {agent.name[0]}
             </div>
             <div>
-              <div style={{ color: '#EEE', fontSize: '12px', fontWeight: 'bold', lineHeight: 1.1 }}>{agent.name}</div>
-              <div style={{ color: '#889', fontSize: '10px', lineHeight: 1.1 }}>{agent.role}</div>
+              <div style={{ color: '#EEE', fontSize: '11px', fontWeight: 'bold', lineHeight: 1.1 }}>{agent.name}</div>
+              <div style={{ color: '#889', fontSize: '9px', lineHeight: 1.1 }}>{agent.role}</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginLeft: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginLeft: '3px' }}>
               <div style={{
-                width: '8px', height: '8px', borderRadius: '50%',
+                width: '7px', height: '7px', borderRadius: '50%',
                 background: dotColor,
-                boxShadow: `0 0 6px ${dotColor}`,
+                boxShadow: `0 0 5px ${dotColor}`,
               }} />
-              <span style={{ color: dotColor, fontSize: '10px', textTransform: 'capitalize' }}>
+              <span style={{ color: dotColor, fontSize: '9px', textTransform: 'capitalize' }}>
                 {STATE_LABEL[st.state] || 'Idle'}
               </span>
             </div>
@@ -448,14 +439,14 @@ function RosterBar({ statuses }) {
         )
       })}
 
-      <div style={{ marginLeft: 'auto', color: '#445566', fontSize: '11px' }}>
-        Phase D2 ?? Live
+      <div style={{ marginLeft: 'auto', color: '#445566', fontSize: '11px', flexShrink: 0 }}>
+        Phase D2 · Live
       </div>
     </div>
   )
 }
 
-// ?????? Main App ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+// ── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [focused, setFocused] = useState(null)
   const statuses = useGatewayStatus()
@@ -469,50 +460,43 @@ export default function App() {
     setFocused(prev => (prev === name ? null : name))
   }
 
-  // Isometric-style initial camera: high angle, angled view
-  const CAM_POS = [12, 14, 14]
-
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#060C18' }}>
       <RosterBar statuses={statuses} />
 
       <Canvas
         shadows
-        camera={{ position: CAM_POS, fov: 45 }}
+        camera={{ position: [16, 18, 16], fov: 42 }}
         style={{ width: '100%', height: '100%', paddingTop: '52px', boxSizing: 'border-box' }}
         gl={{ antialias: true }}
       >
-        {/* Lighting */}
         <ambientLight intensity={0.35} color="#C8D8F0" />
         <directionalLight
-          position={[8, 16, 10]}
+          position={[10, 18, 12]}
           intensity={1.4}
           color="#FFF5E0"
           castShadow
           shadow-mapSize={[2048, 2048]}
           shadow-camera-near={0.5}
-          shadow-camera-far={60}
-          shadow-camera-left={-14}
-          shadow-camera-right={14}
-          shadow-camera-top={14}
-          shadow-camera-bottom={-14}
+          shadow-camera-far={70}
+          shadow-camera-left={-18}
+          shadow-camera-right={18}
+          shadow-camera-top={16}
+          shadow-camera-bottom={-16}
         />
-        <directionalLight position={[-6, 8, -4]} intensity={0.3} color="#8899FF" />
-        <pointLight position={[0, 4, 0]} intensity={0.4} color="#FFE8C0" distance={16} />
+        <directionalLight position={[-8, 10, -4]} intensity={0.3} color="#8899FF" />
+        <pointLight position={[0, 4, 0]} intensity={0.4} color="#FFE8C0" distance={20} />
 
-        {/* Stars field */}
-        <Stars radius={80} depth={40} count={3000} factor={3} fade speed={0.3} />
+        <Stars radius={90} depth={40} count={3500} factor={3} fade speed={0.3} />
 
-        {/* Scene */}
         <CosmicBackdrop />
         <OfficeShell />
         <Whiteboard />
         <Bookshelf />
-        <Plant position={[-6.3, 0, 4.5]} />
-        <Plant position={[6.3, 0, 4.5]} />
-        <ConfTable position={[0, 0, 2.8]} />
+        <Plant position={[-9.3, 0, 5.5]} />
+        <Plant position={[9.3, 0, 5.5]} />
+        <ConfTable position={[0, 0, 3.5]} />
 
-        {/* Agent stations */}
         {CREW.map(agent => (
           <AgentStation
             key={agent.name}
@@ -522,25 +506,23 @@ export default function App() {
           />
         ))}
 
-        {/* Camera */}
         <OrbitControls
           ref={orbitRef}
           target={[0, 1, 0]}
           enableDamping
           dampingFactor={0.06}
-          minDistance={6}
-          maxDistance={32}
+          minDistance={8}
+          maxDistance={40}
           maxPolarAngle={Math.PI / 2.1}
         />
       </Canvas>
 
-      {/* Bottom hint */}
       <div style={{
         position: 'fixed', bottom: '14px', right: '18px',
         color: '#334455', fontFamily: 'monospace', fontSize: '11px',
         pointerEvents: 'none',
       }}>
-        Click desk to focus ?? Drag to orbit ?? Scroll to zoom
+        Click desk to focus · Drag to orbit · Scroll to zoom
       </div>
     </div>
   )

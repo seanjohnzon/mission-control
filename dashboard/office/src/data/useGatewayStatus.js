@@ -4,6 +4,10 @@ import { CREW } from './crewConfig';
 const POLL_MS = 10000;
 
 async function fetchOne(agent) {
+  // Robin and Brook have no machines yet — show as standby (not offline)
+  if (!agent.ip) {
+    return { name: agent.name, state: 'standby', model: null, outputTokens: 0 };
+  }
   const base = `http://${agent.ip}:${agent.port}`;
   const headers = { Authorization: `Bearer ${agent.token}` };
   try {
@@ -33,7 +37,7 @@ async function fetchOne(agent) {
 
 export default function useGatewayStatus() {
   const [statuses, setStatuses] = useState(() =>
-    CREW.map(a => ({ name: a.name, state: 'idle', model: null, outputTokens: 0 }))
+    CREW.map(a => ({ name: a.name, state: a.ip ? 'idle' : 'standby', model: null, outputTokens: 0 }))
   );
   const timer = useRef(null);
 
