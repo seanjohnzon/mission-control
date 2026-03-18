@@ -412,7 +412,7 @@ notes:       6 new docs committed. Bridge Runbook satisfies Phase 1 exit criteri
 ```
 task_id:     TASK-019
 title:       Phase 1 exit criteria reconciliation and checkpoint
-status:      completed
+status:      in-progress
 priority:    P1
 phase:       Phase 1
 assigned_to: bridge
@@ -427,7 +427,7 @@ scope:       Review all Phase 1 exit criteria. Update checkboxes to reflect actu
              analysis and recommended next actions.
 dependencies: TASK-018
 proof_ref:   null
-notes:       Resolved as part of crew-architecture transition. Phase 1 exit criteria superseded by Sprint 0/1 crew delivery model.
+notes:       Phase 1 exit analysis:
              DONE: API key, local inference, routing policy, agent defined, Telegram,
              directive receipt, D1.2/D1.3/D1.4, Bridge Runbook
              BLOCKED (human): TASK-009 (git remote), TASK-010 (Discord)
@@ -439,7 +439,7 @@ notes:       Resolved as part of crew-architecture transition. Phase 1 exit crit
 ```
 task_id:     TASK-020
 title:       Local-first routing correction — heartbeat, digest, and background tasks
-status:      completed
+status:      in-progress
 priority:    P1
 phase:       Phase 1
 assigned_to: bridge
@@ -457,7 +457,7 @@ scope:       Correct routing so operational background tasks use local inference
              (6) If local doesn't work as agent: document why and use cheapest cloud alternative
 dependencies: TASK-008 (local inference installed), CHG-007 (models active)
 proof_ref:   null — set to routing audit + config change commit
-notes:       Superseded by crew architecture shift 2026-03-16. Local routing tracked via cost reporting going forward.
+notes:       Opened by routing audit (ROUTING-AUDIT.md). Current state: 0% local utilization.
              All 5 guardrail checks FAIL. qwen2.5:7b confirmed tool-call-capable via direct
              Ollama API test. Next: test as OpenClaw agent model for cron/heartbeat.
              Estimated monthly savings if successful: $17-67.
@@ -523,7 +523,7 @@ notes:       Fix applied: swapped primary to ollama/qwen2.5:7b, cleared Anthropi
 ```
 task_id:     TASK-023
 title:       Runtime freeze and crew-architecture transition
-status:      completed
+status:      in-progress
 priority:    P1
 phase:       Phase 1 → Phase 2 transition
 assigned_to: human + Claude Code
@@ -537,7 +537,7 @@ scope:       Freeze old single-machine OpenClaw runtime. Disable autonomous cron
              Prevent old assumptions from driving autonomous behavior.
 dependencies: none
 proof_ref:   registry/TRANSITION-NOTE.md
-notes:       Runtime freeze complete. Crew architecture (Nami/Franky/Chopper) is now canonical. Transition done.
+notes:       Daily digest cron f7102d3d disabled. Gateway left running as
              communication backbone. System in transition-safe mode.
              Old bridge-only architecture frozen pending crew realignment.
 ```
@@ -545,7 +545,7 @@ notes:       Runtime freeze complete. Crew architecture (Nami/Franky/Chopper) is
 ```
 task_id:     TASK-024
 title:       Crew network discovery and machine onboarding
-status:      completed
+status:      in-progress
 priority:    P1
 phase:       Phase 2
 assigned_to: human + Claude Code
@@ -559,7 +559,7 @@ scope:       Discover LAN layout for 3-machine crew. Record IPs, MACs,
              Check SSH readiness. Prepare onboarding plan for Windows machines.
 dependencies: TASK-023 (runtime must be frozen first)
 proof_ref:   null
-notes:       Network discovery complete. All three machines active on LAN. IPs reserved: Nami 10.0.0.152, Franky 10.0.0.251, Chopper 10.0.0.16.
+notes:       Mac Mini now has Ethernet active (en0: 10.0.0.152) in addition
              to Wi-Fi (en1: 10.0.0.167). Switch appears to be uplinked.
              Desktop and 3060 status TBD via ARP/ping scan.
 ```
@@ -602,485 +602,4 @@ sprint:       Sprint 0 — Foundation
 created_at:   2026-03-15
 dependencies: CREW-001
 notes:        D1.1-ROADMAP.md updated by Franky via SSH to Nami. crew model (Nami/Franky/Chopper), phase map, IPs, network state all current. Phase A exit criteria checkbox ticked. Completed 2026-03-16.
-```
-
-```
-task_id:      EPIC-001
-title:        Documentation Update — Align D-series to crew model
-status:       in-progress
-priority:     P1
-phase:        
-assigned_to:  Nami (orchestrator)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         epic
-estimate:     3d
-dependencies: none
-notes:        Update all D-series docs to reflect crew model, current machine state, and proven architecture. Franky writes, Chopper verifies, Nami records.
-```
-
-```
-task_id:      CREW-003
-title:        Update D1.2 ARCHITECTURE.md to current state
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-002
-notes:        D1.2-ARCHITECTURE.md patched in place by Nami. Commit a346cf8. All 8 changes applied: machine specs, network (Ethernet/switch), paths (Franky D:\openclaw-brain, Chopper C:\Users\memeb\...), OC 2026.3.13, gateway federation section added (§14.5), crew names in all tables, Desktop/GPU3060 status Active, phase binding updated. Sent to Chopper for verification.
-```
-
-```
-task_id:      CREW-004
-title:        Update D1.4 ORG_MAP.md to crew model
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-003
-notes:        D1.4-ORG_MAP.md updated. Commit eb8f1b1. Org chart, agent tables, role map, decision rights, track ownership — all updated to Nami/Franky/Chopper. Discord now reflected as active.
-```
-
-```
-task_id:      CREW-005
-title:        Update D1.5 MODEL_POLICY.md to actual routing
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     1h
-dependencies: CREW-003
-notes:        D1.5-MODEL_POLICY.md updated. Commit f6cd66a. Nami=Anthropic/Sonnet/setup-token, Franky=Anthropic/Sonnet/OAuth, Chopper=OpenAI-codex/GPT-5.4/OAuth (renewal due 2026-03-25). CREW-013 referenced for Chopper auth renewal.
-```
-
-```
-task_id:      CREW-006
-title:        Update D1.6 LOCAL_INFERENCE_PLAN.md
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     1h
-dependencies: CREW-003
-notes:        D1.6-LOCAL_INFERENCE_PLAN.md updated. Commit 4868f2a. Survey table updated. Nami Ollama confirmed active. Franky/Chopper marked active with TBD local models (Phase B). Section headers updated to crew names. CREW-013 referenced for Chopper OAuth renewal.
-```
-
-```
-task_id:      CREW-007
-title:        Verify all D-series doc updates (CREW-003 through CREW-006)
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Chopper (QA)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-003,CREW-004,CREW-005,CREW-006
-notes:        Chopper verified 2026-03-16 21:34 EDT via SSH to Nami. D1.4 PASS, D1.6 PASS. D1.2 FAIL (internal inconsistency: Model TBD in some sections). D1.5 FAIL (missing Nami IP 10.0.0.152, OpenAI contradiction). Patch tasks created: CREW-014 (D1.2 fix) CREW-015 (D1.5 fix).
-```
-
-```
-task_id:      EPIC-002
-title:        3D Office Tab — Graduation Test
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         epic
-estimate:     5d
-dependencies: none
-notes:        Sprint 2 started 2026-03-16 22:06 EDT. Architecture shift: Franky operates as orchestrator, spawns builder subagents per phase.
-```
-
-```
-task_id:      CREW-008
-title:        3D Office — Static scene with desks and characters
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: EPIC-001
-notes:        Dispatched to Franky 2026-03-16 22:06 EDT with full SPEC-3D-OFFICE-TAB.md brief. Franky to spawn builder subagent for Phase D2.1 (static scene). Checkpoint: office with 3 desks and 3 characters visible.
-
-Subtasks:
-1. Initialize Vite+React+R3F project at D:\\openclaw-brain\\office-3d\\
-2. Create floor plane with grid texture
-3. Create 3 desks (low-poly box geometry): Nami center-back, Franky left-front, Chopper right-front
-4. Create 3 chairs per desk
-5. Place 3 placeholder characters (capsule body + sphere head) at each desk, colored: Nami=gold, Franky=blue, Chopper=green
-6. Add ambient + directional lighting
-7. Implement OrbitControls (orbit/zoom/pan)
-8. Implement click-to-focus camera: click desk/character → smooth camera move to frame it
-9. Add whiteboard prop (center area) showing static text
-10. Basic CSS overlay: agent name labels above characters
-
-Acceptance: Browser shows office with 3 desks + 3 characters, camera controls work, click focuses. No live data needed.
-Deliverables: Running at localhost:5173 on Franky. Code in D:\\openclaw-brain\\office-3d\\
-```
-
-```
-task_id:      CREW-009
-title:        3D Office — Character animations and state machine
-status:       complete
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-008
-notes:        Dispatched to Franky 2026-03-17 21:21 EDT. Phase D2.2 — Live gateway connection + character animations based on real agent states. Franky to spawn builder subagent.
-
-Subtasks:
-1. Create crewConfig.js with Nami/Franky/Chopper IPs, tokens, gateway ports
-2. Create useGatewayStatus.js hook — polls health + sessions.list from all 3 gateways every 10-15s
-3. Implement offline fallback (gateway unreachable → offline state)
-4. Wire agent states to character poses: idle=standing, working=sitting+typing, offline=desk empty
-5. Implement status bar (bottom): colored dots per agent + task count
-6. Handle CORS/ws:// via proxy if browser blocks direct LAN ws connections
-
-Acceptance: Status bar shows real online/offline/working state. Characters change pose based on live data. Kill Nami gateway → Nami desk goes empty.
-Note: May need thin HTTP proxy on Nami (port 18800) to bridge browser→gateway WS.
-```
-
-```
-task_id:      CREW-010
-title:        3D Office — Live gateway connection + data layer
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-009
-notes:        Phase D2.3 — Agent info panel.
-
-Subtasks:
-1. Create AgentPanel.jsx component (floating card, right side)
-2. On click-to-focus: fetch real data from that agent gateway (sessions.list, health)
-3. Display: name, role, status, model, IP, gateway latency, current task (last message), session key, tokens in/out, last active time
-4. Auto-refresh panel data every 15s while agent is focused
-5. Click elsewhere or press Escape → panel closes, camera returns to overview
-6. Style: dark card, crew color accent per agent
-
-Acceptance: Click Franky → panel shows real model (claude-sonnet-4-6), real token count, real last task text.
-```
-
-```
-task_id:      CREW-011
-title:        3D Office — Agent info panel + task flow animation
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-010
-notes:        Phases D2.4 + D2.5 — Task flow animation + polish.
-
-Subtasks:
-1. Create TaskOrb.jsx — animated glowing sphere traveling between desk positions
-2. Detect task assignment: watch Nami session history for outbound messages containing TASK FROM NAMI
-3. Trigger orb: Nami desk → target agent desk (smooth arc, 2-3s travel)
-4. Target agent transitions idle → working on orb arrival
-5. Return orb on session completion (outputTokens stops increasing)
-6. Add thought bubble above character head when Thinking state
-7. Add green checkmark particle burst on Task Complete
-8. Add red exclamation on Error state
-9. Integrate into Mission Control as a new tab in existing MC dashboard
-10. Whiteboard updates to show current active task text
-
-Acceptance: Watch a real crew task assignment — orb flies, character sits, works, completes. Visible in MC tab.
-```
-
-```
-task_id:      CREW-012
-title:        3D Office — Polish, integration, and full verification
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     4h
-dependencies: CREW-011
-notes:        Phase D2.6 — Polish and full verification by Chopper.
-
-All 11 acceptance criteria from spec §13:
-[ ] Scene renders without errors in Chrome/Safari
-[ ] All 3 agents appear with correct names and roles
-[ ] Live gateway status reflected (not mocked)
-[ ] Offline agent shows empty desk (test: kill a gateway)
-[ ] Working agent shows typing animation
-[ ] Click-to-focus camera works for each agent
-[ ] Agent info panel shows real model, tokens, gateway health
-[ ] Task flow orb animation triggers on real task assignment
-[ ] Status bar shows correct state for all 3 agents
-[ ] Page loads in under 3 seconds on LAN
-[ ] No console errors in browser dev tools
-
-Chopper verifies by opening the page, running through each criterion, and posting PASS/FAIL report to Discord #qa. Must use live data, not mocked.
-```
-
-```
-task_id:      CREW-013
-title:        Chopper auth renewal (OpenAI-codex OAuth)
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  human
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         task
-estimate:     10m
-dependencies: none
-notes:        OAuth expires ~2026-03-25. Interactive browser login required. Run on Chopper: openclaw models auth setup-token --provider openai
-```
-
-```
-task_id:      CREW-014
-title:        Patch D1.2-ARCHITECTURE.md — remove Model TBD inconsistency
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-17
-dependencies: none
-notes:        Chopper FAIL: doc has stale Model TBD and D1.5 not yet written references. Make internally consistent with active model state.
-```
-
-```
-task_id:      CREW-015
-title:        Patch D1.5-MODEL_POLICY.md — add Nami IP, fix OpenAI contradiction
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-17
-dependencies: none
-notes:        Chopper FAIL: 10.0.0.152 missing. OpenAI not-approved contradicts Chopper active gpt-5.4. Fix both.
-```
-
-```
-task_id:      CREW-016
-title:        Verify CREW-009 — animations + live gateway data layer
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-009
-notes:        Dispatched 2026-03-17 22:05 EDT. Chopper to verify: page loads, 3 characters visible, pose changes by state, correct colors, live gateway polling active (10s interval), info panel, orbit controls.
-```
-
-```
-task_id:      CREW-017
-title:        3D Office — Full visual redesign to isometric diorama style
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-009
-notes:        Captain rejected CREW-009 visual output. Reference: iamlukethedev Twitter video. Requirements: true isometric diorama view, dark space backdrop with planet, cream floor + cutaway walls, low-poly humanoid characters at desks, round conference tables, top UI roster bar, live gateway polling retained. Full src/ rewrite.
-```
-
-```
-task_id:      CREW-018
-title:        3D Office — QA checklist prep for new visual spec
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        Prep full QA checklist against iamlukethedev reference while Franky rebuilds. Checklist must cover: isometric perspective correct, space backdrop present, planet element visible, cream floor + cutaway walls, low-poly humanoid figures (not capsules), characters at desks, round conference tables, monitor props on desks, name labels above characters, top UI roster bar with crew names, status dots (green/blue/yellow/gray), live gateway polling active (10s), orbit controls working, no console errors. Ready to execute the moment Franky deploys.
-```
-
-```
-task_id:      CREW-019
-title:        3D Office — Visual QA verify against reference style
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-017,CREW-018
-notes:        Execute checklist from CREW-018 against new build at http://10.0.0.152:5174. PASS/FAIL each item. Screenshot key views. Report to Nami.
-```
-
-```
-task_id:      CREW-020
-title:        3D Office — Visual approval package to Captain
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-019
-notes:        Capture screenshot of new build, send to Captain in Telegram for visual approval. If approved, trigger CREW-010 (live data layer). If rejected, debrief Franky with specific notes and iterate.
-```
-
-```
-task_id:      QA-TEST-1773801240853
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801269318
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320708
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320731
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320740
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      CREW-021
-title:        Generate One Piece-style crew avatars — Nami, Franky, Chopper, Robin, Brook
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Brook (media)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        Generate 5 portrait-style avatars in One Piece anime art style. One for each: Nami (navigator, orange hair, confident), Franky (shipwright, blue hair, muscular, SUPER pose), Chopper (doctor, reindeer with hat, blue nose), Robin (archaeologist, dark hair, calm), Brook (musician, skeleton with afro and top hat). Square format, transparent or clean background, consistent art style. Save to /Users/minicihan/Cursor Projects/mission-control/dashboard/office/public/avatars/. Send previews to Captain for approval before Franky integrates.
-```
-
-```
-task_id:      CREW-022
-title:        Captain visual approval — crew avatars
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-021
-notes:        Send all 5 avatar previews to Captain in Telegram. Wait for approval. If any rejected, send feedback to Brook for revision. Only mark PASS when Captain approves all 5.
-```
-
-```
-task_id:      CREW-023
-title:        Integrate approved avatars into 3D Office scene
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-022,CREW-017
-notes:        Replace character color-coded placeholders with approved avatar sprites/textures from /public/avatars/. Each character floats their avatar above their desk or as their face texture. Maintain state color ring/glow around avatar to show status.
 ```

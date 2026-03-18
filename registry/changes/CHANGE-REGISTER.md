@@ -44,7 +44,38 @@ This file is the operational record of all controlled changes. It is the mandato
 
 ## Open Changes
 
-_None._
+### CHG-009 — Runtime Freeze and Crew-Architecture Transition
+
+```
+change_id:           CHG-009
+title:               Runtime Freeze — Crew-Architecture Transition (Nami/Franky/Chopper)
+category:            5 — Agent Configuration Activation (D1.15 §4.5)
+risk_class:          Medium
+proposed_by:         human
+proposed_date:       2026-03-14
+description:         Freeze the old single-machine OpenClaw runtime to prevent autonomous
+                     procedures from running under outdated architecture assumptions.
+                     System entering crew realignment: Nami (Mac Mini), Franky (Desktop),
+                     Chopper (3060 Laptop). Old bridge/brain/forge role assignments and
+                     cron jobs paused until reconfirmed under new architecture.
+scope:               OpenClaw cron jobs, autonomous task pickup, runtime assumptions.
+                     No config destroyed — freeze only.
+affected_documents:  TRANSITION-NOTE.md, TASK-REGISTER, CHANGE-REGISTER, HANDOFF-STATUS.md
+affected_capabilities: None removed. Daily digest cron disabled (not deleted).
+affected_secrets:    null
+approval_status:     approved
+approved_by:         human
+approved_date:       2026-03-14
+execution_window:    2026-03-14 — immediate
+rollback_plan:       openclaw cron enable f7102d3d-a629-4052-ba5e-41abab5cffb9
+                     No config was changed or deleted. Re-enable cron to restore.
+execution_status:    in-progress
+proof_ref:           registry/TRANSITION-NOTE.md + TASK-023
+notes:               Gateway left running as communication backbone. Ollama left running.
+                     Telegram channel left enabled for manual use. Only autonomous
+                     procedures frozen. Resume requires human approval after crew
+                     architecture is confirmed and SSH verified.
+```
 
 ---
 

@@ -11,14 +11,6 @@ function safeRead(p) {
   try { return fs.readFileSync(p, 'utf8'); } catch { return ''; }
 }
 
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', chunk => body += chunk);
-    req.on('end', () => { try { resolve(JSON.parse(body)); } catch(e) { reject(e); } });
-  });
-}
-
 function safeJSON(fn) {
   try { return fn(); } catch (e) { return { error: e.message }; }
 }
@@ -38,10 +30,8 @@ async function fetchJSON(url, timeout = 3000) {
   });
 }
 
-const TASK_REGISTER_PATH = path.join(MC_ROOT, 'registry/tasks/TASK-REGISTER.md');
-
 function parseTasks() {
-  const raw = safeRead(TASK_REGISTER_PATH);
+  const raw = safeRead(path.join(MC_ROOT, 'registry/tasks/TASK-REGISTER.md'));
   const tasks = [];
   const blocks = raw.split(/^```$/m);
   for (let i = 0; i < blocks.length; i++) {
@@ -49,7 +39,7 @@ function parseTasks() {
     if (!b.startsWith('task_id:')) continue;
     const t = {};
     for (const line of b.split('\n')) {
-      const m = line.match(/^([\w_]+):\s+(.+)$/);
+      const m = line.match(/^(\w+):\s+(.+)$/);
       if (m) {
         const key = m[1].trim();
         const val = m[2].trim();
@@ -59,91 +49,13 @@ function parseTasks() {
         else if (key === 'priority') t.priority = val;
         else if (key === 'phase') t.phase = val;
         else if (key === 'assigned_to') t.assigned = val;
-        else if (key === 'verified_by') t.verifiedBy = val;
         else if (key === 'dependencies') t.dependencies = val;
         else if (key === 'notes') t.notes = val;
-        else if (key === 'sprint') t.sprint = val;
-        else if (key === 'created_at') t.createdAt = val;
-        else if (key === 'completed_at') t.completedAt = val;
-        else if (key === 'type') t.type = val;
-        else if (key === 'parent') t.parent = val;
-        else if (key === 'estimate') t.estimate = val;
-        else if (key === 'actual') t.actual = val;
       }
     }
     if (t.id) tasks.push(t);
   }
   return tasks;
-}
-
-function taskToBlock(t) {
-  const pad = (k, v) => `${k}:${' '.repeat(Math.max(1, 13 - k.length))}${v}`;
-  const lines = [
-    pad('task_id', t.task_id || t.id),
-    pad('title', t.title),
-    pad('status', t.status || 'open'),
-    pad('priority', t.priority || 'backlog'),
-    pad('phase', t.phase || ''),
-    pad('assigned_to', t.assigned_to || t.assigned || 'unassigned'),
-  ];
-  if (t.type)          lines.push(pad('type', t.type));
-  if (t.parent)        lines.push(pad('parent', t.parent));
-  if (t.verified_by)   lines.push(pad('verified_by', t.verified_by));
-  if (t.sprint)        lines.push(pad('sprint', t.sprint));
-  if (t.estimate)      lines.push(pad('estimate', t.estimate));
-  if (t.actual)        lines.push(pad('actual', t.actual));
-  if (t.created_at)    lines.push(pad('created_at', t.created_at));
-  if (t.completed_at)  lines.push(pad('completed_at', t.completed_at));
-  lines.push(pad('dependencies', t.dependencies || 'none'));
-  lines.push(pad('notes', t.notes || ''));
-  return '```\n' + lines.join('\n') + '\n```';
-}
-
-function findTaskBlock(raw, taskId) {
-  const blocks = raw.split(/^```$/m);
-  for (let i = 0; i < blocks.length; i++) {
-    const b = blocks[i].trim();
-    if (!b.startsWith('task_id:')) continue;
-    if (b.match(new RegExp(`^task_id:\\s+${taskId}$`, 'm'))) {
-      // Return the full fenced block including backticks
-      const start = raw.indexOf('```\n' + b.trimStart());
-      const end = raw.indexOf('\n```', start) + 4;
-      return { start, end, content: raw.slice(start, end) };
-    }
-  }
-  return null;
-}
-
-function updateTaskBlock(blockContent, updates) {
-  const lines = blockContent.replace(/^```\n/, '').replace(/\n```$/, '').split('\n');
-  const updatedLines = lines.map(line => {
-    const m = line.match(/^([\w_]+):(\s+)(.+)$/);
-    if (!m) return line;
-    const key = m[1].trim();
-    const fieldMap = {
-      status: 'status', title: 'title', priority: 'priority',
-      phase: 'phase', assigned_to: 'assigned_to', notes: 'notes',
-      sprint: 'sprint', verified_by: 'verified_by',
-      dependencies: 'dependencies', completed_at: 'completed_at',
-      type: 'type', parent: 'parent', estimate: 'estimate', actual: 'actual',
-    };
-    if (fieldMap[key] && updates[fieldMap[key]] !== undefined) {
-      return `${key}:${m[2]}${updates[fieldMap[key]]}`;
-    }
-    return line;
-  });
-  // Add new fields not already present
-  const presentKeys = new Set(lines.map(l => l.match(/^([\w_]+):/)?.[1]).filter(Boolean));
-  const optionalFields = ['type', 'parent', 'sprint', 'estimate', 'actual', 'verified_by', 'created_at', 'completed_at'];
-  for (const f of optionalFields) {
-    if (updates[f] !== undefined && !presentKeys.has(f)) {
-      // Insert before dependencies line
-      const depIdx = updatedLines.findIndex(l => l.startsWith('dependencies:'));
-      const insertAt = depIdx >= 0 ? depIdx : updatedLines.length - 1;
-      updatedLines.splice(insertAt, 0, `${f}:${' '.repeat(Math.max(1, 13 - f.length))}${updates[f]}`);
-    }
-  }
-  return '```\n' + updatedLines.join('\n') + '\n```';
 }
 
 function parseRouting() {
@@ -387,104 +299,8 @@ const PROJECTS = [
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const p = url.pathname;
-  const method = req.method;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-
-  // POST /api/tasks — create new task
-  if (method === 'POST' && p === '/api/tasks') {
-    try {
-      const body = await parseBody(req);
-      if (!body.task_id || !body.title) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'task_id and title are required' }));
-        return;
-      }
-      body.created_at = body.created_at || new Date().toISOString().slice(0, 10);
-      const block = taskToBlock(body);
-      const raw = safeRead(TASK_REGISTER_PATH);
-      fs.writeFileSync(TASK_REGISTER_PATH, raw.trimEnd() + '\n\n' + block + '\n');
-      const tasks = parseTasks();
-      const created = tasks.find(t => t.id === body.task_id);
-      res.writeHead(201, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true, task: created }));
-    } catch (e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: e.message }));
-    }
-    return;
-  }
-
-  // PUT /api/tasks/:id — update existing task
-  const putMatch = p.match(/^\/api\/tasks\/([^/]+)$/);
-  if (method === 'PUT' && putMatch) {
-    try {
-      const taskId = putMatch[1];
-      const updates = await parseBody(req);
-      const raw = safeRead(TASK_REGISTER_PATH);
-      const found = findTaskBlock(raw, taskId);
-      if (!found) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Task ${taskId} not found` }));
-        return;
-      }
-      const newBlock = updateTaskBlock(found.content, updates);
-      const newRaw = raw.slice(0, found.start) + newBlock + raw.slice(found.end);
-      fs.writeFileSync(TASK_REGISTER_PATH, newRaw);
-      const tasks = parseTasks();
-      const updated = tasks.find(t => t.id === taskId);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true, task: updated }));
-    } catch (e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: e.message }));
-    }
-    return;
-  }
-
-  // POST /api/tasks/:id/log — append log entry to notes
-  const logMatch = p.match(/^\/api\/tasks\/([^/]+)\/log$/);
-  if (method === 'POST' && logMatch) {
-    try {
-      const taskId = logMatch[1];
-      const body = await parseBody(req);
-      if (!body.message) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'message is required' }));
-        return;
-      }
-      const raw = safeRead(TASK_REGISTER_PATH);
-      const found = findTaskBlock(raw, taskId);
-      if (!found) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: `Task ${taskId} not found` }));
-        return;
-      }
-      const ts = new Date().toISOString().slice(0, 16).replace('T', ' ');
-      const author = body.author || 'agent';
-      const tasks = parseTasks();
-      const task = tasks.find(t => t.id === taskId);
-      const existingNotes = task?.notes || '';
-      const newNotes = existingNotes
-        ? `${existingNotes} | [${ts}] ${author}: ${body.message}`
-        : `[${ts}] ${author}: ${body.message}`;
-      const newBlock = updateTaskBlock(found.content, { notes: newNotes });
-      const newRaw = raw.slice(0, found.start) + newBlock + raw.slice(found.end);
-      fs.writeFileSync(TASK_REGISTER_PATH, newRaw);
-      const updatedTasks = parseTasks();
-      const updated = updatedTasks.find(t => t.id === taskId);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true, task: updated }));
-    } catch (e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: e.message }));
-    }
-    return;
-  }
 
   if (p === '/' || p === '/index.html') {
     const html = safeRead(path.join(__dirname, 'index.html'));
@@ -572,6 +388,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mission Control v2 running at http://0.0.0.0:${PORT}`);
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`Mission Control v2 running at http://127.0.0.1:${PORT}`);
 });

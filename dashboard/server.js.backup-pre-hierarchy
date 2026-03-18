@@ -65,10 +65,6 @@ function parseTasks() {
         else if (key === 'sprint') t.sprint = val;
         else if (key === 'created_at') t.createdAt = val;
         else if (key === 'completed_at') t.completedAt = val;
-        else if (key === 'type') t.type = val;
-        else if (key === 'parent') t.parent = val;
-        else if (key === 'estimate') t.estimate = val;
-        else if (key === 'actual') t.actual = val;
       }
     }
     if (t.id) tasks.push(t);
@@ -86,12 +82,8 @@ function taskToBlock(t) {
     pad('phase', t.phase || ''),
     pad('assigned_to', t.assigned_to || t.assigned || 'unassigned'),
   ];
-  if (t.type)          lines.push(pad('type', t.type));
-  if (t.parent)        lines.push(pad('parent', t.parent));
   if (t.verified_by)   lines.push(pad('verified_by', t.verified_by));
   if (t.sprint)        lines.push(pad('sprint', t.sprint));
-  if (t.estimate)      lines.push(pad('estimate', t.estimate));
-  if (t.actual)        lines.push(pad('actual', t.actual));
   if (t.created_at)    lines.push(pad('created_at', t.created_at));
   if (t.completed_at)  lines.push(pad('completed_at', t.completed_at));
   lines.push(pad('dependencies', t.dependencies || 'none'));
@@ -125,7 +117,6 @@ function updateTaskBlock(blockContent, updates) {
       phase: 'phase', assigned_to: 'assigned_to', notes: 'notes',
       sprint: 'sprint', verified_by: 'verified_by',
       dependencies: 'dependencies', completed_at: 'completed_at',
-      type: 'type', parent: 'parent', estimate: 'estimate', actual: 'actual',
     };
     if (fieldMap[key] && updates[fieldMap[key]] !== undefined) {
       return `${key}:${m[2]}${updates[fieldMap[key]]}`;
@@ -134,7 +125,7 @@ function updateTaskBlock(blockContent, updates) {
   });
   // Add new fields not already present
   const presentKeys = new Set(lines.map(l => l.match(/^([\w_]+):/)?.[1]).filter(Boolean));
-  const optionalFields = ['type', 'parent', 'sprint', 'estimate', 'actual', 'verified_by', 'created_at', 'completed_at'];
+  const optionalFields = ['sprint', 'verified_by', 'created_at', 'completed_at'];
   for (const f of optionalFields) {
     if (updates[f] !== undefined && !presentKeys.has(f)) {
       // Insert before dependencies line
@@ -572,6 +563,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mission Control v2 running at http://0.0.0.0:${PORT}`);
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`Mission Control v2 running at http://127.0.0.1:${PORT}`);
 });
