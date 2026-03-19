@@ -73,9 +73,8 @@ jobs:
           sleep 3
 
       - name: Run ${{ matrix.worker }} tests
-        run: npx playwright test --project=${{ matrix.worker }}
-        env:
-          PLAYWRIGHT_TEST_GREP: "@${{ matrix.worker }}"
+        working-directory: ./qa
+        run: npx playwright test --config=playwright.config.ts --project=${{ matrix.worker }} --grep "@${{ matrix.worker }}"
 
       - name: Upload test results
         if: always()
