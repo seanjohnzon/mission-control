@@ -344,7 +344,7 @@ function HoverPortrait({ avatarUrl, agentName, agentState, hovered }) {
 }
 
 // ?????? Desk geometry ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function Desk({ agentColor, agentState }) {
+function Desk({ agentColor, agentState, agentName }) {
   const monitorGlow = agentState === 'working' ? 1.0 : agentState === 'thinking' ? 0.5 : agentState === 'offline' ? 0 : 0.12
   return (
     <group>
@@ -374,6 +374,189 @@ function Desk({ agentColor, agentState }) {
       </group>
       <mesh position={[0,0.775,0.12]} receiveShadow><boxGeometry args={[0.55,0.02,0.18]} /><meshStandardMaterial color="#222233" /></mesh>
       <mesh position={[0,0.775,0.51]}><boxGeometry args={[2.0,0.03,0.02]} /><meshStandardMaterial color={agentColor} emissive={agentColor} emissiveIntensity={0.6} /></mesh>
+
+      {/* ===== Desk personality items ===== */}
+      {agentName === 'Nami' && (
+        <group>
+          {/* Rolled nautical chart */}
+          <mesh position={[0.55, 0.78, 0.28]} rotation={[0, 0.4, Math.PI/2]} castShadow>
+            <cylinderGeometry args={[0.04, 0.04, 0.40, 8]} />
+            <meshStandardMaterial color="#F5E6C8" roughness={0.9} />
+          </mesh>
+          {/* Compass */}
+          <mesh position={[-0.52, 0.78, 0.20]} castShadow>
+            <cylinderGeometry args={[0.07, 0.07, 0.04, 16]} />
+            <meshStandardMaterial color="#C8A200" roughness={0.4} metalness={0.6} />
+          </mesh>
+          {/* Coin stack */}
+          <mesh position={[-0.52, 0.80, -0.05]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.10, 8]} />
+            <meshStandardMaterial color="#FFD700" roughness={0.3} metalness={0.7} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Franky' && (
+        <group>
+          {/* Blueprint roll */}
+          <mesh position={[0.55, 0.78, 0.20]} rotation={[0, 0.2, Math.PI/2]} castShadow>
+            <cylinderGeometry args={[0.04, 0.04, 0.38, 8]} />
+            <meshStandardMaterial color="#4A7FCC" roughness={0.8} />
+          </mesh>
+          {/* Coffee mug */}
+          <mesh position={[-0.50, 0.78, 0.20]} castShadow>
+            <cylinderGeometry args={[0.05, 0.04, 0.10, 10]} />
+            <meshStandardMaterial color="#C8C8C8" roughness={0.6} />
+          </mesh>
+          {/* Wrench */}
+          <mesh position={[0.30, 0.775, 0.28]} rotation={[0, 0.5, 0]} castShadow>
+            <boxGeometry args={[0.06, 0.04, 0.28]} />
+            <meshStandardMaterial color="#888" roughness={0.5} metalness={0.5} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Chopper' && (
+        <group>
+          {/* Medical kit */}
+          <mesh position={[0.48, 0.78, 0.20]} castShadow>
+            <boxGeometry args={[0.18, 0.12, 0.14]} />
+            <meshStandardMaterial color="#EE2222" roughness={0.7} />
+          </mesh>
+          <mesh position={[0.48, 0.785, 0.20]}>
+            <boxGeometry args={[0.04, 0.10, 0.02]} />
+            <meshStandardMaterial color="#FFFFFF" />
+          </mesh>
+          <mesh position={[0.48, 0.785, 0.20]}>
+            <boxGeometry args={[0.10, 0.04, 0.02]} />
+            <meshStandardMaterial color="#FFFFFF" />
+          </mesh>
+          {/* Magnifying glass handle */}
+          <mesh position={[-0.45, 0.78, 0.22]} rotation={[0, 0, 0.5]} castShadow>
+            <cylinderGeometry args={[0.02, 0.02, 0.18, 8]} />
+            <meshStandardMaterial color="#8B5A2B" roughness={0.7} />
+          </mesh>
+          {/* Magnifying glass head */}
+          <mesh position={[-0.42, 0.80, 0.22]}>
+            <torusGeometry args={[0.06, 0.015, 8, 16]} />
+            <meshStandardMaterial color="#888" metalness={0.5} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Robin' && (
+        <group>
+          {/* Ancient book stack */}
+          <mesh position={[0.50, 0.78, 0.10]} castShadow>
+            <boxGeometry args={[0.16, 0.06, 0.20]} />
+            <meshStandardMaterial color="#8B1A1A" roughness={0.9} />
+          </mesh>
+          <mesh position={[0.50, 0.84, 0.10]} castShadow>
+            <boxGeometry args={[0.14, 0.05, 0.18]} />
+            <meshStandardMaterial color="#4A2C6E" roughness={0.9} />
+          </mesh>
+          {/* Flower pot */}
+          <mesh position={[-0.48, 0.77, 0.18]} castShadow>
+            <cylinderGeometry args={[0.05, 0.04, 0.08, 8]} />
+            <meshStandardMaterial color="#C1440E" roughness={0.9} />
+          </mesh>
+          <mesh position={[-0.48, 0.83, 0.18]} castShadow>
+            <sphereGeometry args={[0.06, 6, 6]} />
+            <meshStandardMaterial color="#3A9A3A" roughness={0.8} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Brook' && (
+        <group>
+          {/* Miniature violin body */}
+          <mesh position={[0.48, 0.78, 0.18]} rotation={[0, 0.3, 0]} castShadow>
+            <boxGeometry args={[0.08, 0.03, 0.18]} />
+            <meshStandardMaterial color="#6B3A1A" roughness={0.6} />
+          </mesh>
+          {/* Violin neck */}
+          <mesh position={[0.48, 0.78, 0.02]} rotation={[0, 0.3, 0]} castShadow>
+            <boxGeometry args={[0.03, 0.03, 0.12]} />
+            <meshStandardMaterial color="#5A2E0A" roughness={0.7} />
+          </mesh>
+          {/* Sheet music papers */}
+          <mesh position={[-0.40, 0.775, 0.15]} rotation={[-0.1, 0.2, 0]} castShadow>
+            <boxGeometry args={[0.22, 0.005, 0.16]} />
+            <meshStandardMaterial color="#F5F0E8" roughness={0.9} />
+          </mesh>
+          <mesh position={[-0.42, 0.776, 0.18]} rotation={[-0.1, -0.1, 0]} castShadow>
+            <boxGeometry args={[0.20, 0.005, 0.14]} />
+            <meshStandardMaterial color="#EEEBE0" roughness={0.9} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Sanji' && (
+        <group>
+          {/* Coffee cup */}
+          <mesh position={[0.48, 0.78, 0.20]} castShadow>
+            <cylinderGeometry args={[0.05, 0.04, 0.09, 10]} />
+            <meshStandardMaterial color="#FFFFFF" roughness={0.5} />
+          </mesh>
+          {/* Saucer */}
+          <mesh position={[0.48, 0.775, 0.20]} castShadow>
+            <cylinderGeometry args={[0.08, 0.08, 0.015, 12]} />
+            <meshStandardMaterial color="#EEEEEE" roughness={0.5} />
+          </mesh>
+          {/* Flower vase */}
+          <mesh position={[-0.46, 0.78, 0.18]} castShadow>
+            <cylinderGeometry args={[0.035, 0.028, 0.10, 8]} />
+            <meshStandardMaterial color="#F0F0F0" roughness={0.4} />
+          </mesh>
+          <mesh position={[-0.46, 0.84, 0.18]} castShadow>
+            <sphereGeometry args={[0.04, 6, 6]} />
+            <meshStandardMaterial color="#FF6699" roughness={0.8} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Usopp' && (
+        <group>
+          {/* Slingshot */}
+          <mesh position={[0.50, 0.79, 0.22]} castShadow>
+            <boxGeometry args={[0.06, 0.16, 0.04]} />
+            <meshStandardMaterial color="#8B6914" roughness={0.7} />
+          </mesh>
+          <mesh position={[0.44, 0.86, 0.22]} castShadow>
+            <boxGeometry args={[0.04, 0.08, 0.04]} />
+            <meshStandardMaterial color="#8B6914" roughness={0.7} />
+          </mesh>
+          <mesh position={[0.56, 0.86, 0.22]} castShadow>
+            <boxGeometry args={[0.04, 0.08, 0.04]} />
+            <meshStandardMaterial color="#8B6914" roughness={0.7} />
+          </mesh>
+          {/* Small telescope */}
+          <mesh position={[-0.45, 0.78, 0.18]} rotation={[0, 0.4, Math.PI/2]} castShadow>
+            <cylinderGeometry args={[0.035, 0.025, 0.24, 10]} />
+            <meshStandardMaterial color="#8B5A00" roughness={0.6} />
+          </mesh>
+        </group>
+      )}
+      {agentName === 'Luffy' && (
+        <group>
+          {/* Meat bone */}
+          <mesh position={[0.50, 0.78, 0.22]} castShadow>
+            <cylinderGeometry args={[0.025, 0.025, 0.20, 8]} />
+            <meshStandardMaterial color="#D4956A" roughness={0.8} />
+          </mesh>
+          <mesh position={[0.42, 0.78, 0.22]} castShadow>
+            <sphereGeometry args={[0.04, 8, 8]} />
+            <meshStandardMaterial color="#D4956A" roughness={0.8} />
+          </mesh>
+          <mesh position={[0.58, 0.78, 0.22]} castShadow>
+            <sphereGeometry args={[0.04, 8, 8]} />
+            <meshStandardMaterial color="#D4956A" roughness={0.8} />
+          </mesh>
+          {/* Straw hat on desk corner */}
+          <mesh position={[-0.46, 0.78, 0.14]} castShadow>
+            <cylinderGeometry args={[0.14, 0.16, 0.03, 16]} />
+            <meshStandardMaterial color="#F5C842" roughness={0.9} />
+          </mesh>
+          <mesh position={[-0.46, 0.79, 0.14]} castShadow>
+            <cylinderGeometry args={[0.07, 0.07, 0.06, 12]} />
+            <meshStandardMaterial color="#F5C842" roughness={0.9} />
+          </mesh>
+        </group>
+      )}
     </group>
   )
 }
@@ -485,7 +668,7 @@ function AgentStation({ agent, agentState, onClick }) {
     <>
       {/* Fixed desk ??? always at agent base position */}
       <group position={[px, 0, pz]}>
-        <Desk agentColor={agent.color} agentState={agentState} />
+        <Desk agentColor={agent.color} agentState={agentState} agentName={agent.name} />
       </group>
 
       {/* Animated character group */}
