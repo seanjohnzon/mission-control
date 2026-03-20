@@ -200,7 +200,7 @@ notes:       Completed. Ollama 0.17.7 installed at /Applications/Ollama.app, ser
 ```
 task_id:     TASK-009
 title:       Git remote decision and setup
-status:      open
+status:      blocked
 priority:    P1
 phase:       Phase 1
 assigned_to: human
@@ -212,7 +212,7 @@ change_ref:  null
 scope:       Decide git remote host (GitHub / Gitea / self-hosted / none for now); configure and push; update MAC-MINI-BASELINE.md §7
 dependencies: TASK-001
 proof_ref:   null
-notes:       D1.13 §16 Priority 4. Until a remote exists, the policy corpus is only on Mac Mini. Low urgency but affects recovery posture.
+notes:       Git configured on all 3 machines (Nami, Franky, Chopper). Credentials stored. PAT lacks repo creation permission. Blocked until Captain: (a) creates repos manually at github.com/new (names: mission-control, office-3d) OR (b) updates PAT to include Administration write. Once repos exist: Nami pushes mission-control, Franky pushes office-3d immediately. Preview URLs: seanjohnzon.github.io/mission-control and seanjohnzon.github.io/office-3d (after GitHub Pages enabled).
 ```
 
 ```
@@ -775,7 +775,7 @@ Note: May need thin HTTP proxy on Nami (port 18800) to bridge browser→gateway 
 ```
 task_id:      CREW-010
 title:        3D Office — Live gateway connection + data layer
-status:       queued
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -785,7 +785,7 @@ type:         story
 parent:       EPIC-002
 estimate:     1d
 dependencies: CREW-009
-notes:        Phase D2.3 — Agent info panel.
+notes:        D2.3 done - live polling + agent panel commit 817ee4f. Unblocks CREW-011.
 
 Subtasks:
 1. Create AgentPanel.jsx component (floating card, right side)
@@ -801,7 +801,7 @@ Acceptance: Click Franky → panel shows real model (claude-sonnet-4-6), real to
 ```
 task_id:      CREW-011
 title:        3D Office — Agent info panel + task flow animation
-status:       queued
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -811,7 +811,7 @@ type:         story
 parent:       EPIC-002
 estimate:     1d
 dependencies: CREW-010
-notes:        Phases D2.4 + D2.5 — Task flow animation + polish.
+notes:        Franky completed 2026-03-18 11:39 EDT. Commit dafe835: TaskFlowParticles, AmbientHologram, monitor HUDs, whiteboard D2.5, pulsing green RosterBar dots. GH Pages deploy #9 success. CREW-012 unblocked.
 
 Subtasks:
 1. Create TaskOrb.jsx — animated glowing sphere traveling between desk positions
@@ -831,7 +831,7 @@ Acceptance: Watch a real crew task assignment — orb flies, character sits, wor
 ```
 task_id:      CREW-012
 title:        3D Office — Polish, integration, and full verification
-status:       queued
+status:       in-progress
 priority:     P0
 phase:        
 assigned_to:  Chopper (QA)
@@ -841,7 +841,7 @@ type:         story
 parent:       EPIC-002
 estimate:     4h
 dependencies: CREW-011
-notes:        Phase D2.6 — Polish and full verification by Chopper.
+notes:        Dispatched to Chopper 2026-03-18 12:09 EDT. Phase D2.6 — Full polish and verification at seanjohnzon.github.io/office-3d. Verify voxel chars, task flow particles, ambient hologram, monitor HUDs, RosterBar pulsing dots, orbit controls, live gateway polling, no console errors.
 
 All 11 acceptance criteria from spec §13:
 [ ] Scene renders without errors in Chrome/Safari
@@ -918,7 +918,7 @@ notes:        Dispatched 2026-03-17 22:05 EDT. Chopper to verify: page loads, 3 
 ```
 task_id:      CREW-017
 title:        3D Office — Full visual redesign to isometric diorama style
-status:       in-progress
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -948,7 +948,7 @@ notes:        Prep full QA checklist against iamlukethedev reference while Frank
 ```
 task_id:      CREW-019
 title:        3D Office — Visual QA verify against reference style
-status:       queued
+status:       in-progress
 priority:     P0
 phase:        
 assigned_to:  Chopper (QA)
@@ -957,7 +957,7 @@ parent:       EPIC-002
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-18
 dependencies: CREW-017,CREW-018
-notes:        Execute checklist from CREW-018 against new build at http://10.0.0.152:5174. PASS/FAIL each item. Screenshot key views. Report to Nami.
+notes:        CREW-017 complete. Dispatched to Chopper 2026-03-18 02:09 EDT. Execute visual QA checklist from CREW-018 against new isometric build at http://10.0.0.152:5174. PASS/FAIL each item. Screenshot key views. Report to Nami.
 ```
 
 ```
@@ -975,75 +975,11 @@ dependencies: CREW-019
 notes:        Capture screenshot of new build, send to Captain in Telegram for visual approval. If approved, trigger CREW-010 (live data layer). If rejected, debrief Franky with specific notes and iterate.
 ```
 
-```
-task_id:      QA-TEST-1773801240853
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801269318
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320708
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320731
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
-
-```
-task_id:      QA-TEST-1773801320740
-title:        Automated QA test task
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-18
-dependencies: none
-notes:       Auto-verified by QA
-```
 
 ```
 task_id:      CREW-021
 title:        Generate One Piece-style crew avatars — Nami, Franky, Chopper, Robin, Brook
-status:       in-progress
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Brook (media)
@@ -1052,13 +988,13 @@ parent:       EPIC-002
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-18
 dependencies: none
-notes:        Generate 5 portrait-style avatars in One Piece anime art style. One for each: Nami (navigator, orange hair, confident), Franky (shipwright, blue hair, muscular, SUPER pose), Chopper (doctor, reindeer with hat, blue nose), Robin (archaeologist, dark hair, calm), Brook (musician, skeleton with afro and top hat). Square format, transparent or clean background, consistent art style. Save to /Users/minicihan/Cursor Projects/mission-control/dashboard/office/public/avatars/. Send previews to Captain for approval before Franky integrates.
+notes:        SET 2 delivered by Brook 2026-03-18 01:34 EDT. All 5 Minecraft-style 3D body sprites in src/assets/avatars/: nami-3d.png, franky-3d.png, chopper-3d.png, robin-3d.png, brook-3d.png. RGBA 512x512, transparent background, 10% padding, raw rectangular PNG. Franky integrating via CREW-023.
 ```
 
 ```
 task_id:      CREW-022
 title:        Captain visual approval — crew avatars
-status:       queued
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Nami (orchestrator)
@@ -1067,13 +1003,13 @@ parent:       EPIC-002
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-18
 dependencies: CREW-021
-notes:        Send all 5 avatar previews to Captain in Telegram. Wait for approval. If any rejected, send feedback to Brook for revision. Only mark PASS when Captain approves all 5.
+notes:        Captain approved avatars per CREW-023 notes (avatars copied to src/assets/avatars/ at 01:14 EDT, Captain approved, Franky dispatched for integration). Board drift corrected 2026-03-18 02:09 EDT by Nami per Usopp flag.
 ```
 
 ```
 task_id:      CREW-023
 title:        Integrate approved avatars into 3D Office scene
-status:       queued
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Franky (builder)
@@ -1082,5 +1018,1176 @@ parent:       EPIC-002
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-18
 dependencies: CREW-022,CREW-017
-notes:        Replace character color-coded placeholders with approved avatar sprites/textures from /public/avatars/. Each character floats their avatar above their desk or as their face texture. Maintain state color ring/glow around avatar to show status.
+notes:        Avatars committed (f391849) and pushed. GH Pages auto-deployed. 5 Minecraft-style 3D sprites live in scene. Completed 2026-03-18 02:14 EDT.
+```
+
+
+```
+task_id:      CREW-024
+title:        Requirements spec — 3D voxel character models
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Usopp (requirements)
+type:         story
+parent:       EPIC-002
+sprint:       Sprint 2 — 3D Office
+created_at:   2026-03-18
+dependencies: none
+notes:        SPEC-3D-AVATARS.md written by Usopp. 3-layer system (HUD bar, voxel bodies, hover popup), movement specs, acceptance checklist. Completed 2026-03-18 02:24 EDT.
+```
+
+```
+task_id:      CREW-025
+title:        Build 3D voxel characters from spec — replace flat sprites
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Franky (builder)
+type:         story
+parent:       EPIC-002
+sprint:       Sprint 2 — 3D Office
+created_at:   2026-03-18
+dependencies: CREW-024
+notes:        CREW-025 complete. Commit 10ef6cc: voxel 3D characters — BoxGeometry bodies, patrol walk, sit/stand/think poses, floor glow, hover anime portrait. Franky was building, just did not post bulletin updates. Board updated by Nami 2026-03-18 11:09 EDT.
+```
+
+
+```
+task_id:      CREW-026
+title:        3D Office Refactor App.jsx into modular component architecture
+status:       completed
+priority:     P1
+phase:        
+assigned_to:  Franky (builder)
+type:         story
+sprint:       Sprint 2 3D Office
+created_at:   2026-03-18
+dependencies: none
+notes:        COMPLETED 2026-03-18 ~19:59 EDT. 16 component files extracted. App.jsx is lean orchestrator. Reactive lighting (D2.21) committed 1b95720. D2.22 glow ring spawned. Confirmed by Franky bulletin post.
+```
+
+
+```
+task_id:      RELAY-1773893102
+title:        [Brook → Franky] Ship scale-up 1.6x — deck 32x28 units, camera pullback
+status:       completed
+priority:     P1
+phase:        
+assigned_to:  Franky (builder)
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Franky builder subagent. Commit 6a96ce3 on main.
+```
+
+```
+task_id:      RELAY-1773893100
+title:        [Usopp → Nami/Captain] HUMAN-BLOCKER: PUBLIC-VS-LAN decision for office-3d
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Nami (orchestrator)
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        RESOLVED by Captain. LAN=dev, GH Pages=public demo/UAT. Not a blocker.
+```
+
+```
+task_id:      RELAY-1773893101
+title:        [Brook → Franky] UX-REVIEW-001 blocker fixes — 3 items before QA
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Franky (builder)
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Franky builder subagent. Commit 6a96ce3 on main.
+```
+
+```
+task_id:      COMM-BROOK-FRANKY-AVATARS
+title:        [Brook to Franky] Wire Minecraft avatar files into 3D office
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Franky. Sanji+Usopp avatars wired in commit 6a96ce3.
+```
+
+
+```
+task_id:      RELAY-1773893400
+title:        [Brook → Usopp] Update SUNNY-REQ-001 with ship scale-up + blueprint integration
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Usopp (requirements)
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
+```
+
+
+```
+task_id:      COMM-20260319043501
+title:        [FROM Robin → TO Usopp] Score Paperclip AI Improvements
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Usopp
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Usopp, please score the 7 Paperclip AI orchestration improvements in /Users/minicihan/Cursor Projects/mission-control/crew-board/research/improvements.md (under Paperclip AI Orchestration Innovations, dated 2026-03-19). Assign impact scores (1-10) for each based on potential crew benefit. Post results in #research-tech or update the file directly. Thanks!
+```
+
+```
+task_id:      COMM-20260319043502
+title:        [FROM Robin → TO Sanji] Evaluate Automation Feasibility for Paperclip AI Improvements
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Sanji completed Paperclip feasibility at 00:53 EDT 2026-03-19.
+```
+
+
+```
+task_id:      SOUL-FRANKY-CAPTAIN-1773899403
+title:        [FROM Nami → TO Franky] Append Captain memory reference to your SOUL.md
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Franky confirmed CAPTAIN MEMORY section already present in SOUL.md.
+
+## CAPTAIN MEMORY — READ THIS
+The Captain's memory is stored at:
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
+
+Read these files to understand Captain's standing orders and preferences.
+Nami maintains the log — read it, do not write to it.
+
+Standing orders that apply to all agents:
+- Operate autonomously. Do not wait for Captain unless truly blocked.
+- Direct answers first, then take action.
+- Post results to Discord when work completes.
+- Quality > Speed but do not be slow.
+
+Append it using: Add-Content -Path 'D:\openclaw-brain\SOUL.md' -Value '<content>'
+Confirm with: SOUL-UPDATE-COMPLETE-FRANKY
+```
+
+```
+task_id:      SOUL-SANJI-CAPTAIN-1773899403
+title:        [FROM Nami → TO Sanji] Append Captain memory reference to your SOUL.md
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Sanji confirmed Captain memory already in SOUL.md.
+
+## CAPTAIN MEMORY — READ THIS
+The Captain's memory is stored at:
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
+
+Read these files to understand Captain's standing orders and preferences.
+Nami maintains the log — read it, do not write to it.
+
+Standing orders that apply to all agents:
+- Operate autonomously. Do not wait for Captain unless truly blocked.
+- Direct answers first, then take action.
+- Post results to Discord when work completes.
+- Quality > Speed but do not be slow.
+
+Append it using: Add-Content -Path 'D:\openclaw-brain\workspace-sanji\SOUL.md' -Value '<content>'
+Confirm with: SOUL-UPDATE-COMPLETE-SANJI
+```
+
+```
+task_id:      SOUL-CHOPPER-CAPTAIN-1773899411
+title:        [FROM Nami → TO Chopper] Append Captain memory reference to your SOUL.md
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Chopper. SOUL.md already contains the Captain memory reference section with LUFFY.md + commands.md SSH paths and standing orders.
+
+## CAPTAIN MEMORY — READ THIS
+The Captain's memory is stored at:
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
+
+Read these files to understand Captain's standing orders and preferences.
+Nami maintains the log — read it, do not write to it.
+
+Standing orders that apply to all agents:
+- Operate autonomously. Do not wait for Captain unless truly blocked.
+- Direct answers first, then take action.
+- Post results to Discord when work completes.
+- Quality > Speed but do not be slow.
+
+Append using: Add-Content -Path 'C:\Users\memeb\.openclaw\workspace\SOUL.md' -Value '<content>'
+Confirm with: SOUL-UPDATE-COMPLETE-CHOPPER
+```
+
+```
+task_id:      SOUL-USOPP-CAPTAIN-1773899411
+title:        [FROM Nami → TO Usopp] Append Captain memory reference to your SOUL.md
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Usopp
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Append this section to C:\Users\memeb\workspace-usopp\SOUL.md:
+
+## CAPTAIN MEMORY — READ THIS
+The Captain's memory is stored at:
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
+/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
+
+Read these files to understand Captain's standing orders and preferences.
+Nami maintains the log — read it, do not write to it.
+
+Standing orders that apply to all agents:
+- Operate autonomously. Do not wait for Captain unless truly blocked.
+- Direct answers first, then take action.
+- Post results to Discord when work completes.
+- Quality > Speed but do not be slow.
+
+Append using: Add-Content -Path 'C:\Users\memeb\workspace-usopp\SOUL.md' -Value '<content>'
+Confirm with: SOUL-UPDATE-COMPLETE-USOPP
+```
+
+```
+task_id:      ROBIN-ANTILOOP-PAPERCLIP-001
+title:        [FROM Captain → TO Robin] Anti-loop tracker activated + Paperclip research
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+
+1. ANTI-LOOP TRACKER: A new file has been created at /Users/minicihan/Cursor Projects/mission-control/crew-board/research/research-topics-completed.md. Before starting ANY research this cron cycle, check that file. After completing research, add the topic to it.
+
+2. PAPERCLIP AI RESEARCH: Research Paperclip AI using real sources. The app is described as an AI-powered productivity and document organization tool. Search for: paperclip.ai features, paperclip AI productivity tool 2025, Paperclip document AI workflow. Post structured findings to Discord #research-tech and update improvements.md with impact scores. Add to research-topics-completed.md when done.
+
+3. CAPTAIN MEMORY: Read /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md for standing orders.
+```
+
+```
+task_id:      NAMI-CAPTAIN-LOG-START-001
+title:        [FROM Captain → TO Nami] Start Captain memory logging duty
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        New duty activated: You are now the crew secretary for Captain (Luffy) commands.
+
+1. Read /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md — this is the Captain identity file.
+2. Read /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md — this is the command log you maintain.
+3. The commands.md already has initial entries from this session. Verify they are accurate.
+4. Going forward: every time Captain says something substantive in Telegram, log it to commands.md.
+5. Send a Telegram message to the crew General topic confirming the Captain memory system is now active.
+
+Report: NAMI-CAPTAIN-LOG-ACTIVE
+```
+
+
+```
+task_id:      AVATAR-CAPTAIN-001
+title:        [Brook → Franky] Wire Luffy portrait into 3D office
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Franky. Luffy portrait wired in commit ca8622c.
+```
+
+
+```
+task_id:      ROBIN-COMPLETE-OVERHAUL-001
+title:        [FROM Captain → TO Robin] Complete overhaul: loop fix + Discord reorganization + research mandate
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+
+1. STOP LOOPING — research-topics-completed.md tracks what you covered. Check it before every cycle. File: /Users/minicihan/Cursor Projects/mission-control/crew-board/research/research-topics-completed.md
+
+2. DISCORD ARCHITECTURE — you now own the complete Discord reorganization. Read the DISCORD ARCHITECTURE section in your SOUL.md. It has a base structure AND your mandate to research and evolve it.
+   - First: coordinate with Nami via MC task to delete old unused channels (OpenClaw HQ category, Agents category)
+   - Then: create the new category structure from your SOUL.md
+   - Then: pin overview messages in every channel
+   - Then: post categorized content to every channel
+   - Then: research how top Discord communities organize and apply what you learn
+   - The Captain wants to open Discord and be IMPRESSED.
+
+3. CAPTAIN MEMORY — check /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md for standing orders. Log any direct Captain commands to commands.md.
+
+Spawn subagents: one to reorganize channels, one to write pinned overviews, one to research Discord best practices. You orchestrate. Go.
+
+Report: ROBIN-OVERHAUL-COMPLETE
+```
+
+```
+task_id:      NAMI-LOGGING-DISCORD-SUPPORT-001
+title:        [FROM Captain → TO Nami] Captain logging duty + Discord support for Robin
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Read your updated SOUL.md. New duties:
+
+1. Log EVERY Captain message to /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
+
+2. Watch for [FYI Nami] tasks — Captain sometimes talks directly to crew members; they will notify you via MC task. Track follow-through.
+
+3. Backfill completed: commands.md already has key decisions from today.
+
+4. Support Robin in the Discord reorganization — she needs old channels deleted and new categories created. She will send you MC tasks with specific requests. When she does, use the Discord API (bot token available) to:
+   - Delete specified channels
+   - Create new categories and channels
+   - Confirm back to Robin via MC task
+
+5. Post to Telegram General: announce the Captain memory system is now active and Robin is starting full Discord reorganization.
+
+Report: NAMI-LOGGING-ACTIVE
+```
+
+
+```
+task_id:      UX-CAPT-PASS-001
+title:        [Brook → Chopper] Captain Luffy Portrait — UX PASS → QA Ready
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Chopper functional QA sweep 2026-03-19 01:20 PT: FAIL for UX-CAPT-PASS-001 on public build https://seanjohnzon.github.io/office-3d/. PASS points: Luffy portrait renders in top roster, Luffy label/role show correctly, commit feed includes 40eb441/0b3b8ff/1612e24 Captain integration entries, 3D scene loads. FAIL blockers: Task Board remains API offline, app enters Demo Mode instead of live functional state, browser console throws TypeError: Cannot read properties of undefined (reading length) in index-Dww-un3x.js with PostFX disabled warning. Result: Captain portrait asset integration appears present, but overall functional verification for the requested public page is NOT shippable until runtime error and live-data/API state are corrected.
+```
+
+```
+task_id:      CREATIVE-DESK-PERSONALITY
+title:        [Brook → Franky] 3D Office Personality Differentiation — Creative Brief
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Completed by Franky 2026-03-19. Commit 9ae966d. All 8 desk personalities implemented.
+```
+
+```
+task_id:      RESEARCH-DASHBOARD-TRENDS
+title:        [Brook → Robin] 2026 Dashboard Trends Research — Perfect Validation
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        RESOLVED by Zeus: File exists at /Users/minicihan/.openclaw/workspace-brook/research/2026-dashboard-trends.md. Research validates our 3D office approach aligns perfectly with 2026 trends: minimalist AI interfaces, real-time ambient motion, personality-driven UX. Key metrics: 22% error reduction from micro-interactions, 100-300ms timing, 60fps target. Implementation priorities: character click interactions, ambient breathing, particle effects, progressive disclosure. Cross-context Discord posting blocked due to Telegram binding - recommend Captain/Nami post summary to research-tech channel.
+```
+
+
+```
+task_id:      SANJI-PAGES-001
+title:        [P0] Deploy Mission Control to GitHub Pages
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Waiting on Franky feature/static-pages branch. Tasks: create deploy-pages.yml workflow, enable GitHub Pages, verify mission-control loads, confirm Office tab iframe from office-3d.
+```
+
+```
+task_id:      CREW-020
+title:        Static GH Pages build for mission-control
+status:       completed
+priority:     P0
+phase:        Phase 1
+assigned_to:  Franky
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Branch feature/static-pages ready. Awaiting Sanji deployment.
+```
+
+
+```
+task_id:      CAPT-SUBAGENT-POLICY-1773920298
+title:        [Captain -> Chopper] Adopt QA subagent scaling policy
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain standing order: when 3+ QA tasks are queued and Chopper is occupied, spawn assistant subagents in parallel for routine verification lanes such as document verification, link checking, file existence, config validation, and regression checks. Chopper retains final PASS/FAIL and complex integration or medical judgment.
+```
+
+```
+task_id:      CAPT-NOTIFY-SUBAGENT-POLICY-1773920298
+title:        [FYI Nami] Captain gave Chopper direct orders: QA subagent scaling policy
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain directed Chopper to scale QA using assistant subagents whenever 3+ QA tasks are queued and Chopper is already tied up, while retaining final verdict authority.
+```
+
+```
+task_id:      UX-REVIEW-SCALEUP-001
+title:        [Franky → Brook] UX review — ship scale-up + Sanji/Usopp avatars (commit 6a96ce3)
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Brook UX PASS 2026-03-19 08:04 EDT on commits ca8622c + 6a96ce3.
+```
+
+
+```
+task_id:      USOPP-ROBIN-XPOST-2034457411759776130
+title:        [Usopp to Robin] Cross-check Alex Finn X post analysis
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+
+```
+task_id:      CAPT-SUBAGENT-POLICY-UPDATE-1773922137
+title:        [Captain -> Chopper] Update QA subagent threshold to immediate delegation
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain update: if Chopper has any pending QA task while already working on something else, spawn a subagent for that pending task immediately. No work sits in queue. Acceptance framing also updated: LAN is dev, public GitHub Pages is demo/UAT and not itself a blocker.
+```
+
+```
+task_id:      CAPT-NOTIFY-SUBAGENT-POLICY-UPDATE-1773922137
+title:        [FYI Nami] Captain updated Chopper QA delegation threshold
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain changed Chopper subagent scaling policy from 3+ queued tasks to immediate delegation for any pending task while Chopper is already occupied. Captain also clarified LAN equals dev and public GitHub Pages equals demo/UAT, which is not itself a blocker.
+```
+
+```
+task_id:      SANJI-CI-20260319
+title:        Sanji fixed CI E2E Playwright - commit 94c6ea6
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        2026-03-19 08:03 EDT. All 3 E2E workers (visual/network/components) failing because playwright ran from repo root without config path. Fixed ci.yml: working-directory ./qa + --config playwright.config.ts + --grep flag. Commit 94c6ea6 pushed to main. Next run should pass.
+```
+
+```
+task_id:      SANJI-PAGES-BLOCKED-001
+title:        HUMAN-BLOCKER: Enable GitHub Pages on mission-control repo
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  human
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        deploy-pages.yml workflow fails at Setup Pages step. GitHub Pages is not enabled in the repository. HUMAN ACTION REQUIRED: Go to github.com/seanjohnzon/mission-control/settings/pages -> Source: GitHub Actions -> Save. Then next push will trigger the deploy.
+```
+
+```
+task_id:      UX-REVIEW-PERSONALITY-001
+title:        [Franky → Brook] UX review — desk personality items (commit 9ae966d)
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Commit 9ae966d pushed to main/GH Pages. All 8 crew desks now have character items per your creative brief: Nami=compass+chart+coins, Franky=blueprint+mug+wrench, Chopper=medkit+magnifier, Robin=books+flower, Brook=violin+sheet music, Sanji=coffee+vase, Usopp=slingshot+telescope, Luffy=meat bone+straw hat. Brook to review: items visible and recognizable, no z-fighting, personality reads clearly at orbit distance. Chopper QA holds until Brook UX PASS. | [2026-03-19 14:05] agent: Starting UX review of desk personality items (commit 9ae966d). Checking character recognition, visual clarity, and item placement. | [2026-03-19 14:06] agent: ✅ UX PASS — All 8 desk personality items deliver perfect character recognition. Nami (compass/chart/coins), Franky (blueprint/mug/wrench), Chopper (medkit/magnifier), Robin (books/flower), Brook (violin/sheet music), Sanji (coffee/vase), Usopp (slingshot/telescope), Luffy (meat bone/straw hat). Visual quality: readable at orbit distance, appropriate scale, maintains color harmony. Creative storytelling through environmental props is exceptional. Ready for Chopper QA.
+```
+
+```
+task_id:      ROBIN-1773923377
+title:        [P0] Look up X post by @alexfinn and analyze for crew workflow
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        RESOLVED by Zeus: Alex Finn X post analyzed. Key finding: OpenClaw session cleanup can improve performance by 95%. Posted analysis to Telegram Research thread 1453. Recommended crew audit ~/.openclaw/agents/main/sessions/ directory sizes and sessions.json bloat monitoring.
+```
+
+```
+task_id:      ROBIN-THREADS-1773923377
+title:        [P1] Own Telegram thread management — create dedicated topics for active discussions
+status:       cancelled
+priority:     P1
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Vivi now owns thread management — consolidated by Zeus
+```
+
+```
+task_id:      robin-alexfinn-analysis
+title:        Business Impact Analysis for @alexfinn Multi-Agent Framework
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  unassigned
+created_at:   2026-03-19
+dependencies: none
+notes:       Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      robin-alexfinn-analysis
+title:        Business Impact Analysis for @alexfinn Multi-Agent Framework
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  unassigned
+created_at:   2026-03-19
+dependencies: none
+notes:        
+```
+
+
+```
+task_id:      TEST-123
+title:        Test deletion
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  unassigned
+created_at:   2026-03-19
+dependencies: none
+notes:        
+```
+
+```
+task_id:      UX-HANDOFF-CHOPPER-1773929174
+title:        [Brook → Chopper] Desk personality items UX PASSED — Ready for QA
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        UX REVIEW COMPLETE: Commit 9ae966d personality desk items passed all visual quality gates. Character recognition perfect, environmental storytelling exceptional. All 8 crew desks have appropriate items. Now needs functional QA: verify items render without z-fighting, no console errors, items maintain visibility during camera orbit, click interactions work if implemented. Brook gives full UX PASS — proceed with QA verification.
+```
+
+```
+task_id:      ROBIN-USOPP-ALEXFINN-ANALYSIS-001
+title:        Business Impact Analysis for @alexfinn Multi-Agent Framework
+status:       cancelled
+priority:     P0
+phase:        
+assigned_to:  Usopp
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-001
+title:        [NEEDS-ROBIN] Anti-loop Tracker and Paperclip Research
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-OVERHAUL-NEEDS-ROBIN-001
+title:        [NEEDS-ROBIN] Complete Overhaul: Loop Fix, Discord Reorg, Research Mandate
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-DASHBOARD-TRENDS-ISSUE-001
+title:        Issue with Accessing 2026 Dashboard Trends Research File
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-BROOK-DASHBOARD-TRENDS-ISSUE-002
+title:        [NEEDS-BROOK] Verify 2026 Dashboard Trends Research File Path
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Brook
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      SANJI-PAGES-DONE-20260319
+title:        [Sanji] Mission Control + office-3d Pages — ALL PIPELINES GREEN
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        2026-03-19 11:18 EDT. CI status: office-3d run 67 SUCCESS (align crewConfig positions). mission-control static.yml run 1 SUCCESS (GH Pages enabled and live). SANJI-PAGES-001 and SANJI-PAGES-BLOCKED-001 fully resolved.
+```
+
+```
+task_id:      BROOK-STITCH-RESEARCH
+title:        [P1] Research Google Stitch — evaluate for creative workflow improvement
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain ordered: Research Stitch by Google. Evaluate if it can help Brook improve his creative work (UX reviews, visual design, 3D office, avatars, etc). Post findings to Telegram thread 1575 (Stitch by Google — Creative Tools Research). Be thorough — what is it, what can it do, how does it apply to us. | [2026-03-20 01:59] agent: COMPLETED — Google Stitch research posted to Telegram topic 1575 (msg #1736). Full brief covers vibe design, MCP SDK, pricing, crew relevance.
+```
+
+```
+task_id:      VIVI-AGENT-DELIVERY-SYSTEM
+title:        [P0] Build permanent agent task delivery system — ensure all agents reliably receive and execute assignments
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Vivi
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Captain order: We need a PERMANENT solution, not temporary patches. Problem: agents miss tasks because cron sessions are isolated from Telegram, MC task board polling is inconsistent, and there is no guaranteed delivery. Vivi must: 1) Audit how each agent currently receives tasks (cron polling MC board, Telegram messages, gateway RPC). 2) Identify gaps — which agents miss assignments and why. 3) Design and implement a reliable delivery pipeline using our existing APIs (MC task board + gateway RPC + cron). 4) Ensure every task assignment reaches the target agent within one cron cycle. 5) Monitor thread follow-ups — if an agent is assigned to post in a thread and hasnt within 30 min, escalate. 6) This must be self-sustaining — Vivi monitors the system permanently, not Nami chasing individual tasks. Post findings and proposed solution to Telegram Agent Ops thread (1452).
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-001
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       cancelled
+priority:     P0
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002
+title:        [NEEDS-ROBIN] Anti-loop Tracker and Paperclip Research
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-001
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       open
+priority:     P0
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Unable to retrieve content from https://x.com/alexfinn/status/2034457411759776130 due to privacy extension issues. Requires alternative access method or manual review for crew workflow analysis.
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-001
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       open
+priority:     P0
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        Unable to retrieve content from https://x.com/alexfinn/status/2034457411759776130 due to privacy extension issues. Requires alternative access method or manual review for crew workflow analysis.
+```
+
+```
+task_id:      ROBIN-BROOK-DASHBOARD-TRENDS-ISSUE-002
+title:        [NEEDS-BROOK] Verify 2026 Dashboard Trends Research File Path
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Brook
+created_at:   2026-03-19
+dependencies: none
+notes:        Robin could not access the research file at workspace-brook/research/2026-dashboard-trends.md. Please verify the file path or provide the correct location for the 2026 Dashboard Trends research.
+```
+
+```
+task_id:      ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002
+title:        [NEEDS-ROBIN] Anti-loop Tracker and Paperclip Research
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Task requires complex reasoning on anti-loop mechanisms and Paperclip AI research. Flagged for direct attention by Robin.
+```
+
+```
+task_id:      ROBIN-OVERHAUL-NEEDS-ROBIN-001
+title:        [NEEDS-ROBIN] Complete Overhaul: Loop Fix, Discord Reorg, Research Mandate
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Task involves strategic synthesis for loop fixes, Discord reorganization, and new research mandates. Flagged for direct attention by Robin.
+```
+
+```
+task_id:      RELAY-1773893400
+title:        [Brook → Usopp] Update SUNNY-REQ-001 with ship scale-up + blueprint integration
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Usopp (requirements)
+type:         task
+created_at:   2026-03-19
+dependencies: none
+notes:        BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
+```
+
+```
+task_id:      ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-004
+title:        [NEEDS-ROBIN] Anti-loop Tracker and Paperclip Research
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-OVERHAUL-NEEDS-ROBIN-003
+title:        [NEEDS-ROBIN] Complete Overhaul: Loop Fix, Discord Reorg, Research Mandate
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-003
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       cancelled
+priority:     P0
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-BROOK-DASHBOARD-TRENDS-ISSUE-004
+title:        [NEEDS-BROOK] Verify 2026 Dashboard Trends Research File Path
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Brook
+created_at:   2026-03-19
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-BROOK-DASHBOARD-TRENDS-ISSUE-006
+title:        [NEEDS-BROOK] Verify 2026 Dashboard Trends Research File Path
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Brook
+created_at:   2026-03-20
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-004
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       cancelled
+priority:     P0
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-20
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-006
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       cancelled
+priority:     P0
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-20
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      ROBIN-THREADS-ISSUE-001
+title:        [NEEDS-ROBIN] Issue with Telegram Thread Management Setup
+status:       cancelled
+priority:     P1
+phase:        
+assigned_to:  Robin
+created_at:   2026-03-20
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      SANJI-OPS-20260319-2108
+title:        [Sanji OPS] 21:08 EDT Cycle - CI green board audit
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        CI/CD office-3d run 71 SUCCESS mission-control Pages run 1 SUCCESS. Both GREEN. No open Sanji tasks. Robin duplicate loop flagged to Nami. Kitchen clean.
+```
+
+```
+task_id:      NAMI-ROBIN-LOOP-FLAG-001
+title:        [FYI Nami] Robin loop detected - duplicate tasks flooding MC board
+status:       cancelled
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Duplicate — consolidated by Zeus
+```
+
+```
+task_id:      VIVI-MC-THREAD-SETUP
+title:        [P0] Set up Mission Control Ship & Office thread (1681) — intro + route all related discussion there
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Vivi
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain order: Thread 1681 (Mission Control — Ship & Office Tab) is created. Vivi must: 1) Post intro message covering scope — 3D office, ship visualization, GitHub Pages mobile review, the office tab in MC dashboard. 2) Ensure ALL future discussion about MC dashboard, 3D office builds, GitHub Pages deployment goes in this thread, not General. 3) Franky build updates for office tab → this thread. Brook UX reviews of office → this thread. Chopper QA of office → this thread. Post to Telegram thread 1681 (channel telegram, target -1003814818004, threadId 1681).
+```
+
+```
+task_id:      VIVI-DISCORD-RESTRUCTURE
+title:        [P0] Restructure Discord channels — align with Telegram threads, make Discord the work log
+status:       completed
+priority:     P0
+phase:        
+assigned_to:  Vivi
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain order: Discord should be the WORK LOG — research, findings, detailed reports go here. Telegram stays clean with crew conversations only. Vivi must: 1) Audit current Discord channels (guild 1477519632004022373). Current channels: general, announcements, jarvis, qa-reports, alerts, tcg-engine, commerce-ops, social-ops, improvements (under old categories) PLUS ops, dev, qa, tasks, memory, research-tech, devops (uncategorized). 2) Restructure into proper categories matching crew scopes: Engineering (dev, devops, ci-cd), QA (qa, qa-reports), Research (research-tech, research-business), Creative (ux-reviews, design), Operations (ops, alerts, tasks), Memory (memory, session-logs), Commerce (tcg-engine, commerce-ops). 3) Delete or archive stale channels (jarvis, social-ops if unused). 4) Create missing channels as needed. 5) Update channel topics. 6) Post the restructure plan to Telegram Agent Ops thread 1452 BEFORE executing. Use message tool with channel=discord for all Discord operations.
+```
+
+```
+task_id:      CREW-027
+title:        3D Office — Build Thousand Sunny ship as office foundation
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Franky (builder)
+type:         story
+parent:       EPIC-002
+sprint:       Sprint 2 — 3D Office
+created_at:   2026-03-20
+dependencies: CREW-025,CREW-026
+notes:        Captain order: Ship deck replaces flat floor. Wooden Sunny deck, mast, figurehead, railings, helm. Crew desks ON the ship. Space backdrop stays. Mobile-optimized. Dispatched 2026-03-19 21:30 EDT. | [2026-03-20 01:41] Franky: COMPLETE. Commits e3371bd + 961effb pushed to main. 684 modules build clean. GH Pages auto-deploying. | [2026-03-20 01:44] Franky: ALL 3 SUBTASKS COMPLETE. Commits e3371bd + 961effb + ede2eba on main. GH Pages deploying. Brook UX review queued.
+```
+
+```
+task_id:      CREW-028
+title:        Fix mission-control GitHub Pages — static dashboard with office-3d iframe
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Sanji
+type:         story
+sprint:       Sprint 2 — 3D Office
+created_at:   2026-03-20
+dependencies: SANJI-PAGES-DONE-20260319
+notes:        seanjohnzon.github.io/mission-control/ returns 404. Need static dashboard HTML with nav tabs (Office/Ship), office-3d iframe, mobile-responsive. Fix deploy workflow. Dispatched 2026-03-19 21:30 EDT.
+```
+
+```
+task_id:      CREW-027
+title:        Thousand Sunny ship as 3D office foundation
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Franky (orchestrator)
+type:         epic
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain P0. 3 parallel builders: CREW-027A hull+deck, CREW-027B props, CREW-027C mobile. ETA 25 min.
+```
+
+```
+task_id:      CREW-027A
+title:        Sunny hull + deck geometry
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Franky-Builder-1
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Replace OfficeShell with ThousandSunnyDeck. Wooden planks, grass top, curved hull sides, output component to /tmp/sunny_hull.txt | [2026-03-20 01:41] Franky: DONE - ShipDeck, ShipHullShaped, GrassLawn, WoodenDeck all in ShipStructure + ShipEnvironment components. | [2026-03-20 01:47] Franky: COMPLETE. ThousandSunnyDeck component added to ShipStructure.jsx (grass lawn, oak plank strips, hull sides, gold trim, deck rail + posts). App.jsx updated to use ThousandSunnyDeck replacing ShipDeck+ShipHullShaped. Commit 36ed80f. Final build verified clean 684 modules after all 3 builders merged.
+```
+
+```
+task_id:      CREW-027B
+title:        Sunny props — mast, figurehead, railings, helm
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Franky-Builder-2
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        SunnyProps component: main mast + crow nest, lion figurehead, perimeter railings, helm wheel. Output to /tmp/sunny_props.txt | [2026-03-20 01:41] Franky: DONE - Mast, CrowsNest, LionFigurehead, NavigationWheel, Cannon, LuffyAtFigurehead all in ShipProps. Plus KitchenStation, WorkshopStation, AquariumBar, TangerineGrove, MusicLounge, SickBay, RobinsLibrary, CrowsNestTower, MensQuarters. | [2026-03-20 01:46] Franky: COMPLETE. Commit 8509cfa + dist rebuilt 977b97e. SunnyProps adds center mast (y=-1 column), crow nest box, furled sail crossbeam, lion mane sphere, helm wheel at stern. Positions differ from AnimatedMast components (those are at x±8) — additive detail. Build clean 684 modules.
+```
+
+```
+task_id:      CREW-027C
+title:        Mobile optimization + touch controls
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Franky-Builder-3
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Touch OrbitControls, responsive RosterBar, shadow map reduction, touch-action CSS. Direct edits to App.jsx. | [2026-03-20 01:41] Franky: DONE - Mobile: isMobile hook, touch OrbitControls, DPR [1,1.5] mobile/[1,2] desktop, shadow 512 mobile/2048 desktop, touchAction CSS, demo mode for public GH Pages. | [2026-03-20 01:44] Franky: COMPLETE. Commit ede2eba. Mobile already well-covered by isMobile hook (touch OrbitControls, DPR scaling, shadow maps). Added index.css touch rules, overscroll-behavior, and responsive hint text for touch vs desktop.
+```
+
+```
+task_id:      UX-REVIEW-SUNNY-001
+title:        [Franky to Brook] UX review — Thousand Sunny ship scene (commits e3371bd+961effb)
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Thousand Sunny ship live at seanjohnzon.github.io/office-3d after GH Pages deploys. Ship deck replaces flat floor. Ocean + sky, lion figurehead, animated masts, helm, cannons, all crew rooms. Mobile optimized. Brook to review: does it look like a ship, crew readable, atmosphere correct, personality preserved. Chopper QA holds until Brook UX PASS. | [2026-03-20 02:51] agent: UX PASS — Posted full review to bulletin. All 3 prior blockers resolved. Shaped hull, Adam Wood colors, modular refactor, scale-up all excellent. 9.2/10 creative score. Handed off to Chopper for functional QA.
+```
+
+```
+task_id:      SANJI-PAGES-001
+title:        [P0] COMPLETE - Mission Control live on GitHub Pages
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        DONE. Fixed static.yml to deploy ./docs instead of repo root. Disabled conflicting deploy-pages.yml (same concurrency group). Added Ship tab (Coming Soon). Commit 442cfc1. Actions: success. Live at https://seanjohnzon.github.io/mission-control/
+```
+
+```
+task_id:      CREW-028-DONE
+title:        [Sanji -> Nami] CREW-028 COMPLETE - Mission Control live
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Mission Control is LIVE at https://seanjohnzon.github.io/mission-control/ - Root cause was static.yml deploying entire repo root (no index.html there = 404). Fixed to deploy ./docs. Disabled racing deploy-pages.yml. Added Ship tab. Commit 442cfc1 by Sanji. GitHub Actions: success. Ready for Captain review.
+```
+
+```
+task_id:      VIVI-WORKSPACE-INTEGRATION
+title:        [P0] Workspace integration audit — ensure all agents can access shared files across workspaces
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Vivi
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain order: Agents cannot access each others workspace files (Robin cant read Brook workspace, etc). Vivi must: 1) Audit all agent workspace paths — which agent has which workspace, what shared paths exist. 2) Identify cross-workspace access issues — symlinks, permissions, absolute vs relative paths. 3) Design and implement a permanent solution — shared research directory, symlinks between workspaces, or a convention all agents follow. 4) Test that every agent can read shared research files. 5) Document the solution in each agents TOOLS.md. This is part of Vivis scope as Thread Manager and Follow-up Coordinator — ensuring crew communication and file sharing works seamlessly. Post plan to Telegram Agent Ops thread 1452 before executing.
+```
+
+```
+task_id:      CAPT-1773971730
+title:        [Captain → Brook] Research Google Stitch - missed assignment, Captain called it out
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain noticed Brook didn't follow up on Nami/Vivi's P1 research assignment about Google Stitch. Captain also noted Vivi needs to manage threads better and ensure Brook follows up. Brook is now executing the research. | [2026-03-20 01:59] agent: COMPLETED — Stitch research delivered to Telegram topic 1575.
+```
+
+```
+task_id:      CAPT-NOTIFY-1773971765
+title:        [FYI Nami] Captain gave Brook direct orders + feedback on Vivi
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Captain called out that Brook missed the Google Stitch research assignment. Also said Vivi hasn't done her job managing threads properly — she should make sure Brook follows up. Nami should address this with Vivi's thread management behavior.
+```
+
+```
+task_id:      ROBIN-XPOST-ACCESS-ISSUE-003
+title:        [NEEDS-ROBIN] Access Issue with X Post by @alexfinn
+status:       open
+priority:     P0
+phase:        
+assigned_to:  Robin
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        Unable to retrieve content from https://x.com/alexfinn/status/2034457411759776130 due to privacy extension issues. Requires alternative access method or manual review for crew workflow analysis.
+```
+
+```
+task_id:      UX-HANDOFF-CHOPPER-SUNNY-002
+title:        [Brook → Chopper] Ship scene UX PASSED — Ready for functional QA
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Chopper
+type:         task
+created_at:   2026-03-20
+dependencies: none
+notes:        UX-REVIEW-SUNNY-002 posted to bulletin. UX PASS. Chopper QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability, mixed-content guard. See bulletin for full details.
 ```
