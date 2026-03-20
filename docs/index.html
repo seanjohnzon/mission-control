@@ -457,8 +457,11 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <!-- Office (Miniverse) -->
     <div id="tab-office" class="tab-panel">
       <div style="width:100%;height:calc(100vh - 56px);display:flex;flex-direction:column;gap:12px;">
-        <div id="office-status" class="text2" style="font-size:12px;display:none"></div>
-        <iframe id="miniverse-frame" data-src="https://seanjohnzon.github.io/office-3d/" src="about:blank" style="flex:1;border:none;width:100%;background:#0f1119;border-radius:8px;min-height:70vh;" allow="autoplay; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <div id="office-status" class="text2" style="font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span>Loading Office 3D scene…</span>
+          <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open directly</a>
+        </div>
+        <iframe id="miniverse-frame" data-src="https://seanjohnzon.github.io/office-3d/" src="https://seanjohnzon.github.io/office-3d/" style="flex:1;border:none;width:100%;background:#0f1119;border-radius:8px;min-height:70vh;" allow="autoplay; fullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
 
@@ -652,20 +655,28 @@ const navItems = document.querySelectorAll('.nav-item');
 const panels = document.querySelectorAll('.tab-panel');
 const validTabs = new Set(Array.from(navItems, item => item.dataset.tab));
 let officeFrameLoaded = false;
+let officeFrameListenersBound = false;
 
 function ensureOfficeFrameLoaded() {
   const frame = document.getElementById('miniverse-frame');
   const status = document.getElementById('office-status');
-  if (!frame || officeFrameLoaded) return;
-  const src = frame.dataset.src;
-  if (!src) return;
-  status.style.display = '';
-  status.textContent = 'Loading Office 3D scene…';
-  frame.addEventListener('load', () => {
-    officeFrameLoaded = true;
-    status.textContent = 'Office 3D scene loaded from GitHub Pages.';
-  }, { once: true });
-  frame.src = src;
+  if (!frame || !status) return;
+
+  if (!officeFrameListenersBound) {
+    officeFrameListenersBound = true;
+    frame.addEventListener('load', () => {
+      officeFrameLoaded = true;
+      status.innerHTML = 'Office 3D scene loaded from GitHub Pages. <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open directly</a>';
+    });
+    frame.addEventListener('error', () => {
+      officeFrameLoaded = false;
+      status.innerHTML = 'Office 3D embed hit a loading issue. <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open the scene directly</a>';
+    });
+  }
+
+  if (!officeFrameLoaded && frame.dataset.src && frame.src === 'about:blank') {
+    frame.src = frame.dataset.src;
+  }
 }
 
 function activateTab(tab, { updateHash = true } = {}) {
