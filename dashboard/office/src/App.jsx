@@ -1,880 +1,270 @@
-import React, { useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Text, RoundedBox, Stars, Html } from '@react-three/drei'
+import React, { useRef, useState, useEffect } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, Stars, Text } from '@react-three/drei'
 import * as THREE from 'three'
 import { CREW } from './data/crewConfig'
 import useGatewayStatus from './data/useGatewayStatus'
+import { StatusContext } from './data/StatusContext'
 
-// ?????? Portrait avatars (anime) ??? HUD bar + hover cards only ??????????????????????????????????????????????????????
-import namiAvatar    from './assets/avatars/nami.png'
-import frankyAvatar  from './assets/avatars/franky.png'
-import chopperAvatar from './assets/avatars/chopper.png'
-import robinAvatar   from './assets/avatars/robin.png'
-import brookAvatar   from './assets/avatars/brook.png'
-import luffyAvatar   from './assets/avatars/luffy.png'
-import sanjiAvatar   from './assets/avatars/sanji.png'
-import usoppAvatar   from './assets/avatars/usopp.png'
+import useIsMobile from './hooks/useIsMobile'
+import useDemoMode from './hooks/useDemoMode'
+import useAgentSounds from './hooks/useAgentSounds'
+import useStateDuration from './hooks/useStateDuration'
+import useWhiteboardData from './hooks/useWhiteboardData'
+import CommitFeed from './components/CommitFeed'
+import RosterBar from './components/RosterBar'
+import ActivityFeed from './components/ActivityFeed'
+import AgentDetailPanel from './components/AgentDetailPanel'
+import HelpOverlay from './components/HelpOverlay'
+import CameraFocus from './components/CameraFocus'
+import DeskGroup from './components/DeskGroup'
+import VoxelCharacter from './components/VoxelCharacter'
+import TaskFlowParticles from './components/TaskFlowParticles'
+import NetworkLines from './components/NetworkLines'
+import AmbientHologram from './components/AmbientHologram'
+import TaskFeed from './components/TaskFeed'
+import SprintHUD from './components/SprintHUD'
+import GatewayBanner from './components/GatewayBanner'
+import CrewTicker from './components/CrewTicker'
+import SceneEffects from './components/SceneEffects'
+import KitchenStation from './components/KitchenStation'
+import WorkshopStation from './components/WorkshopStation'
+import AnimatedMast from './components/AnimatedMast'
+import CaptainsDashboard from './components/CaptainsDashboard'
+import StarField from './components/StarField'
+import WakeFoam from './components/WakeFoam'
+import ShipBob from './components/ShipBob'
+import useDayNightCycle from './hooks/useDayNightCycle'
+import DynamicSky from './components/DynamicSky'
+import ShipDeck, { shipWidthAtZ, ShipHullShaped, ThousandSunnyHull } from './components/ship/ShipStructure'
+import OceanSkyEnvironment, { WoodenDeck, GrassLawn } from './components/ship/ShipEnvironment'
+import Mast, { CrowsNest, NavigationWheel, Cannon, LionFigurehead, LuffyAtFigurehead, CaptainsLog } from './components/ship/ShipProps'
+import StrategyRoom, { RoomBox, AquariumBar, TangerineGrove, MusicLounge, SickBay, RobinsLibrary, CrowsNestTower, MensQuarters } from './components/ship/ShipRooms'
+import SceneErrorBoundary from './components/SceneErrorBoundary'
 
-const AVATAR_MAP = { Nami: namiAvatar, Franky: frankyAvatar, Chopper: chopperAvatar, Robin: robinAvatar, Brook: brookAvatar, Luffy: luffyAvatar, Sanji: sanjiAvatar, Usopp: usoppAvatar }
-const STATE_COLOR = { idle: '#44DD77', working: '#4488FF', thinking: '#FFCC00', offline: '#555566' }
-const STATE_LABEL = { idle: 'Idle', working: 'Working', thinking: 'Thinking', offline: 'Offline' }
+export default function App() {
+  const rawStatuses = useGatewayStatus()
+  const { statuses, demoActive } = useDemoMode(rawStatuses)
+  const whiteboardData = useWhiteboardData()
+  const skyState = useDayNightCycle()
+  const orbitRef = useRef()
+  const { isMobile } = useIsMobile()
+  const [selectedAgent, setSelectedAgent] = useState(null)
+  const [focusTarget, setFocusTarget] = useState(null)
+  const [showHelp, setShowHelp] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(false)
+  const { playStateChange, setAmbientEnabled, ambientEnabled, hasInteracted } = useAgentSounds()
+  const durations = useStateDuration(statuses)
+  const prevStatusesRef = useRef(null)
 
-// ?????? Voxel character configs ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-const CHAR_CFG = {
-  Nami: {
-    scale: 1.0,
-    skinColor: '#F4C28C', hairColor: '#E86000',
-    topColor: '#E86000',  pantsColor: '#2255BB', shoeColor: '#2A1A0A',
-    extras: [
-      // Clima-Tact: thin orange staff at right side
-      { type: 'box', size: [0.04, 0.55, 0.04], pos: [0.32, 0.72, 0], color: '#FF8C00' },
-    ],
-    hairShape: 'block', // orange block hair
-  },
-  Franky: {
-    scale: 1.06,
-    skinColor: '#F4C28C', hairColor: '#1875D1',
-    topColor: '#A8B0B8',  pantsColor: '#2A3A4A', shoeColor: '#1A1A1A',
-    extras: [
-      // Silver chest plate detail
-      { type: 'box', size: [0.28, 0.32, 0.04], pos: [0, 0.64, 0.10], color: '#C8D0D8' },
-      // Gold star on chest
-      { type: 'box', size: [0.10, 0.10, 0.05], pos: [0, 0.68, 0.12], color: '#FFD700' },
-    ],
-    hairShape: 'pompadour',
-  },
-  Chopper: {
-    scale: 0.75,
-    skinColor: '#8B5A2B', hairColor: '#FF69B4',   // brown body, pink hat
-    topColor: '#8B5A2B',  pantsColor: '#6B3A1A', shoeColor: '#3A1A00',
-    extras: [
-      // Antler left
-      { type: 'box', size: [0.05, 0.22, 0.04], pos: [-0.12, 1.28, 0], color: '#7B4A10', rot: [0,0,0.35] },
-      { type: 'box', size: [0.05, 0.12, 0.04], pos: [-0.20, 1.42, 0], color: '#7B4A10', rot: [0,0,0.7] },
-      // Antler right
-      { type: 'box', size: [0.05, 0.22, 0.04], pos: [0.12, 1.28, 0], color: '#7B4A10', rot: [0,0,-0.35] },
-      { type: 'box', size: [0.05, 0.12, 0.04], pos: [0.20, 1.42, 0], color: '#7B4A10', rot: [0,0,-0.7] },
-      // Blue nose dot
-      { type: 'box', size: [0.08, 0.06, 0.04], pos: [0, 1.02, 0.14], color: '#4169E1' },
-    ],
-    hairShape: 'chopperHat',
-  },
-  Robin: {
-    scale: 1.0,
-    skinColor: '#D4A574', hairColor: '#1A1A1A',
-    topColor: '#7B52AB',  pantsColor: '#4A3060', shoeColor: '#1A0A20',
-    extras: [
-      // Book in left hand area
-      { type: 'box', size: [0.14, 0.18, 0.04], pos: [-0.26, 0.58, 0.08], color: '#8B4513' },
-      { type: 'box', size: [0.12, 0.16, 0.02], pos: [-0.26, 0.58, 0.11], color: '#F5F0E8' },
-    ],
-    hairShape: 'darkLong',
-  },
-  Brook: {
-    scale: 1.07,
-    skinColor: '#EAEAEA', hairColor: '#111111',   // white skull, black afro
-    topColor: '#111111',  pantsColor: '#0A0A0A', shoeColor: '#050505',
-    extras: [],
-    hairShape: 'afroHat', // afro sphere + top hat
-    skullFace: true,
-  },
-  Luffy: {
-    scale: 1.0,
-    skinColor: '#D4956A', hairColor: '#111111',
-    topColor: '#FF0000',  pantsColor: '#2244AA', shoeColor: '#1A1A1A',
-    extras: [],
-    hairShape: 'block',
-  },
-  Sanji: {
-    scale: 1.02,
-    skinColor: '#F4C28C', hairColor: '#111111',
-    topColor: '#1A1A1A', pantsColor: '#2A2A2A', shoeColor: '#0A0A0A',
-    extras: [
-      // Cigarette
-      { type: 'box', size: [0.02, 0.10, 0.02], pos: [0.10, 1.04, 0.14], color: '#EEEECC' },
-    ],
-    hairShape: 'block',
-  },
-  Usopp: {
-    scale: 0.95,
-    skinColor: '#C4842C', hairColor: '#111111',
-    topColor: '#228B22', pantsColor: '#8B6914', shoeColor: '#3A2000',
-    extras: [
-      // Slingshot
-      { type: 'box', size: [0.06, 0.22, 0.04], pos: [0.28, 0.72, 0.04], color: '#8B6914' },
-    ],
-    hairShape: 'block',
-  },
-}
-
-// ?????? Voxel humanoid character ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function VoxelCharacter({ name, isSitting, walkPhase, bobY }) {
-  const cfg = CHAR_CFG[name] || CHAR_CFG.Nami
-
-  // Sitting vs standing body-part offsets
-  // Root of this component is at floor-level (y=0)
-  const torsoY = isSitting ? 0.64 : 0.62
-  const headY  = isSitting ? 0.98 : 0.96
-  const armY   = isSitting ? 0.56 : 0.54
-  const armFwd = isSitting ? 0.10 : 0
-
-  // Arm swing (walking animation, zero when sitting)
-  const aSwing = isSitting ? 0 : Math.sin(walkPhase) * 0.45
-  const lSwing = isSitting ? 0 : Math.sin(walkPhase + Math.PI) * 0.40
-
-  return (
-    <group scale={[cfg.scale, cfg.scale, cfg.scale]} position={[0, bobY / cfg.scale, 0]}>
-
-      {/* ?????? Legs ????????????????????????????????????????????????????????????????????????????????????????????????????????? */}
-      {isSitting ? (
-        // Sitting: thighs horizontal forward, lower legs vertical
-        <>
-          {/* Right thigh */}
-          <mesh position={[0.08, 0.38, 0.22]} rotation={[Math.PI/2, 0, 0]} castShadow>
-            <boxGeometry args={[0.12, 0.38, 0.13]} />
-            <meshStandardMaterial color={cfg.pantsColor} />
-          </mesh>
-          {/* Right lower leg */}
-          <mesh position={[0.08, 0.18, 0.42]} castShadow>
-            <boxGeometry args={[0.11, 0.36, 0.13]} />
-            <meshStandardMaterial color={cfg.pantsColor} />
-          </mesh>
-          {/* Left thigh */}
-          <mesh position={[-0.08, 0.38, 0.22]} rotation={[Math.PI/2, 0, 0]} castShadow>
-            <boxGeometry args={[0.12, 0.38, 0.13]} />
-            <meshStandardMaterial color={cfg.pantsColor} />
-          </mesh>
-          {/* Left lower leg */}
-          <mesh position={[-0.08, 0.18, 0.42]} castShadow>
-            <boxGeometry args={[0.11, 0.36, 0.13]} />
-            <meshStandardMaterial color={cfg.pantsColor} />
-          </mesh>
-          {/* Shoes */}
-          <mesh position={[0.08, 0.04, 0.43]} castShadow>
-            <boxGeometry args={[0.13, 0.09, 0.17]} />
-            <meshStandardMaterial color={cfg.shoeColor} />
-          </mesh>
-          <mesh position={[-0.08, 0.04, 0.43]} castShadow>
-            <boxGeometry args={[0.13, 0.09, 0.17]} />
-            <meshStandardMaterial color={cfg.shoeColor} />
-          </mesh>
-        </>
-      ) : (
-        // Standing: legs swing when walking
-        <>
-          <group position={[0.08, 0.20, 0]} rotation={[lSwing, 0, 0]}>
-            <mesh castShadow>
-              <boxGeometry args={[0.12, 0.40, 0.13]} />
-              <meshStandardMaterial color={cfg.pantsColor} />
-            </mesh>
-            <mesh position={[0, -0.26, 0.02]} castShadow>
-              <boxGeometry args={[0.13, 0.09, 0.17]} />
-              <meshStandardMaterial color={cfg.shoeColor} />
-            </mesh>
-          </group>
-          <group position={[-0.08, 0.20, 0]} rotation={[-lSwing, 0, 0]}>
-            <mesh castShadow>
-              <boxGeometry args={[0.12, 0.40, 0.13]} />
-              <meshStandardMaterial color={cfg.pantsColor} />
-            </mesh>
-            <mesh position={[0, -0.26, 0.02]} castShadow>
-              <boxGeometry args={[0.13, 0.09, 0.17]} />
-              <meshStandardMaterial color={cfg.shoeColor} />
-            </mesh>
-          </group>
-        </>
-      )}
-
-      {/* ?????? Torso ?????????????????????????????????????????????????????????????????????????????????????????????????????? */}
-      <mesh position={[0, torsoY, 0]} castShadow>
-        <boxGeometry args={[0.32, 0.44, name === 'Franky' ? 0.22 : 0.18]} />
-        <meshStandardMaterial color={cfg.topColor} roughness={0.7} />
-      </mesh>
-
-      {/* ?????? Arms ????????????????????????????????????????????????????????????????????????????????????????????????????????? */}
-      <group position={[0.22, armY, armFwd]} rotation={[-aSwing, 0, 0]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.11, 0.38, 0.12]} />
-          <meshStandardMaterial color={cfg.skinColor} />
-        </mesh>
-      </group>
-      <group position={[-0.22, armY, armFwd]} rotation={[aSwing, 0, 0]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.11, 0.38, 0.12]} />
-          <meshStandardMaterial color={cfg.skinColor} />
-        </mesh>
-      </group>
-
-      {/* ?????? Head ????????????????????????????????????????????????????????????????????????????????????????????????????????? */}
-      <mesh position={[0, headY, 0]} castShadow>
-        <boxGeometry args={[0.26, 0.26, 0.24]} />
-        <meshStandardMaterial color={cfg.skinColor} roughness={0.6} />
-      </mesh>
-
-      {/* Brook skull eye sockets */}
-      {cfg.skullFace && (
-        <>
-          <mesh position={[0.07, headY + 0.02, 0.13]}>
-            <boxGeometry args={[0.06, 0.07, 0.02]} />
-            <meshStandardMaterial color="#111" />
-          </mesh>
-          <mesh position={[-0.07, headY + 0.02, 0.13]}>
-            <boxGeometry args={[0.06, 0.07, 0.02]} />
-            <meshStandardMaterial color="#111" />
-          </mesh>
-        </>
-      )}
-
-      {/* ?????? Hair / Head accessories ??????????????????????????????????????????????????? */}
-      {cfg.hairShape === 'block' && (
-        <mesh position={[0, headY + 0.18, -0.02]} castShadow>
-          <boxGeometry args={[0.28, 0.16, 0.24]} />
-          <meshStandardMaterial color={cfg.hairColor} />
-        </mesh>
-      )}
-      {cfg.hairShape === 'pompadour' && (
-        // Franky's tall blue pompadour
-        <>
-          <mesh position={[0, headY + 0.22, 0]} castShadow>
-            <boxGeometry args={[0.22, 0.28, 0.20]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-          <mesh position={[0, headY + 0.36, 0]} castShadow>
-            <boxGeometry args={[0.16, 0.14, 0.16]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-        </>
-      )}
-      {cfg.hairShape === 'chopperHat' && (
-        // Chopper pink hat with cross
-        <>
-          <mesh position={[0, headY + 0.15, 0]} castShadow>
-            <boxGeometry args={[0.30, 0.20, 0.28]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-          {/* Brim */}
-          <mesh position={[0, headY + 0.06, 0]} castShadow>
-            <boxGeometry args={[0.38, 0.05, 0.36]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-          {/* Cross vertical */}
-          <mesh position={[0, headY + 0.18, 0.15]}>
-            <boxGeometry args={[0.04, 0.16, 0.02]} />
-            <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.3} />
-          </mesh>
-          {/* Cross horizontal */}
-          <mesh position={[0, headY + 0.22, 0.15]}>
-            <boxGeometry args={[0.12, 0.04, 0.02]} />
-            <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.3} />
-          </mesh>
-        </>
-      )}
-      {cfg.hairShape === 'darkLong' && (
-        // Robin's dark elegant hair
-        <>
-          <mesh position={[0, headY + 0.14, -0.04]} castShadow>
-            <boxGeometry args={[0.28, 0.14, 0.20]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-          {/* Side hair strands */}
-          <mesh position={[0.14, headY - 0.02, -0.02]} castShadow>
-            <boxGeometry args={[0.06, 0.22, 0.14]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-          <mesh position={[-0.14, headY - 0.02, -0.02]} castShadow>
-            <boxGeometry args={[0.06, 0.22, 0.14]} />
-            <meshStandardMaterial color={cfg.hairColor} />
-          </mesh>
-        </>
-      )}
-      {cfg.hairShape === 'afroHat' && (
-        // Brook: dark sphere afro + tall top hat
-        <>
-          {/* Afro sphere (spec-approved exception) */}
-          <mesh position={[0, headY + 0.08, 0]} castShadow>
-            <sphereGeometry args={[0.22, 10, 10]} />
-            <meshStandardMaterial color="#111" roughness={0.9} />
-          </mesh>
-          {/* Hat brim */}
-          <mesh position={[0, headY + 0.30, 0]} castShadow>
-            <boxGeometry args={[0.38, 0.05, 0.36]} />
-            <meshStandardMaterial color="#0A0A0A" />
-          </mesh>
-          {/* Hat cylinder */}
-          <mesh position={[0, headY + 0.52, 0]} castShadow>
-            <boxGeometry args={[0.24, 0.44, 0.22]} />
-            <meshStandardMaterial color="#0A0A0A" />
-          </mesh>
-          {/* Hat top */}
-          <mesh position={[0, headY + 0.75, 0]} castShadow>
-            <boxGeometry args={[0.26, 0.05, 0.24]} />
-            <meshStandardMaterial color="#0A0A0A" />
-          </mesh>
-        </>
-      )}
-
-      {/* ?????? Character-specific extras ????????????????????????????????????????????? */}
-      {cfg.extras.map((e, i) => (
-        <mesh key={i} position={e.pos} rotation={e.rot || [0,0,0]} castShadow>
-          <boxGeometry args={e.size} />
-          <meshStandardMaterial color={e.color} roughness={0.7} />
-        </mesh>
-      ))}
-    </group>
-  )
-}
-
-// ?????? Hover portrait card ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function HoverPortrait({ avatarUrl, agentName, agentState, hovered }) {
-  const dotColor = STATE_COLOR[agentState] || '#555566'
-  return (
-    <Html position={[0, 2.1, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }} zIndexRange={[10, 0]}>
-      <div style={{ opacity: hovered ? 1 : 0, transition: 'opacity 200ms ease', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-        <div style={{ position: 'relative', width: '88px', height: '88px' }}>
-          <div style={{ position: 'absolute', inset: '-4px', borderRadius: '50%', border: `3px solid ${dotColor}`, boxShadow: `0 0 14px ${dotColor}88` }} />
-          <img src={avatarUrl} alt={agentName} style={{ width: '88px', height: '88px', borderRadius: '50%', objectFit: 'cover', display: 'block' }} />
-        </div>
-        <div style={{ background: 'rgba(8,12,28,0.9)', border: `1px solid ${dotColor}55`, borderRadius: '20px', padding: '3px 12px', fontFamily: 'monospace', fontSize: '11px', color: '#EEE', whiteSpace: 'nowrap' }}>
-          <span style={{ fontWeight: 'bold' }}>{agentName}</span>
-          <span style={{ color: dotColor, marginLeft: '6px' }}>??? {STATE_LABEL[agentState] || 'Idle'}</span>
-        </div>
-      </div>
-    </Html>
-  )
-}
-
-// ?????? Desk geometry ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function Desk({ agentColor, agentState, agentName }) {
-  const monitorGlow = agentState === 'working' ? 1.0 : agentState === 'thinking' ? 0.5 : agentState === 'offline' ? 0 : 0.12
-  return (
-    <group>
-      <RoundedBox args={[2.0,0.09,1.0]} radius={0.04} position={[0,0.72,0]} castShadow receiveShadow>
-        <meshStandardMaterial color="#7A5C1E" roughness={0.4} metalness={0.1} />
-      </RoundedBox>
-      {[[-0.88,0.35,-0.42],[0.88,0.35,-0.42],[-0.88,0.35,0.42],[0.88,0.35,0.42]].map(([lx,ly,lz],i) => (
-        <mesh key={i} position={[lx,ly,lz]} castShadow>
-          <boxGeometry args={[0.06,0.70,0.06]} />
-          <meshStandardMaterial color="#5A3E0A" />
-        </mesh>
-      ))}
-      {/* Chair */}
-      <group position={[0,0,0.75]}>
-        <mesh position={[0,0.42,0]} castShadow><boxGeometry args={[0.55,0.07,0.55]} /><meshStandardMaterial color="#1A1A2E" /></mesh>
-        <mesh position={[0,0.72,-0.25]} castShadow><boxGeometry args={[0.55,0.5,0.07]} /><meshStandardMaterial color="#1A1A2E" /></mesh>
-        {[[-0.24,0.19,0.22],[0.24,0.19,0.22],[-0.24,0.19,-0.22],[0.24,0.19,-0.22]].map(([lx,ly,lz],i) => (
-          <mesh key={i} position={[lx,ly,lz]}><boxGeometry args={[0.05,0.38,0.05]} /><meshStandardMaterial color="#111122" /></mesh>
-        ))}
-      </group>
-      {/* Monitor */}
-      <group position={[0,0.77,-0.28]}>
-        <mesh castShadow><boxGeometry args={[0.88,0.52,0.05]} /><meshStandardMaterial color="#0A0A12" /></mesh>
-        <mesh position={[0,0,0.03]}><boxGeometry args={[0.76,0.42,0.01]} /><meshStandardMaterial color={agentState === 'offline' ? '#111' : '#001a33'} emissive={agentColor} emissiveIntensity={monitorGlow} /></mesh>
-        <mesh position={[0,-0.35,0.03]}><boxGeometry args={[0.07,0.16,0.07]} /><meshStandardMaterial color="#222" /></mesh>
-        <mesh position={[0,-0.44,0.06]}><boxGeometry args={[0.24,0.03,0.16]} /><meshStandardMaterial color="#222" /></mesh>
-      </group>
-      <mesh position={[0,0.775,0.12]} receiveShadow><boxGeometry args={[0.55,0.02,0.18]} /><meshStandardMaterial color="#222233" /></mesh>
-      <mesh position={[0,0.775,0.51]}><boxGeometry args={[2.0,0.03,0.02]} /><meshStandardMaterial color={agentColor} emissive={agentColor} emissiveIntensity={0.6} /></mesh>
-
-      {/* ===== Desk personality items ===== */}
-      {agentName === 'Nami' && (
-        <group>
-          {/* Rolled nautical chart */}
-          <mesh position={[0.55, 0.78, 0.28]} rotation={[0, 0.4, Math.PI/2]} castShadow>
-            <cylinderGeometry args={[0.04, 0.04, 0.40, 8]} />
-            <meshStandardMaterial color="#F5E6C8" roughness={0.9} />
-          </mesh>
-          {/* Compass */}
-          <mesh position={[-0.52, 0.78, 0.20]} castShadow>
-            <cylinderGeometry args={[0.07, 0.07, 0.04, 16]} />
-            <meshStandardMaterial color="#C8A200" roughness={0.4} metalness={0.6} />
-          </mesh>
-          {/* Coin stack */}
-          <mesh position={[-0.52, 0.80, -0.05]} castShadow>
-            <cylinderGeometry args={[0.05, 0.05, 0.10, 8]} />
-            <meshStandardMaterial color="#FFD700" roughness={0.3} metalness={0.7} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Franky' && (
-        <group>
-          {/* Blueprint roll */}
-          <mesh position={[0.55, 0.78, 0.20]} rotation={[0, 0.2, Math.PI/2]} castShadow>
-            <cylinderGeometry args={[0.04, 0.04, 0.38, 8]} />
-            <meshStandardMaterial color="#4A7FCC" roughness={0.8} />
-          </mesh>
-          {/* Coffee mug */}
-          <mesh position={[-0.50, 0.78, 0.20]} castShadow>
-            <cylinderGeometry args={[0.05, 0.04, 0.10, 10]} />
-            <meshStandardMaterial color="#C8C8C8" roughness={0.6} />
-          </mesh>
-          {/* Wrench */}
-          <mesh position={[0.30, 0.775, 0.28]} rotation={[0, 0.5, 0]} castShadow>
-            <boxGeometry args={[0.06, 0.04, 0.28]} />
-            <meshStandardMaterial color="#888" roughness={0.5} metalness={0.5} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Chopper' && (
-        <group>
-          {/* Medical kit */}
-          <mesh position={[0.48, 0.78, 0.20]} castShadow>
-            <boxGeometry args={[0.18, 0.12, 0.14]} />
-            <meshStandardMaterial color="#EE2222" roughness={0.7} />
-          </mesh>
-          <mesh position={[0.48, 0.785, 0.20]}>
-            <boxGeometry args={[0.04, 0.10, 0.02]} />
-            <meshStandardMaterial color="#FFFFFF" />
-          </mesh>
-          <mesh position={[0.48, 0.785, 0.20]}>
-            <boxGeometry args={[0.10, 0.04, 0.02]} />
-            <meshStandardMaterial color="#FFFFFF" />
-          </mesh>
-          {/* Magnifying glass handle */}
-          <mesh position={[-0.45, 0.78, 0.22]} rotation={[0, 0, 0.5]} castShadow>
-            <cylinderGeometry args={[0.02, 0.02, 0.18, 8]} />
-            <meshStandardMaterial color="#8B5A2B" roughness={0.7} />
-          </mesh>
-          {/* Magnifying glass head */}
-          <mesh position={[-0.42, 0.80, 0.22]}>
-            <torusGeometry args={[0.06, 0.015, 8, 16]} />
-            <meshStandardMaterial color="#888" metalness={0.5} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Robin' && (
-        <group>
-          {/* Ancient book stack */}
-          <mesh position={[0.50, 0.78, 0.10]} castShadow>
-            <boxGeometry args={[0.16, 0.06, 0.20]} />
-            <meshStandardMaterial color="#8B1A1A" roughness={0.9} />
-          </mesh>
-          <mesh position={[0.50, 0.84, 0.10]} castShadow>
-            <boxGeometry args={[0.14, 0.05, 0.18]} />
-            <meshStandardMaterial color="#4A2C6E" roughness={0.9} />
-          </mesh>
-          {/* Flower pot */}
-          <mesh position={[-0.48, 0.77, 0.18]} castShadow>
-            <cylinderGeometry args={[0.05, 0.04, 0.08, 8]} />
-            <meshStandardMaterial color="#C1440E" roughness={0.9} />
-          </mesh>
-          <mesh position={[-0.48, 0.83, 0.18]} castShadow>
-            <sphereGeometry args={[0.06, 6, 6]} />
-            <meshStandardMaterial color="#3A9A3A" roughness={0.8} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Brook' && (
-        <group>
-          {/* Miniature violin body */}
-          <mesh position={[0.48, 0.78, 0.18]} rotation={[0, 0.3, 0]} castShadow>
-            <boxGeometry args={[0.08, 0.03, 0.18]} />
-            <meshStandardMaterial color="#6B3A1A" roughness={0.6} />
-          </mesh>
-          {/* Violin neck */}
-          <mesh position={[0.48, 0.78, 0.02]} rotation={[0, 0.3, 0]} castShadow>
-            <boxGeometry args={[0.03, 0.03, 0.12]} />
-            <meshStandardMaterial color="#5A2E0A" roughness={0.7} />
-          </mesh>
-          {/* Sheet music papers */}
-          <mesh position={[-0.40, 0.775, 0.15]} rotation={[-0.1, 0.2, 0]} castShadow>
-            <boxGeometry args={[0.22, 0.005, 0.16]} />
-            <meshStandardMaterial color="#F5F0E8" roughness={0.9} />
-          </mesh>
-          <mesh position={[-0.42, 0.776, 0.18]} rotation={[-0.1, -0.1, 0]} castShadow>
-            <boxGeometry args={[0.20, 0.005, 0.14]} />
-            <meshStandardMaterial color="#EEEBE0" roughness={0.9} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Sanji' && (
-        <group>
-          {/* Coffee cup */}
-          <mesh position={[0.48, 0.78, 0.20]} castShadow>
-            <cylinderGeometry args={[0.05, 0.04, 0.09, 10]} />
-            <meshStandardMaterial color="#FFFFFF" roughness={0.5} />
-          </mesh>
-          {/* Saucer */}
-          <mesh position={[0.48, 0.775, 0.20]} castShadow>
-            <cylinderGeometry args={[0.08, 0.08, 0.015, 12]} />
-            <meshStandardMaterial color="#EEEEEE" roughness={0.5} />
-          </mesh>
-          {/* Flower vase */}
-          <mesh position={[-0.46, 0.78, 0.18]} castShadow>
-            <cylinderGeometry args={[0.035, 0.028, 0.10, 8]} />
-            <meshStandardMaterial color="#F0F0F0" roughness={0.4} />
-          </mesh>
-          <mesh position={[-0.46, 0.84, 0.18]} castShadow>
-            <sphereGeometry args={[0.04, 6, 6]} />
-            <meshStandardMaterial color="#FF6699" roughness={0.8} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Usopp' && (
-        <group>
-          {/* Slingshot */}
-          <mesh position={[0.50, 0.79, 0.22]} castShadow>
-            <boxGeometry args={[0.06, 0.16, 0.04]} />
-            <meshStandardMaterial color="#8B6914" roughness={0.7} />
-          </mesh>
-          <mesh position={[0.44, 0.86, 0.22]} castShadow>
-            <boxGeometry args={[0.04, 0.08, 0.04]} />
-            <meshStandardMaterial color="#8B6914" roughness={0.7} />
-          </mesh>
-          <mesh position={[0.56, 0.86, 0.22]} castShadow>
-            <boxGeometry args={[0.04, 0.08, 0.04]} />
-            <meshStandardMaterial color="#8B6914" roughness={0.7} />
-          </mesh>
-          {/* Small telescope */}
-          <mesh position={[-0.45, 0.78, 0.18]} rotation={[0, 0.4, Math.PI/2]} castShadow>
-            <cylinderGeometry args={[0.035, 0.025, 0.24, 10]} />
-            <meshStandardMaterial color="#8B5A00" roughness={0.6} />
-          </mesh>
-        </group>
-      )}
-      {agentName === 'Luffy' && (
-        <group>
-          {/* Meat bone */}
-          <mesh position={[0.50, 0.78, 0.22]} castShadow>
-            <cylinderGeometry args={[0.025, 0.025, 0.20, 8]} />
-            <meshStandardMaterial color="#D4956A" roughness={0.8} />
-          </mesh>
-          <mesh position={[0.42, 0.78, 0.22]} castShadow>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color="#D4956A" roughness={0.8} />
-          </mesh>
-          <mesh position={[0.58, 0.78, 0.22]} castShadow>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color="#D4956A" roughness={0.8} />
-          </mesh>
-          {/* Straw hat on desk corner */}
-          <mesh position={[-0.46, 0.78, 0.14]} castShadow>
-            <cylinderGeometry args={[0.14, 0.16, 0.03, 16]} />
-            <meshStandardMaterial color="#F5C842" roughness={0.9} />
-          </mesh>
-          <mesh position={[-0.46, 0.79, 0.14]} castShadow>
-            <cylinderGeometry args={[0.07, 0.07, 0.06, 12]} />
-            <meshStandardMaterial color="#F5C842" roughness={0.9} />
-          </mesh>
-        </group>
-      )}
-    </group>
-  )
-}
-
-// ?????? Agent station ??? character + patrol + hover ???????????????????????????????????????????????????????????????????????????????????????
-const PATROL_WAYPOINTS = [
-  [0,   0, 1.1],
-  [-0.7, 0, 1.5],
-  [0.7,  0, 1.5],
-]
-const WALK_SPEED = 0.55      // units/sec
-const WAIT_MIN   = 1.2
-const WAIT_RANGE = 1.4
-
-function AgentStation({ agent, agentState, onClick }) {
-  const [hovered, setHovered] = useState(false)
-  const charGroupRef = useRef()
-  const avatarUrl = AVATAR_MAP[agent.name]
-
-  // Patrol state (mutable, no re-render needed)
-  const patrol = useRef({
-    wpIdx: 0,
-    nextWp: 1,
-    progress: 0,
-    waiting: true,
-    waitLeft: WAIT_MIN + Math.random() * WAIT_RANGE,
-    walkPhase: 0,
-    facing: Math.PI, // default face away from camera (toward desk/monitor)
-  })
-  // Lerp target
-  const tgtPos = useRef(new THREE.Vector3())
-  const tgtFacing = useRef(Math.PI)
-  const bobOffset = useRef(0)
-  const bobDir = useRef(1)
-
-  const isSitting = agentState === 'working' || agentState === 'thinking'
-  const [px, , pz] = agent.position
-
-  useFrame((_, dt) => {
-    if (!charGroupRef.current) return
-    const g = charGroupRef.current
-    const p = patrol.current
-
-    if (isSitting) {
-      // Snap to desk sitting position
-      tgtPos.current.set(px, 0, pz + 0.68)
-      tgtFacing.current = Math.PI
-      p.walkPhase = 0
-
-      // Thinking bob
-      if (agentState === 'thinking') {
-        bobOffset.current += dt * 2.4 * bobDir.current
-        if (bobOffset.current > 0.06) bobDir.current = -1
-        if (bobOffset.current < 0)   bobDir.current =  1
-      } else {
-        bobOffset.current = 0
-        bobDir.current = 1
+  useEffect(() => {
+    if (prevStatusesRef.current === null) {
+      // First mount — just store, don't play sounds
+      prevStatusesRef.current = statuses
+      return
+    }
+    const prev = prevStatusesRef.current
+    statuses.forEach(s => {
+      const prevEntry = prev.find(p => p.name === s.name)
+      if (prevEntry && prevEntry.state !== s.state) {
+        playStateChange(s.name, s.state, prevEntry.state)
       }
-    } else {
-      bobOffset.current = 0
+    })
+    prevStatusesRef.current = statuses
+  }, [statuses, playStateChange])
 
-      if (agentState === 'offline') {
-        // Stand still in front of desk
-        tgtPos.current.set(px, 0, pz + 1.1)
-        tgtFacing.current = Math.PI
-        p.walkPhase = 0
-      } else {
-        // Idle patrol
-        if (p.waiting) {
-          p.waitLeft -= dt
-          if (p.waitLeft <= 0) { p.waiting = false; p.progress = 0 }
-          p.walkPhase = 0
-        } else {
-          const from = PATROL_WAYPOINTS[p.wpIdx]
-          const to   = PATROL_WAYPOINTS[p.nextWp]
-          const dx = to[0] - from[0]
-          const dz = to[2] - from[2]
-          const dist = Math.sqrt(dx*dx + dz*dz) || 0.001
-          p.progress = Math.min(1, p.progress + (WALK_SPEED * dt) / dist)
-          p.walkPhase += dt * 6.5
-
-          const cx = px + from[0] + dx * p.progress
-          const cz = pz + from[2] + dz * p.progress
-          tgtPos.current.set(cx, 0, cz)
-          tgtFacing.current = Math.atan2(dx, dz)
-
-          if (p.progress >= 1) {
-            p.wpIdx = p.nextWp
-            p.nextWp = (p.nextWp + 1) % PATROL_WAYPOINTS.length
-            p.waiting = true
-            p.waitLeft = WAIT_MIN + Math.random() * WAIT_RANGE
-          }
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'h' || e.key === 'H' || e.key === '?') {
+        setShowHelp(prev => !prev)
+        return
+      }
+      if (e.key === 'Escape' && showHelp) {
+        setShowHelp(false)
+        return
+      }
+      if (e.key === 'Escape' && showDashboard) {
+        setShowDashboard(false)
+        return
+      }
+      if (e.key === 'c' || e.key === 'C') {
+        if (!showHelp) {
+          setShowDashboard(prev => !prev)
+          return
         }
       }
+      if (e.key === 'r' || e.key === 'R' || e.key === 'Escape') {
+        setFocusTarget(null)
+        return
+      }
+      const idx = parseInt(e.key, 10)
+      if (!isNaN(idx) && idx >= 1 && idx <= CREW.length) {
+        setFocusTarget(CREW[idx - 1])
+      }
     }
-
-    // Smoothly lerp position and facing
-    g.position.lerp(tgtPos.current, 0.08)
-    const df = tgtFacing.current - g.rotation.y
-    // Normalize angle diff
-    const dn = ((df + Math.PI) % (Math.PI * 2)) - Math.PI
-    g.rotation.y += dn * 0.08
-  })
-
-  // Set initial position to avoid teleport on first frame
-  const initPos = [px, 0, pz + 1.1]
-
-  return (
-    <>
-      {/* Fixed desk ??? always at agent base position */}
-      <group position={[px, 0, pz]}>
-        <Desk agentColor={agent.color} agentState={agentState} agentName={agent.name} />
-      </group>
-
-      {/* Animated character group */}
-      <group
-        ref={charGroupRef}
-        position={initPos}
-        rotation={[0, Math.PI, 0]}
-        onPointerEnter={e => { e.stopPropagation(); setHovered(true) }}
-        onPointerLeave={() => setHovered(false)}
-        onClick={e => { e.stopPropagation(); onClick() }}
-      >
-        {/* Floor glow ring */}
-        <mesh rotation={[-Math.PI/2, 0, 0]} position={[0, 0.01, 0]} receiveShadow>
-          <ringGeometry args={[0.30, 0.44, 32]} />
-          <meshBasicMaterial color={STATE_COLOR[agentState] || '#555'} transparent opacity={0.55} side={THREE.DoubleSide} />
-        </mesh>
-
-        {/* The voxel character body */}
-        <VoxelCharacter
-          name={agent.name}
-          isSitting={isSitting}
-          walkPhase={patrol.current.walkPhase}
-          bobY={bobOffset.current}
-        />
-
-        {/* Hover portrait (anime) */}
-        {avatarUrl && (
-          <HoverPortrait
-            avatarUrl={avatarUrl}
-            agentName={agent.name}
-            agentState={agentState}
-            hovered={hovered}
-          />
-        )}
-
-        {/* Name tag above head */}
-        <Text
-          position={[0, 1.70, 0]}
-          fontSize={0.17}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.02}
-          outlineColor="#000"
-          renderOrder={10}
-        >
-          {agent.name}
-        </Text>
-      </group>
-    </>
-  )
-}
-
-// ?????? Office scenery ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function CosmicBackdrop() {
-  return (
-    <>
-      <mesh position={[14, -10, -18]}>
-        <sphereGeometry args={[12, 32, 32]} />
-        <meshStandardMaterial color="#1B2A4A" roughness={0.9} metalness={0.1} />
-      </mesh>
-      <mesh position={[14, -10, -18]} rotation={[0.3, 0, 0.2]}>
-        <torusGeometry args={[14, 0.35, 8, 64]} />
-        <meshStandardMaterial color="#2A3D6A" roughness={1} />
-      </mesh>
-      <mesh position={[-12, 8, -20]}>
-        <sphereGeometry args={[2.2, 16, 16]} />
-        <meshStandardMaterial color="#2E3A5A" roughness={1} />
-      </mesh>
-    </>
-  )
-}
-
-function OfficeShell() {
-  const fc = '#E8DCC8', wc = '#D4C9B4', tc = '#B8A898'
-  return (
-    <group>
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow>
-        <planeGeometry args={[22,20]} /><meshStandardMaterial color={fc} roughness={0.8} />
-      </mesh>
-      {[-10,-8,-6,-4,-2,0,2,4,6,8,10].map(x=>(<mesh key={`fx${x}`} rotation={[-Math.PI/2,0,0]} position={[x,0.002,0]}><planeGeometry args={[0.04,20]}/><meshStandardMaterial color={tc}/></mesh>))}
-      {[-8,-6,-4,-2,0,2,4,6,8].map(z=>(<mesh key={`fz${z}`} rotation={[-Math.PI/2,0,0]} position={[0,0.002,z]}><planeGeometry args={[22,0.04]}/><meshStandardMaterial color={tc}/></mesh>))}
-      <mesh position={[0,2.0,-10]} receiveShadow><planeGeometry args={[22,4]}/><meshStandardMaterial color={wc} roughness={0.85} side={THREE.FrontSide}/></mesh>
-      <mesh position={[-11,2.0,0]} rotation={[0,Math.PI/2,0]} receiveShadow><planeGeometry args={[20,4]}/><meshStandardMaterial color={wc} roughness={0.85} side={THREE.FrontSide}/></mesh>
-      <mesh position={[11,2.0,0]} rotation={[0,-Math.PI/2,0]} receiveShadow><planeGeometry args={[20,4]}/><meshStandardMaterial color={wc} roughness={0.85} side={THREE.FrontSide}/></mesh>
-      <mesh position={[0,0.08,-9.96]}><boxGeometry args={[22,0.16,0.06]}/><meshStandardMaterial color={tc}/></mesh>
-      <mesh position={[-10.96,0.08,0]}><boxGeometry args={[0.06,0.16,20]}/><meshStandardMaterial color={tc}/></mesh>
-    </group>
-  )
-}
-
-function ConfTable({ position }) {
-  return (
-    <group position={position}>
-      <mesh position={[0,0.55,0]} castShadow receiveShadow><cylinderGeometry args={[0.9,0.9,0.08,32]}/><meshStandardMaterial color="#8B6914" roughness={0.5} metalness={0.1}/></mesh>
-      <mesh position={[0,0.28,0]} castShadow><cylinderGeometry args={[0.07,0.12,0.56,12]}/><meshStandardMaterial color="#6B4F10" roughness={0.6}/></mesh>
-      {[0,72,144,216,288].map((deg,i)=>{const r=1.25,a=(deg*Math.PI)/180;return(<group key={i} position={[Math.sin(a)*r,0,Math.cos(a)*r]} rotation={[0,-a,0]}><mesh position={[0,0.22,0]} castShadow><boxGeometry args={[0.38,0.06,0.38]}/><meshStandardMaterial color="#2a2a35"/></mesh><mesh position={[0,0.48,-0.17]} castShadow><boxGeometry args={[0.38,0.44,0.06]}/><meshStandardMaterial color="#2a2a35"/></mesh></group>)})}
-    </group>
-  )
-}
-
-function Bookshelf() {
-  const books=['#E74C3C','#3498DB','#2ECC71','#F39C12','#9B59B6','#1ABC9C','#E67E22','#2980B9','#27AE60','#8E44AD']
-  return(<group position={[-10.5,0,-3]}><mesh position={[0,1.0,0]} castShadow><boxGeometry args={[0.22,2.0,1.6]}/><meshStandardMaterial color="#7A5C1E" roughness={0.6}/></mesh>{books.map((c,i)=>(<mesh key={i} position={[0.02,0.25+Math.floor(i/5)*0.7+0.06,-0.6+(i%5)*0.26]} castShadow><boxGeometry args={[0.16,0.6,0.22]}/><meshStandardMaterial color={c} roughness={0.8}/></mesh>))}</group>)
-}
-
-function Plant({position}) {
-  return(<group position={position}><mesh position={[0,0.2,0]} castShadow><cylinderGeometry args={[0.18,0.22,0.4,10]}/><meshStandardMaterial color="#C1440E" roughness={0.9}/></mesh><mesh position={[0,0.52,0]} castShadow><sphereGeometry args={[0.32,8,6]}/><meshStandardMaterial color="#2D7A2D" roughness={0.8}/></mesh><mesh position={[0.18,0.64,0.08]} castShadow><sphereGeometry args={[0.18,7,6]}/><meshStandardMaterial color="#3A9A3A" roughness={0.8}/></mesh></group>)
-}
-
-function Whiteboard() {
-  return(<group position={[0,1.6,-5.88]}><mesh castShadow><boxGeometry args={[2.8,1.6,0.07]}/><meshStandardMaterial color="#5C3D1E" roughness={0.7}/></mesh><mesh position={[0,0,0.04]}><boxGeometry args={[2.6,1.44,0.02]}/><meshStandardMaterial color="#F5F2EC" roughness={0.9}/></mesh><Text position={[0,0.32,0.06]} fontSize={0.19} color="#333" anchorX="center">ACTIVE TASKS</Text><Text position={[0,0.0,0.06]} fontSize={0.13} color="#777" anchorX="center">Sprint 2 ??? Phase D2</Text><Text position={[0,-0.3,0.06]} fontSize={0.11} color="#999" anchorX="center">CREW-009 ???  CREW-014 ???  CREW-015 ???</Text></group>)
-}
-
-// ?????? Top roster HUD ??? DO NOT TOUCH ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-function RosterBar({ statuses }) {
-  return (
-    <div style={{ position:'fixed',top:0,left:0,right:0,height:'60px',background:'linear-gradient(135deg,#0D2137 0%,#1A2F4A 100%)',borderBottom:'1px solid rgba(100,160,255,0.25)',display:'flex',alignItems:'center',padding:'0 20px',gap:'16px',zIndex:200,fontFamily:"'Courier New',monospace",boxShadow:'0 2px 16px rgba(0,0,0,0.6)' }}>
-      <div style={{ display:'flex',alignItems:'center',gap:'8px',marginRight:'10px' }}>
-        <span style={{ fontSize:'22px' }}>???</span>
-        <div>
-          <div style={{ color:'#FFD700',fontWeight:'bold',fontSize:'13px',lineHeight:1.1 }}>STRAW HAT HQ</div>
-          <div style={{ color:'#557799',fontSize:'10px' }}>Mission Control ?? Live</div>
-        </div>
-      </div>
-      <div style={{ width:'1px',height:'36px',background:'rgba(100,160,255,0.2)' }} />
-      {CREW.map(agent=>{
-        const st=statuses.find(s=>s.name===agent.name)||{state:'idle'}
-        const dotColor=STATE_COLOR[st.state]||'#555'
-        const av=AVATAR_MAP[agent.name]
-        return(
-          <div key={agent.name} style={{ display:'flex',alignItems:'center',gap:'10px',background:'rgba(255,255,255,0.04)',border:`1px solid ${agent.color}33`,borderRadius:'10px',padding:'5px 14px 5px 6px' }}>
-            <div style={{ position:'relative',width:'36px',height:'36px',flexShrink:0 }}>
-              <div style={{ position:'absolute',inset:'-3px',borderRadius:'50%',border:`2.5px solid ${dotColor}`,boxShadow:`0 0 8px ${dotColor}88`,zIndex:1 }} />
-              {av?<img src={av} alt={agent.name} style={{ width:'36px',height:'36px',borderRadius:'50%',objectFit:'cover',display:'block' }}/>:
-                <div style={{ width:'36px',height:'36px',borderRadius:'50%',background:agent.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'14px',fontWeight:'bold',color:'#000' }}>{agent.name[0]}</div>}
-            </div>
-            <div>
-              <div style={{ color:'#EEE',fontSize:'12px',fontWeight:'bold',lineHeight:1.15 }}>{agent.name}</div>
-              <div style={{ color:'#889',fontSize:'10px',lineHeight:1.1 }}>{agent.role}</div>
-            </div>
-            <div style={{ display:'flex',alignItems:'center',gap:'4px',marginLeft:'4px' }}>
-              <div style={{ width:'7px',height:'7px',borderRadius:'50%',background:dotColor,boxShadow:`0 0 5px ${dotColor}` }} />
-              <span style={{ color:dotColor,fontSize:'10px',textTransform:'capitalize' }}>{STATE_LABEL[st.state]||'Idle'}</span>
-            </div>
-          </div>
-        )
-      })}
-      <div style={{ marginLeft:'auto',color:'#334455',fontSize:'11px' }}>Phase D2</div>
-    </div>
-  )
-}
-
-// ?????? Main App ?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-export default function App() {
-  const statuses = useGatewayStatus()
-  const orbitRef = useRef()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showHelp, showDashboard])
 
   function getState(name) {
     return statuses.find(s => s.name === name)?.state || 'idle'
   }
 
+  const selectedStatus = selectedAgent ? statuses.find(s => s.name === selectedAgent.name) : null
+
   return (
-    <div style={{ width:'100vw',height:'100vh',background:'#060C18' }}>
-      <RosterBar statuses={statuses} />
+    <StatusContext.Provider value={statuses}>
+    <div style={{ width:'100vw',height:'100dvh',background:'#87CEEB',overflow:'hidden',position:'fixed',top:0,left:0 }}>
+      <style>{`@keyframes pulseDot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(1.5); } } @keyframes fadeInRow { from { opacity:0; transform:translateX(10px); } to { opacity:1; transform:translateX(0); } } @keyframes helpFadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }`}</style>
+      <RosterBar statuses={statuses} onFocusAgent={setFocusTarget} focusTarget={focusTarget} demoActive={demoActive} ambientEnabled={ambientEnabled} setAmbientEnabled={setAmbientEnabled} hasInteracted={hasInteracted} showDashboard={showDashboard} setShowDashboard={setShowDashboard} />
+      <SprintHUD />
+      <ActivityFeed statuses={statuses} />
+      <CommitFeed />
+      <TaskFeed />
       <Canvas
         shadows
-        camera={{ position:[0,26,34], fov:45 }}
-        style={{ width:'100%',height:'100%',paddingTop:'60px',boxSizing:'border-box' }}
+        camera={{ position: isMobile ? [0, 55, 80] : [0, 35, 70], fov: isMobile ? 50 : 50 }}
+        dpr={isMobile ? [1, 1.5] : [1, 2]}
+        style={{ width:'100%',height:'100%',paddingTop:isMobile?'44px':'60px',paddingBottom:isMobile?'0':'32px',boxSizing:'border-box',touchAction:'none',WebkitUserSelect:'none',userSelect:'none' }}
         gl={{ antialias:true }}
+        onCreated={({ gl, scene }) => {
+          scene.fog = null // Sunny sails in clear bright skies — no fog
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault()
+            console.warn('WebGL context lost — will attempt restore')
+          })
+        }}
       >
-        <ambientLight intensity={0.40} color="#C8D8F0" />
-        <directionalLight position={[8,16,10]} intensity={1.4} color="#FFF5E0" castShadow
-          shadow-mapSize={[2048,2048]}
-          shadow-camera-near={0.5} shadow-camera-far={60}
-          shadow-camera-left={-22} shadow-camera-right={22}
-          shadow-camera-top={22} shadow-camera-bottom={-22}
+        <ambientLight intensity={skyState.ambientIntensity} color={skyState.ambientColor} />
+        <directionalLight position={[20, 40, 25]} intensity={skyState.dirLightIntensity} color="#FFF5E0" castShadow
+          shadow-mapSize={isMobile ? [512, 512] : [2048, 2048]}
+          shadow-camera-near={0.5} shadow-camera-far={200}
+          shadow-camera-left={-60} shadow-camera-right={60}
+          shadow-camera-top={60} shadow-camera-bottom={-60}
         />
-        <directionalLight position={[-6,8,-4]} intensity={0.3} color="#8899FF" />
-        <pointLight position={[0,4,0]} intensity={0.4} color="#FFE8C0" distance={16} />
+        <directionalLight position={[-6, 8, -4]} intensity={0.8} color="#AACCFF" />
+        <directionalLight position={[0, 4, 12]} intensity={0.6} color="#FFD700" /> {/* warm fill from bow */}
+        <pointLight position={[0, 5, 0]} intensity={1.2} color="#FFE8C0" distance={30} />
+        <pointLight position={[0, 8, 6]} intensity={0.6} color="#FFD080" distance={20} /> {/* figurehead glow */}
 
-        <Stars radius={80} depth={40} count={3000} factor={3} fade speed={0.3} />
-        <CosmicBackdrop />
-        <OfficeShell />
-        <Whiteboard />
-        <Bookshelf />
-        <Plant position={[-9.5,0,7]} />
-        <Plant position={[9.5,0,7]} />
-        <ConfTable position={[0,0,4.5]} />
+        <OceanSkyEnvironment />
 
-        {CREW.map(agent => (
-          <AgentStation
-            key={agent.name}
-            agent={agent}
-            agentState={getState(agent.name)}
-            onClick={() => {}}
-          />
-        ))}
+        {/* World-fixed elements — NOT bobbed */}
+        <DynamicSky skyState={skyState} />
+        <SceneErrorBoundary><StarField opacity={skyState.starsOpacity} /></SceneErrorBoundary>
+        <SceneErrorBoundary><WakeFoam /></SceneErrorBoundary>
 
-        <OrbitControls ref={orbitRef} target={[0,1,0]} enableDamping dampingFactor={0.06}
-          minDistance={8} maxDistance={48} maxPolarAngle={Math.PI/2.1} />
+        {/* Ship content — all bobs with the ocean */}
+        <ShipBob>
+          {/* Ship Structure */}
+          <ShipDeck />
+          <ShipHullShaped />
+          <LionFigurehead />
+          <LuffyAtFigurehead />
+
+          {/* Masts */}
+          <AnimatedMast position={[-8, 0, -12]} />
+          <AnimatedMast position={[8, 0, -12]} />
+
+          {/* Captain's Log (was Whiteboard) */}
+          <CaptainsLog data={whiteboardData} />
+
+          {/* Grass lawn area */}
+          <GrassLawn />
+
+          {/* Helm at stern */}
+          <NavigationWheel position={[0, 2.2, -20]} />
+
+          {/* Cannons */}
+          <Cannon position={[-28, 0.3, -6]} rotateY={Math.PI / 2} />
+          <Cannon position={[-28, 0.3, 3]} rotateY={Math.PI / 2} />
+          <Cannon position={[28, 0.3, -6]} rotateY={-Math.PI / 2} />
+          <Cannon position={[28, 0.3, 3]} rotateY={-Math.PI / 2} />
+
+          {/* Strategy Room (center back) */}
+          <StrategyRoom />
+
+          {/* Signature crew stations */}
+          <KitchenStation position={[6, 0, 12]} />
+          <WorkshopStation position={[-10, 0, 8]} />
+
+          {/* Aquarium Bar — lower deck feel, stern area */}
+          <AquariumBar />
+          {/* Nami's Tangerine Grove */}
+          <TangerineGrove />
+          {/* Music Lounge — Brook */}
+          <MusicLounge />
+          {/* Sick Bay — Chopper */}
+          <SickBay />
+          {/* Robin's Library — circular bookshelves, poneglyph, globe */}
+          <RobinsLibrary />
+          {/* Crow's Nest Tower — telescope, gym, Jolly Roger */}
+          <CrowsNestTower />
+          {/* Men's Quarters — bunks, lockers, wanted posters */}
+          <MensQuarters />
+
+          {CREW.filter(agent => agent.name !== 'Luffy').map(agent => (
+            <DeskGroup
+              key={agent.name}
+              agent={agent}
+              agentState={getState(agent.name)}
+              onClick={() => setSelectedAgent(agent)}
+              isSelected={selectedAgent?.name === agent.name}
+            />
+          ))}
+
+          <TaskFlowParticles />
+          <NetworkLines />
+          <AmbientHologram confTablePos={[0, 0.5, -2]} />
+        </ShipBob>
+
+        <SceneErrorBoundary><SceneEffects /></SceneErrorBoundary>
+
+        <OrbitControls
+          ref={orbitRef}
+          target={[0, 0, -5]}
+          enableDamping
+          dampingFactor={0.08}
+          minDistance={8}
+          maxDistance={120}
+          maxPolarAngle={Math.PI / 2.3}
+          enableZoom={true}
+          enableRotate={true}
+          enablePan={true}
+          touches={{
+            ONE: THREE.TOUCH.ROTATE,
+            TWO: THREE.TOUCH.DOLLY_PAN,
+          }}
+          mouseButtons={{
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.PAN,
+          }}
+          zoomSpeed={isMobile ? 0.6 : 1.0}
+          rotateSpeed={isMobile ? 0.6 : 0.8}
+          panSpeed={isMobile ? 0.8 : 1.0}
+        />
+        <CameraFocus target={focusTarget} orbitRef={orbitRef} />
       </Canvas>
 
-      <div style={{ position:'fixed',bottom:'14px',right:'18px',color:'#334455',fontFamily:'monospace',fontSize:'11px',pointerEvents:'none' }}>
-        Hover character for portrait ?? Drag to orbit ?? Scroll to zoom
-      </div>
+      {selectedAgent && (
+        <AgentDetailPanel
+          agent={selectedAgent}
+          status={selectedStatus}
+          onClose={() => setSelectedAgent(null)}
+          duration={durations[selectedAgent?.name]}
+        />
+      )}
+
+      <HelpOverlay visible={showHelp} onClose={() => setShowHelp(false)} />
+      <CaptainsDashboard visible={showDashboard} onClose={() => setShowDashboard(false)} statuses={statuses} demoActive={demoActive} />
+      <GatewayBanner statuses={statuses} demoActive={demoActive} />
+      <CrewTicker statuses={statuses} />
+
+      {!isMobile && <div style={{ position:'fixed',bottom:'46px',right:'18px',color:'#334455',fontFamily:'monospace',fontSize:'11px',pointerEvents:'none' }}>
+        Hover character for portrait · Drag to orbit · Scroll to zoom
+      </div>}
     </div>
+    </StatusContext.Provider>
   )
 }
