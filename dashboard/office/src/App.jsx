@@ -261,9 +261,11 @@ export default function App() {
       <GatewayBanner statuses={statuses} demoActive={demoActive} />
       <CrewTicker statuses={statuses} />
 
-      {!isMobile && <div style={{ position:'fixed',bottom:'46px',right:'18px',color:'#334455',fontFamily:'monospace',fontSize:'11px',pointerEvents:'none' }}>
-        Hover character for portrait · Drag to orbit · Scroll to zoom
-      </div>}
+      <div style={{ position:'fixed',bottom:'46px',right:'18px',color:'#334455',fontFamily:'monospace',fontSize:'11px',pointerEvents:'none' }}>
+        {typeof window !== 'undefined' && ('ontouchstart' in window)
+          ? '1-finger rotate · 2-finger pinch zoom'
+          : 'Hover for portrait · Drag to orbit · Scroll to zoom'}
+      </div>
     </div>
     </StatusContext.Provider>
   )
