@@ -23,8 +23,9 @@ a { color: var(--blue); text-decoration: none; }
 .sidebar-header .subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
 .sidebar-footer .gw-status { display: flex; align-items: center; gap: 6px; }
 .nav { flex: 1; padding: 8px 0; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.15s; }
+.nav-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text2); border: 0; border-left: 3px solid transparent; background: transparent; text-align: left; transition: all 0.15s; }
 .nav-item:hover { background: rgba(88,166,255,0.06); color: var(--text); }
+.nav-item:focus-visible { outline: 2px solid rgba(88,166,255,0.45); outline-offset: -2px; }
 .nav-item.active { background: rgba(88,166,255,0.14); color: var(--text); border-left-color: var(--blue); }
 .nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
 .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text2); }
@@ -369,16 +370,16 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
     </div>
     <nav class="nav" id="nav">
-      <div class="nav-item" data-tab="mission"><span class="icon">🎯</span>Mission</div>
-      <div class="nav-item active" data-tab="tasks"><span class="icon">📋</span>Tasks</div>
-      <div class="nav-item" data-tab="calendar"><span class="icon">📅</span>Calendar</div>
-      <div class="nav-item" data-tab="projects"><span class="icon">📁</span>Projects</div>
-      <div class="nav-item" data-tab="memory"><span class="icon">🧠</span>Memory</div>
-      <div class="nav-item" data-tab="docs"><span class="icon">📚</span>Docs</div>
-      <div class="nav-item" data-tab="office"><span class="icon">🏢</span>Office</div>
-      <div class="nav-item" data-tab="team"><span class="icon">👥</span>Team</div>
-      <div class="nav-item" data-tab="ship"><span class="icon">🚢</span>Ship</div>
-      <div class="nav-item" data-tab="modelops"><span class="icon">⚡</span>Model Ops</div>
+      <button class="nav-item" type="button" data-tab="mission"><span class="icon">🎯</span>Mission</button>
+      <button class="nav-item active" type="button" data-tab="tasks"><span class="icon">📋</span>Tasks</button>
+      <button class="nav-item" type="button" data-tab="calendar"><span class="icon">📅</span>Calendar</button>
+      <button class="nav-item" type="button" data-tab="projects"><span class="icon">📁</span>Projects</button>
+      <button class="nav-item" type="button" data-tab="memory"><span class="icon">🧠</span>Memory</button>
+      <button class="nav-item" type="button" data-tab="docs"><span class="icon">📚</span>Docs</button>
+      <button class="nav-item" type="button" data-tab="office"><span class="icon">🏢</span>Office</button>
+      <button class="nav-item" type="button" data-tab="team"><span class="icon">👥</span>Team</button>
+      <button class="nav-item" type="button" data-tab="ship"><span class="icon">🚢</span>Ship</button>
+      <button class="nav-item" type="button" data-tab="modelops"><span class="icon">⚡</span>Model Ops</button>
     </nav>
     <div class="sidebar-footer">
       <div class="gw-status" id="health-status"><span class="health-dot warn"></span>Checking...</div>
@@ -455,8 +456,9 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
     <!-- Office (Miniverse) -->
     <div id="tab-office" class="tab-panel">
-      <div style="width:100%;height:calc(100vh - 56px);display:flex;flex-direction:column;">
-        <iframe id="miniverse-frame" src="https://seanjohnzon.github.io/office-3d" style="flex:1;border:none;width:100%;background:#0f1119;border-radius:8px;" allow="autoplay"></iframe>
+      <div style="width:100%;height:calc(100vh - 56px);display:flex;flex-direction:column;gap:12px;">
+        <div id="office-status" class="text2" style="font-size:12px;display:none"></div>
+        <iframe id="miniverse-frame" data-src="https://seanjohnzon.github.io/office-3d/" src="about:blank" style="flex:1;border:none;width:100%;background:#0f1119;border-radius:8px;min-height:70vh;" allow="autoplay; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
 
@@ -648,22 +650,80 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 // Tab navigation
 const navItems = document.querySelectorAll('.nav-item');
 const panels = document.querySelectorAll('.tab-panel');
+const validTabs = new Set(Array.from(navItems, item => item.dataset.tab));
+let officeFrameLoaded = false;
+
+function ensureOfficeFrameLoaded() {
+  const frame = document.getElementById('miniverse-frame');
+  const status = document.getElementById('office-status');
+  if (!frame || officeFrameLoaded) return;
+  const src = frame.dataset.src;
+  if (!src) return;
+  status.style.display = '';
+  status.textContent = 'Loading Office 3D scene…';
+  frame.addEventListener('load', () => {
+    officeFrameLoaded = true;
+    status.textContent = 'Office 3D scene loaded from GitHub Pages.';
+  }, { once: true });
+  frame.src = src;
+}
+
+function activateTab(tab, { updateHash = true } = {}) {
+  if (!validTabs.has(tab)) tab = 'tasks';
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
+  panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+  if (tab === 'office') ensureOfficeFrameLoaded();
+  if (updateHash) {
+    history.replaceState(null, '', '#' + tab);
+  }
+}
+
 navItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const tab = item.dataset.tab;
-    navItems.forEach(n => n.classList.remove('active'));
-    panels.forEach(p => p.classList.remove('active'));
-    item.classList.add('active');
-    document.getElementById('tab-' + tab).classList.add('active');
-  });
+  item.addEventListener('click', () => activateTab(item.dataset.tab));
 });
+
+window.addEventListener('hashchange', () => activateTab(location.hash.slice(1), { updateHash: false }));
 
 // API helpers
 async function api(path) {
   try {
-    const r = await fetch(path);
+    const r = await fetch(path, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status} for ${path}`);
     return await r.json();
-  } catch (e) { return null; }
+  } catch (e) {
+    console.error('[Mission Control data fetch failed]', path, e);
+    return null;
+  }
+}
+
+async function verifyDataFiles() {
+  const paths = [
+    './data/activity.json',
+    './data/docs.json',
+    './data/health.json',
+    './data/memory-long.json',
+    './data/memory.json',
+    './data/model-ops.json',
+    './data/projects.json',
+    './data/tasks.json'
+  ];
+  const results = await Promise.all(paths.map(async (path) => {
+    try {
+      const r = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+      return { path, ok: r.ok, status: r.status };
+    } catch (e) {
+      return { path, ok: false, status: 'ERR' };
+    }
+  }));
+
+  const failed = results.filter(r => !r.ok);
+  const healthStatus = document.getElementById('health-status');
+  if (failed.length && healthStatus) {
+    healthStatus.innerHTML = `<span class="health-dot err"></span>Data issue (${failed.length})`;
+    healthStatus.title = failed.map(f => `${f.path} [${f.status}]`).join('\n');
+  }
+  console.info('[Mission Control data files]', results);
+  return results;
 }
 
 // Health
@@ -1059,7 +1119,8 @@ function selectDesk(agent) {
 
 // Init
 (async function init() {
-  await Promise.all([loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
+  activateTab(location.hash.slice(1) || 'tasks', { updateHash: false });
+  await Promise.all([verifyDataFiles(), loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
 })();
 
 // Mobile sidebar toggle
