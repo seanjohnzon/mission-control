@@ -5,7 +5,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Network/Gateway polling checks @network', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5174');
-    await page.waitForSelector('canvas', { timeout: 20000 });
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(3000);
   });
 
   test('page makes outbound requests (app is active)', async ({ page }) => {

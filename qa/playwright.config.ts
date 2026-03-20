@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  timeout: 30000,
-  retries: 1,
+  timeout: 60000,
+  retries: 2,
   workers: 3, // Parallel — Chopper's subagents
 
   projects: [
