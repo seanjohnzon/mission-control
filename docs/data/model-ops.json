@@ -249,14 +249,14 @@
           "emoji": "🥤",
           "model": "qwen2.5-coder:7b",
           "modelShort": "qwen2.5-coder:7b",
-          "role": "Code Local",
+          "role": "Light Patrol Local",
           "contextWindow": 32768,
-          "contextUsed": 0,
-          "tokensToday": { "input": 0, "output": 0 },
+          "contextUsed": 2600,
+          "tokensToday": { "input": 2200, "output": 400 },
           "costToday": 0,
           "machine": "Desktop",
-          "sessions": 0,
-          "status": "future"
+          "sessions": 1,
+          "status": "active"
         },
         {
           "id": "sakura",
@@ -264,14 +264,14 @@
           "emoji": "🌸",
           "model": "llama3.1:8b",
           "modelShort": "llama3.1:8b",
-          "role": "Laptop Local",
+          "role": "Light Patrol Local",
           "contextWindow": 32768,
-          "contextUsed": 0,
-          "tokensToday": { "input": 0, "output": 0 },
+          "contextUsed": 2100,
+          "tokensToday": { "input": 1800, "output": 300 },
           "costToday": 0,
           "machine": "Laptop",
-          "sessions": 0,
-          "status": "future"
+          "sessions": 1,
+          "status": "active"
         }
       ]
     }
