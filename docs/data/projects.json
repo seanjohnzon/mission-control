@@ -1,1 +1,9 @@
-{"projects":[{"name":"Mission Control","desc":"Operational dashboard and governance system","status":"active","phase":"Phase 1","progress":60},{"name":"Bridge Runtime","desc":"OpenClaw autonomous agent on Mac Mini","status":"active","phase":"Operational","progress":90},{"name":"Telegram Integration","desc":"@CihanHawkBot ops-channel","status":"active","phase":"Connected","progress":100},{"name":"Discord Integration","desc":"Community/team channel","status":"planned","phase":"Awaiting decision (TASK-010)","progress":0},{"name":"One Piece","desc":"(placeholder project)","status":"planned","phase":"","progress":0},{"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini","status":"active","phase":"2 models installed","progress":75},{"name":"Desktop Integration","desc":"Brain agent on Desktop machine","status":"planned","phase":"Blocked (TASK-011)","progress":0}]}
+{"projects":[
+  {"name":"Mission Control Dashboard","desc":"Full-featured operational dashboard on GitHub Pages","status":"active","phase":"EPIC-003 — Sprint 3","progress":40,"lead":"Nami"},
+  {"name":"3D Office Visualization","desc":"Isometric 3D office with crew desks and ship","status":"paused","phase":"EPIC-002 — Paused by Captain","progress":75,"lead":"Franky"},
+  {"name":"Bridge Runtime","desc":"OpenClaw autonomous agent on Mac Mini","status":"active","phase":"Operational","progress":95,"lead":"Nami"},
+  {"name":"Telegram Integration","desc":"@CihanHawkBot — StrawHats HQ forum","status":"active","phase":"Connected + Forum topics","progress":100,"lead":"Nami"},
+  {"name":"Discord Integration","desc":"The Straw Hats guild — work log","status":"active","phase":"Active","progress":80,"lead":"Robin"},
+  {"name":"Crew Architecture","desc":"8 agents across 3 machines","status":"active","phase":"All agents online","progress":85,"lead":"Nami"},
+  {"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini","status":"active","phase":"2 models installed","progress":75,"lead":"Nami"}
+]}
