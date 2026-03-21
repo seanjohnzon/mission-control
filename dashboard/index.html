@@ -50,6 +50,7 @@ a { color: var(--blue); text-decoration: none; }
 .badge-gray { background: rgba(139,148,158,0.15); color: var(--text2); }
 .badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
 .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.badge-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
 .health-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 .health-dot.ok { background: var(--green); }
 .health-dot.err { background: var(--red); }
@@ -85,6 +86,17 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .kanban-card.p1 { border-left: 3px solid var(--orange); }
 .kanban-card.p2 { border-left: 3px solid var(--blue); }
 .kanban-card.backlog { border-left: 3px solid var(--text2); }
+
+/* Task Tree */
+.task-tree { height: calc(100vh - 140px); overflow-y: auto; padding-right: 6px; }
+.tree-node { margin-bottom: 8px; }
+.tree-header { display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border); background: rgba(26,29,46,0.7); border-radius: 8px; cursor: pointer; user-select:none; }
+.tree-header:hover { border-color:#3d4158; }
+.tree-toggle { width: 14px; text-align:center; color: var(--text2); font-weight: 700; }
+.tree-title { font-size: 13px; font-weight: 600; }
+.tree-children { margin-left: 18px; padding-left: 10px; border-left: 1px dashed rgba(139,148,158,0.25); margin-top: 8px; }
+.tree-leaf { margin: 8px 0; }
+.tree-leaf .kanban-card { cursor: default; }
 
 /* Calendar */
 .cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
@@ -200,6 +212,13 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
 /* Team */
 .org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
+.load-card { position: relative; }
+.load-card .dept-name { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
+.load-card .dept-points { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+.load-card .dept-sub { margin-top: 6px; font-size: 12px; color: var(--text2); }
+.load-card.low { border-left: 3px solid var(--green); }
+.load-card.med { border-left: 3px solid var(--yellow); }
+.load-card.high { border-left: 3px solid var(--red); }
 .org-line { width: 2px; height: 32px; background: var(--border); }
 .org-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
 .team-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px 20px; text-align: center; min-width: 220px; position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
@@ -371,10 +390,24 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       </div>
     </div>
 
-    <!-- Tasks (Kanban) -->
+    <!-- Tasks -->
     <div class="tab-panel active" id="tab-tasks">
-      <div class="section-title" style="margin-bottom:12px">📋 Task Board</div>
-      <div class="kanban" id="kanban"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="section-title" style="margin:0">📋 Task Board</div>
+        <div class="task-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="text2" style="font-size:12px">View</span>
+            <button class="office-filter" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
+            <button class="office-filter" id="view-tree" onclick="setTaskView('tree')">Tree</button>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);user-select:none">
+            <input type="checkbox" id="active-only" onchange="renderTasks()" />
+            Active only
+          </label>
+        </div>
+      </div>
+      <div class="kanban" id="kanban" style="display:none"></div>
+      <div id="task-tree" class="task-tree" style="display:none"></div>
     </div>
 
     <!-- Calendar -->
@@ -424,6 +457,10 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <!-- Team -->
     <div class="tab-panel" id="tab-team">
       <div class="section-title">👥 Team</div>
+
+      <div class="section-title" style="font-size:14px;margin-top:4px">🏋️ Department Loads</div>
+      <div class="card-grid mb" id="dept-loads"></div>
+
       <div class="org-chart">
         <div class="org-divider">Leadership</div>
         <div class="team-card glow-yellow">
@@ -633,12 +670,88 @@ async function loadHealth() {
   }
 }
 
-// Tasks (Kanban)
-async function loadTasks() {
-  const data = await api('/api/tasks');
-  if (!data || !data.tasks) return;
-  const tasks = data.tasks;
+// Tasks
+let _taskView = 'kanban';
+let _tasksData = [];
 
+function setTaskView(view) {
+  _taskView = view;
+  renderTasks();
+}
+
+function getTaskPoints(t) {
+  const raw = t.points ?? t.estimate ?? '';
+  if (raw === null || raw === undefined) return null;
+  const m = String(raw).match(/(\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  const n = Number(m[1]);
+  return Number.isFinite(n) ? n : null;
+}
+
+function taskDept(t) {
+  return t.department || t.dept || t.team || '';
+}
+
+function isCompletedStatus(status) {
+  const s = (status || '').toLowerCase();
+  return s === 'completed' || s === 'cancelled' || s === 'done';
+}
+
+function focusTask(taskId) {
+  const el = document.getElementById('task-' + taskId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.borderColor = 'rgba(88,166,255,0.7)';
+    setTimeout(() => { el.style.borderColor = ''; }, 1200);
+    return;
+  }
+  if (_taskView !== 'tree') {
+    _taskView = 'tree';
+    renderTasks();
+    setTimeout(() => focusTask(taskId), 50);
+  }
+}
+
+function renderTaskCardInner(t, dotColor) {
+  const pClass = t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog';
+  const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+  const assignName = t.assigned || 'unassigned';
+  const assignInitial = assignName.charAt(0).toUpperCase();
+  const assignColor = assignName.includes('bridge') ? 'var(--blue)' : assignName.includes('human') ? 'var(--yellow)' : assignName.includes('forge') ? 'var(--orange)' : assignName.includes('brain') ? 'var(--teal)' : 'var(--text2)';
+  const descHtml = t.notes ? `<div class="task-desc">${escapeHtml(t.notes)}</div>` : '';
+
+  const pts = getTaskPoints(t);
+  const dept = taskDept(t);
+  const parentLink = t.parent ? `<a href="#" class="badge badge-gray" onclick="focusTask('${t.parent}');return false;">↑ ${t.parent}</a>` : '';
+
+  let deps = '';
+  if (t.dependencies && t.dependencies !== 'none') {
+    deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${escapeHtml(t.dependencies)}</div>`;
+  }
+
+  return {
+    pClass,
+    html: `
+      <div class="task-id">${t.id}</div>
+      <div class="task-title"><span class="status-dot" style="background:${dotColor}"></span>${escapeHtml(t.title || '')}</div>
+      ${descHtml}
+      <div class="task-meta">
+        <span class="badge ${pBadge}">${escapeHtml(t.priority || '')}</span>
+        ${t.phase ? `<span class="badge badge-blue">${escapeHtml(t.phase)}</span>` : ''}
+        ${pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : ''}
+        ${dept ? `<span class="badge badge-teal">${escapeHtml(dept)}</span>` : ''}
+        ${parentLink}
+      </div>
+      ${deps}
+      <div class="task-footer">
+        <div class="assignee"><span class="avatar-circle" style="background:${assignColor}">${escapeHtml(assignInitial)}</span>${escapeHtml(assignName)}</div>
+        <div class="timestamp">${t.opened || t.createdAt || ''}</div>
+      </div>
+    `
+  };
+}
+
+function renderKanban(tasks) {
   const columns = {
     backlog: { title: 'Backlog', tasks: [] },
     todo: { title: 'To Do', tasks: [] },
@@ -668,50 +781,201 @@ async function loadTasks() {
     const cardsEl = colEl.querySelector('.kanban-cards');
     const dotColors = { backlog: 'var(--text2)', todo: 'var(--blue)', inprogress: 'var(--purple)', blocked: 'var(--yellow)', done: 'var(--green)' };
     const dotColor = dotColors[key] || 'var(--text2)';
+
     for (const t of col.tasks) {
-      const pClass = t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog';
-      const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
-      const assignName = t.assigned || 'unassigned';
-      const assignInitial = assignName.charAt(0).toUpperCase();
-      const assignColor = assignName.includes('bridge') ? 'var(--blue)' : assignName.includes('human') ? 'var(--yellow)' : 'var(--text2)';
-      const descHtml = t.notes ? `<div class="task-desc">${escapeHtml(t.notes)}</div>` : '';
-      const ts = t.created ? new Date(t.created).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
-      let deps = '';
-      if (t.dependencies && t.dependencies !== 'none') {
-        deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${t.dependencies}</div>`;
-      }
+      const { pClass, html } = renderTaskCardInner(t, dotColor);
       const card = document.createElement('div');
+      card.id = 'task-' + t.id;
       card.className = `kanban-card ${pClass}`;
-      card.innerHTML = `
-        <div class="task-id">${t.id}</div>
-        <div class="task-title"><span class="status-dot" style="background:${dotColor}"></span>${t.title}</div>
-        ${descHtml}
-        <div class="task-meta">
-          <span class="badge ${pBadge}">${t.priority}</span>
-          ${t.phase ? `<span class="badge badge-blue">${t.phase}</span>` : ''}
-        </div>
-        ${deps}
-        <div class="task-footer">
-          <div class="assignee"><span class="avatar-circle" style="background:${assignColor}">${assignInitial}</span>${assignName}</div>
-          <div class="timestamp">${ts}</div>
-        </div>
-      `;
+      card.innerHTML = html;
       cardsEl.appendChild(card);
     }
     kanban.appendChild(colEl);
   }
+}
 
-  // Mission priorities (top in-progress + open P0/P1)
-  const priorities = tasks.filter(t => t.status === 'in-progress' || (t.status === 'open' && (t.priority === 'P0' || t.priority === 'P1'))).slice(0, 5);
-  const priEl = document.getElementById('mission-priorities');
-  if (priorities.length) {
-    priEl.innerHTML = priorities.map(t => {
-      const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : 'badge-blue';
-      return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${t.priority}</span><strong>${t.id}</strong> — ${t.title} <span class="text2">(${t.status})</span></div>`;
-    }).join('');
-  } else {
-    priEl.textContent = 'No active priorities found.';
+function renderTree(tasks) {
+  const container = document.getElementById('task-tree');
+  container.innerHTML = '';
+
+  const byId = new Map(tasks.map(t => [t.id, t]));
+  const children = new Map();
+  for (const t of tasks) {
+    const pid = t.parent || '';
+    if (!pid) continue;
+    if (!children.has(pid)) children.set(pid, []);
+    children.get(pid).push(t.id);
   }
+
+  const roots = [];
+  for (const t of tasks) {
+    const hasParent = !!t.parent && byId.has(t.parent);
+    const isProject = (t.type || '').toLowerCase() === 'project';
+    if (isProject || !hasParent) roots.push(t.id);
+  }
+
+  roots.sort((a, b) => {
+    const ta = byId.get(a), tb = byId.get(b);
+    const pa = ((ta?.type || '').toLowerCase() === 'project') ? 0 : 1;
+    const pb = ((tb?.type || '').toLowerCase() === 'project') ? 0 : 1;
+    if (pa !== pb) return pa - pb;
+    return String(a).localeCompare(String(b));
+  });
+
+  function nodeLabel(t) {
+    const kind = (t.type || '').toLowerCase();
+    const kindBadge = kind ? `<span class="badge badge-gray">${escapeHtml(kind)}</span>` : '';
+    const pts = getTaskPoints(t);
+    const ptsBadge = pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : '';
+    const dept = taskDept(t);
+    const deptBadge = dept ? `<span class="badge badge-teal">${escapeHtml(dept)}</span>` : '';
+    const pri = t.priority || '';
+    const pBadge = pri === 'P0' ? 'badge-red' : pri === 'P1' ? 'badge-orange' : pri === 'P2' ? 'badge-blue' : 'badge-gray';
+    const priBadge = pri ? `<span class="badge ${pBadge}">${escapeHtml(pri)}</span>` : '';
+    return `${priBadge}${kindBadge}${ptsBadge}${deptBadge}`;
+  }
+
+  function renderNode(taskId) {
+    const t = byId.get(taskId);
+    if (!t) return document.createElement('div');
+
+    const kids = (children.get(taskId) || []).slice().sort();
+    const hasKids = kids.length > 0;
+
+    const node = document.createElement('div');
+    node.className = 'tree-node';
+
+    const header = document.createElement('div');
+    header.className = 'tree-header';
+    header.id = 'task-' + t.id;
+    header.innerHTML = `
+      <div class="tree-toggle">${hasKids ? '▾' : '•'}</div>
+      <div style="flex:1">
+        <div class="tree-title">${escapeHtml(t.id)} — ${escapeHtml(t.title || '')}</div>
+        <div class="task-meta" style="margin-top:6px">${nodeLabel(t)}</div>
+      </div>
+    `;
+
+    const childrenEl = document.createElement('div');
+    childrenEl.className = 'tree-children';
+    childrenEl.style.display = hasKids ? '' : 'none';
+
+    if (hasKids) {
+      header.addEventListener('click', () => {
+        const open = childrenEl.style.display !== 'none';
+        childrenEl.style.display = open ? 'none' : '';
+        header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
+      });
+      for (const kidId of kids) {
+        if ((children.get(kidId) || []).length === 0) {
+          const leafWrap = document.createElement('div');
+          leafWrap.className = 'tree-leaf';
+          const kid = byId.get(kidId);
+          const { pClass, html } = renderTaskCardInner(kid, 'var(--text2)');
+          const card = document.createElement('div');
+          card.className = `kanban-card ${pClass}`;
+          card.id = 'task-' + kid.id;
+          card.innerHTML = html;
+          leafWrap.appendChild(card);
+          childrenEl.appendChild(leafWrap);
+        } else {
+          childrenEl.appendChild(renderNode(kidId));
+        }
+      }
+    }
+
+    node.appendChild(header);
+    if (hasKids) node.appendChild(childrenEl);
+    return node;
+  }
+
+  for (const rid of roots) container.appendChild(renderNode(rid));
+
+  if (!roots.length) {
+    container.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No tasks found.</div>';
+  }
+}
+
+function renderDepartmentLoads(tasks) {
+  const el = document.getElementById('dept-loads');
+  if (!el) return;
+
+  const active = tasks.filter(t => !isCompletedStatus(t.status));
+  const deptMap = new Map();
+  for (const t of active) {
+    const dept = taskDept(t) || 'Unassigned';
+    const pts = getTaskPoints(t) ?? 0;
+    if (!deptMap.has(dept)) deptMap.set(dept, { dept, points: 0, tasks: 0 });
+    const row = deptMap.get(dept);
+    row.points += pts;
+    row.tasks += 1;
+  }
+
+  const depts = [...deptMap.values()].sort((a, b) => b.points - a.points);
+  if (!depts.length) {
+    el.innerHTML = '<div class="card text2" style="text-align:center;padding:28px">No active tasks to compute loads.</div>';
+    return;
+  }
+
+  const cls = (p) => p >= 25 ? 'high' : p >= 12 ? 'med' : 'low';
+  el.innerHTML = depts.map(d => {
+    return `
+      <div class="card load-card ${cls(d.points)}">
+        <div class="dept-name">${escapeHtml(d.dept)}</div>
+        <div class="dept-points">${Math.round(d.points * 10) / 10}<span class="text2" style="font-size:14px;font-weight:600"> pts</span></div>
+        <div class="dept-sub">${d.tasks} active task${d.tasks === 1 ? '' : 's'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTasks() {
+  const tasks = _tasksData || [];
+  const activeOnly = document.getElementById('active-only')?.checked;
+  const filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
+
+  const kanbanEl = document.getElementById('kanban');
+  const treeEl = document.getElementById('task-tree');
+
+  const kb = document.getElementById('view-kanban');
+  const tb = document.getElementById('view-tree');
+  if (kb && tb) {
+    kb.classList.toggle('active', _taskView === 'kanban');
+    tb.classList.toggle('active', _taskView === 'tree');
+  }
+
+  if (_taskView === 'tree') {
+    kanbanEl.style.display = 'none';
+    treeEl.style.display = '';
+    renderTree(filtered);
+  } else {
+    treeEl.style.display = 'none';
+    kanbanEl.style.display = '';
+    renderKanban(filtered);
+  }
+
+  renderDepartmentLoads(tasks);
+
+  const priorities = tasks.filter(t => (t.status || '').toLowerCase() === 'in-progress' || ((t.status || '').toLowerCase() === 'open' && (t.priority === 'P0' || t.priority === 'P1'))).slice(0, 5);
+  const priEl = document.getElementById('mission-priorities');
+  if (priEl) {
+    if (priorities.length) {
+      priEl.innerHTML = priorities.map(t => {
+        const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : 'badge-blue';
+        const pts = getTaskPoints(t);
+        return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${escapeHtml(t.priority || '')}</span><strong>${escapeHtml(t.id)}</strong> — ${escapeHtml(t.title || '')} ${pts !== null ? `<span class=\"text2\">(${pts} pts)</span>` : ''} <span class="text2">(${escapeHtml(t.status || '')})</span></div>`;
+      }).join('');
+    } else {
+      priEl.textContent = 'No active priorities found.';
+    }
+  }
+}
+
+async function loadTasks() {
+  const data = await api('/api/tasks');
+  if (!data || !data.tasks) return;
+  _tasksData = data.tasks;
+  setTaskView(_taskView || 'kanban');
 }
 
 // Calendar

@@ -65,8 +65,14 @@ function parseTasks() {
         else if (key === 'sprint') t.sprint = val;
         else if (key === 'created_at') t.createdAt = val;
         else if (key === 'completed_at') t.completedAt = val;
+        else if (key === 'opened') t.opened = val;
+        else if (key === 'started') t.started = val;
+        else if (key === 'completed') t.completed = val;
         else if (key === 'type') t.type = val;
         else if (key === 'parent') t.parent = val;
+        else if (key === 'points') t.points = val;
+        else if (key === 'department') t.department = val;
+        else if (key === 'dept') t.dept = val;
         else if (key === 'estimate') t.estimate = val;
         else if (key === 'actual') t.actual = val;
       }
@@ -88,10 +94,16 @@ function taskToBlock(t) {
   ];
   if (t.type)          lines.push(pad('type', t.type));
   if (t.parent)        lines.push(pad('parent', t.parent));
+  if (t.points !== undefined && t.points !== null && t.points !== '') lines.push(pad('points', t.points));
+  if (t.department)    lines.push(pad('department', t.department));
+  if (t.dept)          lines.push(pad('dept', t.dept));
   if (t.verified_by)   lines.push(pad('verified_by', t.verified_by));
   if (t.sprint)        lines.push(pad('sprint', t.sprint));
   if (t.estimate)      lines.push(pad('estimate', t.estimate));
   if (t.actual)        lines.push(pad('actual', t.actual));
+  if (t.opened)        lines.push(pad('opened', t.opened));
+  if (t.started)       lines.push(pad('started', t.started));
+  if (t.completed)     lines.push(pad('completed', t.completed));
   if (t.created_at)    lines.push(pad('created_at', t.created_at));
   if (t.completed_at)  lines.push(pad('completed_at', t.completed_at));
   lines.push(pad('dependencies', t.dependencies || 'none'));
@@ -125,7 +137,10 @@ function updateTaskBlock(blockContent, updates) {
       phase: 'phase', assigned_to: 'assigned_to', notes: 'notes',
       sprint: 'sprint', verified_by: 'verified_by',
       dependencies: 'dependencies', completed_at: 'completed_at',
-      type: 'type', parent: 'parent', estimate: 'estimate', actual: 'actual',
+      opened: 'opened', started: 'started', completed: 'completed',
+      type: 'type', parent: 'parent', points: 'points',
+      department: 'department', dept: 'dept',
+      estimate: 'estimate', actual: 'actual',
     };
     if (fieldMap[key] && updates[fieldMap[key]] !== undefined) {
       return `${key}:${m[2]}${updates[fieldMap[key]]}`;
@@ -134,7 +149,7 @@ function updateTaskBlock(blockContent, updates) {
   });
   // Add new fields not already present
   const presentKeys = new Set(lines.map(l => l.match(/^([\w_]+):/)?.[1]).filter(Boolean));
-  const optionalFields = ['type', 'parent', 'sprint', 'estimate', 'actual', 'verified_by', 'created_at', 'completed_at'];
+  const optionalFields = ['type', 'parent', 'points', 'department', 'dept', 'sprint', 'estimate', 'actual', 'verified_by', 'opened', 'started', 'completed', 'created_at', 'completed_at'];
   for (const f of optionalFields) {
     if (updates[f] !== undefined && !presentKeys.has(f)) {
       // Insert before dependencies line
@@ -525,6 +540,20 @@ const server = http.createServer(async (req, res) => {
   } else if (p === '/api/projects') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ projects: PROJECTS }));
+
+  } else if (p === '/api/cron-schedules') {
+    const schedules = getCronSchedules();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ schedules }));
+
+  } else if (p === '/api/calendar') {
+    const start = url.searchParams.get('start');
+    const end = url.searchParams.get('end');
+    const view = url.searchParams.get('view') || 'week';
+    const data = getCalendarData({ start, end, view });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+
   } else if (p === '/api/agents-status') {
     // Adapter endpoint: feeds MC agent state into Miniverse
     const health = await handleHealth();
