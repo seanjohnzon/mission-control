@@ -399,6 +399,127 @@ const PROJECTS = [
   { name: 'Desktop Integration', desc: 'Brain agent on Desktop machine', status: 'planned', phase: 'Blocked (TASK-011)', progress: 0 }
 ];
 
+// Calendar / Cron (Dashboard Build 2)
+function getCronSchedules() {
+  return [
+    { id: 'hb',    name: 'Heartbeat check', cron: '*/30 * * * *', tier: 'teal', enabled: true },
+    { id: 'dig',   name: 'Daily digest',    cron: '0 9 * * *',   tier: 'yellow', enabled: true },
+    { id: 'maint', name: 'Maintenance',     cron: '0 2 * * 0',   tier: 'pink', enabled: true },
+    { id: 'audit', name: 'Security audit',  cron: '0 3 1 * *',   tier: 'red', enabled: false },
+  ];
+}
+
+function parseCronField(expr, min, max) {
+  const out = new Set();
+  const addRange = (a, b, step = 1) => { for (let v = a; v <= b; v += step) out.add(v); };
+  const parts = (expr || '').split(',').map(s => s.trim()).filter(Boolean);
+
+  for (const part of (parts.length ? parts : ['*'])) {
+    if (part === '*') { addRange(min, max, 1); continue; }
+    let m = part.match(/^\*\/(\d+)$/);
+    if (m) { addRange(min, max, Math.max(1, parseInt(m[1], 10))); continue; }
+    m = part.match(/^(\d+)-(\d+)(?:\/(\d+))?$/);
+    if (m) {
+      const a = Math.max(min, parseInt(m[1], 10));
+      const b = Math.min(max, parseInt(m[2], 10));
+      const step = m[3] ? Math.max(1, parseInt(m[3], 10)) : 1;
+      addRange(a, b, step);
+      continue;
+    }
+    m = part.match(/^(\d+)$/);
+    if (m) {
+      const v = parseInt(m[1], 10);
+      if (v >= min && v <= max) out.add(v);
+    }
+  }
+
+  return Array.from(out).sort((a, b) => a - b);
+}
+
+function cronOccurrencesInRange(cronExpr, rangeStart, rangeEnd) {
+  const parts = (cronExpr || '').trim().split(/\s+/);
+  if (parts.length < 5) return [];
+  const [minField, hourField, domField, monField, dowField] = parts;
+
+  const mins = parseCronField(minField, 0, 59);
+  const hours = parseCronField(hourField, 0, 23);
+  const doms = domField === '*' ? null : new Set(parseCronField(domField, 1, 31));
+  const mons = monField === '*' ? null : new Set(parseCronField(monField, 1, 12));
+  const dows = dowField === '*' ? null : new Set(parseCronField(dowField, 0, 6));
+
+  const occurrences = [];
+  const d0 = new Date(rangeStart);
+  d0.setSeconds(0, 0);
+
+  for (let day = new Date(d0); day < rangeEnd; day.setDate(day.getDate() + 1)) {
+    const mo = day.getMonth() + 1;
+    const da = day.getDate();
+    const dow = day.getDay();
+    if (mons && !mons.has(mo)) continue;
+    if (doms && !doms.has(da)) continue;
+    if (dows && !dows.has(dow)) continue;
+
+    for (const h of hours) {
+      for (const m of mins) {
+        const ts = new Date(day.getFullYear(), day.getMonth(), da, h, m, 0, 0);
+        if (ts >= rangeStart && ts < rangeEnd) occurrences.push(ts);
+      }
+    }
+  }
+
+  occurrences.sort((a, b) => a - b);
+  return occurrences;
+}
+
+function getCalendarData({ start, end, view }) {
+  const now = new Date();
+  const rangeStart = start ? new Date(start) : new Date(now);
+  const rangeEnd = end ? new Date(end) : new Date(now.getTime() + 7 * 86400000);
+
+  const schedules = getCronSchedules();
+  const cronBlocks = [];
+  for (const job of schedules) {
+    if (!job.enabled) continue;
+    for (const ts of cronOccurrencesInRange(job.cron, rangeStart, rangeEnd)) {
+      const endTs = new Date(ts.getTime() + 15 * 60000);
+      cronBlocks.push({
+        id: `${job.id}:${ts.toISOString()}`,
+        kind: 'cron',
+        title: job.name,
+        start: ts.toISOString(),
+        end: endTs.toISOString(),
+        tier: job.tier,
+        jobId: job.id,
+      });
+    }
+  }
+
+  const events = [
+    {
+      id: 'evt:demo-1',
+      kind: 'event',
+      title: 'Demo: Mission Control review',
+      start: new Date(rangeStart.getTime() + 2 * 3600000).toISOString(),
+      end: new Date(rangeStart.getTime() + 3 * 3600000).toISOString(),
+      color: 'blue'
+    },
+    {
+      id: 'rem:demo-1',
+      kind: 'reminder',
+      title: 'Send status update',
+      start: new Date(rangeStart.getTime() + 5 * 3600000).toISOString(),
+      end: new Date(rangeStart.getTime() + 5 * 3600000 + 30 * 60000).toISOString(),
+      color: 'purple'
+    }
+  ].filter(e => new Date(e.start) < rangeEnd && new Date(e.end) > rangeStart);
+
+  return {
+    view,
+    range: { start: rangeStart.toISOString(), end: rangeEnd.toISOString() },
+    items: [...events, ...cronBlocks]
+  };
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const p = url.pathname;
