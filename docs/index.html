@@ -232,12 +232,68 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .agent-detail-panel .adp-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
 .agent-detail-panel .adp-row .adp-label { color: var(--text2); }
 
-/* Model Ops */
-.modelops-section { margin-bottom: 24px; }
-.modelops-section-header { font-size: 18px; font-weight: 600; padding-bottom: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
-.mo-info-banner { background: rgba(210,153,34,0.1); border-left: 3px solid var(--yellow); padding: 12px; font-size: 13px; border-radius: 4px; margin-bottom: 16px; }
-.mo-kv { padding: 4px 0; font-size: 13px; }
+/* Model Ops — Redesign */
 .badge-teal { background: rgba(45,212,191,0.15); color: var(--teal); }
+.mo-section { margin-bottom: 28px; }
+.mo-section-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+
+/* Subscription Cards */
+.mo-sub-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 28px; }
+@media (max-width: 1300px) { .mo-sub-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) { .mo-sub-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .mo-sub-cards { grid-template-columns: 1fr; } }
+.mo-sub-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; cursor: default; }
+.mo-sub-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+.mo-sub-card .mo-sub-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 10px 10px 0 0; }
+.mo-sub-card .mo-sub-provider { font-size: 13px; font-weight: 700; margin-bottom: 2px; margin-top: 6px; }
+.mo-sub-card .mo-sub-cost { font-size: 11px; color: var(--text2); margin-bottom: 12px; }
+.mo-sub-card .mo-sub-stat { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; }
+.mo-sub-card .mo-sub-stat:last-child { border-bottom: none; }
+.mo-sub-card .mo-sub-stat-label { color: var(--text2); }
+.mo-sub-card .mo-sub-stat-val { font-weight: 600; }
+.mo-cost-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+.mo-agent-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.mo-agent-pill { padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; background: rgba(255,255,255,0.06); color: var(--text2); }
+.mo-agent-pill.active { color: var(--text); }
+
+/* Usage Bars */
+.mo-usage-wrap { overflow-x: auto; }
+.mo-usage-chart { min-width: 480px; display: flex; flex-direction: column; gap: 10px; }
+.mo-bar-row { display: grid; grid-template-columns: 120px 1fr 110px; align-items: center; gap: 12px; }
+.mo-bar-agent { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mo-bar-agent-model { font-size: 10px; color: var(--text2); margin-top: 1px; }
+.mo-bar-track { background: rgba(255,255,255,0.05); border-radius: 4px; height: 22px; overflow: hidden; position: relative; }
+.mo-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; min-width: 4px; transition: width 0.6s ease; }
+.mo-bar-tokens { font-size: 11px; color: var(--text2); text-align: right; white-space: nowrap; }
+
+/* Context Window */
+.mo-ctx-grid { display: flex; flex-direction: column; gap: 10px; }
+.mo-ctx-row { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+.mo-ctx-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.mo-ctx-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.mo-ctx-info { font-size: 11px; color: var(--text2); text-align: right; }
+.mo-ctx-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.mo-ctx-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.mo-ctx-warn { border-left: 3px solid; }
+.mo-ctx-pct { font-size: 11px; font-weight: 700; margin-top: 4px; text-align: right; }
+
+/* Agent Filter */
+.mo-filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.mo-filter-select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; min-width: 180px; }
+@media (max-width: 600px) { .mo-filter-select { width: 100%; } }
+.mo-filter-select:focus { outline: 1px solid var(--blue); }
+.mo-detail-panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.mo-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 600px) { .mo-detail-grid { grid-template-columns: 1fr; } }
+.mo-detail-kv { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+.mo-detail-kv:last-child { border-bottom: none; }
+.mo-detail-label { color: var(--text2); }
+.mo-detail-val { font-weight: 500; text-align: right; max-width: 65%; }
+.mo-empty-state { text-align: center; padding: 32px; color: var(--text2); font-size: 13px; }
+.mo-status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+.mo-status-dot.active { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.mo-status-dot.idle { background: var(--text2); }
+.mo-status-dot.future { background: var(--border); }
 
 /* Team */
 .org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
@@ -817,93 +873,42 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <div class="tab-panel" id="tab-modelops">
       <div class="section-title">⚡ Model Ops</div>
 
-      <!-- Section A: Runtime Reality -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Runtime Reality</div>
-        <div class="card-row" style="grid-template-columns:1fr 1fr;margin-bottom:16px">
-          <div class="card">
-            <h3>Active Default</h3>
-            <div class="val" id="mo-active-model" style="font-size:18px">...</div>
-            <div style="margin-top:6px"><span id="mo-active-provider" class="text2"></span> <span class="badge badge-blue">CLOUD</span></div>
-          </div>
-          <div class="card">
-            <h3>Router Mode</h3>
-            <div class="val" id="mo-router-mode" style="font-size:18px">...</div>
-            <div style="margin-top:6px"><span class="badge" id="mo-router-badge">...</span></div>
-          </div>
-        </div>
-        <div class="card mb">
-          <h3 style="margin-bottom:12px">Available Models</h3>
-          <table>
-            <thead><tr><th>Model</th><th>Provider</th><th>Status</th><th>Role</th><th>Cost (In)</th><th>Cost (Out)</th><th>Cache Read</th><th>Notes</th></tr></thead>
-            <tbody id="mo-models-table"></tbody>
-          </table>
+      <!-- Section 1: Subscription Cards -->
+      <div class="mo-section">
+        <div class="mo-section-title">Subscriptions &amp; Providers</div>
+        <div class="mo-sub-cards" id="mo-sub-cards">
+          <!-- Rendered by JS -->
         </div>
       </div>
 
-      <!-- Section C: Category Routing Map -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Category → Model Routing Map</div>
-        <div class="mo-info-banner" style="background:rgba(248,81,73,0.08);border-left:3px solid var(--red);padding:12px 16px;margin-bottom:16px;border-radius:0 6px 6px 0;font-size:13px;">
-          <strong>⚠️ Prior verification runs superseded.</strong> Tests run 2026-03-14 00:46 were executed inside a subagent (depth limit prevented local model spawning). Only heartbeat has been directly verified. Direct top-level verification in progress for remaining categories.
-        </div>
-        <div class="card mb" style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Category</th><th>Intended Model</th><th>Fallback</th><th>Escalation</th><th>Last Used</th><th>Runs</th><th>Success</th><th>Spend</th><th>Status</th></tr></thead>
-            <tbody id="mo-routing-map-table"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Section D: Verification Results -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Verification Log — Direct Runs Only</div>
-        <div style="color:var(--text2);font-size:12px;margin-bottom:10px">Only top-level direct spawns count. Sub-subagent tests are marked SUPERSEDED.</div>
-        <div id="mo-verification-results"></div>
-      </div>
-
-      <!-- Section B: Cost + Projection -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Cost + Projection</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
-          <div class="card">
-            <h3>Cloud Spend</h3>
-            <div style="margin-top:10px">
-              <div class="mo-kv"><span class="text2">Today:</span> <strong id="mo-cost-today">...</strong></div>
-              <div class="mo-kv"><span class="text2">Confidence:</span> <span class="badge badge-yellow" id="mo-cost-conf">...</span></div>
-              <div class="mo-kv"><span class="text2">Projected monthly:</span> <strong id="mo-cost-proj">...</strong></div>
-              <div class="mo-kv"><span class="text2">Confidence:</span> <span class="badge badge-yellow" id="mo-cost-proj-conf">...</span></div>
-            </div>
-          </div>
-          <div class="card">
-            <h3>Local Compute</h3>
-            <div style="margin-top:10px">
-              <div class="mo-kv"><span class="text2">Local Runs:</span> <strong id="mo-local-runs">...</strong></div>
-              <div class="mo-kv"><span class="text2">Runtime:</span> <strong id="mo-local-runtime">...</strong></div>
-              <div class="mo-kv"><span class="text2">Direct API Cost:</span> <strong>$0.00</strong></div>
-              <div class="mo-kv"><span class="text2">Infra/electricity:</span> <em class="text2">not yet modeled</em></div>
-            </div>
+      <!-- Section 2: Agent Usage Bar Chart -->
+      <div class="mo-section">
+        <div class="mo-section-title">Agent Token Usage — Today</div>
+        <div class="mo-usage-wrap">
+          <div class="mo-usage-chart" id="mo-usage-chart">
+            <!-- Rendered by JS -->
           </div>
         </div>
-        <div style="font-size:12px;color:var(--text2);font-style:italic;padding:0 4px">Cost estimates derived from Anthropic published pricing + session token counts. ±10% variance from actual billing.</div>
       </div>
 
-      <!-- Usage Ledger -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Usage Ledger</div>
-        <div class="mo-info-banner" id="mo-ledger-banner">⚠️ Ledger is manually reconstructed. Live per-request instrumentation not yet available.</div>
-        <div class="card mb" style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Time</th><th>Task</th><th>Category</th><th>Agent</th><th>Model</th><th>Provider</th><th>Local?</th><th>Reason</th><th>Status</th><th>Fallback?</th></tr></thead>
-            <tbody id="mo-ledger-table"></tbody>
-          </table>
+      <!-- Section 3: Context Window Monitor -->
+      <div class="mo-section">
+        <div class="mo-section-title">Context Window Monitor</div>
+        <div class="mo-ctx-grid" id="mo-ctx-grid">
+          <!-- Rendered by JS -->
         </div>
       </div>
 
-      <!-- Section E: Routing Health -->
-      <div class="modelops-section">
-        <div class="modelops-section-header">Routing Health</div>
-        <div class="card" id="mo-routing-health"></div>
+      <!-- Section 4: Agent Filter + Detail -->
+      <div class="mo-section">
+        <div class="mo-section-title">Agent Detail</div>
+        <div class="mo-filter-row">
+          <select class="mo-filter-select" id="mo-agent-select" onchange="moSelectAgent(this.value)">
+            <option value="">— Select an agent —</option>
+          </select>
+          <span id="mo-filter-status" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+        <div id="mo-detail-panel" class="mo-empty-state">Select an agent above to view details.</div>
       </div>
     </div>
   </main>
@@ -1946,110 +1951,234 @@ function showDoc(el, filename) {
   }
 }
 
-// Model Ops
+// Model Ops — Redesign
+let _moData = null;
+
+function moFmtTokens(n) {
+  if (!n || n === 0) return '0';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return String(n);
+}
+
+function moCtxColor(pct) {
+  if (pct >= 90) return 'var(--red)';
+  if (pct >= 75) return 'var(--orange)';
+  if (pct >= 50) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+function moStatusDot(status) {
+  return `<span class="mo-status-dot ${status}"></span>`;
+}
+
+function moRenderSubCards(data) {
+  const el = document.getElementById('mo-sub-cards');
+  if (!el) return;
+  el.innerHTML = data.subscriptions.map(sub => {
+    const totalInput = sub.agents.reduce((s, a) => s + (a.tokensToday.input || 0), 0);
+    const totalOutput = sub.agents.reduce((s, a) => s + (a.tokensToday.output || 0), 0);
+    const totalTokens = totalInput + totalOutput;
+    const activeCount = sub.agents.filter(a => a.status === 'active').length;
+    const agentCount = sub.agents.filter(a => a.status !== 'future').length;
+
+    let costBadgeHtml = '';
+    if (sub.type === 'subscription') {
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">${sub.costLabel} sub</span>`;
+    } else if (sub.type === 'local') {
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">FREE</span>`;
+    } else {
+      const totalCost = sub.agents.reduce((s, a) => s + (a.costToday || 0), 0);
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">$${totalCost.toFixed(2)} today</span>`;
+    }
+
+    const pillsHtml = sub.agents.map(a =>
+      `<span class="mo-agent-pill ${a.status}" title="${a.model}">${a.emoji || ''} ${a.name}</span>`
+    ).join('');
+
+    return `<div class="mo-sub-card" style="border-color:rgba(${sub.colorRgb},0.25);box-shadow:0 0 16px rgba(${sub.colorRgb},0.06)">
+      <div class="mo-sub-accent" style="background:${sub.color}"></div>
+      <div class="mo-sub-provider" style="color:${sub.color}">${sub.provider}</div>
+      <div class="mo-sub-cost">${sub.costLabel}</div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Agents</span><span class="mo-sub-stat-val">${agentCount} <span style="color:var(--text2);font-weight:400;font-size:11px">(${activeCount} active)</span></span></div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Tokens today</span><span class="mo-sub-stat-val">${moFmtTokens(totalTokens)}</span></div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Cost</span><span>${costBadgeHtml}</span></div>
+      <div class="mo-agent-pills">${pillsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function moRenderUsageBars(data) {
+  const el = document.getElementById('mo-usage-chart');
+  if (!el) return;
+
+  // Flatten agents with color, skip future
+  const agents = [];
+  data.subscriptions.forEach(sub => {
+    sub.agents.forEach(a => {
+      if (a.status === 'future') return;
+      agents.push({ ...a, color: sub.color, colorRgb: sub.colorRgb });
+    });
+  });
+
+  // Find max tokens for scale
+  const maxTokens = Math.max(...agents.map(a => (a.tokensToday.input || 0) + (a.tokensToday.output || 0)), 1);
+
+  el.innerHTML = agents.map(a => {
+    const total = (a.tokensToday.input || 0) + (a.tokensToday.output || 0);
+    const pct = Math.max((total / maxTokens) * 100, total > 0 ? 2 : 0);
+    const label = total > 0 ? moFmtTokens(total) : '';
+    const inputPct = total > 0 ? Math.round((a.tokensToday.input / total) * 100) : 0;
+    return `<div class="mo-bar-row" onclick="moSelectAgent('${a.id}')" style="cursor:pointer" title="Click to view ${a.name} details">
+      <div>
+        <div class="mo-bar-agent">${a.emoji || ''} ${a.name}</div>
+        <div class="mo-bar-agent-model">${a.modelShort}</div>
+      </div>
+      <div class="mo-bar-track">
+        <div class="mo-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,rgba(${a.colorRgb},0.9) ${inputPct}%,rgba(${a.colorRgb},0.5) ${inputPct}%)">
+          ${pct > 12 ? label : ''}
+        </div>
+      </div>
+      <div class="mo-bar-tokens">
+        ${total > 0 ? `<span style="color:${a.color}">${moFmtTokens(total)}</span><br><span style="font-size:10px">${moFmtTokens(a.tokensToday.input)}↑ ${moFmtTokens(a.tokensToday.output)}↓</span>` : '<span style="color:var(--border)">—</span>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Legend
+  el.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text2)">
+    <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:8px;background:rgba(88,166,255,0.9);border-radius:2px"></span>Input tokens</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:8px;background:rgba(88,166,255,0.45);border-radius:2px"></span>Output tokens</span>
+  </div>`);
+}
+
+function moRenderContextBars(data) {
+  const el = document.getElementById('mo-ctx-grid');
+  if (!el) return;
+
+  const agents = [];
+  data.subscriptions.forEach(sub => {
+    sub.agents.forEach(a => {
+      agents.push({ ...a, color: sub.color, colorRgb: sub.colorRgb, provider: sub.provider });
+    });
+  });
+
+  // Sort by pct desc so most-loaded appear first
+  agents.sort((a, b) => {
+    const pA = (a.contextUsed / a.contextWindow) * 100;
+    const pB = (b.contextUsed / b.contextWindow) * 100;
+    return pB - pA;
+  });
+
+  el.innerHTML = agents.map(a => {
+    const pct = a.contextWindow > 0 ? Math.round((a.contextUsed / a.contextWindow) * 100) : 0;
+    const barColor = moCtxColor(pct);
+    const isLocal = a.contextWindow <= 32768;
+    const warnBorder = pct >= 75 ? `border-left:3px solid ${barColor}` : `border-left:3px solid rgba(${a.colorRgb},0.3)`;
+    const futureStyle = a.status === 'future' ? 'opacity:0.45' : '';
+    return `<div class="mo-ctx-row" style="${warnBorder};${futureStyle}">
+      <div class="mo-ctx-header">
+        <div class="mo-ctx-name">
+          ${moStatusDot(a.status)}${a.emoji || ''} ${a.name}
+          ${isLocal ? '<span class="badge badge-teal" style="font-size:9px;padding:1px 5px">32K</span>' : ''}
+          ${a.status === 'future' ? '<span class="badge badge-gray" style="font-size:9px;padding:1px 5px">future</span>' : ''}
+        </div>
+        <div class="mo-ctx-info">
+          <span style="color:var(--text2)">${a.modelShort}</span> &nbsp;·&nbsp;
+          <span>${moFmtTokens(a.contextUsed)} / ${moFmtTokens(a.contextWindow)}</span>
+        </div>
+      </div>
+      <div class="mo-ctx-bar-track">
+        <div class="mo-ctx-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+      </div>
+      <div class="mo-ctx-pct" style="color:${barColor}">${pct}%${pct >= 75 ? ' ⚠️' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function moPopulateSelect(data) {
+  const sel = document.getElementById('mo-agent-select');
+  if (!sel) return;
+  // Clear existing options except placeholder
+  while (sel.options.length > 1) sel.remove(1);
+  data.subscriptions.forEach(sub => {
+    const grp = document.createElement('optgroup');
+    grp.label = sub.provider;
+    sub.agents.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a.id;
+      opt.textContent = `${a.emoji || ''} ${a.name} — ${a.modelShort}`;
+      grp.appendChild(opt);
+    });
+    sel.appendChild(grp);
+  });
+}
+
+function moSelectAgent(agentId) {
+  if (!_moData || !agentId) return;
+  const sel = document.getElementById('mo-agent-select');
+  if (sel) sel.value = agentId;
+
+  let found = null, sub = null;
+  for (const s of _moData.subscriptions) {
+    const a = s.agents.find(a => a.id === agentId);
+    if (a) { found = a; sub = s; break; }
+  }
+  if (!found) return;
+
+  const pct = found.contextWindow > 0 ? Math.round((found.contextUsed / found.contextWindow) * 100) : 0;
+  const barColor = moCtxColor(pct);
+  const totalTokens = (found.tokensToday.input || 0) + (found.tokensToday.output || 0);
+  const costDisplay = sub.type === 'subscription' ? `$0 (sub — ${sub.costLabel})` : (found.costToday > 0 ? `$${found.costToday.toFixed(4)}` : '$0.00');
+
+  const statusMap = { active: '<span style="color:var(--green)">● Active</span>', idle: '<span style="color:var(--text2)">● Idle</span>', future: '<span class="badge badge-gray">Future</span>' };
+
+  document.getElementById('mo-detail-panel').innerHTML = `
+    <div class="mo-detail-panel">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:32px">${found.emoji || '🤖'}</span>
+        <div>
+          <div style="font-size:18px;font-weight:700;color:${sub.color}">${found.name}</div>
+          <div style="font-size:12px;color:var(--text2)">${found.role} · ${found.machine}</div>
+        </div>
+        <div style="margin-left:auto">${statusMap[found.status] || found.status}</div>
+      </div>
+      <div class="mo-detail-grid">
+        <div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Model</span><span class="mo-detail-val">${found.model}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Provider</span><span class="mo-detail-val" style="color:${sub.color}">${sub.provider}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Subscription</span><span class="mo-detail-val">${sub.costLabel} (${sub.type})</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Machine</span><span class="mo-detail-val">${found.machine}</span></div>
+        </div>
+        <div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Tokens today</span><span class="mo-detail-val">${moFmtTokens(totalTokens)}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Input / Output</span><span class="mo-detail-val">${moFmtTokens(found.tokensToday.input)} / ${moFmtTokens(found.tokensToday.output)}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Cost today</span><span class="mo-detail-val">${costDisplay}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Sessions</span><span class="mo-detail-val">${found.sessions}</span></div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Context Window — ${pct}% used</div>
+        <div class="mo-ctx-bar-track" style="height:12px">
+          <div class="mo-ctx-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px">
+          <span style="color:var(--text2)">${moFmtTokens(found.contextUsed)} used</span>
+          <span style="color:${barColor};font-weight:600">${moFmtTokens(found.contextWindow)} max</span>
+        </div>
+      </div>
+    </div>`;
+}
+
 async function loadModelOps() {
   const data = await api('./data/model-ops.json');
-  if (!data) return;
+  if (!data || !data.subscriptions) return;
+  _moData = data;
 
-  // Section A: Runtime Reality
-  const rt = data.runtime;
-  document.getElementById('mo-active-model').textContent = rt.activeDefault.replace('anthropic/', '');
-  document.getElementById('mo-active-provider').textContent = 'Anthropic';
-
-  const mode = rt.routerMode;
-  document.getElementById('mo-router-mode').textContent = mode;
-  const badge = document.getElementById('mo-router-badge');
-  if (mode.includes('manual')) { badge.textContent = 'MANUAL'; badge.className = 'badge badge-yellow'; }
-  else if (mode.includes('canary')) { badge.textContent = 'CANARY'; badge.className = 'badge badge-yellow'; }
-  else { badge.textContent = 'LOCAL-FIRST'; badge.className = 'badge badge-green'; }
-
-  // Models table
-  const allModels = [...rt.cloudModels.map(m => ({...m, type: 'cloud'})), ...rt.localModels.map(m => ({...m, type: 'local'}))];
-  const statusBadge = (s) => {
-    if (s === 'escalation-only') return '<span class="badge badge-orange">escalation-only</span>';
-    if (s === 'available — intended baseline') return '<span class="badge badge-blue">intended baseline</span>';
-    if (s === 'installed-configured') return '<span class="badge badge-teal">configured</span>';
-    if (s === 'installed-unused') return '<span class="badge badge-yellow">unused</span>';
-    return `<span class="badge badge-gray">${s}</span>`;
-  };
-  document.getElementById('mo-models-table').innerHTML = allModels.map(m => {
-    const costIn = m.costIn || (m.type === 'local' ? '$0' : '—');
-    const costOut = m.costOut || (m.type === 'local' ? '$0' : '—');
-    const cacheRead = m.cacheRead || (m.type === 'local' ? '—' : '—');
-    const role = m.role || '—';
-    const notes = m.notes || (m.type === 'local' ? `${m.paramSize || '—'} · Infra: ${m.infraCost || '—'}` : '');
-    return `<tr><td>${m.id}</td><td>${m.provider}</td><td>${statusBadge(m.status)}</td><td class="text2" style="font-size:12px">${role}</td><td>${costIn}</td><td>${costOut}</td><td>${cacheRead}</td><td class="text2" style="font-size:12px">${notes}</td></tr>`;
-  }).join('');
-
-  // Routing Map
-  if (data.routingMap) {
-    const routingStatusBadge = (status) => {
-      if (!status) return '<span class="badge badge-gray">unknown</span>';
-      const s = status.toLowerCase();
-      if (s === 'verified') return '<span class="badge badge-green">verified ✓</span>';
-      if (s.includes('via fallback')) return '<span class="badge badge-yellow">verified via fallback</span>';
-      if (s.includes('routing confirmed') && s.includes('execution failed')) return '<span class="badge badge-orange">routing confirmed, exec failed</span>';
-      if (s.includes('partially verified')) return '<span class="badge badge-yellow">partially verified</span>';
-      if (s.includes('superseded') || s.includes('needs re-verify')) return '<span class="badge badge-red">needs re-verify</span>';
-      if (s.includes('mismatch')) return '<span class="badge badge-orange">mismatch</span>';
-      if (s.includes('canary')) return '<span class="badge badge-yellow">canary</span>';
-      if (s.includes('active')) return '<span class="badge badge-green">active</span>';
-      if (s.includes('degraded')) return '<span class="badge badge-red">degraded</span>';
-      return '<span class="badge badge-gray">pending</span>';
-    };
-    document.getElementById('mo-routing-map-table').innerHTML = data.routingMap.map(r => {
-      const intendedShort = r.intended.split('/').pop();
-      const lastUsedShort = (r.lastUsed || '').split('/').pop();
-      const mismatch = r.lastUsed !== '—' && r.lastUsed !== '' && !r.lastUsed.includes(intendedShort) && !intendedShort.includes(lastUsedShort);
-      const lastUsedHtml = mismatch
-        ? `<span style="color:var(--yellow)">${r.lastUsed} ⚠️</span>`
-        : (r.lastUsed || '—');
-      return `<tr><td><strong>${r.category}</strong></td><td>${r.intended}</td><td>${r.fallback}</td><td>${r.escalation}</td><td>${lastUsedHtml}</td><td>${r.runs}</td><td>${r.successRate}</td><td>${r.spend}</td><td>${routingStatusBadge(r.status)}</td></tr>`;
-    }).join('');
-  }
-
-  // Verification Results
-  const vrEl = document.getElementById('mo-verification-results');
-  if (data.verificationResults && data.verificationResults.length > 0) {
-    vrEl.innerHTML = `<div class="card mb" style="overflow-x:auto"><table>
-      <thead><tr><th>Category</th><th>Intended Model</th><th>Actual Model</th><th>Provider</th><th>Local?</th><th>Fallback?</th><th>Success?</th><th>Est. Cost</th><th>Notes</th></tr></thead>
-      <tbody>${data.verificationResults.map(v => `<tr><td>${v.category||''}</td><td>${v.intended||''}</td><td>${v.actual||''}</td><td>${v.provider||''}</td><td>${v.local?'✅':'❌'}</td><td>${v.fallback?'⚠️ Yes':'No'}</td><td>${v.success?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--red)">✗</span>'}</td><td>${v.estCost||'—'}</td><td class="text2">${v.notes||''}</td></tr>`).join('')}</tbody>
-    </table></div>`;
-  } else {
-    vrEl.innerHTML = '<div class="card mb" style="padding:24px;text-align:center;color:var(--text2)">No verification runs completed yet. Sequential verification in progress.</div>';
-  }
-
-  // Usage Ledger
-  document.getElementById('mo-ledger-table').innerHTML = data.ledger.map(l => {
-    const localBadge = l.local ? '<span class="badge badge-green">LOCAL</span>' : '<span class="badge badge-gray">CLOUD</span>';
-    const statusIcon = l.success ? '<span style="color:var(--green)">✓</span>' : '<span style="color:var(--red)">✗</span>';
-    const fallback = l.fallback ? '<span style="color:var(--yellow)">Yes</span>' : '<span class="text2">No</span>';
-    return `<tr><td style="white-space:nowrap">${l.ts}</td><td>${l.taskId}</td><td>${l.category}</td><td>${l.agent}</td><td>${l.model}</td><td>${l.provider}</td><td>${localBadge}</td><td style="font-size:11px">${l.reason}</td><td>${statusIcon}</td><td>${fallback}</td></tr>`;
-  }).join('');
-
-  // Cost
-  document.getElementById('mo-cost-today').textContent = data.cost.todayCloud;
-  document.getElementById('mo-cost-conf').textContent = 'estimated';
-  document.getElementById('mo-cost-proj').textContent = data.cost.projectedMonthly;
-  document.getElementById('mo-cost-proj-conf').textContent = 'wide range';
-
-  // Local Compute
-  document.getElementById('mo-local-runs').textContent = data.cost.localRunCount || 0;
-  document.getElementById('mo-local-runtime').textContent = (data.cost.localRuntimeMinutes || '0 min') + ' (estimated)';
-
-  // Routing Health
-  const rh = data.routingHealth;
-  document.getElementById('mo-routing-health').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Routing Policy</span><span style="max-width:65%;text-align:right">${rh.currentPolicy}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Local Success Rate</span><span>${rh.localSuccessRate}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Cloud Fallback Count</span><span>${rh.cloudFallbackCount}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Rollback Count</span><span>${rh.rollbackCount}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Model Failures</span><span>${rh.modelFailureCount} <span class="text2" style="font-size:11px">(${rh.modelFailureNote})</span></span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text2">Canary Status</span><span class="badge badge-gray">${rh.canaryStatus}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;align-items:flex-start"><span class="text2" style="flex-shrink:0;margin-right:16px">Recommendation</span><div style="color:var(--blue);text-align:right;line-height:1.8">${(rh.recommendation||'').split(/(\d+\))/).reduce((acc,part,i,arr)=>{if(/^\d+\)$/.test(part)&&arr[i+1]){acc.push(part+arr[i+1]);}return acc;},[]).map(l=>`<div>${l.trim()}</div>`).join('')||rh.recommendation}</div></div>
-    </div>
-  `;
+  moRenderSubCards(data);
+  moRenderUsageBars(data);
+  moRenderContextBars(data);
+  moPopulateSelect(data);
 }
 
 // Office interactions
@@ -2074,6 +2203,12 @@ function selectDesk(agent) {
   activateTab(location.hash.slice(1) || 'tasks', { updateHash: false });
   await Promise.all([verifyDataFiles(), loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
   setCalView('week');
+
+  // Auto-refresh Model Ops every 60s when tab is active
+  setInterval(() => {
+    const panel = document.getElementById('tab-modelops');
+    if (panel && panel.classList.contains('active')) loadModelOps();
+  }, 60000);
 })();
 
 // Mobile sidebar toggle

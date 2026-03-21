@@ -1,1 +1,283 @@
-{"runtime":{"activeDefault":"anthropic/claude-sonnet-4-6","routerMode":"manual — category map defined, verification in progress","cloudModels":[{"id":"claude-opus-4-6","provider":"Anthropic","status":"escalation-only","role":"Escalation / orchestrator","costIn":"$15/MTok","costOut":"$75/MTok","cacheRead":"$1.50/MTok","cacheWrite":"$18.75/MTok","notes":"Not default for routine categories. Used for complex orchestration and escalation."},{"id":"claude-sonnet-4-6","provider":"Anthropic","status":"available — intended baseline","role":"Cloud baseline for complex categories","costIn":"$3/MTok","costOut":"$15/MTok","cacheRead":"$0.30/MTok","cacheWrite":"$3.75/MTok","notes":"Intended default for build/debug, research, visual/UI, interactive, repair."}],"localModels":[{"id":"qwen2.5:7b","provider":"Ollama (local)","status":"installed-configured","role":"Local workhorse — digest, maintenance, build/docs","directCost":"$0","infraCost":"not yet modeled","paramSize":"7.6B"},{"id":"qwen2.5:3b","provider":"Ollama (local)","status":"installed-configured","role":"Local lightweight — heartbeat, hygiene","directCost":"$0","infraCost":"not yet modeled","paramSize":"3.1B"}]},"routingMap":[{"category":"heartbeat","intended":"ollama/qwen2.5:3b","fallback":"ollama/qwen2.5:7b","escalation":"claude-sonnet-4-6","lastUsed":"qwen2.5:3b","runs":1,"successRate":"100% (1/1)","spend":"$0.00","taskIds":["verify-heartbeat"],"status":"verified"},{"category":"digest","intended":"ollama/qwen2.5:7b","fallback":"ollama/qwen2.5:3b","escalation":"claude-sonnet-4-6","lastUsed":"qwen2.5:7b","runs":1,"successRate":"0% (0/1)","spend":"$0.00","taskIds":["direct-verify-digest"],"status":"routing confirmed, execution failed"},{"category":"hygiene","intended":"ollama/qwen2.5:3b","fallback":"ollama/qwen2.5:7b","escalation":"claude-sonnet-4-6","lastUsed":"qwen2.5:7b","runs":1,"successRate":"100% (1/1)","spend":"$0.00","taskIds":["direct-verify-hygiene"],"status":"verified via fallback"},{"category":"maintenance","intended":"ollama/qwen2.5:7b","fallback":"ollama/qwen2.5:3b","escalation":"claude-sonnet-4-6","lastUsed":"qwen2.5:7b","runs":1,"successRate":"0% (0/1)","spend":"$0.00","taskIds":["direct-verify-maintenance"],"status":"routing confirmed, execution failed"},{"category":"build/docs","intended":"ollama/qwen2.5:7b","fallback":"claude-sonnet-4-6","escalation":"claude-opus-4-6","lastUsed":"qwen2.5:7b","runs":1,"successRate":"0% (0/1)","spend":"$0.00","taskIds":["direct-verify-builddocs"],"status":"routing confirmed, execution failed"},{"category":"build/debug","intended":"claude-sonnet-4-6","fallback":"claude-opus-4-6","escalation":"claude-opus-4-6","lastUsed":"claude-sonnet-4-6","runs":1,"successRate":"100% (1/1)","spend":"~$0.0002","taskIds":["direct-verify-builddebug"],"status":"verified"},{"category":"research","intended":"claude-sonnet-4-6","fallback":"claude-opus-4-6","escalation":"claude-opus-4-6","lastUsed":"claude-sonnet-4-6","runs":1,"successRate":"100% (1/1)","spend":"~$0.0001","taskIds":["direct-verify-research"],"status":"verified"},{"category":"visual/UI generation","intended":"claude-sonnet-4-6","fallback":"claude-opus-4-6","escalation":"claude-opus-4-6","lastUsed":"claude-sonnet-4-6","runs":1,"successRate":"100% (1/1)","spend":"~$0.0002","taskIds":["direct-verify-visualui"],"status":"verified"},{"category":"interactive","intended":"claude-sonnet-4-6","fallback":"claude-opus-4-6","escalation":"claude-opus-4-6","lastUsed":"claude-sonnet-4-6","runs":1,"successRate":"50% (1/1)","spend":"~$0.0001","taskIds":["direct-verify-interactive"],"status":"partially verified"},{"category":"repair","intended":"claude-sonnet-4-6","fallback":"claude-opus-4-6","escalation":"claude-opus-4-6 + Claude Code","lastUsed":"claude-sonnet-4-6","runs":1,"successRate":"100% (1/1)","spend":"~$0.0002","taskIds":["direct-verify-repair"],"status":"verified"}],"verificationResults":[{"ts":"2026-03-14 00:29","category":"heartbeat","intendedModel":"ollama/qwen2.5:3b","actualModel":"qwen2.5:3b","provider":"Ollama (local)","local":true,"fallbackTriggered":false,"success":true,"estimatedCost":"$0.00","localRuntimeMinutes":0.4,"notes":"DIRECTLY VERIFIED. Top-level spawn. Tool calling confirmed. Gateway health + disk check completed."},{"ts":"2026-03-14 00:57","category":"digest","intendedModel":"ollama/qwen2.5:7b","actualModel":"qwen2.5:7b","provider":"Ollama (local)","local":true,"fallbackTriggered":false,"success":false,"estimatedCost":"$0.00","localRuntimeMinutes":0.9,"notes":"ROUTING CONFIRMED LOCAL (qwen2.5:7b ran, used tool calling). Task failed: file path with spaces not quoted in exec. Not a model failure. Re-run pending with corrected path."},{"ts":"2026-03-14 01:00","category":"hygiene","intendedModel":"ollama/qwen2.5:3b","actualModel":"qwen2.5:7b","provider":"Ollama (local)","local":true,"fallbackTriggered":false,"success":true,"estimatedCost":"$0.00","localRuntimeMinutes":0.85,"notes":"DIRECTLY VERIFIED LOCAL. Ran git log + memory dir listing. Used 7b (intended: 3b — 3b not spawnable via sessions_spawn, only via gateway heartbeat config). Task completed successfully."},{"ts":"2026-03-14 01:01","category":"maintenance","intendedModel":"ollama/qwen2.5:7b","actualModel":"qwen2.5:7b","provider":"Ollama (local)","local":true,"fallbackTriggered":false,"success":false,"estimatedCost":"$0.00","localRuntimeMinutes":0.9,"notes":"ROUTING CONFIRMED LOCAL. Task execution FAILED: model did not invoke exec tool, fabricated permissions explanation instead. Indicates inconsistent tool-use reliability with qwen2.5:7b for shell maintenance tasks. Model capability gap — not a routing failure."},{"ts":"2026-03-14 01:03","category":"build/docs","intendedModel":"ollama/qwen2.5:7b","actualModel":"qwen2.5:7b","provider":"Ollama (local)","local":true,"fallbackTriggered":false,"success":false,"estimatedCost":"$0.00","localRuntimeMinutes":0.8,"notes":"ROUTING CONFIRMED LOCAL. Task failed: model reported file not found (spaces in path not handled). Same pattern as digest. 7b exec reliability issue with space-containing paths. Routing intent correct, execution unreliable."},{"ts":"2026-03-14 01:03","category":"build/debug","intendedModel":"claude-sonnet-4-6","actualModel":"claude-sonnet-4-6","provider":"Anthropic","local":false,"fallbackTriggered":false,"success":true,"estimatedCost":"~$0.0002","localRuntimeMinutes":0,"notes":"DIRECTLY VERIFIED SONNET. Used exec tool, got server.js line count (350). lsof unavailable in sandbox. Routing confirmed, task partially successful."},{"ts":"2026-03-14 01:03","category":"research","intendedModel":"claude-sonnet-4-6","actualModel":"claude-sonnet-4-6","provider":"Anthropic","local":false,"fallbackTriggered":false,"success":true,"estimatedCost":"~$0.0001","localRuntimeMinutes":0,"notes":"DIRECTLY VERIFIED SONNET. Produced correct 2-sentence explanation of local vs cloud cost. Routing confirmed. Task successful."},{"ts":"2026-03-14 01:03","category":"visual/UI generation","intendedModel":"claude-sonnet-4-6","actualModel":"claude-sonnet-4-6","provider":"Anthropic","local":false,"fallbackTriggered":false,"success":true,"estimatedCost":"~$0.0002","localRuntimeMinutes":0,"notes":"DIRECTLY VERIFIED SONNET. Generated CSS pulse animation correctly. Routing confirmed. Task successful."},{"ts":"2026-03-14 01:02","category":"interactive","intendedModel":"claude-sonnet-4-6","actualModel":"claude-sonnet-4-6","provider":"Anthropic","local":false,"fallbackTriggered":false,"success":true,"estimatedCost":"~$0.0001","localRuntimeMinutes":0,"notes":"DIRECTLY VERIFIED SONNET. Default model confirmed as Sonnet 4.6. Light context (12k cached). Task partially failed (no session context) but model routing correct. Sonnet is confirmed default for new sessions."},{"ts":"2026-03-14 01:03","category":"repair","intendedModel":"claude-sonnet-4-6","actualModel":"claude-sonnet-4-6","provider":"Anthropic","local":false,"fallbackTriggered":false,"success":true,"estimatedCost":"~$0.0002","localRuntimeMinutes":0,"notes":"DIRECTLY VERIFIED SONNET. Read-only file inspection: server.js=350 lines, index.html=1172 lines. No modifications. Repair lane validation confirmed."}],"ledger":[{"ts":"2026-03-13 20:48","taskId":"session-start","category":"interactive","agent":"bridge","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"default model — no routing rules","success":true,"fallback":false},{"ts":"2026-03-13 21:01","taskId":"TASK-018","category":"build/docs","agent":"bridge","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"complex doc authoring — cloud appropriate","success":true,"fallback":false},{"ts":"2026-03-13 21:55","taskId":"TASK-020","category":"build/audit","agent":"bridge","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"complex analysis — cloud appropriate","success":true,"fallback":false},{"ts":"2026-03-13 22:31","taskId":"mc-dashboard-build","category":"visual/UI generation","agent":"subagent","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"subagent default model","success":true,"fallback":false},{"ts":"2026-03-13 22:44","taskId":"mc-dashboard-v2","category":"visual/UI generation","agent":"subagent","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"subagent default model","success":true,"fallback":false},{"ts":"2026-03-13 22:50","taskId":"mc-visual-refinement","category":"visual/UI generation","agent":"subagent","model":"claude-opus-4-6","provider":"Anthropic","local":false,"reason":"subagent default model","success":true,"fallback":false}],"ledgerNote":"ledger is manually reconstructed — live instrumentation not yet available","cost":{"todayCloud":"$0.17","todayLocal":"$0.00","localRunCount":5,"localRuntimeMinutes":"~3.9 (estimated)","confidence":"estimated — incomplete instrumentation","projectedMonthly":"$3-82","projectedConfidence":"wide range — insufficient history"},"routingHealth":{"currentPolicy":"Default: Sonnet 4.6 (cloud baseline, confirmed). Heartbeat: qwen2.5:3b (local, confirmed). Digest/maintenance/hygiene/build-docs: qwen2.5:7b (local, routing confirmed). Opus 4.6: escalation-only (not appearing in any direct run).","localSuccessRate":"2/5 local categories fully verified (heartbeat, hygiene). 3/5 routing confirmed but execution failed (exec unreliable with space-containing paths). Local runtime: ~3.9min estimated across 5 runs.","cloudFallbackCount":0,"rollbackCount":0,"modelFailureCount":1,"modelFailureNote":"1 auth failure on first startup (resolved). qwen2.5:7b exec tool unreliable for paths containing spaces (affects digest, maintenance, build/docs).","canaryStatus":"not deployed — awaiting local exec reliability fix","recommendation":"1) Sonnet baseline confirmed — no changes needed for cloud categories. 2) Fix qwen2.5:7b exec reliability for space-containing paths, then re-run digest/maintenance/build-docs. 3) Confirm qwen2.5:3b for hygiene (currently running on 7b as fallback). 4) After 3 successful local runs per category, assess canary readiness. 5) Opus not appearing in any run — escalation-only policy is working."}}
+{
+  "subscriptions": [
+    {
+      "provider": "Anthropic",
+      "type": "subscription",
+      "monthlyCost": 100,
+      "costLabel": "$100/mo",
+      "color": "#8B5CF6",
+      "colorRgb": "139,92,246",
+      "agents": [
+        {
+          "id": "nami",
+          "name": "Nami",
+          "emoji": "🧭",
+          "model": "claude-opus-4-6",
+          "modelShort": "Opus 4.6",
+          "role": "Orchestrator",
+          "contextWindow": 200000,
+          "contextUsed": 24500,
+          "tokensToday": { "input": 48200, "output": 12800 },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 3,
+          "status": "active"
+        },
+        {
+          "id": "zeus",
+          "name": "Zeus",
+          "emoji": "⚡",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Subagent / Heartbeat",
+          "contextWindow": 200000,
+          "contextUsed": 8200,
+          "tokensToday": { "input": 18400, "output": 4200 },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 7,
+          "status": "active"
+        },
+        {
+          "id": "vivi",
+          "name": "Vivi",
+          "emoji": "✨",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Dispatcher",
+          "contextWindow": 200000,
+          "contextUsed": 3100,
+          "tokensToday": { "input": 9600, "output": 2100 },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 2,
+          "status": "idle"
+        },
+        {
+          "id": "jinbe",
+          "name": "Jinbe",
+          "emoji": "🛡️",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Security / Infra",
+          "contextWindow": 200000,
+          "contextUsed": 1800,
+          "tokensToday": { "input": 4200, "output": 900 },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 1,
+          "status": "idle"
+        }
+      ]
+    },
+    {
+      "provider": "OpenAI",
+      "type": "subscription",
+      "monthlyCost": 200,
+      "costLabel": "$200/mo",
+      "color": "#3FB950",
+      "colorRgb": "63,185,80",
+      "agents": [
+        {
+          "id": "franky",
+          "name": "Franky",
+          "emoji": "🔧",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Chief Engineer",
+          "contextWindow": 128000,
+          "contextUsed": 41200,
+          "tokensToday": { "input": 62400, "output": 28600 },
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 5,
+          "status": "active"
+        },
+        {
+          "id": "sanji",
+          "name": "Sanji",
+          "emoji": "👨‍🍳",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Automation / CI",
+          "contextWindow": 128000,
+          "contextUsed": 18700,
+          "tokensToday": { "input": 31200, "output": 14800 },
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 4,
+          "status": "active"
+        },
+        {
+          "id": "chopper",
+          "name": "Chopper",
+          "emoji": "🔬",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "QA / Testing",
+          "contextWindow": 128000,
+          "contextUsed": 22100,
+          "tokensToday": { "input": 28800, "output": 11200 },
+          "costToday": 0,
+          "machine": "GPU3060",
+          "sessions": 6,
+          "status": "active"
+        },
+        {
+          "id": "usopp",
+          "name": "Usopp",
+          "emoji": "🎯",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Business Intel",
+          "contextWindow": 128000,
+          "contextUsed": 9400,
+          "tokensToday": { "input": 14600, "output": 6200 },
+          "costToday": 0,
+          "machine": "GPU3060",
+          "sessions": 2,
+          "status": "idle"
+        }
+      ]
+    },
+    {
+      "provider": "xAI / Grok",
+      "type": "variable",
+      "monthlyCost": 50,
+      "costLabel": "~$50/mo cap",
+      "color": "#58A6FF",
+      "colorRgb": "88,166,255",
+      "agents": [
+        {
+          "id": "robin",
+          "name": "Robin",
+          "emoji": "📚",
+          "model": "grok-4",
+          "modelShort": "Grok 4",
+          "role": "Research",
+          "contextWindow": 131072,
+          "contextUsed": 52800,
+          "tokensToday": { "input": 38400, "output": 9600 },
+          "costToday": 1.24,
+          "machine": "Mac Mini M4",
+          "sessions": 4,
+          "status": "active"
+        },
+        {
+          "id": "robin-ops",
+          "name": "Robin-Ops",
+          "emoji": "🔎",
+          "model": "grok-3-fast",
+          "modelShort": "Grok 3 Fast",
+          "role": "Task Patrol",
+          "contextWindow": 131072,
+          "contextUsed": 14200,
+          "tokensToday": { "input": 12800, "output": 3400 },
+          "costToday": 0.18,
+          "machine": "Mac Mini M4",
+          "sessions": 9,
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "provider": "Google / Gemini",
+      "type": "variable",
+      "monthlyCost": 5,
+      "costLabel": "~$5/mo",
+      "color": "#F0883E",
+      "colorRgb": "240,136,62",
+      "agents": [
+        {
+          "id": "brook",
+          "name": "Brook",
+          "emoji": "🎨",
+          "model": "gemini-2.5-pro",
+          "modelShort": "Gemini 2.5 Pro",
+          "role": "Creative / UX",
+          "contextWindow": 1000000,
+          "contextUsed": 186000,
+          "tokensToday": { "input": 42600, "output": 18400 },
+          "costToday": 0.31,
+          "machine": "Mac Mini M4",
+          "sessions": 3,
+          "status": "active"
+        },
+        {
+          "id": "brook-ops",
+          "name": "Brook-Ops",
+          "emoji": "🎵",
+          "model": "gemini-2.5-flash",
+          "modelShort": "Gemini 2.5 Flash",
+          "role": "Quick Creative",
+          "contextWindow": 1000000,
+          "contextUsed": 48000,
+          "tokensToday": { "input": 18200, "output": 7800 },
+          "costToday": 0.04,
+          "machine": "Mac Mini M4",
+          "sessions": 5,
+          "status": "idle"
+        }
+      ]
+    },
+    {
+      "provider": "Local / Ollama",
+      "type": "local",
+      "monthlyCost": 0,
+      "costLabel": "$0",
+      "color": "#2DD4BF",
+      "colorRgb": "45,212,191",
+      "agents": [
+        {
+          "id": "mikan",
+          "name": "Mikan",
+          "emoji": "🍊",
+          "model": "qwen2.5:7b",
+          "modelShort": "qwen2.5:7b",
+          "role": "Local Workhorse",
+          "contextWindow": 32768,
+          "contextUsed": 18400,
+          "tokensToday": { "input": 24800, "output": 8200 },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 5,
+          "status": "active"
+        },
+        {
+          "id": "cola",
+          "name": "Cola",
+          "emoji": "🥤",
+          "model": "qwen2.5-coder:7b",
+          "modelShort": "qwen2.5-coder:7b",
+          "role": "Code Local",
+          "contextWindow": 32768,
+          "contextUsed": 0,
+          "tokensToday": { "input": 0, "output": 0 },
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 0,
+          "status": "future"
+        },
+        {
+          "id": "sakura",
+          "name": "Sakura",
+          "emoji": "🌸",
+          "model": "llama3.1:8b",
+          "modelShort": "llama3.1:8b",
+          "role": "Laptop Local",
+          "contextWindow": 32768,
+          "contextUsed": 0,
+          "tokensToday": { "input": 0, "output": 0 },
+          "costToday": 0,
+          "machine": "Laptop",
+          "sessions": 0,
+          "status": "future"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "lastUpdated": "2026-03-21T00:00:00Z",
+    "refreshInterval": 60
+  }
+}
