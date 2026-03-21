@@ -735,16 +735,16 @@ notes:        Chopper verified 2026-03-16 21:34 EDT via SSH to Nami. D1.4 PASS, 
 task_id:      EPIC-002
 title:        3D Office Tab — Graduation Test
 status:       in-progress
-priority:     P0
+priority:     P2
 points:       10
 phase:        
 assigned_to:  Nami (orchestrator)
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-16
 type:         epic
-estimate:     5d
+estimate:     epic (sum of children)
 dependencies: none
-notes:        Sprint 2 started 2026-03-16 22:06 EDT. Architecture shift: Franky operates as orchestrator, spawns builder subagents per phase.
+notes:        DEPRIORITIZED by Captain 2026-03-21. Mission Control epic (EPIC-003) takes priority. Resume after EPIC-003 is complete.
 ```
 
 ```
@@ -868,8 +868,8 @@ Acceptance: Watch a real crew task assignment — orb flies, character sits, wor
 ```
 task_id:      CREW-012
 title:        3D Office — Polish, integration, and full verification
-status:       in-progress
-priority:     P0
+status:       queued
+priority:     P2
 points:       10
 phase:        
 assigned_to:  Chopper (QA)
@@ -877,9 +877,9 @@ sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-16
 type:         story
 parent:       EPIC-002
-estimate:     4h
+estimate:     5pts
 dependencies: CREW-011
-notes:        Dispatched to Chopper 2026-03-18 12:09 EDT. Phase D2.6 — Full polish and verification at seanjohnzon.github.io/office-3d. Verify voxel chars, task flow particles, ambient hologram, monitor HUDs, RosterBar pulsing dots, orbit controls, live gateway polling, no console errors.
+notes:        PAUSED — Captain ordered MC priority over 3D. Resume after EPIC-003.
 
 All 11 acceptance criteria from spec §13:
 [ ] Scene renders without errors in Chrome/Safari
@@ -908,7 +908,7 @@ assigned_to:  human
 sprint:       Sprint 1 — Foundation Docs
 created_at:   2026-03-16
 type:         task
-estimate:     10m
+estimate:     1pt
 dependencies: none
 notes:        OAuth expires ~2026-03-25. Interactive browser login required. Run on Chopper: openclaw models auth setup-token --provider openai
 ```
@@ -1181,14 +1181,15 @@ notes:        Completed by Franky. Sanji+Usopp avatars wired in commit 6a96ce3.
 task_id:      RELAY-1773893400
 title:        [Brook → Usopp] Update SUNNY-REQ-001 with ship scale-up + blueprint integration
 status:       queued
-priority:     P1
+priority:     backlog
 points:       5
 phase:        
 assigned_to:  Usopp (requirements)
 type:         task
 created_at:   2026-03-19
+estimate:     2pts
 dependencies: none
-notes:        BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
+notes:        PAUSED — Ship/3D deprioritized. Resume after EPIC-003.
 ```
 
 
@@ -1460,12 +1461,13 @@ notes:        RESOLVED by Zeus: File exists at /Users/minicihan/.openclaw/worksp
 task_id:      SANJI-PAGES-001
 title:        [P0] Deploy Mission Control to GitHub Pages
 status:       queued
-priority:     backlog
+priority:     P0
 points:       1
 phase:        
 assigned_to:  Sanji
 type:         task
 created_at:   2026-03-19
+parent:       EPIC-003
 dependencies: none
 notes:        Waiting on Franky feature/static-pages branch. Tasks: create deploy-pages.yml workflow, enable GitHub Pages, verify mission-control loads, confirm Office tab iframe from office-3d.
 ```
@@ -1638,6 +1640,7 @@ phase:
 assigned_to:  Vivi
 type:         task
 created_at:   2026-03-19
+estimate:     5pts
 dependencies: none
 parent:       PROJ-OPS
 notes:        Captain order: We need a PERMANENT solution, not temporary patches. Problem: agents miss tasks because cron sessions are isolated from Telegram, MC task board polling is inconsistent, and there is no guaranteed delivery. Vivi must: 1) Audit how each agent currently receives tasks (cron polling MC board, Telegram messages, gateway RPC). 2) Identify gaps — which agents miss assignments and why. 3) Design and implement a reliable delivery pipeline using our existing APIs (MC task board + gateway RPC + cron). 4) Ensure every task assignment reaches the target agent within one cron cycle. 5) Monitor thread follow-ups — if an agent is assigned to post in a thread and hasnt within 30 min, escalate. 6) This must be self-sustaining — Vivi monitors the system permanently, not Nami chasing individual tasks. Post findings and proposed solution to Telegram Agent Ops thread (1452).
@@ -1816,6 +1819,7 @@ phase:
 assigned_to:  Vivi
 type:         task
 created_at:   2026-03-20
+estimate:     3pts
 dependencies: none
 parent:       PROJ-OPS
 notes:        Captain order: Agents cannot access each others workspace files (Robin cant read Brook workspace, etc). Vivi must: 1) Audit all agent workspace paths — which agent has which workspace, what shared paths exist. 2) Identify cross-workspace access issues — symlinks, permissions, absolute vs relative paths. 3) Design and implement a permanent solution — shared research directory, symlinks between workspaces, or a convention all agents follow. 4) Test that every agent can read shared research files. 5) Document the solution in each agents TOOLS.md. This is part of Vivis scope as Thread Manager and Follow-up Coordinator — ensuring crew communication and file sharing works seamlessly. Post plan to Telegram Agent Ops thread 1452 before executing.
@@ -1890,6 +1894,7 @@ type:         story
 parent:       EPIC-002
 sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-20
+estimate:     2pts
 dependencies: none
 notes:        ESCALATED by Captain. Sanji pushed 2 commits (1924834, 02b3e16) but Captain still not seeing results. Must verify on mobile (ADP devices). Captain frustrated — no more babysitting. 20 min deadline from 7:08 AM EDT.
 1. ALL 10 tabs must be clickable and functional (Mission, Tasks, Calendar, Projects, Memory, Docs, Office, Team, Ship, Model Ops)
@@ -1995,15 +2000,16 @@ notes:        Captain has renamed the project agent from Cyrano to Cavendish. Up
 task_id:      BRIDGE-CHOPPER-QA-20260320
 title:        [BRIDGE REPAIR] Execute ship scene QA after Brook UX PASS
 status:       queued
-priority:     P0
+priority:     backlog
 points:       10
 phase:        
 assigned_to:  Chopper
 type:         task
 created_at:   2026-03-20
+estimate:     3pts
 dependencies: none
 parent:       EPIC-002
-notes:        BROKEN BRIDGE REPAIRED: Brook posted UX-HANDOFF-CHOPPER-SUNNY-002 with UX PASS (9.2/10) for ship scene. Execute QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability.
+notes:        PAUSED — 3D work deprioritized. Resume after EPIC-003.
 ```
 
 ```
@@ -2044,8 +2050,9 @@ phase:        Operations
 assigned_to:  Robin
 type:         task
 created_at:   2026-03-20
+estimate:     3pts
 dependencies: none
-notes:        ROBIN-OVERHAUL-NEEDS-ROBIN-001: Complete overhaul involving loop fixes, Discord reorganization, and new research mandates. ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002: Anti-loop tracker and Paperclip AI research requiring strategic analysis. ROBIN-THREADS-ISSUE-001: Telegram thread management setup issue. All require complex reasoning beyond simple data gathering - flagged for direct Robin attention.
+notes:        Robin-Ops flagged 2026-03-20 22:32 EST - This task requires complex strategic synthesis beyond simple execution. Contains three bundled issues: loop fixes, Discord reorganization, and research mandates requiring deep reasoning. Escalated to main Robin for handling. [2026-03-21 03:02 UTC] Robin-Ops patrol confirms this task requires main Robin - complex reasoning beyond ops scope. Task flagged but no action taken per anti-loop rules. [2026-03-21 03:32 UTC] Robin-Ops patrol: Task still requires main Robin attention for complex synthesis work.
 ```
 
 
@@ -2059,7 +2066,262 @@ phase:        Sprint 3 — Calendar
 assigned_to:  Franky (builder subagent)
 type:         story
 created_at:   2026-03-20
+estimate:     5pts
 dependencies: none
-parent:       PROJ-MC
+parent:       EPIC-003
 notes:        Captain order: Transform Calendar tab from bare month-grid to beautiful weekly schedule + cron inspector. Inspired by @chrysb AlphaClaw design. Spec: SPEC-CALENDAR-TAB-UPGRADE.md. Requirements: REQ-CALENDAR-TAB-UPGRADE.md (by Usopp). Franky assigning builder subagent. Phases: Frontend week grid + Backend APIs + Polish.
+```
+
+```
+task_id:      STITCH-USOPP-1774064216
+title:        [Brook → Usopp] Stitch by Google Analysis — Evaluate Gemini Image API Integration into Our Framework
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Usopp
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain's orders: Analyze whether we can inject AI-powered UI generation into our existing framework for better design results.
+
+## WHAT IS STITCH?
+Google Labs tool at https://stitch.withgoogle.com — generates UI mockups for mobile and web apps from text prompts. Powered by Gemini. Currently in Beta (codename 'Nemo').
+
+## THE PROBLEM
+Stitch has NO public API — browser-only. We cannot call it programmatically. BUT the underlying tech (Gemini image generation) IS available via API.
+
+## WHAT USOPP NEEDS TO ANALYZE:
+
+### 1. Gemini Image Generation API Integration
+- Vertex AI endpoint: POST https://REGION-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/REGION/publishers/google/models/MODEL_VERSION:predict
+- Models to evaluate:
+  - Gemini 2.5 Flash Image: ~/bin/zsh.067/image (best value)
+  - Gemini 3 Pro Image: ~/bin/zsh.134/image (highest quality)
+  - Imagen 4: dedicated image model via Vertex AI
+- Python SDK: pip install google-genai
+- Auth: Google Cloud project + service account
+
+### 2. Can We Build a Stitch-Like Pipeline?
+- Text prompt → Gemini generates UI mockup image
+- Custom system prompts tuned for our brand (Straw Hat design system)
+- Batch generation: 10 variants per design concept
+- Export as PNG/JPEG/SVG for Franky to implement
+
+### 3. Integration Points with Existing Framework
+- Can this plug into our 3D Office build pipeline?
+- Can Franky receive auto-generated design specs?
+- Can we version-control design iterations in GitHub?
+- CI/CD hook: on PR, auto-generate UI preview?
+
+### 4. Cost Analysis
+- ~200 generations/month estimated usage
+- Gemini 2.5 Flash Image: ~/month
+- Gemini 3 Pro Image: ~/month
+- Google One AI Pro (manual Stitch access): /month
+- Vertex AI requires a Google Cloud project with billing enabled
+
+### 5. Prerequisites
+- Google Cloud project with Vertex AI API enabled
+- Service account with roles/aiplatform.user
+- GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION env vars
+- Python google-genai SDK installed
+
+### 6. Quality Comparison Needed
+- Captain is already signed into Stitch — he can generate sample UI mockups
+- We need to compare: Stitch output vs raw Gemini API output with same prompts
+- Are Stitch's results better because of optimized system prompts? If so, we reverse-engineer the prompt strategy
+
+Please run a full technical feasibility analysis and report back. Captain wants this evaluated for injection into our framework.
+```
+
+```
+task_id:      STITCH-NAMI-1774064233
+title:        [Brook → Nami] Create Epic: Stitch by Google / Gemini UI Generation Integration
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain's orders: Create an epic for Stitch by Google adaptation with all tasks coordinated across departments.
+
+## EPIC SUMMARY
+Integrate AI-powered UI generation (Google Stitch / Gemini API) into our design-to-build pipeline. Goal: generate production-quality UI mockups programmatically to accelerate Franky's builds and my creative reviews.
+
+## TASKS TO COORDINATE:
+
+### Brook (Creative) — Already Started
+1. Research Stitch capabilities ✅ DONE
+2. Cost analysis ✅ DONE
+3. Brand kit creation for Straw Hat design system — prompt templates, color palette, typography rules
+4. Quality comparison: Stitch manual output vs Gemini API output
+5. Creative direction: define UI generation prompt library for our projects
+6. UX review process update: integrate AI mockups into review pipeline
+
+### Usopp (Engineering) — Task Created: STITCH-USOPP-1774064233
+1. Technical feasibility analysis of Gemini Image API
+2. Prototype: script that generates UI mockup from text prompt via API
+3. Evaluate Google Cloud setup requirements (project, billing, service account)
+4. Build integration into existing framework
+5. CI/CD hook design: auto-generate UI previews on PR
+6. Compare API models: Gemini 2.5 Flash Image vs 3 Pro Image vs Imagen 4
+
+### Franky (Build) — Downstream
+1. Define ideal handoff format from AI-generated mockups
+2. Test building from AI-generated designs vs current text briefs
+3. Feedback loop: what works, what doesn't from generated mockups
+
+### Chopper (QA) — Downstream
+1. Quality gate: verify AI-generated mockups meet our visual standards
+2. Test generated designs for accessibility compliance
+
+## COST ESTIMATE
+- -30/month for API usage (200 generations/month)
+- /month for Google One AI Pro (manual Stitch access for Captain)
+- Google Cloud project setup (may have free tier credits)
+
+## DEPENDENCIES
+- Captain needs to share sample Stitch outputs for quality comparison
+- Google Cloud project needs to be set up with billing
+- Vertex AI API needs to be enabled
+
+Please create the epic and coordinate timelines. This came directly from the Captain.
+```
+
+```
+task_id:      CAPT-1774064245
+title:        [Captain → Brook] Evaluate Stitch by Google, brief Usopp and Nami
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain's directive: Research Stitch by Google (https://stitch.withgoogle.com). Find the link, analyze API adaptation potential, cost. Report findings to Usopp for full technical analysis on injecting into our framework. Report to Nami to create an epic with all coordinated tasks. Captain is already signed in and open to upgrading subscription if Brook can directly access Stitch. Captain does not mind the cost if it improves results.
+```
+
+```
+task_id:      CAPT-NOTIFY-1774064245
+title:        [FYI Nami] Captain gave Brook direct orders: Stitch by Google evaluation + cross-dept coordination
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain went directly to Brook about: evaluating Stitch by Google for our workflow. Captain wants Usopp to run a full technical analysis and Nami to create an epic. Captain is signed into Stitch and willing to pay for upgrades. Brook has briefed both departments via MC tasks.
+```
+
+```
+task_id:      CREW-STATUS-REPORT-2345
+title:        [CAPTAIN ORDER] All crew report Mission Control progress to thread 1681 immediately
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  All Departments
+type:         task
+estimate:     1pt
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain directive: Franky, Sanji, Chopper must post status updates to Mission Control thread 1681 within 5 minutes. Include what was built, live links, what is remaining. This is crew discipline - Captain should not have to chase progress reports.
+```
+
+```
+task_id:      USOPP-20260321-0400-STATUS-TEMPLATE
+title:        [Usopp to Nami] Add standard status-update acceptance criteria for Captain progress reports
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Requirements gap flagged from CREW-STATUS-REPORT-2345. Please define a mandatory progress-report template for all crews: (1) what was built, (2) live link, (3) validation evidence/device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Captain is currently chasing updates because completion/reporting standards are implicit instead of testable.
+```
+
+```
+task_id:      EPIC-003
+title:        Mission Control Dashboard — Full Feature Completion
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Nami (orchestrator)
+type:         epic
+parent:       PROJ-MC
+sprint:       Sprint 3 — Mission Control
+estimate:     epic (sum of children)
+created_at:   2026-03-21
+dependencies: none
+notes:        CAPTAIN ORDER 2026-03-21: Stop all 3D work and focus on Mission Control. Get our house in order first. 3D design is lower priority until this epic is DONE.
+
+Scope: All tabs functional on GitHub Pages with real data, hierarchy view, calendar upgrade, effort points visible, department loads, office iframe working.
+
+Live URL: https://seanjohnzon.github.io/mission-control/
+```
+
+```
+task_id:      MC-001
+title:        Mission Control — All tabs populated with real data on GitHub Pages
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Sanji
+type:         story
+parent:       EPIC-003
+sprint:       Sprint 3 — Mission Control
+estimate:     3pts
+created_at:   2026-03-21
+dependencies: none
+notes:        Ensure docs/data/*.json files are up to date with real task board data, project status, memory entries, model-ops stats. All tabs must show real content not placeholder text.
+```
+
+```
+task_id:      MC-002
+title:        Mission Control — Effort points and dept loads visible in Tasks tab
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Franky
+type:         story
+parent:       EPIC-003
+sprint:       Sprint 3 — Mission Control
+estimate:     3pts
+created_at:   2026-03-21
+dependencies: none
+notes:        Tasks tab must show effort point estimates, department load badges, and sprint velocity. Hierarchy tree view with projects → epics → stories → tasks. The tree view is partially built — verify it works with real data.
+```
+
+```
+task_id:      MC-003
+title:        Mission Control — Office tab loads 3D scene correctly
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Sanji
+type:         story
+parent:       EPIC-003
+sprint:       Sprint 3 — Mission Control
+estimate:     2pts
+created_at:   2026-03-21
+dependencies: none
+notes:        Office tab iframe must load seanjohnzon.github.io/office-3d correctly on both desktop and mobile. Verify with mobile device testing.
+```
+
+```
+task_id:      MC-004
+title:        Mission Control — Full QA pass on all 10 tabs (desktop + mobile)
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Chopper
+type:         story
+parent:       EPIC-003
+sprint:       Sprint 3 — Mission Control
+estimate:     3pts
+created_at:   2026-03-21
+dependencies: none
+notes:        QA verification of all 10 tabs on GitHub Pages. Test on desktop browser AND mobile. Every tab must load, show data, and be navigable. Office iframe must render. Hamburger menu must work on mobile. Report PASS/FAIL per tab.
 ```
