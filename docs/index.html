@@ -1996,6 +1996,36 @@ function moRenderSubCards(data) {
       `<span class="mo-agent-pill ${a.status}" title="${a.model}">${a.emoji || ''} ${a.name}</span>`
     ).join('');
 
+    // Usage metrics
+    let usageHtml = '';
+    if (sub.usage) {
+      const u = sub.usage;
+      const planBadge = u.plan ? `<span style="background:rgba(${sub.colorRgb},0.1);color:${sub.color};padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600">${u.plan}</span>` : '';
+      let limitBar = '', limitInfo = '';
+      if (sub.type === 'subscription' && sub.provider === 'Anthropic') {
+        const hits = u.current?.rateLimitHitsToday || 0;
+        const peak = u.current?.peakUsagePct || 0;
+        const bc = peak > 90 ? 'var(--red)' : peak > 75 ? 'var(--orange)' : peak > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Rate limit usage</span><span style="color:${bc};font-weight:600">${peak}%</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(peak,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Rate limit hits</span><span class="mo-sub-stat-val" style="color:${hits > 0 ? 'var(--red)' : 'var(--green)'}">${hits}</span></div>`;
+        if (u.billingCycle) { const dl = Math.max(0, Math.ceil((new Date(u.billingCycle.end) - new Date()) / 86400000)); limitInfo += `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Resets in</span><span class="mo-sub-stat-val">${dl}d</span></div>`; }
+      } else if (sub.type === 'subscription' && sub.provider === 'OpenAI') {
+        const hits = u.current?.rateLimitHitsToday || 0;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Rate limit hits</span><span class="mo-sub-stat-val" style="color:${hits > 0 ? 'var(--red)' : 'var(--green)'}">${hits}</span></div>`;
+        if (u.billingCycle) { const dl = Math.max(0, Math.ceil((new Date(u.billingCycle.end) - new Date()) / 86400000)); limitInfo += `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Resets in</span><span class="mo-sub-stat-val">${dl}d</span></div>`; }
+      } else if (sub.type === 'variable') {
+        const cap = u.limits?.monthlyCap || 0; const spent = u.limits?.spentThisMonth || 0; const pct = cap > 0 ? Math.round((spent / cap) * 100) : 0;
+        const bc = pct > 90 ? 'var(--red)' : pct > 75 ? 'var(--orange)' : pct > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Budget</span><span style="color:${bc};font-weight:600">$${spent} / $${cap}</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(pct,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+      } else if (sub.type === 'local') {
+        const avg = u.current?.avgContextUsePct || 0; const ov = u.current?.contextOverflows || 0;
+        const bc = avg > 90 ? 'var(--red)' : avg > 75 ? 'var(--orange)' : avg > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Avg context</span><span style="color:${bc};font-weight:600">${avg}%</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(avg,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Context overflows</span><span class="mo-sub-stat-val" style="color:${ov > 0 ? 'var(--red)' : 'var(--green)'}">${ov}</span></div>`;
+      }
+      usageHtml = `<div style="border-top:1px solid rgba(255,255,255,0.04);margin-top:8px;padding-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Usage & Limits</span>${planBadge}</div>${limitInfo}${limitBar}</div>`;
+    }
+
     return `<div class="mo-sub-card" style="border-color:rgba(${sub.colorRgb},0.25);box-shadow:0 0 16px rgba(${sub.colorRgb},0.06)">
       <div class="mo-sub-accent" style="background:${sub.color}"></div>
       <div class="mo-sub-provider" style="color:${sub.color}">${sub.provider}</div>
@@ -2003,6 +2033,7 @@ function moRenderSubCards(data) {
       <div class="mo-sub-stat"><span class="mo-sub-stat-label">Agents</span><span class="mo-sub-stat-val">${agentCount} <span style="color:var(--text2);font-weight:400;font-size:11px">(${activeCount} active)</span></span></div>
       <div class="mo-sub-stat"><span class="mo-sub-stat-label">Tokens today</span><span class="mo-sub-stat-val">${moFmtTokens(totalTokens)}</span></div>
       <div class="mo-sub-stat"><span class="mo-sub-stat-label">Cost</span><span>${costBadgeHtml}</span></div>
+      ${usageHtml}
       <div class="mo-agent-pills">${pillsHtml}</div>
     </div>`;
   }).join('');

@@ -3,21 +3,24 @@
     {
       "provider": "Anthropic",
       "type": "subscription",
-      "monthlyCost": 100,
-      "costLabel": "$100/mo",
+      "monthlyCost": 200,
+      "costLabel": "$200/mo",
       "color": "#8B5CF6",
       "colorRgb": "139,92,246",
       "agents": [
         {
           "id": "nami",
           "name": "Nami",
-          "emoji": "🧭",
+          "emoji": "\ud83e\udded",
           "model": "claude-opus-4-6",
           "modelShort": "Opus 4.6",
           "role": "Orchestrator",
           "contextWindow": 200000,
           "contextUsed": 24500,
-          "tokensToday": { "input": 48200, "output": 12800 },
+          "tokensToday": {
+            "input": 48200,
+            "output": 12800
+          },
           "costToday": 0,
           "machine": "Mac Mini M4",
           "sessions": 3,
@@ -26,13 +29,16 @@
         {
           "id": "zeus",
           "name": "Zeus",
-          "emoji": "⚡",
+          "emoji": "\u26a1",
           "model": "claude-sonnet-4-6",
           "modelShort": "Sonnet 4.6",
           "role": "Subagent / Heartbeat",
           "contextWindow": 200000,
           "contextUsed": 8200,
-          "tokensToday": { "input": 18400, "output": 4200 },
+          "tokensToday": {
+            "input": 18400,
+            "output": 4200
+          },
           "costToday": 0,
           "machine": "Mac Mini M4",
           "sessions": 7,
@@ -41,13 +47,16 @@
         {
           "id": "vivi",
           "name": "Vivi",
-          "emoji": "✨",
+          "emoji": "\u2728",
           "model": "claude-sonnet-4-6",
           "modelShort": "Sonnet 4.6",
           "role": "Dispatcher",
           "contextWindow": 200000,
           "contextUsed": 3100,
-          "tokensToday": { "input": 9600, "output": 2100 },
+          "tokensToday": {
+            "input": 9600,
+            "output": 2100
+          },
           "costToday": 0,
           "machine": "Mac Mini M4",
           "sessions": 2,
@@ -56,19 +65,42 @@
         {
           "id": "jinbe",
           "name": "Jinbe",
-          "emoji": "🛡️",
+          "emoji": "\ud83d\udee1\ufe0f",
           "model": "claude-sonnet-4-6",
           "modelShort": "Sonnet 4.6",
           "role": "Security / Infra",
           "contextWindow": 200000,
           "contextUsed": 1800,
-          "tokensToday": { "input": 4200, "output": 900 },
+          "tokensToday": {
+            "input": 4200,
+            "output": 900
+          },
           "costToday": 0,
           "machine": "Mac Mini M4",
           "sessions": 1,
           "status": "idle"
         }
-      ]
+      ],
+      "usage": {
+        "plan": "Max 5x",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "opusTokensPerMin": 40000,
+          "sonnetTokensPerMin": 80000,
+          "opusRequestsPerDay": 1200,
+          "sonnetRequestsPerDay": 3600
+        },
+        "current": {
+          "opusRequestsToday": 0,
+          "sonnetRequestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "lastRateLimitAt": null,
+          "peakUsagePct": 0
+        }
+      }
     },
     {
       "provider": "OpenAI",
@@ -81,13 +113,16 @@
         {
           "id": "franky",
           "name": "Franky",
-          "emoji": "🔧",
+          "emoji": "\ud83d\udd27",
           "model": "gpt-5.4",
           "modelShort": "GPT-5.4",
           "role": "Chief Engineer",
           "contextWindow": 128000,
           "contextUsed": 41200,
-          "tokensToday": { "input": 62400, "output": 28600 },
+          "tokensToday": {
+            "input": 62400,
+            "output": 28600
+          },
           "costToday": 0,
           "machine": "Desktop",
           "sessions": 5,
@@ -96,13 +131,16 @@
         {
           "id": "sanji",
           "name": "Sanji",
-          "emoji": "👨‍🍳",
+          "emoji": "\ud83d\udc68\u200d\ud83c\udf73",
           "model": "gpt-5.4",
           "modelShort": "GPT-5.4",
           "role": "Automation / CI",
           "contextWindow": 128000,
           "contextUsed": 18700,
-          "tokensToday": { "input": 31200, "output": 14800 },
+          "tokensToday": {
+            "input": 31200,
+            "output": 14800
+          },
           "costToday": 0,
           "machine": "Desktop",
           "sessions": 4,
@@ -111,13 +149,16 @@
         {
           "id": "chopper",
           "name": "Chopper",
-          "emoji": "🔬",
+          "emoji": "\ud83d\udd2c",
           "model": "gpt-5.4",
           "modelShort": "GPT-5.4",
           "role": "QA / Testing",
           "contextWindow": 128000,
           "contextUsed": 22100,
-          "tokensToday": { "input": 28800, "output": 11200 },
+          "tokensToday": {
+            "input": 28800,
+            "output": 11200
+          },
           "costToday": 0,
           "machine": "GPU3060",
           "sessions": 6,
@@ -126,19 +167,38 @@
         {
           "id": "usopp",
           "name": "Usopp",
-          "emoji": "🎯",
+          "emoji": "\ud83c\udfaf",
           "model": "gpt-5.4",
           "modelShort": "GPT-5.4",
           "role": "Business Intel",
           "contextWindow": 128000,
           "contextUsed": 9400,
-          "tokensToday": { "input": 14600, "output": 6200 },
+          "tokensToday": {
+            "input": 14600,
+            "output": 6200
+          },
           "costToday": 0,
           "machine": "GPU3060",
           "sessions": 2,
           "status": "idle"
         }
-      ]
+      ],
+      "usage": {
+        "plan": "ChatGPT Pro",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "gpt54RequestsPerDay": "unlimited",
+          "note": "Pro plan \u2014 fair use policy"
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "peakUsagePct": 0
+        }
+      }
     },
     {
       "provider": "xAI / Grok",
@@ -151,13 +211,16 @@
         {
           "id": "robin",
           "name": "Robin",
-          "emoji": "📚",
+          "emoji": "\ud83d\udcda",
           "model": "grok-4",
           "modelShort": "Grok 4",
           "role": "Research",
           "contextWindow": 131072,
           "contextUsed": 52800,
-          "tokensToday": { "input": 38400, "output": 9600 },
+          "tokensToday": {
+            "input": 38400,
+            "output": 9600
+          },
           "costToday": 1.24,
           "machine": "Mac Mini M4",
           "sessions": 4,
@@ -166,19 +229,39 @@
         {
           "id": "robin-ops",
           "name": "Robin-Ops",
-          "emoji": "🔎",
+          "emoji": "\ud83d\udd0e",
           "model": "grok-3-fast",
           "modelShort": "Grok 3 Fast",
           "role": "Task Patrol",
           "contextWindow": 131072,
           "contextUsed": 14200,
-          "tokensToday": { "input": 12800, "output": 3400 },
+          "tokensToday": {
+            "input": 12800,
+            "output": 3400
+          },
           "costToday": 0.18,
           "machine": "Mac Mini M4",
           "sessions": 9,
           "status": "active"
         }
-      ]
+      ],
+      "usage": {
+        "plan": "API (pay-per-use)",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "monthlyCap": 50,
+          "spentThisMonth": 0
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "spendToday": 0,
+          "peakUsagePct": 0
+        }
+      }
     },
     {
       "provider": "Google / Gemini",
@@ -191,13 +274,16 @@
         {
           "id": "brook",
           "name": "Brook",
-          "emoji": "🎨",
+          "emoji": "\ud83c\udfa8",
           "model": "gemini-2.5-pro",
           "modelShort": "Gemini 2.5 Pro",
           "role": "Creative / UX",
           "contextWindow": 1000000,
           "contextUsed": 186000,
-          "tokensToday": { "input": 42600, "output": 18400 },
+          "tokensToday": {
+            "input": 42600,
+            "output": 18400
+          },
           "costToday": 0.31,
           "machine": "Mac Mini M4",
           "sessions": 3,
@@ -206,19 +292,40 @@
         {
           "id": "brook-ops",
           "name": "Brook-Ops",
-          "emoji": "🎵",
+          "emoji": "\ud83c\udfb5",
           "model": "gemini-2.5-flash",
           "modelShort": "Gemini 2.5 Flash",
           "role": "Quick Creative",
           "contextWindow": 1000000,
           "contextUsed": 48000,
-          "tokensToday": { "input": 18200, "output": 7800 },
+          "tokensToday": {
+            "input": 18200,
+            "output": 7800
+          },
           "costToday": 0.04,
           "machine": "Mac Mini M4",
           "sessions": 5,
           "status": "idle"
         }
-      ]
+      ],
+      "usage": {
+        "plan": "API (free tier)",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "monthlyCap": 5,
+          "freeRequestsPerDay": 1500,
+          "spentThisMonth": 0
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "spendToday": 0,
+          "peakUsagePct": 0
+        }
+      }
     },
     {
       "provider": "Local / Ollama",
@@ -231,13 +338,16 @@
         {
           "id": "mikan",
           "name": "Mikan",
-          "emoji": "🍊",
+          "emoji": "\ud83c\udf4a",
           "model": "qwen2.5:7b",
           "modelShort": "qwen2.5:7b",
           "role": "Local Workhorse",
           "contextWindow": 32768,
           "contextUsed": 18400,
-          "tokensToday": { "input": 24800, "output": 8200 },
+          "tokensToday": {
+            "input": 24800,
+            "output": 8200
+          },
           "costToday": 0,
           "machine": "Mac Mini M4",
           "sessions": 5,
@@ -246,13 +356,16 @@
         {
           "id": "cola",
           "name": "Cola",
-          "emoji": "🥤",
+          "emoji": "\ud83e\udd64",
           "model": "qwen2.5-coder:7b",
           "modelShort": "qwen2.5-coder:7b",
           "role": "Light Patrol Local",
           "contextWindow": 32768,
           "contextUsed": 2600,
-          "tokensToday": { "input": 2200, "output": 400 },
+          "tokensToday": {
+            "input": 2200,
+            "output": 400
+          },
           "costToday": 0,
           "machine": "Desktop",
           "sessions": 1,
@@ -261,19 +374,33 @@
         {
           "id": "sakura",
           "name": "Sakura",
-          "emoji": "🌸",
+          "emoji": "\ud83c\udf38",
           "model": "llama3.1:8b",
           "modelShort": "llama3.1:8b",
           "role": "Light Patrol Local",
           "contextWindow": 32768,
           "contextUsed": 2100,
-          "tokensToday": { "input": 1800, "output": 300 },
+          "tokensToday": {
+            "input": 1800,
+            "output": 300
+          },
           "costToday": 0,
           "machine": "Laptop",
           "sessions": 1,
           "status": "active"
         }
-      ]
+      ],
+      "usage": {
+        "plan": "Local compute",
+        "limits": {
+          "contextWindow": 32768,
+          "note": "Limited by RAM and context, not billing"
+        },
+        "current": {
+          "contextOverflows": 0,
+          "avgContextUsePct": 0
+        }
+      }
     }
   ],
   "meta": {
