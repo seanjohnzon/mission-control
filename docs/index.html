@@ -471,6 +471,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <div class="task-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <div style="display:flex;gap:6px;align-items:center">
             <span class="text2" style="font-size:12px">View</span>
+            <button class="office-filter active" id="view-drill" onclick="setTaskView('drill')">Projects</button>
             <button class="office-filter" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
             <button class="office-filter" id="view-tree" onclick="setTaskView('tree')">Tree</button>
           </div>
@@ -480,6 +481,10 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           </label>
         </div>
       </div>
+      <!-- Drill-down breadcrumb -->
+      <div id="drill-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;flex-wrap:wrap"></div>
+      <!-- Drill-down view (Jira-style) -->
+      <div id="task-drill" class="task-tree"></div>
       <div class="kanban" id="kanban" style="display:none"></div>
       <div id="task-tree" class="task-tree" style="display:none"></div>
     </div>
@@ -1242,24 +1247,36 @@ function renderDepartmentLoads(tasks) {
   `).join('');
 }
 
+let _drillPath = []; // breadcrumb: [{id, title}]
+
 function renderTasks() {
   const tasks = _tasksData || [];
   const activeOnly = document.getElementById('active-only')?.checked;
   const filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
   const kanbanEl = document.getElementById('kanban');
   const treeEl = document.getElementById('task-tree');
+  const drillEl = document.getElementById('task-drill');
+  const breadEl = document.getElementById('drill-breadcrumb');
+  const db = document.getElementById('view-drill');
   const kb = document.getElementById('view-kanban');
   const tb = document.getElementById('view-tree');
-  if (kb && tb) {
-    kb.classList.toggle('active', _taskView === 'kanban');
-    tb.classList.toggle('active', _taskView === 'tree');
-  }
-  if (_taskView === 'tree') {
-    kanbanEl.style.display = 'none';
+  if (db) db.classList.toggle('active', _taskView === 'drill');
+  if (kb) kb.classList.toggle('active', _taskView === 'kanban');
+  if (tb) tb.classList.toggle('active', _taskView === 'tree');
+
+  kanbanEl.style.display = 'none';
+  treeEl.style.display = 'none';
+  drillEl.style.display = 'none';
+  breadEl.style.display = 'none';
+
+  if (_taskView === 'drill') {
+    drillEl.style.display = '';
+    breadEl.style.display = '';
+    renderDrillDown(filtered);
+  } else if (_taskView === 'tree') {
     treeEl.style.display = '';
     renderTree(filtered);
   } else {
-    treeEl.style.display = 'none';
     kanbanEl.style.display = '';
     renderKanban(filtered);
   }
@@ -1279,11 +1296,135 @@ function renderTasks() {
   }
 }
 
+function drillInto(id, title) {
+  _drillPath.push({id, title});
+  renderTasks();
+}
+
+function drillTo(index) {
+  _drillPath = _drillPath.slice(0, index);
+  renderTasks();
+}
+
+function statusIcon(s) {
+  s = (s||'').toLowerCase();
+  if (s === 'completed' || s === 'complete' || s === 'done') return '✅';
+  if (s === 'in-progress') return '🔨';
+  if (s === 'queued') return '📋';
+  if (s === 'blocked') return '⏳';
+  if (s === 'open') return '📌';
+  if (s === 'paused') return '⏸️';
+  return '○';
+}
+
+function typeIcon(t) {
+  if (t === 'project') return '📁';
+  if (t === 'epic') return '🎯';
+  if (t === 'story') return '📖';
+  return '🔧';
+}
+
+function renderDrillDown(tasks) {
+  const drillEl = document.getElementById('task-drill');
+  const breadEl = document.getElementById('drill-breadcrumb');
+
+  // Breadcrumb
+  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="drillTo(0)">🏠 All Projects</span>';
+  _drillPath.forEach((p, i) => {
+    bc += ` <span class="text2">›</span> <span style="cursor:pointer;color:var(--blue)" onclick="drillTo(${i+1})">${escapeHtml(p.title)}</span>`;
+  });
+  breadEl.innerHTML = bc;
+
+  const currentParent = _drillPath.length > 0 ? _drillPath[_drillPath.length - 1].id : null;
+
+  let items;
+  if (!currentParent) {
+    // Show projects
+    items = tasks.filter(t => t.type === 'project');
+    if (!items.length) {
+      // Fallback: synthesize projects from PROJ- parents
+      const projIds = new Set();
+      tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
+      items = [...projIds].map(pid => {
+        const found = tasks.find(t => t.id === pid);
+        return found || {id: pid, title: pid, type: 'project', status: 'in-progress', priority: 'P1'};
+      });
+    }
+  } else {
+    // Show children of currentParent
+    items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
+  }
+
+  // Sort: P0 first, then in-progress, then queued, then rest
+  const pOrder = {'P0':0,'P1':1,'P2':2};
+  const sOrder = {'in-progress':0,'queued':1,'open':2,'blocked':3};
+  items.sort((a,b) => {
+    const pa = pOrder[a.priority] ?? 3, pb = pOrder[b.priority] ?? 3;
+    if (pa !== pb) return pa - pb;
+    const sa = sOrder[(a.status||'').toLowerCase()] ?? 4, sb = sOrder[(b.status||'').toLowerCase()] ?? 4;
+    return sa - sb;
+  });
+
+  if (!items.length) {
+    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level.</div>';
+    return;
+  }
+
+  // Count children for each item
+  const childCount = (id) => tasks.filter(t => t.parent === id && t.id !== id).length;
+  const completedChildCount = (id) => tasks.filter(t => t.parent === id && t.id !== id && isCompletedStatus(t.status)).length;
+  const totalPoints = (id) => {
+    let sum = 0;
+    tasks.filter(t => t.parent === id && t.id !== id).forEach(t => { sum += getTaskPoints(t) || 0; });
+    return sum;
+  };
+
+  drillEl.innerHTML = items.map(t => {
+    const kids = childCount(t.id);
+    const doneKids = completedChildCount(t.id);
+    const pts = getTaskPoints(t);
+    const tPts = totalPoints(t.id);
+    const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+    const canDrill = kids > 0 || t.type === 'project' || t.type === 'epic' || t.type === 'story';
+    const clickAttr = canDrill ? `onclick="drillInto('${t.id}','${escapeHtml(t.title).replace(/'/g,"\\'")}')" style="cursor:pointer"` : '';
+    const progress = kids > 0 ? Math.round((doneKids / kids) * 100) : (isCompletedStatus(t.status) ? 100 : 0);
+    const assignee = t.assigned || '';
+    const assignShort = assignee.split('(')[0].split(' ')[0].trim();
+
+    return `
+      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr} id="task-${t.id}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+              <span style="font-size:14px">${typeIcon(t.type)}</span>
+              <span class="task-id">${escapeHtml(t.id)}</span>
+              <span class="badge ${pBadge}" style="font-size:10px">${escapeHtml(t.priority || '')}</span>
+              ${pts !== null ? `<span class="badge badge-blue" style="font-size:10px">${pts}pt${pts!==1?'s':''}</span>` : ''}
+              <span style="font-size:11px">${statusIcon(t.status)}</span>
+            </div>
+            <div class="task-title" style="font-size:14px">${escapeHtml(t.title || '')}</div>
+          </div>
+          ${canDrill ? '<span style="color:var(--text2);font-size:18px">›</span>' : ''}
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            ${assignShort ? `<span style="font-size:11px;color:var(--text2)">👤 ${escapeHtml(assignShort)}</span>` : ''}
+            ${kids > 0 ? `<span style="font-size:11px;color:var(--text2)">${doneKids}/${kids} items</span>` : ''}
+            ${tPts > 0 ? `<span style="font-size:11px;color:var(--text2)">Σ${tPts}pts</span>` : ''}
+          </div>
+          ${kids > 0 ? `<div style="width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${progress}%;background:${progress===100?'var(--green)':'var(--blue)'};border-radius:3px;transition:width 0.3s"></div></div>` : ''}
+        </div>
+        ${t.notes && !canDrill ? `<div class="task-desc" style="margin-top:6px">${escapeHtml((t.notes||'').substring(0,120))}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
 async function loadTasks() {
   const data = await api('./data/tasks.json');
   if (!data || !data.tasks) return;
   _tasksData = data.tasks;
-  setTaskView(_taskView || 'kanban');
+  setTaskView(_taskView || 'drill');
 }
 
 // Calendar

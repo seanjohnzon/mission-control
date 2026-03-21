@@ -238,6 +238,7 @@ started:     null
 completed:   null
 change_ref:  null — new CHG record required if Discord is activated
 scope:       Human decides: activate Discord in Phase 1 or defer to Phase 2+. Decision documented in D1.9, D1.11, and D1.14 §16 Priority 5.
+parent:       PROJ-FUTURE
 dependencies: TASK-004 (Telegram must be confirmed primary first)
 proof_ref:   null — set to D1.14 §16 Priority 5 updated + decision recorded
 notes:       The decision is required. Not activating Discord is a valid outcome. Obtaining a Discord bot token before the decision is made is a policy violation (D1.14 §16 Priority 5).
@@ -261,6 +262,7 @@ started:     null
 completed:   null
 change_ref:  null
 scope:       Power on Desktop; survey hardware; confirm OS; unblock basement switch; integrate brain agent; declare Phase 2 operational
+parent:       PROJ-FUTURE
 dependencies: TASK-007 (Phase 1 bridge must be operational)
 proof_ref:   null
 notes:       D1.13 §10.2 baseline pending. D1.2 §6 machine role. Blocked by basement switch physical cabling.
@@ -280,6 +282,7 @@ started:     null
 completed:   null
 change_ref:  null
 scope:       Inventory n8n workflows on Desktop; classify per D5.3; migrate, retain, or retire per D5.5 workflow migration plan
+parent:       PROJ-FUTURE
 dependencies: TASK-011 (Desktop must be online)
 proof_ref:   null
 notes:       Nothing on Desktop runs until inventoried and classified. D1.13 §10.2 pre-integration state constraint.
@@ -305,6 +308,7 @@ started:     null
 completed:   null
 change_ref:  CHG-003
 scope:       Run a bounded evaluation of Perplexity for live research tasks: test live web retrieval, current-information queries, and browser-style lookups. Document: what it does well, what it does not do, latency, cost profile, API access method, data exposure risk. File results as experiment record; forward to forge (Critic) for quality assessment.
+parent:       PROJ-FUTURE
 dependencies: TASK-001 (git init for filing)
 proof_ref:   null — set to experiment record path + git commit hash
 notes:       Evaluation uses human's own authenticated Perplexity session — no org-level API key is provisioned until TASK-014 approves production use. Validation rules from D1.10 §8 apply. Result feeds TASK-014 scope decision.
@@ -324,6 +328,7 @@ started:     null
 completed:   null
 change_ref:  CHG-003
 scope:       Based on TASK-013 evaluation: human decides to (A) activate Perplexity as a production callable capability (requires D1.12 adoption proposal, SEC-### registration, D1.15 change record), (B) defer to a later phase, or (C) reject and close the candidate. Update D5.7 CAP-006 status accordingly.
+parent:       PROJ-FUTURE
 dependencies: TASK-013 (evaluation must complete first)
 proof_ref:   null — set to D5.7 CAP-006 status update + git commit hash
 notes:       If decision is (A) activate: register Perplexity API key under D1.14, set cost ceiling, update D5.7 CAP-006 to approved/active, open a new CHG for the activation. If (B) defer: mark CAP-006 deferred with a review date. If (C) reject: mark CAP-006 declined with reason.
@@ -343,6 +348,7 @@ started:     null
 completed:   null
 change_ref:  CHG-003
 scope:       After TASK-014 closes (Perplexity scope decision) and after Phase 1 has produced enough Cursor engineering task cycles: evaluate whether WF-004 (Perplexity-assisted research) and WF-005 (Cursor engineering handoff) have enough observed pattern data to draft formal workflow definitions for D5.6. If yes, draft both and submit for human approval. If no, record observation and revisit at Phase 2 checkpoint.
+parent:       PROJ-FUTURE
 dependencies: TASK-014, TASK-007 (bridge running — bridge tracks ad-hoc pattern count per D5.6 §4.2)
 proof_ref:   null
 notes:       Do not draft workflows from speculation. Workflows are promoted from observed patterns per D5.6 §5.1. This task is the checkpoint to assess whether patterns exist yet.
@@ -642,6 +648,7 @@ sprint:       Sprint 1 — Foundation Docs
 created_at:   2026-03-16
 type:         epic
 estimate:     3d
+parent:       PROJ-OPS
 dependencies: none
 notes:        Update all D-series docs to reflect crew model, current machine state, and proven architecture. Franky writes, Chopper verifies, Nami records.
 ```
@@ -743,6 +750,7 @@ sprint:       Sprint 2 — 3D Office
 created_at:   2026-03-16
 type:         epic
 estimate:     epic (sum of children)
+parent:       PROJ-MC
 dependencies: none
 notes:        DEPRIORITIZED by Captain 2026-03-21. Mission Control epic (EPIC-003) takes priority. Resume after EPIC-003 is complete.
 ```
@@ -909,6 +917,7 @@ sprint:       Sprint 1 — Foundation Docs
 created_at:   2026-03-16
 type:         task
 estimate:     1pt
+parent:       PROJ-OPS
 dependencies: none
 notes:        OAuth expires ~2026-03-25. Interactive browser login required. Run on Chopper: openclaw models auth setup-token --provider openai
 ```
@@ -2051,6 +2060,7 @@ assigned_to:  Robin
 type:         task
 created_at:   2026-03-20
 estimate:     3pts
+parent:       PROJ-RESEARCH
 dependencies: none
 notes:        Robin-Ops flagged 2026-03-20 22:32 EST - This task requires complex strategic synthesis beyond simple execution. Contains three bundled issues: loop fixes, Discord reorganization, and research mandates requiring deep reasoning. Escalated to main Robin for handling. [2026-03-21 03:02 UTC] Robin-Ops patrol confirms this task requires main Robin - complex reasoning beyond ops scope. Task flagged but no action taken per anti-loop rules. [2026-03-21 03:32 UTC] Robin-Ops patrol: Task still requires main Robin attention for complex synthesis work.
 ```
@@ -2225,6 +2235,7 @@ assigned_to:  All Departments
 type:         task
 estimate:     1pt
 created_at:   2026-03-21
+parent:       PROJ-OPS
 dependencies: none
 notes:        Captain directive: Franky, Sanji, Chopper must post status updates to Mission Control thread 1681 within 5 minutes. Include what was built, live links, what is remaining. This is crew discipline - Captain should not have to chase progress reports.
 ```
@@ -2324,4 +2335,140 @@ estimate:     3pts
 created_at:   2026-03-21
 dependencies: none
 notes:        QA verification of all 10 tabs on GitHub Pages. Test on desktop browser AND mobile. Every tab must load, show data, and be navigable. Office iframe must render. Hamburger menu must work on mobile. Report PASS/FAIL per tab.
+```
+
+```
+task_id:      CAPT-SANJI-DATING-EPIC-20260321-0112
+title:        [Captain -> Sanji] Build Epic for Cavendish + Zeff dating rollout
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         epic
+created_at:   2026-03-21
+parent:       PROJ-OPS
+dependencies: none
+notes:        Captain confirms Vivi already created the Cavendish Discord channel and has now posted photos there. Next phase: build a coordinated Epic that runs in parallel until ready for live app tests. Scope: (1) Cavendish posts the full questionnaire for what he needs to know about Captain in order to build bio points per app and conversation flow architecture. (2) Zeff creates/sets up Bumble, Hinge, and Tinder accounts and retrieves the profile prompt/field requirements needed for each app bio library. (3) Subagents should be used so work proceeds in parallel and context windows stay clean. Goal state: complete intake, app requirements, bio library inputs, and conversation architecture so team can move to real live tests talking to women.
+```
+
+```
+task_id:      CAPT-NOTIFY-NAMI-DATING-EPIC-20260321-0112
+title:        [FYI Nami] Captain directed Sanji to run parallel dating rollout via Cavendish + Zeff
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain says Vivi already created the Cavendish channel but the bridge-back to Sanji failed. New directive: coordinate cleaner department orchestration so thread/channel work dispatches back properly. Sanji is now building an Epic for parallel execution: Cavendish questionnaire + conversation architecture, Zeff app/account/prompt prep for Bumble/Hinge/Tinder, and eventual readiness for live tests. Please keep Vivi looped in for bridge-gap monitoring and dispatch hygiene.
+```
+
+```
+task_id:      EPIC-CAVENDISH-ZEFF-DATING-ROLL-20260321
+title:        [EPIC] Cavendish + Zeff parallel dating rollout to live-test readiness
+status:       in-progress
+priority:     backlog
+phase:        
+assigned_to:  Sanji
+type:         epic
+created_at:   2026-03-21
+parent:       PROJ-OPS
+dependencies: none
+notes:        Objective: prepare Captain for live dating-app execution with proper intake, bios, app-specific prompt libraries, and conversation architecture. Parallel lanes: LANE A / Cavendish = analyze existing corpus + photos/context, post questionnaire in dedicated Discord channel, define what he needs to know about Captain, produce app-specific bio input framework, and draft conversation-flow architecture. LANE B / Zeff = prepare Bumble/Hinge/Tinder account setup flow, enumerate required prompts/fields/media constraints for each app, and assemble a bio-library schema mapped to each platform. LANE C / Vivi support = monitor thread/channel bridge gaps so outputs created in Discord get dispatched back into Sanji department without Captain needing to manually relay. Completion criteria: questionnaire posted, app prompt requirements collected, account-setup checklist ready, conversation architecture drafted, and handoff package assembled for real-world testing.
+```
+
+```
+task_id:      SANJI-TO-CAVENDISH-QUESTIONNAIRE-20260321
+title:        [Sanji to Cavendish] Post intake questionnaire + conversation flow architecture
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Cavendish
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain has posted photos in your dedicated Discord channel. Your lane starts now. Use the existing Playing With Fire corpus plus Captain-provided images/context. Deliverables: (1) Post a clean, structured questionnaire in the dedicated Cavendish Discord channel covering everything you need to know about Captain to build strong bio points for Bumble, Hinge, and Tinder. (2) Draft the initial conversation flow architecture: opener styles, qualification flow, flirt escalation guardrails, date conversion logic, and per-app tone differences. (3) If needed, spawn your own subagents so this lane keeps moving without blocking. Goal is readiness for live tests, not perfection before movement.
+```
+
+```
+task_id:      SANJI-TO-ZEFF-APPS-20260321
+title:        [Sanji to Zeff] Prepare Bumble/Hinge/Tinder accounts + collect prompt requirements
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Zeff
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Parallel lane. Captain wants Bumble, Hinge, and Tinder prepared while Cavendish finishes intake. Deliverables: (1) create/setup flow for Bumble, Hinge, and Tinder accounts, (2) retrieve and document all profile prompts/required fields/media constraints needed for each app so we can build a bio library, (3) structure findings so Cavendish can map bio points to each platform, and (4) use subagents if available so work continues in parallel. Do not begin live messaging yet. This phase is setup and requirements gathering for eventual live tests.
+```
+
+```
+task_id:      SANJI-TO-VIVI-BRIDGE-AUDIT-20260321
+title:        [Sanji to Vivi] Design bridge-gap monitor for thread/channel dispatch failures
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Vivi
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain explicitly wants a subagent-style monitor that loops through active threads/channels and catches bridge gaps so departments receive their dispatch without Captain having to manually relay. Please design/implement an operational plan for Vivi to monitor thread activity, detect when work exists in a thread/channel but has not been dispatched back to the responsible department, and escalate/repair those gaps automatically. Tie this into the Cavendish/Zeff dating Epic as the first live use case.
+```
+
+```
+task_id:      PROJ-MC
+title:        Mission Control
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Nami
+type:         project
+estimate:     project
+created_at:   2026-03-21
+dependencies: none
+notes:        All Mission Control dashboard work. GitHub Pages deployment, tabs, data, visualization.
+```
+
+```
+task_id:      PROJ-OPS
+title:        Operations & Infrastructure
+status:       in-progress
+priority:     P1
+phase:        
+assigned_to:  Nami
+type:         project
+estimate:     project
+created_at:   2026-03-21
+dependencies: none
+notes:        Crew architecture, gateway management, agent delivery systems, documentation.
+```
+
+```
+task_id:      PROJ-RESEARCH
+title:        Research & Knowledge
+status:       in-progress
+priority:     P2
+phase:        
+assigned_to:  Robin
+type:         project
+estimate:     project
+created_at:   2026-03-21
+dependencies: none
+notes:        X/Twitter research, market analysis, knowledge archiving, Discord organization.
+```
+
+```
+task_id:      PROJ-FUTURE
+title:        Future & Backlog
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         project
+estimate:     project
+created_at:   2026-03-21
+dependencies: none
+notes:        Deferred work: Desktop integration, Perplexity eval, n8n migration, Zoro security.
 ```
