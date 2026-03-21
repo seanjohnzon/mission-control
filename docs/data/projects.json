@@ -1,9 +1,11 @@
 {"projects":[
-  {"name":"Mission Control Dashboard","desc":"Full-featured operational dashboard on GitHub Pages","status":"active","phase":"EPIC-003 — Sprint 3","progress":40,"lead":"Nami"},
-  {"name":"3D Office Visualization","desc":"Isometric 3D office with crew desks and ship","status":"paused","phase":"EPIC-002 — Paused by Captain","progress":75,"lead":"Franky"},
-  {"name":"Bridge Runtime","desc":"OpenClaw autonomous agent on Mac Mini","status":"active","phase":"Operational","progress":95,"lead":"Nami"},
-  {"name":"Telegram Integration","desc":"@CihanHawkBot — StrawHats HQ forum","status":"active","phase":"Connected + Forum topics","progress":100,"lead":"Nami"},
-  {"name":"Discord Integration","desc":"The Straw Hats guild — work log","status":"active","phase":"Active","progress":80,"lead":"Robin"},
-  {"name":"Crew Architecture","desc":"8 agents across 3 machines","status":"active","phase":"All agents online","progress":85,"lead":"Nami"},
-  {"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini","status":"active","phase":"2 models installed","progress":75,"lead":"Nami"}
+  {"name":"Mission Control Dashboard","desc":"Full-featured operational dashboard on GitHub Pages","status":"active","phase":"EPIC-003 — Sprint 3","progress":40,"lead":"Nami","taskId":"PROJ-MC"},
+  {"name":"3D Office Visualization","desc":"Isometric 3D office with crew desks and ship","status":"paused","phase":"EPIC-002 — Paused by Captain","progress":75,"lead":"Franky","taskId":"PROJ-MC"},
+  {"name":"Operations & Infrastructure","desc":"Crew architecture, gateway management, agent delivery, documentation","status":"active","phase":"All agents online","progress":70,"lead":"Nami","taskId":"PROJ-OPS"},
+  {"name":"Bridge Runtime","desc":"OpenClaw autonomous runtime on Mac Mini","status":"active","phase":"Operational","progress":95,"lead":"Nami"},
+  {"name":"Telegram Integration","desc":"@CihanHawkBot — StrawHats HQ forum with 17 topics","status":"active","phase":"Connected + Forum topics","progress":100,"lead":"Nami"},
+  {"name":"Discord Integration","desc":"The Straw Hats guild — work log channels","status":"active","phase":"Active","progress":80,"lead":"Robin"},
+  {"name":"Research & Knowledge","desc":"X/Twitter research, market analysis, knowledge archiving","status":"active","phase":"Robin + Robin-Ops active","progress":60,"lead":"Robin","taskId":"PROJ-RESEARCH"},
+  {"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini — 2 models","status":"active","phase":"Stable — qwen2.5:3b + 7b","progress":75,"lead":"Nami"},
+  {"name":"Desktop Integration","desc":"Brain agent on Desktop machine — Phase 2","status":"planned","phase":"Blocked — physical cabling","progress":0,"lead":"Nami","taskId":"PROJ-FUTURE"}
 ]}

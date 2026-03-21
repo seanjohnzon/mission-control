@@ -521,14 +521,12 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div id="cal-list" style="display:none"></div>
     </div>
 
-    <!-- Projects (Jira-style drill-down) -->
+    <!-- Projects (high-level overview + epic drill) -->
     <div class="tab-panel" id="tab-projects">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-        <div class="section-title" style="margin:0">📁 Projects</div>
-      </div>
+      <div class="section-title">📁 Projects</div>
       <div id="proj-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;flex-wrap:wrap"></div>
-      <div id="proj-drill" class="task-tree"></div>
-      <div class="card-grid" id="projects-grid" style="display:none"></div>
+      <div class="card-grid" id="projects-grid"></div>
+      <div id="proj-drill" class="task-tree" style="display:none"></div>
     </div>
 
     <!-- Memory -->
@@ -1473,8 +1471,8 @@ async function loadTasks() {
   if (!data || !data.tasks) return;
   _tasksData = data.tasks;
   setTaskView(_taskView || 'kanban');
-  // Also render projects drill-down now that we have task data
-  renderProjectsDrill();
+  // Re-render projects view now that task data is available for drill-down
+  if (_projectsData) renderProjectsView();
 }
 
 // Calendar
@@ -1701,44 +1699,94 @@ function calNav(dir) {
 
 // Projects
 let _projDrillPath = [];
+let _projectsData = null;
 
 function projDrillInto(id, title) {
   _projDrillPath.push({id, title});
-  renderProjectsDrill();
+  renderProjectsView();
 }
 function projDrillTo(index) {
   _projDrillPath = _projDrillPath.slice(0, index);
-  renderProjectsDrill();
+  renderProjectsView();
 }
 
-function renderProjectsDrill() {
+function renderProjectsView() {
+  const gridEl = document.getElementById('projects-grid');
+  const drillEl = document.getElementById('proj-drill');
+  const breadEl = document.getElementById('proj-breadcrumb');
+
+  if (_projDrillPath.length === 0) {
+    // TOP LEVEL — show project cards (high-level overview)
+    gridEl.style.display = '';
+    drillEl.style.display = 'none';
+    breadEl.innerHTML = '';
+    renderProjectCards();
+  } else {
+    // DRILLED IN — show epics/stories/tasks for selected project
+    gridEl.style.display = 'none';
+    drillEl.style.display = '';
+    renderProjectDrill();
+  }
+}
+
+function renderProjectCards() {
+  const gridEl = document.getElementById('projects-grid');
+  const projects = _projectsData || [];
+  const tasks = _tasksData || [];
+
+  // Enrich projects with live task data
+  const projTaskMap = {
+    'Mission Control Dashboard': 'PROJ-MC',
+    '3D Office Visualization': 'PROJ-MC',
+    'Crew Architecture': 'PROJ-OPS',
+    'Bridge Runtime': 'PROJ-OPS'
+  };
+
+  gridEl.innerHTML = projects.map(p => {
+    const prog = p.progress || 0;
+    const lead = p.lead || 'Nami';
+    const initial = lead.charAt(0).toUpperCase();
+    const statusClass = p.status === 'active' ? 'badge-green' : p.status === 'paused' ? 'badge-yellow' : p.status === 'planned' ? 'badge-gray' : 'badge-blue';
+    const statusLabel = p.status === 'active' ? '● Active' : p.status === 'paused' ? '⏸ Paused' : p.status === 'planned' ? '○ Planned' : p.status;
+    const avatarColor = lead === 'Nami' ? 'var(--blue)' : lead === 'Franky' ? 'var(--orange)' : lead === 'Robin' ? 'var(--purple)' : lead === 'Chopper' ? 'var(--green)' : 'var(--teal)';
+    const projId = projTaskMap[p.name] || '';
+
+    return `
+    <div class="proj-card" ${projId ? `onclick="projDrillInto('${projId}','${escapeHtml(p.name).replace(/'/g,"\\'")}')" style="cursor:pointer"` : ''}>
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+        <h3 style="font-size:15px;font-weight:600">${escapeHtml(p.name)}</h3>
+        <span class="badge ${statusClass}" style="flex-shrink:0">${statusLabel}</span>
+      </div>
+      <div class="desc" style="color:var(--text2);font-size:13px;margin-bottom:8px">${escapeHtml(p.desc)}</div>
+      ${p.phase ? `<div style="font-size:11px;color:var(--text2);margin-bottom:10px">📌 ${escapeHtml(p.phase)}</div>` : ''}
+      <div class="progress-bar" style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:10px">
+        <div class="fill" style="height:100%;width:${prog}%;background:${prog===100?'var(--green)':prog>60?'var(--blue)':'var(--yellow)'};border-radius:3px"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:24px;height:24px;border-radius:50%;background:${avatarColor};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff">${initial}</div>
+          <span style="font-size:12px;color:var(--text2)">${escapeHtml(lead)}</span>
+        </div>
+        <span style="font-size:12px;color:var(--text2)">${prog}%</span>
+      </div>
+      ${projId ? '<div style="text-align:right;margin-top:6px;font-size:11px;color:var(--blue)">View epics →</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderProjectDrill() {
   const tasks = _tasksData || [];
   const drillEl = document.getElementById('proj-drill');
   const breadEl = document.getElementById('proj-breadcrumb');
-  const gridEl = document.getElementById('projects-grid');
-  gridEl.style.display = 'none';
-  drillEl.style.display = '';
 
-  // Breadcrumb
-  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(0)">🏠 All Projects</span>';
+  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(0)">🏠 Projects</span>';
   _projDrillPath.forEach((p, i) => {
     bc += ` <span class="text2">›</span> <span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(${i+1})">${escapeHtml(p.title)}</span>`;
   });
   breadEl.innerHTML = bc;
 
-  const currentParent = _projDrillPath.length > 0 ? _projDrillPath[_projDrillPath.length - 1].id : null;
-
-  let items;
-  if (!currentParent) {
-    items = tasks.filter(t => t.type === 'project');
-    if (!items.length) {
-      const projIds = new Set();
-      tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
-      items = [...projIds].map(pid => tasks.find(t => t.id === pid) || {id: pid, title: pid, type: 'project', status: 'in-progress', priority: 'P1'});
-    }
-  } else {
-    items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
-  }
+  const currentParent = _projDrillPath[_projDrillPath.length - 1].id;
+  const items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
 
   const pOrder = {'P0':0,'P1':1,'P2':2};
   const sOrder = {'in-progress':0,'queued':1,'open':2,'blocked':3};
@@ -1750,7 +1798,7 @@ function renderProjectsDrill() {
   });
 
   if (!items.length) {
-    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level.</div>';
+    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level. <span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(_projDrillPath.length-1)">← Back</span></div>';
     return;
   }
 
@@ -1764,13 +1812,13 @@ function renderProjectsDrill() {
     const pts = getTaskPoints(t);
     const tPts = totalPoints(t.id);
     const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
-    const canDrill = kids > 0 || t.type === 'project' || t.type === 'epic' || t.type === 'story';
+    const canDrill = kids > 0;
     const clickAttr = canDrill ? `onclick="projDrillInto('${t.id}','${escapeHtml(t.title).replace(/'/g,"\\'")}')" style="cursor:pointer"` : '';
     const progress = kids > 0 ? Math.round((doneKids / kids) * 100) : (isCompletedStatus(t.status) ? 100 : 0);
     const assignShort = (t.assigned||'').split('(')[0].split(' ')[0].trim();
 
     return `
-      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr} id="proj-${t.id}">
+      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr}>
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
           <div style="flex:1;min-width:0">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
@@ -1780,7 +1828,7 @@ function renderProjectsDrill() {
               ${pts !== null ? `<span class="badge badge-blue" style="font-size:10px">${pts}pt${pts!==1?'s':''}</span>` : ''}
               <span style="font-size:11px">${statusIcon(t.status)}</span>
             </div>
-            <div style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis">${escapeHtml(t.title || '')}</div>
+            <div style="font-size:14px;font-weight:500">${escapeHtml(t.title || '')}</div>
           </div>
           ${canDrill ? '<span style="color:var(--text2);font-size:18px;flex-shrink:0">›</span>' : ''}
         </div>
@@ -1793,28 +1841,14 @@ function renderProjectsDrill() {
           ${kids > 0 ? `<div style="width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${progress}%;background:${progress===100?'var(--green)':'var(--blue)'};border-radius:3px"></div></div>` : ''}
         </div>
         ${t.notes && !canDrill ? `<div class="task-desc" style="margin-top:6px">${escapeHtml((t.notes||'').substring(0,120))}</div>` : ''}
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
 async function loadProjects() {
-  // Wait for tasks data, then render drill-down
-  if (_tasksData && _tasksData.length) {
-    renderProjectsDrill();
-  } else {
-    // Fallback to old grid
-    const data = await api('./data/projects.json');
-    if (!data) return;
-    const grid = document.getElementById('projects-grid');
-    grid.style.display = '';
-    grid.innerHTML = data.projects.map(p => {
-      const prog = p.progress || 0;
-      const assignee = p.owner || p.lead || 'Nami';
-      const initial = assignee.charAt(0).toUpperCase();
-      return `<div class="proj-card"><h3>${escapeHtml(p.name)}</h3><div class="desc">${escapeHtml(p.desc)}</div><div class="progress-bar"><div class="fill" style="width:${prog}%"></div></div><div class="proj-footer"><span style="font-size:11px;color:var(--text2)">${prog}%</span></div></div>`;
-    }).join('');
-  }
+  const data = await api('./data/projects.json');
+  if (data) _projectsData = data.projects || [];
+  renderProjectsView();
 }
 
 // Memory
