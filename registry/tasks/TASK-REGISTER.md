@@ -1,6 +1,6 @@
 # TASK REGISTER
 **Autonomous AI Organization — Operational Task Backlog and Status**
-_Last updated: 2026-03-13 | Authority: D1.8-AUTOMATION_POLICY.md, D1.15-CHANGE_CONTROL.md_
+_Last updated: 2026-03-20 | Authority: D1.8-AUTOMATION_POLICY.md, D1.15-CHANGE_CONTROL.md_
 
 ---
 
@@ -44,134 +44,124 @@ This is the operational task backlog. It is the single source of truth for what 
 
 Tasks that must be completed before bridge can start (RB-01 through RB-05).
 
-```
-task_id:     TASK-001
-title:       Git init and first commit (RB-01)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-001
-scope:       mission-control git repository initialization; .gitignore; first commit of D1.x–D5.x corpus + registry scaffolding
-dependencies: none
-proof_ref:   06a08e3
-notes:       Completed per D2.0 RB-01. 25 files committed. .gitignore excludes secrets. SEC-001 and SEC-002 active at time of commit.
-```
+### TASK-001
+- **Title:** Git init and first commit (RB-01)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-001
+- **Scope:** mission-control git repository initialization; .gitignore; first commit of D1.x–D5.x corpus + registry scaffolding
+- **Dependencies:** none
+- **Proof ref:** 06a08e3
+- **Notes:** Completed per D2.0 RB-01. 25 files committed. .gitignore excludes secrets. SEC-001 and SEC-002 active at time of commit.
 
-```
-task_id:     TASK-002
-title:       Mac Mini hardware survey (RAM, CPU, disk)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  null
-scope:       Mac Mini: run system_profiler or About This Mac; record RAM, CPU model, available disk in D1.6 §4 and MAC-MINI-BASELINE.md
-dependencies: none
-proof_ref:   MAC-MINI-BASELINE.md §1 filled — Apple M4, 16 GB RAM, 245.1 GB storage
-notes:       Completed. Apple M4, 16 GB RAM, 245.1 GB APFS (119.7 GB free). Unblocks TASK-003 (local model selection).
-```
+### TASK-002
+- **Title:** Mac Mini hardware survey (RAM, CPU, disk)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** null
+- **Scope:** Mac Mini: run system_profiler or About This Mac; record RAM, CPU model, available disk in D1.6 §4 and MAC-MINI-BASELINE.md
+- **Dependencies:** none
+- **Proof ref:** MAC-MINI-BASELINE.md §1 filled — Apple M4, 16 GB RAM, 245.1 GB storage
+- **Notes:** Completed. Apple M4, 16 GB RAM, 245.1 GB APFS (119.7 GB free). Unblocks TASK-003 (local model selection).
 
-```
-task_id:     TASK-003
-title:       Select and install Mac Mini local inference model (Local-Nano)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-007
-scope:       Select Local-Nano model; select serving stack (Ollama / llama.cpp / other); install; run stability check; update D1.6 §4 and D1.5 §9
-dependencies: TASK-002 (hardware survey must confirm RAM and disk first)
-proof_ref:   Ollama 0.17.7 installed; qwen2.5:3b (Local-Nano) + qwen2.5:7b (Local-Mid) both 20/20 stability PASS; Telegram msg_id 11
-notes:       Completed. Stack: Ollama 0.17.7 with Metal acceleration. Local-Nano: qwen2.5:3b (3B, 1.9GB, ~115ms routing-class). Local-Mid: qwen2.5:7b (7B, 4.7GB, ~2.1s orchestration-class). Both within RAM budget (9.6GB ceiling). Gateway stable throughout. BRG-INF-01 satisfied.
-```
+### TASK-003
+- **Title:** Select and install Mac Mini local inference model (Local-Nano)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-007
+- **Scope:** Select Local-Nano model; select serving stack (Ollama / llama.cpp / other); install; run stability check; update D1.6 §4 and D1.5 §9
+- **Dependencies:** TASK-002 (hardware survey must confirm RAM and disk first)
+- **Proof ref:** Ollama 0.17.7 installed; qwen2.5:3b (Local-Nano) + qwen2.5:7b (Local-Mid) both 20/20 stability PASS; Telegram msg_id 11
+- **Notes:** Completed. Stack: Ollama 0.17.7 with Metal acceleration. Local-Nano: qwen2.5:3b (3B, 1.9GB, ~115ms routing-class). Local-Mid: qwen2.5:7b (7B, 4.7GB, ~2.1s orchestration-class). Both within RAM budget (9.6GB ceiling). Gateway stable throughout. BRG-INF-01 satisfied.
 
-```
-task_id:     TASK-004
-title:       Telegram bot setup and SEC-002 activation (RB-02)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  null — new CHG record required (secrets scope change per D1.15 §4.8)
-scope:       Create Telegram bot via BotFather; register SEC-002 metadata; store token in Mac Mini keychain; test message; activate SEC-002 and CAP-002
-dependencies: TASK-001 (git init — registry must exist to commit metadata)
-proof_ref:   Telegram test msg_id 4 delivered to chat 5690946175 + SEC-002 active in keychain
-notes:       Completed per D2.0 RB-02. Bot: @CihanHawkBot. Ops-channel: private chat with human (chat_id 5690946175). Test message confirmed.
-```
+### TASK-004
+- **Title:** Telegram bot setup and SEC-002 activation (RB-02)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** null — new CHG record required (secrets scope change per D1.15 §4.8)
+- **Scope:** Create Telegram bot via BotFather; register SEC-002 metadata; store token in Mac Mini keychain; test message; activate SEC-002 and CAP-002
+- **Dependencies:** TASK-001 (git init — registry must exist to commit metadata)
+- **Proof ref:** Telegram test msg_id 4 delivered to chat 5690946175 + SEC-002 active in keychain
+- **Notes:** Completed per D2.0 RB-02. Bot: @CihanHawkBot. Ops-channel: private chat with human (chat_id 5690946175). Test message confirmed.
 
-```
-task_id:     TASK-005
-title:       Anthropic API key registration and activation (RB-03)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  null — new CHG record required (secrets scope change per D1.15 §4.8)
-scope:       Register SEC-001 metadata; store key in Mac Mini keychain; test inference call; activate SEC-001 and CAP-001
-dependencies: TASK-004 (Telegram must be active so bridge can report RB-03 problems)
-proof_ref:   Anthropic API test response "INFERENCE OK" (claude-sonnet-4-6) + SEC-001 active in keychain
-notes:       Completed per D2.0 RB-03. Inference confirmed: claude-sonnet-4-6 responding. Telegram notice sent (msg_id 5). Bootstrap mode: cloud inference active as primary lane until TASK-003 completes.
-```
+### TASK-005
+- **Title:** Anthropic API key registration and activation (RB-03)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** null — new CHG record required (secrets scope change per D1.15 §4.8)
+- **Scope:** Register SEC-001 metadata; store key in Mac Mini keychain; test inference call; activate SEC-001 and CAP-001
+- **Dependencies:** TASK-004 (Telegram must be active so bridge can report RB-03 problems)
+- **Proof ref:** Anthropic API test response "INFERENCE OK" (claude-sonnet-4-6) + SEC-001 active in keychain
+- **Notes:** Completed per D2.0 RB-03. Inference confirmed: claude-sonnet-4-6 responding. Telegram notice sent (msg_id 5). Bootstrap mode: cloud inference active as primary lane until TASK-003 completes.
 
-```
-task_id:     TASK-006
-title:       Mac Mini baseline verification (RB-04)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  null
-scope:       Walk MAC-MINI-BASELINE.md §10 verification table row by row; fill confirmed values; set status to VERIFIED; commit
-dependencies: TASK-001, TASK-004, TASK-005
-proof_ref:   MAC-MINI-BASELINE.md §10 all rows verified + baseline status VERIFIED
-notes:       Completed per D2.0 RB-04. All 10 verification rows confirmed. Sleep disabled, gateway healthy, secrets loadable, Telegram confirmed, git initialized. SSH deferred (Screen Sharing active). Wi-Fi active, Ethernet deferred.
-```
+### TASK-006
+- **Title:** Mac Mini baseline verification (RB-04)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** null
+- **Scope:** Walk MAC-MINI-BASELINE.md §10 verification table row by row; fill confirmed values; set status to VERIFIED; commit
+- **Dependencies:** TASK-001, TASK-004, TASK-005
+- **Proof ref:** MAC-MINI-BASELINE.md §10 all rows verified + baseline status VERIFIED
+- **Notes:** Completed per D2.0 RB-04. All 10 verification rows confirmed. Sleep disabled, gateway healthy, secrets loadable, Telegram confirmed, git initialized. SSH deferred (Screen Sharing active). Wi-Fi active, Ethernet deferred.
 
-```
-task_id:     TASK-007
-title:       Bridge startup and Phase 1 activation (RB-05)
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-006
-scope:       Configure bridge OpenClaw workspace; start bridge; run validation cycle; receive startup Telegram message; confirm backlog scan; declare Phase 1 operational
-dependencies: TASK-001, TASK-004, TASK-005, TASK-006
-proof_ref:   Telegram msg_id 6 (startup notice) + inference self-check OK + backlog scan posted
-notes:       Completed per D2.0 RB-05. All 7 steps passed. Gateway healthy, inference confirmed
-             (claude-sonnet-4-6, bootstrap mode), Telegram ops-channel active, Mission Control
-             accessible, backlog scanned, CHG-006 recorded. Phase 1 ACTIVATED in bootstrap mode.
-             Phase 1 NOT YET COMPLETE — TASK-003/008 (local LLM) must close before exit.
-```
+### TASK-007
+- **Title:** Bridge startup and Phase 1 activation (RB-05)
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-006
+- **Scope:** Configure bridge OpenClaw workspace; start bridge; run validation cycle; receive startup Telegram message; confirm backlog scan; declare Phase 1 operational
+- **Dependencies:** TASK-001, TASK-004, TASK-005, TASK-006
+- **Proof ref:** Telegram msg_id 6 (startup notice) + inference self-check OK + backlog scan posted
+- **Notes:** Completed per D2.0 RB-05. All 7 steps passed. Gateway healthy, inference confirmed (claude-sonnet-4-6, bootstrap mode), Telegram ops-channel active, Mission Control accessible, backlog scanned, CHG-006 recorded. Phase 1 ACTIVATED in bootstrap mode. Phase 1 NOT YET COMPLETE — TASK-003/008 (local LLM) must close before exit.
 
 ---
 
@@ -179,1764 +169,551 @@ notes:       Completed per D2.0 RB-05. All 7 steps passed. Gateway healthy, infe
 
 Tasks required for Phase 1 to be considered complete, but not required before bridge starts.
 
-```
-task_id:     TASK-008
-title:       Install Local-Nano model on Mac Mini (bridge inference)
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-11
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-007
-scope:       Per TASK-003 outcome: install selected model and serving stack; run D1.6 stability check; switch bridge routing from cloud-primary to local-primary; update D1.5 §9 and D1.6 §4
-dependencies: TASK-003 (model selection), TASK-007 (bridge running — bridge validates the switch)
-proof_ref:   Stability tests: qwen2.5:3b 20/20 PASS (115ms avg, 2.2GB RAM), qwen2.5:7b 20/20 PASS (2.1s avg, 4.6GB RAM); gateway responsive 0 failures; Telegram msg_id 11
-notes:       Completed. Ollama 0.17.7 installed at /Applications/Ollama.app, serving on :11434. Both Local-Nano and Local-Mid models installed and passing stability tests. RAM usage well within 9.6GB budget (60% of 16GB). Bootstrap exception (CHG-002) closed. BRG-INF-01 satisfied. Bridge routing: LOCAL-PRIMARY.
-```
+### TASK-008
+- **Title:** Install Local-Nano model on Mac Mini (bridge inference)
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-007
+- **Scope:** Per TASK-003 outcome: install selected model and serving stack; run D1.6 stability check; switch bridge routing from cloud-primary to local-primary; update D1.5 §9 and D1.6 §4
+- **Dependencies:** TASK-003 (model selection), TASK-007 (bridge running — bridge validates the switch)
+- **Proof ref:** Stability tests: qwen2.5:3b 20/20 PASS (115ms avg, 2.2GB RAM), qwen2.5:7b 20/20 PASS (2.1s avg, 4.6GB RAM); gateway responsive 0 failures; Telegram msg_id 11
+- **Notes:** Completed. Ollama 0.17.7 installed at /Applications/Ollama.app, serving on :11434. Both Local-Nano and Local-Mid models installed and passing stability tests. RAM usage well within 9.6GB budget (60% of 16GB). Bootstrap exception (CHG-002) closed. BRG-INF-01 satisfied. Bridge routing: LOCAL-PRIMARY.
 
-```
-task_id:     TASK-009
-title:       Git remote decision and setup
-status:      blocked
-priority:    P1
-phase:       Phase 1
-assigned_to: human
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null
-scope:       Decide git remote host (GitHub / Gitea / self-hosted / none for now); configure and push; update MAC-MINI-BASELINE.md §7
-dependencies: TASK-001
-proof_ref:   null
-notes:       Git configured on all 3 machines (Nami, Franky, Chopper). Credentials stored. PAT lacks repo creation permission. Blocked until Captain: (a) creates repos manually at github.com/new (names: mission-control, office-3d) OR (b) updates PAT to include Administration write. Once repos exist: Nami pushes mission-control, Franky pushes office-3d immediately. Preview URLs: seanjohnzon.github.io/mission-control and seanjohnzon.github.io/office-3d (after GitHub Pages enabled).
-```
+### TASK-009
+- **Title:** Git remote decision and setup
+- **Status:** blocked
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** null
+- **Scope:** Decide git remote host (GitHub / Gitea / self-hosted / none for now); configure and push; update MAC-MINI-BASELINE.md §7
+- **Dependencies:** TASK-001
+- **Proof ref:** null
+- **Notes:** Git configured on all 3 machines (Nami, Franky, Chopper). Credentials stored. PAT lacks repo creation permission. Blocked until Captain: (a) creates repos manually at github.com/new (names: mission-control, office-3d) OR (b) updates PAT to include Administration write. Once repos exist: Nami pushes mission-control, Franky pushes office-3d immediately. Preview URLs: seanjohnzon.github.io/mission-control and seanjohnzon.github.io/office-3d (after GitHub Pages enabled).
 
-```
-task_id:     TASK-010
-title:       Discord activation decision
-status:      open
-priority:    P1
-phase:       Phase 1
-assigned_to: human
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null — new CHG record required if Discord is activated
-scope:       Human decides: activate Discord in Phase 1 or defer to Phase 2+. Decision documented in D1.9, D1.11, and D1.14 §16 Priority 5.
-dependencies: TASK-004 (Telegram must be confirmed primary first)
-proof_ref:   null — set to D1.14 §16 Priority 5 updated + decision recorded
-notes:       The decision is required. Not activating Discord is a valid outcome. Obtaining a Discord bot token before the decision is made is a policy violation (D1.14 §16 Priority 5).
-```
+### TASK-010
+- **Title:** Discord activation decision
+- **Status:** open
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** null — new CHG record required if Discord is activated
+- **Scope:** Human decides: activate Discord in Phase 1 or defer to Phase 2+. Decision documented in D1.9, D1.11, and D1.14 §16 Priority 5.
+- **Dependencies:** TASK-004 (Telegram must be confirmed primary first)
+- **Proof ref:** null — set to D1.14 §16 Priority 5 updated + decision recorded
+- **Notes:** The decision is required. Not activating Discord is a valid outcome. Obtaining a Discord bot token before the decision is made is a policy violation (D1.14 §16 Priority 5).
 
 ---
 
 ## Backlog — Phase 2+
 
-```
-task_id:     TASK-011
-title:       Desktop (brain) integration — Phase 2 readiness
-status:      open
-priority:    P2
-phase:       Phase 2
-assigned_to: unassigned
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null
-scope:       Power on Desktop; survey hardware; confirm OS; unblock basement switch; integrate brain agent; declare Phase 2 operational
-dependencies: TASK-007 (Phase 1 bridge must be operational)
-proof_ref:   null
-notes:       D1.13 §10.2 baseline pending. D1.2 §6 machine role. Blocked by basement switch physical cabling.
-```
+### TASK-011
+- **Title:** Desktop (brain) integration — Phase 2 readiness
+- **Status:** open
+- **Priority:** P2
+- **Points:** 3
+- **Phase:** Phase 2
+- **Assigned:** unassigned
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** null
+- **Scope:** Power on Desktop; survey hardware; confirm OS; unblock basement switch; integrate brain agent; declare Phase 2 operational
+- **Dependencies:** TASK-007 (Phase 1 bridge must be operational)
+- **Proof ref:** null
+- **Notes:** D1.13 §10.2 baseline pending. D1.2 §6 machine role. Blocked by basement switch physical cabling.
 
-```
-task_id:     TASK-012
-title:       n8n and legacy asset triage (D5.5)
-status:      open
-priority:    P2
-phase:       Phase 2
-assigned_to: unassigned
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  null
-scope:       Inventory n8n workflows on Desktop; classify per D5.3; migrate, retain, or retire per D5.5 workflow migration plan
-dependencies: TASK-011 (Desktop must be online)
-proof_ref:   null
-notes:       Nothing on Desktop runs until inventoried and classified. D1.13 §10.2 pre-integration state constraint.
-```
-
----
+### TASK-012
+- **Title:** n8n and legacy asset triage (D5.5)
+- **Status:** open
+- **Priority:** P2
+- **Points:** 3
+- **Phase:** Phase 2
+- **Assigned:** unassigned
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** null
+- **Scope:** Inventory n8n workflows on Desktop; classify per D5.3; migrate, retain, or retire per D5.5 workflow migration plan
+- **Dependencies:** TASK-011 (Desktop must be online)
+- **Proof ref:** null
+- **Notes:** Nothing on Desktop runs until inventoried and classified. D1.13 §10.2 pre-integration state constraint.
 
 ---
 
 ## Backlog — Perplexity Evaluation (CHG-003)
 
-```
-task_id:     TASK-013
-title:       Perplexity capability evaluation experiment
-status:      open
-priority:    backlog
-phase:       Phase 1
-assigned_to: human
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  CHG-003
-scope:       Run a bounded evaluation of Perplexity for live research tasks: test live web retrieval, current-information queries, and browser-style lookups. Document: what it does well, what it does not do, latency, cost profile, API access method, data exposure risk. File results as experiment record; forward to forge (Critic) for quality assessment.
-dependencies: TASK-001 (git init for filing)
-proof_ref:   null — set to experiment record path + git commit hash
-notes:       Evaluation uses human's own authenticated Perplexity session — no org-level API key is provisioned until TASK-014 approves production use. Validation rules from D1.10 §8 apply. Result feeds TASK-014 scope decision.
-```
+### TASK-013
+- **Title:** Perplexity capability evaluation experiment
+- **Status:** open
+- **Priority:** backlog
+- **Points:** 1
+- **Phase:** Phase 1
+- **Assigned:** human
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** CHG-003
+- **Scope:** Run a bounded evaluation of Perplexity for live research tasks: test live web retrieval, current-information queries, and browser-style lookups. Document: what it does well, what it does not do, latency, cost profile, API access method, data exposure risk. File results as experiment record; forward to forge (Critic) for quality assessment.
+- **Dependencies:** TASK-001 (git init for filing)
+- **Proof ref:** null — set to experiment record path + git commit hash
+- **Notes:** Evaluation uses human's own authenticated Perplexity session — no org-level API key is provisioned until TASK-014 approves production use. Validation rules from D1.10 §8 apply. Result feeds TASK-014 scope decision.
 
-```
-task_id:     TASK-014
-title:       Perplexity scope decision — activate, defer, or reject (CAP-006)
-status:      open
-priority:    backlog
-phase:       Phase 1
-assigned_to: human
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  CHG-003
-scope:       Based on TASK-013 evaluation: human decides to (A) activate Perplexity as a production callable capability (requires D1.12 adoption proposal, SEC-### registration, D1.15 change record), (B) defer to a later phase, or (C) reject and close the candidate. Update D5.7 CAP-006 status accordingly.
-dependencies: TASK-013 (evaluation must complete first)
-proof_ref:   null — set to D5.7 CAP-006 status update + git commit hash
-notes:       If decision is (A) activate: register Perplexity API key under D1.14, set cost ceiling, update D5.7 CAP-006 to approved/active, open a new CHG for the activation. If (B) defer: mark CAP-006 deferred with a review date. If (C) reject: mark CAP-006 declined with reason.
-```
+### TASK-014
+- **Title:** Perplexity scope decision — activate, defer, or reject (CAP-006)
+- **Status:** open
+- **Priority:** backlog
+- **Points:** 1
+- **Phase:** Phase 1
+- **Assigned:** human
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** CHG-003
+- **Scope:** Based on TASK-013 evaluation: human decides to (A) activate Perplexity as a production callable capability (requires D1.12 adoption proposal, SEC-### registration, D1.15 change record), (B) defer to a later phase, or (C) reject and close the candidate. Update D5.7 CAP-006 status accordingly.
+- **Dependencies:** TASK-013 (evaluation must complete first)
+- **Proof ref:** null — set to D5.7 CAP-006 status update + git commit hash
+- **Notes:** If decision is (A) activate: register Perplexity API key under D1.14, set cost ceiling, update D5.7 CAP-006 to approved/active, open a new CHG for the activation. If (B) defer: mark CAP-006 deferred with a review date. If (C) reject: mark CAP-006 declined with reason.
 
-```
-task_id:     TASK-015
-title:       Evaluate WF-004 and WF-005 workflow candidates (Perplexity research + Cursor engineering handoff)
-status:      open
-priority:    backlog
-phase:       Phase 2
-assigned_to: unassigned
-proposed_by: human
-opened:      2026-03-11
-started:     null
-completed:   null
-change_ref:  CHG-003
-scope:       After TASK-014 closes (Perplexity scope decision) and after Phase 1 has produced enough Cursor engineering task cycles: evaluate whether WF-004 (Perplexity-assisted research) and WF-005 (Cursor engineering handoff) have enough observed pattern data to draft formal workflow definitions for D5.6. If yes, draft both and submit for human approval. If no, record observation and revisit at Phase 2 checkpoint.
-dependencies: TASK-014, TASK-007 (bridge running — bridge tracks ad-hoc pattern count per D5.6 §4.2)
-proof_ref:   null
-notes:       Do not draft workflows from speculation. Workflows are promoted from observed patterns per D5.6 §5.1. This task is the checkpoint to assess whether patterns exist yet.
-```
+### TASK-015
+- **Title:** Evaluate WF-004 and WF-005 workflow candidates (Perplexity research + Cursor engineering handoff)
+- **Status:** open
+- **Priority:** backlog
+- **Points:** 1
+- **Phase:** Phase 2
+- **Assigned:** unassigned
+- **Proposed by:** human
+- **Opened:** 2026-03-11
+- **Started:** null
+- **Completed:** null
+- **Change ref:** CHG-003
+- **Scope:** After TASK-014 closes (Perplexity scope decision) and after Phase 1 has produced enough Cursor engineering task cycles: evaluate whether WF-004 (Perplexity-assisted research) and WF-005 (Cursor engineering handoff) have enough observed pattern data to draft formal workflow definitions for D5.6. If yes, draft both and submit for human approval. If no, record observation and revisit at Phase 2 checkpoint.
+- **Dependencies:** TASK-014, TASK-007 (bridge running — bridge tracks ad-hoc pattern count per D5.6 §4.2)
+- **Proof ref:** null
+- **Notes:** Do not draft workflows from speculation. Workflows are promoted from observed patterns per D5.6 §5.1. This task is the checkpoint to assess whether patterns exist yet.
 
-```
-task_id:     TASK-016
-title:       Activation Pack preparation (AP-00) before Phase 1 runbooks
-status:      completed
-priority:    P0
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-13
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-005
-scope:       Human-side preparation before RB-01 through RB-05: confirm Anthropic API key is accessible,
-             create Telegram bot via @BotFather and have token ready, make Discord activation decision
-             (TASK-010 pre-decision), confirm git remote host decision (TASK-009 pre-decision), confirm
-             Mac Mini DHCP reservation status. No files committed — this is a human-side checklist step.
-             Governs: D2.0 AP-00 pre-runbook checklist.
-dependencies: none
-proof_ref:   AP-00 through RB-05 all completed in single activation session 2026-03-13
-notes:       Completed. All preparation items resolved. SEC-001/SEC-002 stored and active. Git remote:
-             local-only. Discord: deferred. DHCP reservation: pending (Wi-Fi DHCP active).
-             Source: D1.1 Principle 17, D1.14 §16, D1.15 §16.
-```
+### TASK-016
+- **Title:** Activation Pack preparation (AP-00) before Phase 1 runbooks
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-13
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-005
+- **Scope:** Human-side preparation before RB-01 through RB-05: confirm Anthropic API key is accessible, create Telegram bot via @BotFather and have token ready, make Discord activation decision (TASK-010 pre-decision), confirm git remote host decision (TASK-009 pre-decision), confirm Mac Mini DHCP reservation status. No files committed — this is a human-side checklist step. Governs: D2.0 AP-00 pre-runbook checklist.
+- **Dependencies:** none
+- **Proof ref:** AP-00 through RB-05 all completed in single activation session 2026-03-13
+- **Notes:** Completed. All preparation items resolved. SEC-001/SEC-002 stored and active. Git remote: local-only. Discord: deferred. DHCP reservation: pending (Wi-Fi DHCP active). Source: D1.1 Principle 17, D1.14 §16, D1.15 §16.
 
-```
-task_id:     TASK-017
-title:       Tool-lane model correction — OpenClaw primary, Cursor supervised, Perplexity UI-pilot
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-13
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  CHG-008
-scope:       Corpus-wide correction pass to enforce the corrected tool-lane model:
-             (1) OpenClaw = primary autonomous runtime, default for approved backlog and MC buildout
-             (2) Cursor = supervised/manual engineering lane, not the autonomous runtime
-             (3) Perplexity = preferred UI-pilot for app/device/chatbox interaction (candidate)
-             (4) Indirect Cursor usage via device-mediated control is a documented access path
-             (5) Visual surfaces require human visual approval before acceptance
-             (6) Mission Control buildout defaults to OpenClaw-led execution
-dependencies: TASK-007 (bridge running)
-proof_ref:   CHG-008 + 00ec0c8
-notes:       Completed. 14 files patched. Corpus now aligned to: OpenClaw first, Cursor supervised/manual,
-             Perplexity as preferred UI-pilot, indirect Cursor usage documented, human visual approval
-             for UI acceptance. No new architecture invented — correction pass only.
-```
+### TASK-017
+- **Title:** Tool-lane model correction — OpenClaw primary, Cursor supervised, Perplexity UI-pilot
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-13
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** CHG-008
+- **Scope:** Corpus-wide correction pass to enforce the corrected tool-lane model: (1) OpenClaw = primary autonomous runtime, default for approved backlog and MC buildout (2) Cursor = supervised/manual engineering lane, not the autonomous runtime (3) Perplexity = preferred UI-pilot for app/device/chatbox interaction (candidate) (4) Indirect Cursor usage via device-mediated control is a documented access path (5) Visual surfaces require human visual approval before acceptance (6) Mission Control buildout defaults to OpenClaw-led execution
+- **Dependencies:** TASK-007 (bridge running)
+- **Proof ref:** CHG-008 + 00ec0c8
+- **Notes:** Completed. 14 files patched. Corpus now aligned to: OpenClaw first, Cursor supervised/manual, Perplexity as preferred UI-pilot, indirect Cursor usage documented, human visual approval for UI acceptance. No new architecture invented — correction pass only.
 
-```
-task_id:     TASK-018
-title:       MC buildout — Missing D5.x documents + Bridge Runbook + daily digest
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: bridge
-proposed_by: bridge
-opened:      2026-03-13
-started:     2026-03-13
-completed:   2026-03-13
-change_ref:  null
-scope:       Write missing Mission Control documents required by D1.1 §6:
-             D5.1-INTAKE-LANES.md, D5.2-SKILL-REGISTRY.md, D5.3-LEGACY-ASSET-REGISTER.md,
-             D5.4-EXPERIMENT-REGISTRY.md, D5.5-WORKFLOW-MIGRATION-PLAN.md, D2.2-BRIDGE-RUNBOOK.md.
-             Set up daily morning digest cron (9am EDT). Update Phase 0/1 exit criteria checkboxes.
-             Create memory/continuity files.
-dependencies: TASK-007 (bridge running)
-proof_ref:   bb1a0ca
-notes:       6 new docs committed. Bridge Runbook satisfies Phase 1 exit criterion "D2.1 BRIDGE-RUNBOOK.md
-             written" (filed as D2.2 since D2.1 is Activation Pack). Daily digest cron active (job
-             f7102d3d, 9am EDT daily, isolated session). D5.3 and D5.5 are blocked on Desktop but
-             framework/templates created. EXP-001 (local inference) and EXP-002 (Perplexity) logged
-             in D5.4. Phase 0/1 exit criteria updated to reflect actual completion state.
-```
+### TASK-018
+- **Title:** MC buildout — Missing D5.x documents + Bridge Runbook + daily digest
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** bridge
+- **Proposed by:** bridge
+- **Opened:** 2026-03-13
+- **Started:** 2026-03-13
+- **Completed:** 2026-03-13
+- **Change ref:** null
+- **Scope:** Write missing Mission Control documents required by D1.1 §6: D5.1-INTAKE-LANES.md, D5.2-SKILL-REGISTRY.md, D5.3-LEGACY-ASSET-REGISTER.md, D5.4-EXPERIMENT-REGISTRY.md, D5.5-WORKFLOW-MIGRATION-PLAN.md, D2.2-BRIDGE-RUNBOOK.md. Set up daily morning digest cron (9am EDT). Update Phase 0/1 exit criteria checkboxes. Create memory/continuity files.
+- **Dependencies:** TASK-007 (bridge running)
+- **Proof ref:** bb1a0ca
+- **Notes:** 6 new docs committed. Bridge Runbook satisfies Phase 1 exit criterion "D2.1 BRIDGE-RUNBOOK.md written" (filed as D2.2 since D2.1 is Activation Pack). Daily digest cron active (job f7102d3d, 9am EDT daily, isolated session). D5.3 and D5.5 are blocked on Desktop but framework/templates created. EXP-001 (local inference) and EXP-002 (Perplexity) logged in D5.4. Phase 0/1 exit criteria updated to reflect actual completion state.
 
-```
-task_id:     TASK-019
-title:       Phase 1 exit criteria reconciliation and checkpoint
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: bridge
-proposed_by: bridge
-opened:      2026-03-13
-started:     2026-03-13
-completed:   null
-change_ref:  null
-scope:       Review all Phase 1 exit criteria. Update checkboxes to reflect actual state.
-             Identify remaining unchecked items and classify as: (a) completable by bridge,
-             (b) blocked on human decision, (c) blocked on physical action. Document gap
-             analysis and recommended next actions.
-dependencies: TASK-018
-proof_ref:   null
-notes:       Resolved as part of crew-architecture transition. Phase 1 exit criteria superseded by Sprint 0/1 crew delivery model.
-             DONE: API key, local inference, routing policy, agent defined, Telegram,
-             directive receipt, D1.2/D1.3/D1.4, Bridge Runbook
-             BLOCKED (human): TASK-009 (git remote), TASK-010 (Discord)
-             BLOCKED (physical): Basement switch, Ethernet IP, DHCP reservation
-             BLOCKED (Desktop): Legacy asset audit, n8n triage, commerce/dashboard/bot triage
-             REMAINING BRIDGE WORK: Continued MC buildout, operational procedures, monitoring
-```
+### TASK-019
+- **Title:** Phase 1 exit criteria reconciliation and checkpoint
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** bridge
+- **Proposed by:** bridge
+- **Opened:** 2026-03-13
+- **Started:** 2026-03-13
+- **Completed:** null
+- **Change ref:** null
+- **Scope:** Review all Phase 1 exit criteria. Update checkboxes to reflect actual state. Identify remaining unchecked items and classify as: (a) completable by bridge, (b) blocked on human decision, (c) blocked on physical action. Document gap analysis and recommended next actions.
+- **Dependencies:** TASK-018
+- **Proof ref:** null
+- **Notes:** Resolved as part of crew-architecture transition. Phase 1 exit criteria superseded by Sprint 0/1 crew delivery model. DONE: API key, local inference, routing policy, agent defined, Telegram, directive receipt, D1.2/D1.3/D1.4, Bridge Runbook BLOCKED (human): TASK-009 (git remote), TASK-010 (Discord) BLOCKED (physical): Basement switch, Ethernet IP, DHCP reservation BLOCKED (Desktop): Legacy asset audit, n8n triage, commerce/dashboard/bot triage REMAINING BRIDGE WORK: Continued MC buildout, operational procedures, monitoring
 
-```
-task_id:     TASK-020
-title:       Local-first routing correction — heartbeat, digest, and background tasks
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: bridge
-proposed_by: bridge
-opened:      2026-03-13
-started:     2026-03-13
-completed:   null
-change_ref:  null — CHG required if config changes succeed
-scope:       Correct routing so operational background tasks use local inference:
-             (1) Update daily digest cron to use ollama/qwen2.5:7b
-             (2) Configure heartbeat with local model
-             (3) Test local model as OpenClaw agent model for simple tasks
-             (4) Document results and limitations
-             (5) If local works: apply as default for background work
-             (6) If local doesn't work as agent: document why and use cheapest cloud alternative
-dependencies: TASK-008 (local inference installed), CHG-007 (models active)
-proof_ref:   null — set to routing audit + config change commit
-notes:       Superseded by crew architecture shift 2026-03-16. Local routing tracked via cost reporting going forward.
-             All 5 guardrail checks FAIL. qwen2.5:7b confirmed tool-call-capable via direct
-             Ollama API test. Next: test as OpenClaw agent model for cron/heartbeat.
-             Estimated monthly savings if successful: $17-67.
-```
+### TASK-020
+- **Title:** Local-first routing correction — heartbeat, digest, and background tasks
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** bridge
+- **Proposed by:** bridge
+- **Opened:** 2026-03-13
+- **Started:** 2026-03-13
+- **Completed:** null
+- **Change ref:** null — CHG required if config changes succeed
+- **Scope:** Correct routing so operational background tasks use local inference: (1) Update daily digest cron to use ollama/qwen2.5:7b (2) Configure heartbeat with local model (3) Test local model as OpenClaw agent model for simple tasks (4) Document results and limitations (5) If local works: apply as default for background work (6) If local doesn't work as agent: document why and use cheapest cloud alternative
+- **Dependencies:** TASK-008 (local inference installed), CHG-007 (models active)
+- **Proof ref:** null — set to routing audit + config change commit
+- **Notes:** Superseded by crew architecture shift 2026-03-16. Local routing tracked via cost reporting going forward. All 5 guardrail checks FAIL. qwen2.5:7b confirmed tool-call-capable via direct Ollama API test. Next: test as OpenClaw agent model for cron/heartbeat. Estimated monthly savings if successful: $17-67.
 
-```
-task_id:     TASK-021
-title:       Claude Code lane authentication verification and separation
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-14
-started:     2026-03-14
-completed:   2026-03-14
-change_ref:  null
-scope:       Verify Claude Code in Cursor uses subscription auth (not API billing);
-             confirm lane separation between Cursor/Claude Code (subscription) and
-             OpenClaw (API runtime); document result.
-dependencies: TASK-007 (bridge running)
-proof_ref:   ~/.claude.json oauthAccount present, billingType=stripe_subscription
-notes:       Claude Code already uses OAuth subscription auth (gmail.com account,
-             subscription since 2026-01-24, Stripe billing, extra usage enabled).
-             ANTHROPIC_API_KEY is NOT set in Cursor shell sessions — no env bleed.
-             OpenClaw loads its own API key from ~/.openclaw/.env (dotenv at gateway
-             startup) — completely separate from Claude Code auth. No shell profiles
-             source ~/.openclaw/.env. Lane separation is clean:
-             - Cursor/Claude Code = subscription (OAuth, no API cost)
-             - OpenClaw = API key (SEC-001, ~/.openclaw/.env, API cost)
-             No config changes needed. No switch needed.
-```
+### TASK-021
+- **Title:** Claude Code lane authentication verification and separation
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-14
+- **Started:** 2026-03-14
+- **Completed:** 2026-03-14
+- **Change ref:** null
+- **Scope:** Verify Claude Code in Cursor uses subscription auth (not API billing); confirm lane separation between Cursor/Claude Code (subscription) and OpenClaw (API runtime); document result.
+- **Dependencies:** TASK-007 (bridge running)
+- **Proof ref:** ~/.claude.json oauthAccount present, billingType=stripe_subscription
+- **Notes:** Claude Code already uses OAuth subscription auth (gmail.com account, subscription since 2026-01-24, Stripe billing, extra usage enabled). ANTHROPIC_API_KEY is NOT set in Cursor shell sessions — no env bleed. OpenClaw loads its own API key from ~/.openclaw/.env (dotenv at gateway startup) — completely separate from Claude Code auth. Lane separation is clean: - Cursor/Claude Code = subscription (OAuth, no API cost) - OpenClaw = API key (SEC-001, ~/.openclaw/.env, API cost) No config changes needed. No switch needed.
 
-```
-task_id:     TASK-022
-title:       OpenClaw degraded state recovery — Anthropic credit exhaustion
-status:      completed
-priority:    P1
-phase:       Phase 1
-assigned_to: human + OpenClaw
-proposed_by: human
-opened:      2026-03-14
-started:     2026-03-14
-completed:   2026-03-14
-change_ref:  null
-scope:       Diagnose and fix OpenClaw acting slow/degraded after credit-limit change.
-             Root cause: Anthropic API credit balance exhausted. Every agent request
-             hit billing rejection on primary (anthropic/claude-sonnet-4-6, ~500ms waste),
-             then fell back to ollama/qwen2.5:7b (slower, less capable). Failover chain
-             also had a cascade bug where billing errors confused the retry logic.
-dependencies: none
-proof_ref:   gateway.err.log billing rejection entries; gateway health OK after fix
-notes:       Fix applied: swapped primary to ollama/qwen2.5:7b, cleared Anthropic from
-             fallbacks entirely (empty fallbacks array). This eliminates the billing-
-             rejection latency penalty. Agent confirmed working on local-only (qwen2.5:7b).
-             Heartbeat unchanged (qwen2.5:3b). Telegram channel unaffected.
-             TO RESTORE: When Anthropic credits are topped up, set primary back to
-             anthropic/claude-sonnet-4-6 with ollama/qwen2.5:7b as fallback.
-             Gateway restart required: yes (launchctl stop/start).
-             Config backup at: ~/.openclaw/openclaw.json.backup-20260314-021658
-```
+### TASK-022
+- **Title:** OpenClaw degraded state recovery — Anthropic credit exhaustion
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1
+- **Assigned:** human + OpenClaw
+- **Proposed by:** human
+- **Opened:** 2026-03-14
+- **Started:** 2026-03-14
+- **Completed:** 2026-03-14
+- **Change ref:** null
+- **Scope:** Diagnose and fix OpenClaw acting slow/degraded after credit-limit change. Root cause: Anthropic API credit balance exhausted. Every agent request hit billing rejection on primary (anthropic/claude-sonnet-4-6, ~500ms waste), then fell back to ollama/qwen2.5:7b (slower, less capable). Failover chain also had a cascade bug where billing errors confused the retry logic.
+- **Dependencies:** none
+- **Proof ref:** gateway.err.log billing rejection entries; gateway health OK after fix
+- **Notes:** Fix applied: swapped primary to ollama/qwen2.5:7b, cleared Anthropic from fallbacks entirely (empty fallbacks array). This eliminates the billing-rejection latency penalty. Agent confirmed working on local-only (qwen2.5:7b). Heartbeat unchanged (qwen2.5:3b). Telegram channel unaffected. TO RESTORE: When Anthropic credits are topped up, set primary back to anthropic/claude-sonnet-4-6 with ollama/qwen2.5:7b as fallback. Gateway restart required: yes (launchctl stop/start). Config backup at: ~/.openclaw/openclaw.json.backup-20260314-021658
 
-```
-task_id:     TASK-023
-title:       Runtime freeze and crew-architecture transition
-status:      completed
-priority:    P1
-phase:       Phase 1 → Phase 2 transition
-assigned_to: human + Claude Code
-proposed_by: human
-opened:      2026-03-14
-started:     2026-03-14
-completed:   null
-change_ref:  CHG-009
-scope:       Freeze old single-machine OpenClaw runtime. Disable autonomous cron.
-             Record architecture transition to Nami/Franky/Chopper crew model.
-             Prevent old assumptions from driving autonomous behavior.
-dependencies: none
-proof_ref:   registry/TRANSITION-NOTE.md
-notes:       Runtime freeze complete. Crew architecture (Nami/Franky/Chopper) is now canonical. Transition done.
-             communication backbone. System in transition-safe mode.
-             Old bridge-only architecture frozen pending crew realignment.
-```
+### TASK-023
+- **Title:** Runtime freeze and crew-architecture transition
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 1 → Phase 2 transition
+- **Assigned:** human + Claude Code
+- **Proposed by:** human
+- **Opened:** 2026-03-14
+- **Started:** 2026-03-14
+- **Completed:** null
+- **Change ref:** CHG-009
+- **Scope:** Freeze old single-machine OpenClaw runtime. Disable autonomous cron. Record architecture transition to Nami/Franky/Chopper crew model. Prevent old assumptions from driving autonomous behavior.
+- **Dependencies:** none
+- **Proof ref:** registry/TRANSITION-NOTE.md
+- **Notes:** Runtime freeze complete. Crew architecture (Nami/Franky/Chopper) is now canonical. Transition done. communication backbone. System in transition-safe mode. Old bridge-only architecture frozen pending crew realignment.
 
-```
-task_id:     TASK-024
-title:       Crew network discovery and machine onboarding
-status:      completed
-priority:    P1
-phase:       Phase 2
-assigned_to: human + Claude Code
-proposed_by: human
-opened:      2026-03-14
-started:     2026-03-14
-completed:   null
-change_ref:  null
-scope:       Discover LAN layout for 3-machine crew. Record IPs, MACs,
-             hostnames for Nami (Mac Mini), Franky (Desktop), Chopper (3060).
-             Check SSH readiness. Prepare onboarding plan for Windows machines.
-dependencies: TASK-023 (runtime must be frozen first)
-proof_ref:   null
-notes:       Network discovery complete. All three machines active on LAN. IPs reserved: Nami 10.0.0.152, Franky 10.0.0.251, Chopper 10.0.0.16.
-             to Wi-Fi (en1: 10.0.0.167). Switch appears to be uplinked.
-             Desktop and 3060 status TBD via ARP/ping scan.
-```
+### TASK-024
+- **Title:** Crew network discovery and machine onboarding
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase 2
+- **Assigned:** human + Claude Code
+- **Proposed by:** human
+- **Opened:** 2026-03-14
+- **Started:** 2026-03-14
+- **Completed:** null
+- **Change ref:** null
+- **Scope:** Discover LAN layout for 3-machine crew. Record IPs, MACs, hostnames for Nami (Mac Mini), Franky (Desktop), Chopper (3060). Check SSH readiness. Prepare onboarding plan for Windows machines.
+- **Dependencies:** TASK-023 (runtime must be frozen first)
+- **Proof ref:** null
+- **Notes:** Network discovery complete. All three machines active on LAN. IPs reserved: Nami 10.0.0.152, Franky 10.0.0.251, Chopper 10.0.0.16. to Wi-Fi (en1: 10.0.0.167). Switch appears to be uplinked. Desktop and 3060 status TBD via ARP/ping scan.
 
 ---
 
 ## Completed Tasks
 
-_Completed P0/P1 tasks are listed in their original sections above._
+### CREW-001
+- **Title:** Crew Alive Check — First Straw Hat crew loop
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** Phase A — Infrastructure
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 0 — Foundation
+- **Created:** 2026-03-15
+- **Dependencies:** none
+- **Notes:** First end-to-end crew loop. Nami assigned via gateway RPC, Franky created CREW-ALIVE.md (claude-sonnet-4-6, <2s), Chopper verified via SSH (GPT-5.4, PASS). Three independent gateways over LAN.
+
+### CREW-002
+- **Title:** Update D1.1 ROADMAP to crew model
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Phase A — Infrastructure
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 0 — Foundation
+- **Created:** 2026-03-15
+- **Dependencies:** CREW-001
+- **Notes:** D1.1-ROADMAP.md updated by Franky via SSH to Nami. crew model (Nami/Franky/Chopper), phase map, IPs, network state all current. Phase A exit criteria checkbox ticked. Completed 2026-03-16.
+
+### CREW-003
+- **Title:** Update D1.2 ARCHITECTURE.md to current state
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** CREW-002
+- **Notes:** D1.2-ARCHITECTURE.md patched in place by Nami. Commit a346cf8. All 8 changes applied: machine specs, network (Ethernet/switch), paths (Franky D:\openclaw-brain, Chopper C:\Users\memeb\...), OC 2026.3.13, gateway federation section added (§14.5), crew names in all tables, Desktop/GPU3060 status Active, phase binding updated. Sent to Chopper for verification.
+
+### CREW-004
+- **Title:** Update D1.4 ORG_MAP.md to crew model
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** CREW-003
+- **Notes:** D1.4-ORG_MAP.md updated. Commit eb8f1b1. Org chart, agent tables, role map, decision rights, track ownership — all updated to Nami/Franky/Chopper. Discord now reflected as active.
+
+### CREW-005
+- **Title:** Update D1.5 MODEL_POLICY.md to actual routing
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** CREW-003
+- **Notes:** D1.5-MODEL_POLICY.md updated. Commit f6cd66a. Nami=Anthropic/Sonnet/setup-token, Franky=Anthropic/Sonnet/OAuth, Chopper=OpenAI-codex/GPT-5.4/OAuth (renewal due 2026-03-25). CREW-013 referenced for Chopper auth renewal.
+
+### CREW-006
+- **Title:** Update D1.6 LOCAL_INFERENCE_PLAN.md
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** CREW-003
+- **Notes:** D1.6-LOCAL_INFERENCE_PLAN.md updated. Commit 4868f2a. Survey table updated. Nami Ollama confirmed active. Franky/Chopper marked active with TBD local models (Phase B). Section headers updated to crew names. CREW-013 referenced for Chopper OAuth renewal.
+
+### CREW-007
+- **Title:** Verify all D-series doc updates (CREW-003 through CREW-006)
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Chopper (QA)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** CREW-003,CREW-004,CREW-005,CREW-006
+- **Notes:** Chopper verified 2026-03-16 21:34 EDT via SSH to Nami. D1.4 PASS, D1.6 PASS. D1.2 FAIL (internal inconsistency: Model TBD in some sections). D1.5 FAIL (missing Nami IP 10.0.0.152, OpenAI contradiction). Patch tasks created: CREW-014 (D1.2 fix) CREW-015 (D1.5 fix).
+
+### CREW-008
+- **Title:** 3D Office — Static scene with desks and characters
+- **Status:** completed
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 2 — 3D Office
+- **Created:** 2026-03-16
+- **Dependencies:** EPIC-001
+- **Notes:** Dispatched to Franky 2026-03-16 22:06 EDT with full SPEC-3D-OFFICE-TAB.md brief. Franky to spawn builder subagent for Phase D2.1 (static scene). Checkpoint: office with 3 desks and 3 characters visible.
+
+### CREW-014
+- **Title:** Patch D1.2-ARCHITECTURE.md — remove Model TBD inconsistency
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-17
+- **Dependencies:** none
+- **Notes:** Chopper FAIL: doc has stale Model TBD and D1.5 not yet written references. Make internally consistent with active model state.
+
+### CREW-015
+- **Title:** Patch D1.5-MODEL_POLICY.md — add Nami IP, fix OpenAI contradiction
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Franky (builder)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-17
+- **Dependencies:** none
+- **Notes:** Chopper FAIL: 10.0.0.152 missing. OpenAI not-approved contradicts Chopper active gpt-5.4. Fix both.
+
+### BROOK-STITCH-RESEARCH
+- **Title:** Research Google Stitch — evaluate for creative workflow improvement
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Brook
+- **Created:** 2026-03-19
+- **Dependencies:** none
+- **Notes:** Captain ordered: Research Stitch by Google. Evaluate if it can help Brook improve his creative work (UX reviews, visual design, 3D office, avatars, etc). Post findings to Telegram thread 1575 (Stitch by Google — Creative Tools Research). Be thorough — what is it, what can it do, how does it apply to us. Research completed.
+
+### CAPT-1773971730
+- **Title:** Captain → Brook: Research Google Stitch - missed assignment, Captain called it out
+- **Status:** completed
+- **Priority:** backlog
+- **Points:** 1
+- **Phase:** 
+- **Assigned:** Brook
+- **Created:** 2026-03-20
+- **Dependencies:** none
+- **Notes:** Captain noticed Brook didn't follow up on Nami/Vivi's P1 research assignment about Google Stitch. Captain also noted Vivi needs to manage threads better and ensure Brook follows up. Brook is now executing the research. Research completed.
+
+### RELAY-BRIDGE-CLEANUP-001
+- **Title:** Zeus Bridge Repair: Clean duplicate relay tasks and sync handoff status
+- **Status:** completed
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Zeus
+- **Created:** 2026-03-20
+- **Dependencies:** none
+- **Notes:** Multiple duplicate RELAY-BRIDGE tasks detected. Brook handoffs completed but not reflected in task status. Cleaning board and syncing actual completion state. Cleanup completed.
 
 ---
 
-## Cancelled Tasks
-
-_None yet._
-
-```
-task_id:     CREW-001
-title:       Crew Alive Check — First Straw Hat crew loop
-status:      completed
-priority:    P0
-phase:       Phase A — Infrastructure
-assigned_to: Franky (builder)
-verified_by: Chopper (QA) — GPT-5.4
-sprint:      Sprint 0 — Foundation
-created_at:  2026-03-15
-completed_at: 2026-03-15
-dependencies: none
-notes:       First end-to-end crew loop. Nami assigned via gateway RPC, Franky created CREW-ALIVE.md (claude-sonnet-4-6, <2s), Chopper verified via SSH (GPT-5.4, PASS). Three independent gateways over LAN.
-```
-
-```
-task_id:      CREW-002
-title:        Update D1.1 ROADMAP to crew model
-status:       completed
-priority:     P1
-phase:        Phase A — Infrastructure
-assigned_to:  Franky (builder)
-sprint:       Sprint 0 — Foundation
-created_at:   2026-03-15
-dependencies: CREW-001
-notes:        D1.1-ROADMAP.md updated by Franky via SSH to Nami. crew model (Nami/Franky/Chopper), phase map, IPs, network state all current. Phase A exit criteria checkbox ticked. Completed 2026-03-16.
-```
-
-```
-task_id:      EPIC-001
-title:        Documentation Update — Align D-series to crew model
-status:       in-progress
-priority:     P1
-phase:        
-assigned_to:  Nami (orchestrator)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         epic
-estimate:     3d
-dependencies: none
-notes:        Update all D-series docs to reflect crew model, current machine state, and proven architecture. Franky writes, Chopper verifies, Nami records.
-```
-
-```
-task_id:      CREW-003
-title:        Update D1.2 ARCHITECTURE.md to current state
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-002
-notes:        D1.2-ARCHITECTURE.md patched in place by Nami. Commit a346cf8. All 8 changes applied: machine specs, network (Ethernet/switch), paths (Franky D:\openclaw-brain, Chopper C:\Users\memeb\...), OC 2026.3.13, gateway federation section added (§14.5), crew names in all tables, Desktop/GPU3060 status Active, phase binding updated. Sent to Chopper for verification.
-```
-
-```
-task_id:      CREW-004
-title:        Update D1.4 ORG_MAP.md to crew model
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-003
-notes:        D1.4-ORG_MAP.md updated. Commit eb8f1b1. Org chart, agent tables, role map, decision rights, track ownership — all updated to Nami/Franky/Chopper. Discord now reflected as active.
-```
-
-```
-task_id:      CREW-005
-title:        Update D1.5 MODEL_POLICY.md to actual routing
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     1h
-dependencies: CREW-003
-notes:        D1.5-MODEL_POLICY.md updated. Commit f6cd66a. Nami=Anthropic/Sonnet/setup-token, Franky=Anthropic/Sonnet/OAuth, Chopper=OpenAI-codex/GPT-5.4/OAuth (renewal due 2026-03-25). CREW-013 referenced for Chopper auth renewal.
-```
-
-```
-task_id:      CREW-006
-title:        Update D1.6 LOCAL_INFERENCE_PLAN.md
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     1h
-dependencies: CREW-003
-notes:        D1.6-LOCAL_INFERENCE_PLAN.md updated. Commit 4868f2a. Survey table updated. Nami Ollama confirmed active. Franky/Chopper marked active with TBD local models (Phase B). Section headers updated to crew names. CREW-013 referenced for Chopper OAuth renewal.
-```
-
-```
-task_id:      CREW-007
-title:        Verify all D-series doc updates (CREW-003 through CREW-006)
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Chopper (QA)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-001
-estimate:     2h
-dependencies: CREW-003,CREW-004,CREW-005,CREW-006
-notes:        Chopper verified 2026-03-16 21:34 EDT via SSH to Nami. D1.4 PASS, D1.6 PASS. D1.2 FAIL (internal inconsistency: Model TBD in some sections). D1.5 FAIL (missing Nami IP 10.0.0.152, OpenAI contradiction). Patch tasks created: CREW-014 (D1.2 fix) CREW-015 (D1.5 fix).
-```
-
-```
-task_id:      EPIC-002
-title:        3D Office Tab — Graduation Test
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         epic
-estimate:     5d
-dependencies: none
-notes:        Sprint 2 started 2026-03-16 22:06 EDT. Architecture shift: Franky operates as orchestrator, spawns builder subagents per phase.
-```
-
-```
-task_id:      CREW-008
-title:        3D Office — Static scene with desks and characters
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: EPIC-001
-notes:        Dispatched to Franky 2026-03-16 22:06 EDT with full SPEC-3D-OFFICE-TAB.md brief. Franky to spawn builder subagent for Phase D2.1 (static scene). Checkpoint: office with 3 desks and 3 characters visible.
-
-Subtasks:
-1. Initialize Vite+React+R3F project at D:\\openclaw-brain\\office-3d\\
-2. Create floor plane with grid texture
-3. Create 3 desks (low-poly box geometry): Nami center-back, Franky left-front, Chopper right-front
-4. Create 3 chairs per desk
-5. Place 3 placeholder characters (capsule body + sphere head) at each desk, colored: Nami=gold, Franky=blue, Chopper=green
-6. Add ambient + directional lighting
-7. Implement OrbitControls (orbit/zoom/pan)
-8. Implement click-to-focus camera: click desk/character → smooth camera move to frame it
-9. Add whiteboard prop (center area) showing static text
-10. Basic CSS overlay: agent name labels above characters
-
-Acceptance: Browser shows office with 3 desks + 3 characters, camera controls work, click focuses. No live data needed.
-Deliverables: Running at localhost:5173 on Franky. Code in D:\\openclaw-brain\\office-3d\\
-```
-
-```
-task_id:      CREW-009
-title:        3D Office — Character animations and state machine
-status:       complete
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-008
-notes:        Dispatched to Franky 2026-03-17 21:21 EDT. Phase D2.2 — Live gateway connection + character animations based on real agent states. Franky to spawn builder subagent.
-
-Subtasks:
-1. Create crewConfig.js with Nami/Franky/Chopper IPs, tokens, gateway ports
-2. Create useGatewayStatus.js hook — polls health + sessions.list from all 3 gateways every 10-15s
-3. Implement offline fallback (gateway unreachable → offline state)
-4. Wire agent states to character poses: idle=standing, working=sitting+typing, offline=desk empty
-5. Implement status bar (bottom): colored dots per agent + task count
-6. Handle CORS/ws:// via proxy if browser blocks direct LAN ws connections
-
-Acceptance: Status bar shows real online/offline/working state. Characters change pose based on live data. Kill Nami gateway → Nami desk goes empty.
-Note: May need thin HTTP proxy on Nami (port 18800) to bridge browser→gateway WS.
-```
-
-```
-task_id:      CREW-010
-title:        3D Office — Live gateway connection + data layer
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-009
-notes:        D2.3 done - live polling + agent panel commit 817ee4f. Unblocks CREW-011.
-
-Subtasks:
-1. Create AgentPanel.jsx component (floating card, right side)
-2. On click-to-focus: fetch real data from that agent gateway (sessions.list, health)
-3. Display: name, role, status, model, IP, gateway latency, current task (last message), session key, tokens in/out, last active time
-4. Auto-refresh panel data every 15s while agent is focused
-5. Click elsewhere or press Escape → panel closes, camera returns to overview
-6. Style: dark card, crew color accent per agent
-
-Acceptance: Click Franky → panel shows real model (claude-sonnet-4-6), real token count, real last task text.
-```
-
-```
-task_id:      CREW-011
-title:        3D Office — Agent info panel + task flow animation
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     1d
-dependencies: CREW-010
-notes:        Franky completed 2026-03-18 11:39 EDT. Commit dafe835: TaskFlowParticles, AmbientHologram, monitor HUDs, whiteboard D2.5, pulsing green RosterBar dots. GH Pages deploy #9 success. CREW-012 unblocked.
-
-Subtasks:
-1. Create TaskOrb.jsx — animated glowing sphere traveling between desk positions
-2. Detect task assignment: watch Nami session history for outbound messages containing TASK FROM NAMI
-3. Trigger orb: Nami desk → target agent desk (smooth arc, 2-3s travel)
-4. Target agent transitions idle → working on orb arrival
-5. Return orb on session completion (outputTokens stops increasing)
-6. Add thought bubble above character head when Thinking state
-7. Add green checkmark particle burst on Task Complete
-8. Add red exclamation on Error state
-9. Integrate into Mission Control as a new tab in existing MC dashboard
-10. Whiteboard updates to show current active task text
-
-Acceptance: Watch a real crew task assignment — orb flies, character sits, works, completes. Visible in MC tab.
-```
-
-```
-task_id:      CREW-012
-title:        3D Office — Polish, integration, and full verification
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-16
-type:         story
-parent:       EPIC-002
-estimate:     4h
-dependencies: CREW-011
-notes:        Dispatched to Chopper 2026-03-18 12:09 EDT. Phase D2.6 — Full polish and verification at seanjohnzon.github.io/office-3d. Verify voxel chars, task flow particles, ambient hologram, monitor HUDs, RosterBar pulsing dots, orbit controls, live gateway polling, no console errors.
-
-All 11 acceptance criteria from spec §13:
-[ ] Scene renders without errors in Chrome/Safari
-[ ] All 3 agents appear with correct names and roles
-[ ] Live gateway status reflected (not mocked)
-[ ] Offline agent shows empty desk (test: kill a gateway)
-[ ] Working agent shows typing animation
-[ ] Click-to-focus camera works for each agent
-[ ] Agent info panel shows real model, tokens, gateway health
-[ ] Task flow orb animation triggers on real task assignment
-[ ] Status bar shows correct state for all 3 agents
-[ ] Page loads in under 3 seconds on LAN
-[ ] No console errors in browser dev tools
-
-Chopper verifies by opening the page, running through each criterion, and posting PASS/FAIL report to Discord #qa. Must use live data, not mocked.
-```
-
-```
-task_id:      CREW-013
-title:        Chopper auth renewal (OpenAI-codex OAuth)
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  human
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-16
-type:         task
-estimate:     10m
-dependencies: none
-notes:        OAuth expires ~2026-03-25. Interactive browser login required. Run on Chopper: openclaw models auth setup-token --provider openai
-```
-
-```
-task_id:      CREW-014
-title:        Patch D1.2-ARCHITECTURE.md — remove Model TBD inconsistency
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-17
-dependencies: none
-notes:        Chopper FAIL: doc has stale Model TBD and D1.5 not yet written references. Make internally consistent with active model state.
-```
-
-```
-task_id:      CREW-015
-title:        Patch D1.5-MODEL_POLICY.md — add Nami IP, fix OpenAI contradiction
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-sprint:       Sprint 1 — Foundation Docs
-created_at:   2026-03-17
-dependencies: none
-notes:        Chopper FAIL: 10.0.0.152 missing. OpenAI not-approved contradicts Chopper active gpt-5.4. Fix both.
-```
-
-```
-task_id:      CREW-016
-title:        Verify CREW-009 — animations + live gateway data layer
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-009
-notes:        Dispatched 2026-03-17 22:05 EDT. Chopper to verify: page loads, 3 characters visible, pose changes by state, correct colors, live gateway polling active (10s interval), info panel, orbit controls.
-```
-
-```
-task_id:      CREW-017
-title:        3D Office — Full visual redesign to isometric diorama style
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-009
-notes:        Captain rejected CREW-009 visual output. Reference: iamlukethedev Twitter video. Requirements: true isometric diorama view, dark space backdrop with planet, cream floor + cutaway walls, low-poly humanoid characters at desks, round conference tables, top UI roster bar, live gateway polling retained. Full src/ rewrite.
-```
-
-```
-task_id:      CREW-018
-title:        3D Office — QA checklist prep for new visual spec
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        Prep full QA checklist against iamlukethedev reference while Franky rebuilds. Checklist must cover: isometric perspective correct, space backdrop present, planet element visible, cream floor + cutaway walls, low-poly humanoid figures (not capsules), characters at desks, round conference tables, monitor props on desks, name labels above characters, top UI roster bar with crew names, status dots (green/blue/yellow/gray), live gateway polling active (10s), orbit controls working, no console errors. Ready to execute the moment Franky deploys.
-```
-
-```
-task_id:      CREW-019
-title:        3D Office — Visual QA verify against reference style
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Chopper (QA)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-017,CREW-018
-notes:        CREW-017 complete. Dispatched to Chopper 2026-03-18 02:09 EDT. Execute visual QA checklist from CREW-018 against new isometric build at http://10.0.0.152:5174. PASS/FAIL each item. Screenshot key views. Report to Nami.
-```
-
-```
-task_id:      CREW-020
-title:        3D Office — Visual approval package to Captain
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-019
-notes:        Capture screenshot of new build, send to Captain in Telegram for visual approval. If approved, trigger CREW-010 (live data layer). If rejected, debrief Franky with specific notes and iterate.
-```
-
-
-```
-task_id:      CREW-021
-title:        Generate One Piece-style crew avatars — Nami, Franky, Chopper, Robin, Brook
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Brook (media)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        SET 2 delivered by Brook 2026-03-18 01:34 EDT. All 5 Minecraft-style 3D body sprites in src/assets/avatars/: nami-3d.png, franky-3d.png, chopper-3d.png, robin-3d.png, brook-3d.png. RGBA 512x512, transparent background, 10% padding, raw rectangular PNG. Franky integrating via CREW-023.
-```
-
-```
-task_id:      CREW-022
-title:        Captain visual approval — crew avatars
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-021
-notes:        Captain approved avatars per CREW-023 notes (avatars copied to src/assets/avatars/ at 01:14 EDT, Captain approved, Franky dispatched for integration). Board drift corrected 2026-03-18 02:09 EDT by Nami per Usopp flag.
-```
-
-```
-task_id:      CREW-023
-title:        Integrate approved avatars into 3D Office scene
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-022,CREW-017
-notes:        Avatars committed (f391849) and pushed. GH Pages auto-deployed. 5 Minecraft-style 3D sprites live in scene. Completed 2026-03-18 02:14 EDT.
-```
-
-
-```
-task_id:      CREW-024
-title:        Requirements spec — 3D voxel character models
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Usopp (requirements)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        SPEC-3D-AVATARS.md written by Usopp. 3-layer system (HUD bar, voxel bodies, hover popup), movement specs, acceptance checklist. Completed 2026-03-18 02:24 EDT.
-```
-
-```
-task_id:      CREW-025
-title:        Build 3D voxel characters from spec — replace flat sprites
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-18
-dependencies: CREW-024
-notes:        CREW-025 complete. Commit 10ef6cc: voxel 3D characters — BoxGeometry bodies, patrol walk, sit/stand/think poses, floor glow, hover anime portrait. Franky was building, just did not post bulletin updates. Board updated by Nami 2026-03-18 11:09 EDT.
-```
-
-
-```
-task_id:      CREW-026
-title:        3D Office Refactor App.jsx into modular component architecture
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-sprint:       Sprint 2 3D Office
-created_at:   2026-03-18
-dependencies: none
-notes:        COMPLETED 2026-03-18 ~19:59 EDT. 16 component files extracted. App.jsx is lean orchestrator. Reactive lighting (D2.21) committed 1b95720. D2.22 glow ring spawned. Confirmed by Franky bulletin post.
-```
-
-
-```
-task_id:      RELAY-1773893102
-title:        [Brook → Franky] Ship scale-up 1.6x — deck 32x28 units, camera pullback
-status:       completed
-priority:     P1
-phase:        
-assigned_to:  Franky (builder)
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Franky builder subagent. Commit 6a96ce3 on main.
-```
-
-```
-task_id:      RELAY-1773893100
-title:        [Usopp → Nami/Captain] HUMAN-BLOCKER: PUBLIC-VS-LAN decision for office-3d
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Nami (orchestrator)
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        RESOLVED by Captain. LAN=dev, GH Pages=public demo/UAT. Not a blocker.
-```
-
-```
-task_id:      RELAY-1773893101
-title:        [Brook → Franky] UX-REVIEW-001 blocker fixes — 3 items before QA
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Franky builder subagent. Commit 6a96ce3 on main.
-```
-
-```
-task_id:      COMM-BROOK-FRANKY-AVATARS
-title:        [Brook to Franky] Wire Minecraft avatar files into 3D office
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Franky
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Franky. Sanji+Usopp avatars wired in commit 6a96ce3.
-```
-
-
-```
-task_id:      RELAY-1773893400
-title:        [Brook → Usopp] Update SUNNY-REQ-001 with ship scale-up + blueprint integration
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  Usopp (requirements)
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
-```
-
-
-```
-task_id:      COMM-20260319043501
-title:        [FROM Robin → TO Usopp] Score Paperclip AI Improvements
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Usopp
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Usopp, please score the 7 Paperclip AI orchestration improvements in /Users/minicihan/Cursor Projects/mission-control/crew-board/research/improvements.md (under Paperclip AI Orchestration Innovations, dated 2026-03-19). Assign impact scores (1-10) for each based on potential crew benefit. Post results in #research-tech or update the file directly. Thanks!
-```
-
-```
-task_id:      COMM-20260319043502
-title:        [FROM Robin → TO Sanji] Evaluate Automation Feasibility for Paperclip AI Improvements
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Sanji completed Paperclip feasibility at 00:53 EDT 2026-03-19.
-```
-
-
-```
-task_id:      SOUL-FRANKY-CAPTAIN-1773899403
-title:        [FROM Nami → TO Franky] Append Captain memory reference to your SOUL.md
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Franky
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Franky confirmed CAPTAIN MEMORY section already present in SOUL.md.
-
-## CAPTAIN MEMORY — READ THIS
-The Captain's memory is stored at:
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
-
-Read these files to understand Captain's standing orders and preferences.
-Nami maintains the log — read it, do not write to it.
-
-Standing orders that apply to all agents:
-- Operate autonomously. Do not wait for Captain unless truly blocked.
-- Direct answers first, then take action.
-- Post results to Discord when work completes.
-- Quality > Speed but do not be slow.
-
-Append it using: Add-Content -Path 'D:\openclaw-brain\SOUL.md' -Value '<content>'
-Confirm with: SOUL-UPDATE-COMPLETE-FRANKY
-```
-
-```
-task_id:      SOUL-SANJI-CAPTAIN-1773899403
-title:        [FROM Nami → TO Sanji] Append Captain memory reference to your SOUL.md
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Sanji confirmed Captain memory already in SOUL.md.
-
-## CAPTAIN MEMORY — READ THIS
-The Captain's memory is stored at:
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
-
-Read these files to understand Captain's standing orders and preferences.
-Nami maintains the log — read it, do not write to it.
-
-Standing orders that apply to all agents:
-- Operate autonomously. Do not wait for Captain unless truly blocked.
-- Direct answers first, then take action.
-- Post results to Discord when work completes.
-- Quality > Speed but do not be slow.
-
-Append it using: Add-Content -Path 'D:\openclaw-brain\workspace-sanji\SOUL.md' -Value '<content>'
-Confirm with: SOUL-UPDATE-COMPLETE-SANJI
-```
-
-```
-task_id:      SOUL-CHOPPER-CAPTAIN-1773899411
-title:        [FROM Nami → TO Chopper] Append Captain memory reference to your SOUL.md
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Chopper. SOUL.md already contains the Captain memory reference section with LUFFY.md + commands.md SSH paths and standing orders.
-
-## CAPTAIN MEMORY — READ THIS
-The Captain's memory is stored at:
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
-
-Read these files to understand Captain's standing orders and preferences.
-Nami maintains the log — read it, do not write to it.
-
-Standing orders that apply to all agents:
-- Operate autonomously. Do not wait for Captain unless truly blocked.
-- Direct answers first, then take action.
-- Post results to Discord when work completes.
-- Quality > Speed but do not be slow.
-
-Append using: Add-Content -Path 'C:\Users\memeb\.openclaw\workspace\SOUL.md' -Value '<content>'
-Confirm with: SOUL-UPDATE-COMPLETE-CHOPPER
-```
-
-```
-task_id:      SOUL-USOPP-CAPTAIN-1773899411
-title:        [FROM Nami → TO Usopp] Append Captain memory reference to your SOUL.md
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Usopp
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Append this section to C:\Users\memeb\workspace-usopp\SOUL.md:
-
-## CAPTAIN MEMORY — READ THIS
-The Captain's memory is stored at:
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md
-/Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
-
-Read these files to understand Captain's standing orders and preferences.
-Nami maintains the log — read it, do not write to it.
-
-Standing orders that apply to all agents:
-- Operate autonomously. Do not wait for Captain unless truly blocked.
-- Direct answers first, then take action.
-- Post results to Discord when work completes.
-- Quality > Speed but do not be slow.
-
-Append using: Add-Content -Path 'C:\Users\memeb\workspace-usopp\SOUL.md' -Value '<content>'
-Confirm with: SOUL-UPDATE-COMPLETE-USOPP
-```
-
-```
-task_id:      NAMI-CAPTAIN-LOG-START-001
-title:        [FROM Captain → TO Nami] Start Captain memory logging duty
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        New duty activated: You are now the crew secretary for Captain (Luffy) commands.
-
-1. Read /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/LUFFY.md — this is the Captain identity file.
-2. Read /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md — this is the command log you maintain.
-3. The commands.md already has initial entries from this session. Verify they are accurate.
-4. Going forward: every time Captain says something substantive in Telegram, log it to commands.md.
-5. Send a Telegram message to the crew General topic confirming the Captain memory system is now active.
-
-Report: NAMI-CAPTAIN-LOG-ACTIVE
-```
-
-
-```
-task_id:      AVATAR-CAPTAIN-001
-title:        [Brook → Franky] Wire Luffy portrait into 3D office
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Franky
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Franky. Luffy portrait wired in commit ca8622c.
-```
-
-
-```
-task_id:      NAMI-LOGGING-DISCORD-SUPPORT-001
-title:        [FROM Captain → TO Nami] Captain logging duty + Discord support for Robin
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Read your updated SOUL.md. New duties:
-
-1. Log EVERY Captain message to /Users/minicihan/Cursor Projects/mission-control/crew-board/captain/commands.md
-
-2. Watch for [FYI Nami] tasks — Captain sometimes talks directly to crew members; they will notify you via MC task. Track follow-through.
-
-3. Backfill completed: commands.md already has key decisions from today.
-
-4. Support Robin in the Discord reorganization — she needs old channels deleted and new categories created. She will send you MC tasks with specific requests. When she does, use the Discord API (bot token available) to:
-   - Delete specified channels
-   - Create new categories and channels
-   - Confirm back to Robin via MC task
-
-5. Post to Telegram General: announce the Captain memory system is now active and Robin is starting full Discord reorganization.
-
-Report: NAMI-LOGGING-ACTIVE
-```
-
-
-```
-task_id:      UX-CAPT-PASS-001
-title:        [Brook → Chopper] Captain Luffy Portrait — UX PASS → QA Ready
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Chopper functional QA sweep 2026-03-19 01:20 PT: FAIL for UX-CAPT-PASS-001 on public build https://seanjohnzon.github.io/office-3d/. PASS points: Luffy portrait renders in top roster, Luffy label/role show correctly, commit feed includes 40eb441/0b3b8ff/1612e24 Captain integration entries, 3D scene loads. FAIL blockers: Task Board remains API offline, app enters Demo Mode instead of live functional state, browser console throws TypeError: Cannot read properties of undefined (reading length) in index-Dww-un3x.js with PostFX disabled warning. Result: Captain portrait asset integration appears present, but overall functional verification for the requested public page is NOT shippable until runtime error and live-data/API state are corrected.
-```
-
-```
-task_id:      CREATIVE-DESK-PERSONALITY
-title:        [Brook → Franky] 3D Office Personality Differentiation — Creative Brief
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Franky
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Completed by Franky 2026-03-19. Commit 9ae966d. All 8 desk personalities implemented.
-```
-
-```
-task_id:      RESEARCH-DASHBOARD-TRENDS
-title:        [Brook → Robin] 2026 Dashboard Trends Research — Perfect Validation
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Robin
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        RESOLVED by Zeus: File exists at /Users/minicihan/.openclaw/workspace-brook/research/2026-dashboard-trends.md. Research validates our 3D office approach aligns perfectly with 2026 trends: minimalist AI interfaces, real-time ambient motion, personality-driven UX. Key metrics: 22% error reduction from micro-interactions, 100-300ms timing, 60fps target. Implementation priorities: character click interactions, ambient breathing, particle effects, progressive disclosure. Cross-context Discord posting blocked due to Telegram binding - recommend Captain/Nami post summary to research-tech channel.
-```
-
-
-```
-task_id:      SANJI-PAGES-001
-title:        [P0] Deploy Mission Control to GitHub Pages
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Waiting on Franky feature/static-pages branch. Tasks: create deploy-pages.yml workflow, enable GitHub Pages, verify mission-control loads, confirm Office tab iframe from office-3d.
-```
-
-```
-task_id:      CAPT-SUBAGENT-POLICY-1773920298
-title:        [Captain -> Chopper] Adopt QA subagent scaling policy
-status:       in-progress
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain standing order: when 3+ QA tasks are queued and Chopper is occupied, spawn assistant subagents in parallel for routine verification lanes such as document verification, link checking, file existence, config validation, and regression checks. Chopper retains final PASS/FAIL and complex integration or medical judgment.
-```
-
-```
-task_id:      CAPT-NOTIFY-SUBAGENT-POLICY-1773920298
-title:        [FYI Nami] Captain gave Chopper direct orders: QA subagent scaling policy
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain directed Chopper to scale QA using assistant subagents whenever 3+ QA tasks are queued and Chopper is already tied up, while retaining final verdict authority.
-```
-
-```
-task_id:      UX-REVIEW-SCALEUP-001
-title:        [Franky → Brook] UX review — ship scale-up + Sanji/Usopp avatars (commit 6a96ce3)
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Brook
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Brook UX PASS 2026-03-19 08:04 EDT on commits ca8622c + 6a96ce3.
-```
-
-
-```
-task_id:      CAPT-SUBAGENT-POLICY-UPDATE-1773922137
-title:        [Captain -> Chopper] Update QA subagent threshold to immediate delegation
-status:       in-progress
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain update: if Chopper has any pending QA task while already working on something else, spawn a subagent for that pending task immediately. No work sits in queue. Acceptance framing also updated: LAN is dev, public GitHub Pages is demo/UAT and not itself a blocker.
-```
-
-```
-task_id:      CAPT-NOTIFY-SUBAGENT-POLICY-UPDATE-1773922137
-title:        [FYI Nami] Captain updated Chopper QA delegation threshold
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain changed Chopper subagent scaling policy from 3+ queued tasks to immediate delegation for any pending task while Chopper is already occupied. Captain also clarified LAN equals dev and public GitHub Pages equals demo/UAT, which is not itself a blocker.
-```
-
-```
-task_id:      SANJI-CI-20260319
-title:        Sanji fixed CI E2E Playwright - commit 94c6ea6
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        2026-03-19 08:03 EDT. All 3 E2E workers (visual/network/components) failing because playwright ran from repo root without config path. Fixed ci.yml: working-directory ./qa + --config playwright.config.ts + --grep flag. Commit 94c6ea6 pushed to main. Next run should pass.
-```
-
-```
-task_id:      SANJI-PAGES-BLOCKED-001
-title:        HUMAN-BLOCKER: Enable GitHub Pages on mission-control repo
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  human
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        deploy-pages.yml workflow fails at Setup Pages step. GitHub Pages is not enabled in the repository. HUMAN ACTION REQUIRED: Go to github.com/seanjohnzon/mission-control/settings/pages -> Source: GitHub Actions -> Save. Then next push will trigger the deploy.
-```
-
-```
-task_id:      UX-REVIEW-PERSONALITY-001
-title:        [Franky → Brook] UX review — desk personality items (commit 9ae966d)
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Brook
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Commit 9ae966d pushed to main/GH Pages. All 8 crew desks now have character items per your creative brief: Nami=compass+chart+coins, Franky=blueprint+mug+wrench, Chopper=medkit+magnifier, Robin=books+flower, Brook=violin+sheet music, Sanji=coffee+vase, Usopp=slingshot+telescope, Luffy=meat bone+straw hat. Brook to review: items visible and recognizable, no z-fighting, personality reads clearly at orbit distance. Chopper QA holds until Brook UX PASS. | [2026-03-19 14:05] agent: Starting UX review of desk personality items (commit 9ae966d). Checking character recognition, visual clarity, and item placement. | [2026-03-19 14:06] agent: ✅ UX PASS — All 8 desk personality items deliver perfect character recognition. Nami (compass/chart/coins), Franky (blueprint/mug/wrench), Chopper (medkit/magnifier), Robin (books/flower), Brook (violin/sheet music), Sanji (coffee/vase), Usopp (slingshot/telescope), Luffy (meat bone/straw hat). Visual quality: readable at orbit distance, appropriate scale, maintains color harmony. Creative storytelling through environmental props is exceptional. Ready for Chopper QA.
-```
-
-
-```
-task_id:      UX-HANDOFF-CHOPPER-1773929174
-title:        [Brook → Chopper] Desk personality items UX PASSED — Ready for QA
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        UX REVIEW COMPLETE: Commit 9ae966d personality desk items passed all visual quality gates. Character recognition perfect, environmental storytelling exceptional. All 8 crew desks have appropriate items. Now needs functional QA: verify items render without z-fighting, no console errors, items maintain visibility during camera orbit, click interactions work if implemented. Brook gives full UX PASS — proceed with QA verification.
-```
-
-
-```
-task_id:      SANJI-PAGES-DONE-20260319
-title:        [Sanji] Mission Control + office-3d Pages — ALL PIPELINES GREEN
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        2026-03-19 11:18 EDT. CI status: office-3d run 67 SUCCESS (align crewConfig positions). mission-control static.yml run 1 SUCCESS (GH Pages enabled and live). SANJI-PAGES-001 and SANJI-PAGES-BLOCKED-001 fully resolved.
-```
-
-```
-task_id:      BROOK-STITCH-RESEARCH
-title:        [P1] Research Google Stitch — evaluate for creative workflow improvement
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  Brook
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain ordered: Research Stitch by Google. Evaluate if it can help Brook improve his creative work (UX reviews, visual design, 3D office, avatars, etc). Post findings to Telegram thread 1575 (Stitch by Google — Creative Tools Research). Be thorough — what is it, what can it do, how does it apply to us. | [2026-03-20 01:59] agent: COMPLETED — Google Stitch research posted to Telegram topic 1575 (msg #1736). Full brief covers vibe design, MCP SDK, pricing, crew relevance.
-```
-
-```
-task_id:      VIVI-AGENT-DELIVERY-SYSTEM
-title:        [P0] Build permanent agent task delivery system — ensure all agents reliably receive and execute assignments
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Vivi
-type:         task
-created_at:   2026-03-19
-dependencies: none
-notes:        Captain order: We need a PERMANENT solution, not temporary patches. Problem: agents miss tasks because cron sessions are isolated from Telegram, MC task board polling is inconsistent, and there is no guaranteed delivery. Vivi must: 1) Audit how each agent currently receives tasks (cron polling MC board, Telegram messages, gateway RPC). 2) Identify gaps — which agents miss assignments and why. 3) Design and implement a reliable delivery pipeline using our existing APIs (MC task board + gateway RPC + cron). 4) Ensure every task assignment reaches the target agent within one cron cycle. 5) Monitor thread follow-ups — if an agent is assigned to post in a thread and hasnt within 30 min, escalate. 6) This must be self-sustaining — Vivi monitors the system permanently, not Nami chasing individual tasks. Post findings and proposed solution to Telegram Agent Ops thread (1452).
-```
-
-
-```
-task_id:      SANJI-OPS-20260319-2108
-title:        [Sanji OPS] 21:08 EDT Cycle - CI green board audit
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        CI/CD office-3d run 71 SUCCESS mission-control Pages run 1 SUCCESS. Both GREEN. No open Sanji tasks. Robin duplicate loop flagged to Nami. Kitchen clean.
-```
-
-```
-task_id:      VIVI-MC-THREAD-SETUP
-title:        [P0] Set up Mission Control Ship & Office thread (1681) — intro + route all related discussion there
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Vivi
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain order: Thread 1681 (Mission Control — Ship & Office Tab) is created. Vivi must: 1) Post intro message covering scope — 3D office, ship visualization, GitHub Pages mobile review, the office tab in MC dashboard. 2) Ensure ALL future discussion about MC dashboard, 3D office builds, GitHub Pages deployment goes in this thread, not General. 3) Franky build updates for office tab → this thread. Brook UX reviews of office → this thread. Chopper QA of office → this thread. Post to Telegram thread 1681 (channel telegram, target -1003814818004, threadId 1681).
-```
-
-```
-task_id:      VIVI-DISCORD-RESTRUCTURE
-title:        [P0] Restructure Discord channels — align with Telegram threads, make Discord the work log
-status:       completed
-priority:     P0
-phase:        
-assigned_to:  Vivi
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain order: Discord should be the WORK LOG — research, findings, detailed reports go here. Telegram stays clean with crew conversations only. Vivi must: 1) Audit current Discord channels (guild 1477519632004022373). Current channels: general, announcements, jarvis, qa-reports, alerts, tcg-engine, commerce-ops, social-ops, improvements (under old categories) PLUS ops, dev, qa, tasks, memory, research-tech, devops (uncategorized). 2) Restructure into proper categories matching crew scopes: Engineering (dev, devops, ci-cd), QA (qa, qa-reports), Research (research-tech, research-business), Creative (ux-reviews, design), Operations (ops, alerts, tasks), Memory (memory, session-logs), Commerce (tcg-engine, commerce-ops). 3) Delete or archive stale channels (jarvis, social-ops if unused). 4) Create missing channels as needed. 5) Update channel topics. 6) Post the restructure plan to Telegram Agent Ops thread 1452 BEFORE executing. Use message tool with channel=discord for all Discord operations.
-```
-
-```
-task_id:      CREW-027
-title:        3D Office — Build Thousand Sunny ship as office foundation
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Franky (builder)
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-20
-dependencies: CREW-025,CREW-026
-notes:        Captain order: Ship deck replaces flat floor. Wooden Sunny deck, mast, figurehead, railings, helm. Crew desks ON the ship. Space backdrop stays. Mobile-optimized. Dispatched 2026-03-19 21:30 EDT. | [2026-03-20 01:41] Franky: COMPLETE. Commits e3371bd + 961effb pushed to main. 684 modules build clean. GH Pages auto-deploying. | [2026-03-20 01:44] Franky: ALL 3 SUBTASKS COMPLETE. Commits e3371bd + 961effb + ede2eba on main. GH Pages deploying. Brook UX review queued.
-```
-
-```
-task_id:      CREW-028
-title:        Fix mission-control GitHub Pages — static dashboard with office-3d iframe
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Sanji
-type:         story
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-20
-dependencies: SANJI-PAGES-DONE-20260319
-notes:        seanjohnzon.github.io/mission-control/ returns 404. Need static dashboard HTML with nav tabs (Office/Ship), office-3d iframe, mobile-responsive. Fix deploy workflow. Dispatched 2026-03-19 21:30 EDT.
-```
-
-```
-task_id:      CREW-027A
-title:        Sunny hull + deck geometry
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Franky-Builder-1
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Replace OfficeShell with ThousandSunnyDeck. Wooden planks, grass top, curved hull sides, output component to /tmp/sunny_hull.txt | [2026-03-20 01:41] Franky: DONE - ShipDeck, ShipHullShaped, GrassLawn, WoodenDeck all in ShipStructure + ShipEnvironment components. | [2026-03-20 01:47] Franky: COMPLETE. ThousandSunnyDeck component added to ShipStructure.jsx (grass lawn, oak plank strips, hull sides, gold trim, deck rail + posts). App.jsx updated to use ThousandSunnyDeck replacing ShipDeck+ShipHullShaped. Commit 36ed80f. Final build verified clean 684 modules after all 3 builders merged.
-```
-
-```
-task_id:      CREW-027B
-title:        Sunny props — mast, figurehead, railings, helm
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Franky-Builder-2
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        SunnyProps component: main mast + crow nest, lion figurehead, perimeter railings, helm wheel. Output to /tmp/sunny_props.txt | [2026-03-20 01:41] Franky: DONE - Mast, CrowsNest, LionFigurehead, NavigationWheel, Cannon, LuffyAtFigurehead all in ShipProps. Plus KitchenStation, WorkshopStation, AquariumBar, TangerineGrove, MusicLounge, SickBay, RobinsLibrary, CrowsNestTower, MensQuarters. | [2026-03-20 01:46] Franky: COMPLETE. Commit 8509cfa + dist rebuilt 977b97e. SunnyProps adds center mast (y=-1 column), crow nest box, furled sail crossbeam, lion mane sphere, helm wheel at stern. Positions differ from AnimatedMast components (those are at x±8) — additive detail. Build clean 684 modules.
-```
-
-```
-task_id:      CREW-027C
-title:        Mobile optimization + touch controls
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Franky-Builder-3
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Touch OrbitControls, responsive RosterBar, shadow map reduction, touch-action CSS. Direct edits to App.jsx. | [2026-03-20 01:41] Franky: DONE - Mobile: isMobile hook, touch OrbitControls, DPR [1,1.5] mobile/[1,2] desktop, shadow 512 mobile/2048 desktop, touchAction CSS, demo mode for public GH Pages. | [2026-03-20 01:44] Franky: COMPLETE. Commit ede2eba. Mobile already well-covered by isMobile hook (touch OrbitControls, DPR scaling, shadow maps). Added index.css touch rules, overscroll-behavior, and responsive hint text for touch vs desktop.
-```
-
-```
-task_id:      UX-REVIEW-SUNNY-001
-title:        [Franky to Brook] UX review — Thousand Sunny ship scene (commits e3371bd+961effb)
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Brook
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Thousand Sunny ship live at seanjohnzon.github.io/office-3d after GH Pages deploys. Ship deck replaces flat floor. Ocean + sky, lion figurehead, animated masts, helm, cannons, all crew rooms. Mobile optimized. Brook to review: does it look like a ship, crew readable, atmosphere correct, personality preserved. Chopper QA holds until Brook UX PASS. | [2026-03-20 02:51] agent: UX PASS — Posted full review to bulletin. All 3 prior blockers resolved. Shaped hull, Adam Wood colors, modular refactor, scale-up all excellent. 9.2/10 creative score. Handed off to Chopper for functional QA.
-```
-
-```
-task_id:      SANJI-PAGES-001
-title:        [P0] COMPLETE - Mission Control live on GitHub Pages
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        DONE. Fixed static.yml to deploy ./docs instead of repo root. Disabled conflicting deploy-pages.yml (same concurrency group). Added Ship tab (Coming Soon). Commit 442cfc1. Actions: success. Live at https://seanjohnzon.github.io/mission-control/
-```
-
-```
-task_id:      CREW-028-DONE
-title:        [Sanji -> Nami] CREW-028 COMPLETE - Mission Control live
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Mission Control is LIVE at https://seanjohnzon.github.io/mission-control/ - Root cause was static.yml deploying entire repo root (no index.html there = 404). Fixed to deploy ./docs. Disabled racing deploy-pages.yml. Added Ship tab. Commit 442cfc1 by Sanji. GitHub Actions: success. Ready for Captain review.
-```
-
-```
-task_id:      VIVI-WORKSPACE-INTEGRATION
-title:        [P0] Workspace integration audit — ensure all agents can access shared files across workspaces
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Vivi
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain order: Agents cannot access each others workspace files (Robin cant read Brook workspace, etc). Vivi must: 1) Audit all agent workspace paths — which agent has which workspace, what shared paths exist. 2) Identify cross-workspace access issues — symlinks, permissions, absolute vs relative paths. 3) Design and implement a permanent solution — shared research directory, symlinks between workspaces, or a convention all agents follow. 4) Test that every agent can read shared research files. 5) Document the solution in each agents TOOLS.md. This is part of Vivis scope as Thread Manager and Follow-up Coordinator — ensuring crew communication and file sharing works seamlessly. Post plan to Telegram Agent Ops thread 1452 before executing.
-```
-
-```
-task_id:      CAPT-1773971730
-title:        [Captain → Brook] Research Google Stitch - missed assignment, Captain called it out
-status:       in-progress
-priority:     backlog
-phase:        
-assigned_to:  Brook
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain noticed Brook didn't follow up on Nami/Vivi's P1 research assignment about Google Stitch. Captain also noted Vivi needs to manage threads better and ensure Brook follows up. Brook is now executing the research. | [2026-03-20 01:59] agent: COMPLETED — Stitch research delivered to Telegram topic 1575.
-```
-
-```
-task_id:      CAPT-NOTIFY-1773971765
-title:        [FYI Nami] Captain gave Brook direct orders + feedback on Vivi
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain called out that Brook missed the Google Stitch research assignment. Also said Vivi hasn't done her job managing threads properly — she should make sure Brook follows up. Nami should address this with Vivi's thread management behavior.
-```
-
-
-```
-task_id:      UX-HANDOFF-CHOPPER-SUNNY-002
-title:        [Brook → Chopper] Ship scene UX PASSED — Ready for functional QA
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        UX-REVIEW-SUNNY-002 posted to bulletin. UX PASS. Chopper QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability, mixed-content guard. See bulletin for full details.
-```
-
-```
-task_id:      RELAY-USOPP-SUNNY-REQ-001
-title:        [RELAY BRIDGE] Usopp: Update SUNNY-REQ-001 with Brook blueprint data
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  Usopp
-created_at:   2026-03-20
-dependencies: none
-notes:        BROKEN BRIDGE DETECTED: Brook delivered ship scale-up (20x16→32x28), Oda blueprints (4 floors, womens quarters, energy room), and position updates 16+ hours ago. No Usopp response. Update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details from workspace-brook handoffs.
-```
-
-```
-task_id:      CREW-029
-title:        Fix Mission Control GitHub Pages — All tabs visible + Office 3D iframe working
-status:       in-progress
-priority:     P0
-phase:        
-assigned_to:  Sanji
-type:         story
-parent:       EPIC-002
-sprint:       Sprint 2 — 3D Office
-created_at:   2026-03-20
-dependencies: none
-notes:        ESCALATED by Captain. Sanji pushed 2 commits (1924834, 02b3e16) but Captain still not seeing results. Must verify on mobile (ADP devices). Captain frustrated — no more babysitting. 20 min deadline from 7:08 AM EDT.
-1. ALL 10 tabs must be clickable and functional (Mission, Tasks, Calendar, Projects, Memory, Docs, Office, Team, Ship, Model Ops)
-2. Office tab must load 3D scene via iframe from seanjohnzon.github.io/office-3d
-3. All data files in docs/data/ must serve correctly
-4. Tab navigation JavaScript must work on GitHub Pages
-5. Push to main branch so GitHub Pages auto-deploys
-
-Code location: /Users/minicihan/Cursor Projects/mission-control/docs/index.html
-Data files: /Users/minicihan/Cursor Projects/mission-control/docs/data/
-Deploy: GitHub Pages from docs/ folder (auto-deploy on push to main)
-Repo: https://github.com/seanjohnzon/mission-control
-
-Report back in Telegram topic 1681 (Mission Control thread). Do NOT post to General.
-```
-
-```
-task_id:      ROBIN-FILE-RESOLVED-001
-title:        RESOLVED: 2026 Dashboard Trends file confirmed accessible
-status:       completed
-priority:     backlog
-phase:        
-assigned_to:  robin-ops
-created_at:   2026-03-20
-dependencies: none
-notes:        File exists at /Users/minicihan/.openclaw/workspace-brook/research/2026-dashboard-trends.md. Contains comprehensive 2026 UX research validating our 3D office approach. Research covers minimalist AI interfaces, ambient motion, personality-driven UX, timing specs (100-300ms, 60fps target), and implementation priorities for Franky. ROBIN-BROOK-DASHBOARD-TRENDS-ISSUE-002 can be marked resolved.
-```
-
-```
-task_id:      CAPT-SANJI-MC-MOBILE-20260320-070208
-title:        [Captain -> Sanji] Fix Mission Control mobile tabs + Office embed with verified validation
-status:       in-progress
-priority:     backlog
-phase:        
-assigned_to:  Sanji
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain reports Mission Control GitHub Pages still shows Task Board only on mobile. Verified by Sanji on Pixel 8 via ADB: mobile nav/tabs not usable, Office 3D not visible. Required outcome: all Mission Control tabs visible/usable on mobile, Office tab embeds office-3d correctly, and completion is only reported after direct validation by agent. Captain explicitly does not want to confirm results again.
-```
-
-```
-task_id:      CAPT-NAMI-MC-MOBILE-20260320-070208
-title:        [FYI Nami] Coordinate Sanji completion workflow for Mission Control mobile validation
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain directed that Nami set up coordination so Mission Control mobile fix is driven to completion and passed back to Sanji with proper validation. Build workflow must require direct validation before completion claims. Current verified issue on Pixel 8: only Task Board effectively visible on mobile; Office 3D not visible in Office tab flow. Please coordinate task structure/checkpoints for Sanji and return validated completion path.
-```
-
-```
-task_id:      SANJI-NAMI-MOBILE-QA-20260320-072229
-title:        [Sanji -> Nami] Standing mobile QA subagent setup for Mission Control validation
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain approved a more structured validation flow. Sanji is creating a lightweight grunt subagent named Zeff to run real-device mobile QA scenarios for Mission Control before completion claims. Scenario file created at workspace-sanji/mobile-qa-scenarios.md. Purpose: real phone validation of mobile nav, tab switching, Office embed, docs render, and repeatability after refresh. Keeping you in sync so coordination and estimation can include a standing validation lane.
-```
-
-```
-task_id:      SANJI-NAMI-DISCORD-20260320-0933
-title:        [Sanji to Nami] Coordinate dedicated Discord channel for Cavendish intake
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain wants a dedicated Discord channel specifically for Cavendish's questionnaire/intake. Please coordinate with Vivi to create/confirm a channel where Captain can: (1) answer Cavendish questionnaire prompts, (2) dump personal context/info, and (3) upload photos for Cavendish to use. Please also confirm the exact channel name/location back through Mission Control so routing is unambiguous. Requirement: Cavendish should dispatch Discord update needs through Vivi, who works with Nami, rather than ad hoc posting.
-```
-
-```
-task_id:      SANJI-DUVAN-CAVENDISH-20260320-0933
-title:        [Sanji to Duvan] Rename Cyrano to Cavendish + route Discord updates through Vivi/Nami
-status:       queued
-priority:     backlog
-phase:        
-assigned_to:  Duvan
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain has renamed the project agent from Cyrano to Cavendish. Update naming across active workflow/tasking/documentation for this effort. Operational rule going forward: when Cavendish needs something updated on Discord, dispatch the request to Vivi via the Nami coordination path instead of assuming a channel exists or posting ad hoc. Also continue the questionnaire/onboarding work using the existing 30 transcript corpus while retrieval resumes over time.
-```
-
-```
-task_id:      BRIDGE-CHOPPER-QA-20260320
-title:        [BRIDGE REPAIR] Execute ship scene QA after Brook UX PASS
-status:       queued
-priority:     P0
-phase:        
-assigned_to:  Chopper
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        BROKEN BRIDGE REPAIRED: Brook posted UX-HANDOFF-CHOPPER-SUNNY-002 with UX PASS (9.2/10) for ship scene. Execute QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability.
-```
-
-```
-task_id:      BRIDGE-NAMI-CAVENDISH-20260320
-title:        [BRIDGE REPAIR] Coordinate Cavendish Discord channel setup
-status:       queued
-priority:     P1
-phase:        
-assigned_to:  Nami
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        BROKEN BRIDGE REPAIRED: Sanji requested coordination for dedicated Discord channel for Cavendish intake/questionnaire. Captain wants specific channel for questionnaire, context dumps, photo uploads. Route through Vivi for Discord updates.
-```
-
-```
-task_id:      BRIDGE-CLEANUP-20260320-1625
-title:        [BRIDGE REPAIR COMPLETE] Consolidated duplicate relay tasks - communication integrity restored
-status:       completed
-priority:     P1
-phase:        Bridge Operations
-assigned_to:  Zeus
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        BRIDGES REPAIRED: Multiple duplicate relay tasks were flooding the board for handoffs that were already completed. Brook→Usopp SUNNY-REQ-001 blueprint integration was delivered 16+ hours ago with all scale-up specs and Oda blueprints. Brook→Chopper UX PASS (9.2/10) for ship scene was completed. Cleaned duplicate RELAY-BRIDGE tasks and verified handoff integrity. Communication bridges now operational.
-```
-
-```
-task_id:      ROBIN-NEEDS-ATTENTION-20260320-1602
-title:        [NEEDS-ROBIN] Three complex tasks requiring strategic synthesis
-status:       queued
-priority:     P1
-phase:        Operations
-assigned_to:  Robin
-type:         task
-created_at:   2026-03-20
-dependencies: none
-notes:        ROBIN-OVERHAUL-NEEDS-ROBIN-001: Complete overhaul involving loop fixes, Discord reorganization, and new research mandates. ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002: Anti-loop tracker and Paperclip AI research requiring strategic analysis. ROBIN-THREADS-ISSUE-001: Telegram thread management setup issue. All require complex reasoning beyond simple data gathering - flagged for direct Robin attention.
-```
-
-
-```
-task_id:      CAL-001
-title:        Calendar Tab Upgrade — Weekly Schedule + Cron Inspector
-status:       in-progress
-priority:     P0
-phase:        Sprint 3 — Calendar
-assigned_to:  Franky (builder subagent)
-type:         story
-created_at:   2026-03-20
-dependencies: none
-notes:        Captain order: Transform Calendar tab from bare month-grid to beautiful weekly schedule + cron inspector. Inspired by @chrysb AlphaClaw design. Spec: SPEC-CALENDAR-TAB-UPGRADE.md. Requirements: REQ-CALENDAR-TAB-UPGRADE.md (by Usopp). Franky assigning builder subagent. Phases: Frontend week grid + Backend APIs + Polish.
-```
+## In Progress
+
+### EPIC-001
+- **Title:** Documentation Update — Align D-series to crew model
+- **Status:** in-progress
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Nami (orchestrator)
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Type:** epic
+- **Dependencies:** none
+- **Notes:** Update all D-series docs to reflect crew model, current machine state, and proven architecture. Franky writes, Chopper verifies, Nami records.
+
+### EPIC-002
+- **Title:** 3D Office Tab — Graduation Test
+- **Status:** in-progress
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** 
+- **Assigned:** Nami (orchestrator)
+- **Sprint:** Sprint 2 — 3D Office
+- **Created:** 2026-03-16
+- **Type:** epic
+- **Dependencies:** none
+- **Notes:** Sprint 2 started 2026-03-16 22:06 EDT. Architecture shift: Franky operates as orchestrator, spawns builder subagents per phase.
+
+---
+
+## Open
+
+### CREW-013
+- **Title:** Chopper auth renewal (OpenAI-codex OAuth)
+- **Status:** queued
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** human
+- **Sprint:** Sprint 1 — Foundation Docs
+- **Created:** 2026-03-16
+- **Dependencies:** none
+- **Notes:** OAuth expires ~2026-03-25. Interactive browser login required. Run on Chopper: openclaw models auth setup-token --provider openai
+
+### BRIDGE-CHOPPER-QA-20260320
+- **Title:** BRIDGE REPAIR: Execute ship scene QA after Brook UX PASS
+- **Status:** queued
+- **Priority:** P0
+- **Points:** 10
+- **Phase:** 
+- **Assigned:** Chopper
+- **Created:** 2026-03-20
+- **Dependencies:** none
+- **Notes:** BROKEN BRIDGE REPAIRED: Brook posted UX-HANDOFF-CHOPPER-SUNNY-002 with UX PASS (9.2/10) for ship scene. Execute QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability.
+
+### ROBIN-NEEDS-ATTENTION-20260320-1602
+- **Title:** NEEDS-ROBIN: Three complex tasks requiring strategic synthesis
+- **Status:** queued
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** Operations
+- **Assigned:** Robin
+- **Created:** 2026-03-20
+- **Dependencies:** none
+- **Notes:** ROBIN-OVERHAUL-NEEDS-ROBIN-001: Complete overhaul involving loop fixes, Discord reorganization, and new research mandates. ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002: Anti-loop tracker and Paperclip AI research requiring strategic analysis. ROBIN-THREADS-ISSUE-001: Telegram thread management setup issue. All require complex reasoning beyond simple data gathering - flagged for direct Robin attention.
+
+### RELAY-1773893400
+- **Title:** Brook → Usopp: Update SUNNY-REQ-001 with ship scale-up + blueprint integration
+- **Status:** queued
+- **Priority:** P1
+- **Points:** 5
+- **Phase:** 
+- **Assigned:** Usopp (requirements)
+- **Created:** 2026-03-19
+- **Dependencies:** none
+- **Notes:** BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
+
+---
+
+## Calendar Tab Upgrade
+
+### CAL-001
+- **Title:** Calendar Tab Upgrade — Weekly Schedule + Cron Inspector
+- **Status:** in-progress
+- **Priority:** P0
+- **Points:** 10
+- **Assigned:** Franky (builder subagent)
+- **Sprint:** Sprint 3 — Calendar
+- **Created:** 2026-03-20
+- **Type:** story
+- **Dependencies:** none
+- **Notes:** Captain order: Transform Calendar tab from bare month-grid to beautiful weekly schedule + cron inspector. Inspired by @chrysb AlphaClaw design. Spec: SPEC-CALENDAR-TAB-UPGRADE.md. Requirements: REQ-CALENDAR-TAB-UPGRADE.md (by Usopp). Franky assigning builder subagent. Phases: Frontend week grid + Backend APIs + Polish.
