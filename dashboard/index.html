@@ -87,17 +87,67 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .kanban-card.backlog { border-left: 3px solid var(--text2); }
 
 /* Calendar */
-.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.cal-header h2 { font-size: 18px; min-width: 200px; }
-.cal-header button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-.cal-header button:hover { background: var(--border); }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.cal-day-name { background: var(--sidebar); padding: 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; }
-.cal-day { background: var(--bg); padding: 8px; min-height: 80px; font-size: 12px; }
-.cal-day.other { color: var(--text2); opacity: 0.3; }
+.cal-shell { display: flex; flex-direction: column; gap: 14px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.cal-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cal-title-wrap { display: flex; flex-direction: column; gap: 4px; min-width: 240px; }
+.cal-title-wrap h2 { font-size: 18px; }
+.cal-subtitle { font-size: 12px; color: var(--text2); }
+.cal-header button, .cal-toggle button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.cal-header button:hover, .cal-toggle button:hover { background: #202438; }
+.cal-toggle { display: inline-flex; gap: 6px; padding: 4px; background: rgba(20,22,32,0.9); border: 1px solid var(--border); border-radius: 10px; }
+.cal-toggle button.active { background: rgba(88,166,255,0.16); border-color: rgba(88,166,255,0.35); color: var(--blue); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 10px 12px; background: rgba(20,22,32,0.8); border: 1px solid var(--border); border-radius: 10px; }
+.cal-legend-item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.cal-legend-swatch { width: 3px; height: 14px; border-radius: 999px; background: var(--blue); }
+.cal-body { background: linear-gradient(180deg, rgba(20,22,32,0.95), rgba(15,17,25,0.98)); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.cal-status { padding: 12px 14px; font-size: 12px; color: var(--text2); border-bottom: 1px solid rgba(42,45,61,0.8); }
+.cal-status.error { color: var(--red); }
+.cal-week { overflow: auto; }
+.cal-week-grid { display: grid; grid-template-columns: 72px repeat(7, minmax(160px, 1fr)); min-width: 1100px; position: relative; }
+.cal-time-head, .cal-day-head { background: rgba(20,22,32,0.95); border-bottom: 1px solid rgba(42,45,61,0.7); position: sticky; top: 0; z-index: 3; }
+.cal-time-head { min-height: 64px; }
+.cal-day-head { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.cal-day-head .dow { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.7px; }
+.cal-day-head .date { font-size: 16px; font-weight: 600; }
+.cal-day-head.today .date { color: var(--blue); }
+.cal-time-label, .cal-hour-cell, .cal-day-col { border-right: 1px solid rgba(42,45,61,0.35); border-bottom: 1px solid rgba(42,45,61,0.28); }
+.cal-time-label { height: 64px; padding: 0 12px; display: flex; align-items: flex-start; justify-content: flex-end; color: var(--text2); font-size: 11px; transform: translateY(-7px); }
+.cal-hour-cell { height: 64px; background: rgba(12,14,22,0.88); }
+.cal-day-col { position: relative; background: rgba(12,14,22,0.92); height: calc(24 * 64px); }
+.cal-day-col.today { background: linear-gradient(180deg, rgba(88,166,255,0.05), rgba(12,14,22,0.94)); }
+.cal-day-col::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 100% 64px; pointer-events: none; }
+.cal-now-line { position: absolute; left: 0; right: 0; height: 2px; background: rgba(248,81,73,0.9); box-shadow: 0 0 10px rgba(248,81,73,0.35); z-index: 2; }
+.cal-now-line::before { content: ''; position: absolute; left: 0; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+.cal-event { position: absolute; left: 6px; right: 6px; background: var(--card); border: 1px solid rgba(255,255,255,0.04); border-left: 3px solid var(--blue); border-radius: 6px; padding: 6px 8px; overflow: hidden; box-shadow: 0 8px 18px rgba(0,0,0,0.22); }
+.cal-event-title { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-event-meta { margin-top: 4px; font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-event.cron-low { border-left-color: var(--teal); }
+.cal-event.cron-medium { border-left-color: var(--yellow); }
+.cal-event.cron-high { border-left-color: var(--pink); }
+.cal-event.cron-very-high { border-left-color: var(--red); }
+.cal-event.event { border-left-color: var(--blue); }
+.cal-event.reminder { border-left-color: var(--purple); }
+.cal-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: rgba(42,45,61,0.7); }
+.cal-day-name { background: var(--sidebar); padding: 10px 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; }
+.cal-day { background: var(--bg); padding: 8px; min-height: 120px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+.cal-day.other { color: var(--text2); opacity: 0.35; }
 .cal-day.today { background: rgba(88,166,255,0.08); }
-.cal-day .day-num { font-weight: 600; margin-bottom: 4px; }
+.cal-day .day-num { font-weight: 600; }
 .cal-day.today .day-num { color: var(--blue); }
+.cal-day-dots { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+.cal-day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); opacity: 0.95; }
+.cal-day-list { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+.cal-day-pill { background: rgba(255,255,255,0.03); border-left: 3px solid var(--blue); border-radius: 4px; padding: 4px 6px; font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-day-more { font-size: 11px; color: var(--text2); }
+@media (max-width: 900px) {
+  .cal-header { align-items: stretch; }
+  .cal-nav { width: 100%; }
+  .cal-toggle { width: 100%; justify-content: stretch; }
+  .cal-toggle button { flex: 1; }
+}
+
+
 
 /* Projects */
 .proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
@@ -379,14 +429,31 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
     <!-- Calendar -->
     <div class="tab-panel" id="tab-calendar">
-      <div class="cal-header">
-        <button onclick="calNav(-1)">← Prev</button>
-        <h2 id="cal-title"></h2>
-        <button onclick="calNav(1)">Next →</button>
-        <button onclick="calNav(0)">Today</button>
+      <div class="cal-shell">
+        <div class="cal-header">
+          <div class="cal-nav">
+            <button onclick="calNav(-1)">??? Prev</button>
+            <div class="cal-title-wrap">
+              <h2 id="cal-title"></h2>
+              <div class="cal-subtitle" id="cal-subtitle">Weekly schedule + cron inspector</div>
+            </div>
+            <button onclick="calNav(1)">Next ???</button>
+            <button onclick="calNav(0)">Today</button>
+          </div>
+          <div class="cal-toggle">
+            <button id="cal-week-btn" class="active" onclick="setCalView('week')">Week</button>
+            <button id="cal-month-btn" onclick="setCalView('month')">Month</button>
+          </div>
+        </div>
+        <div class="cal-legend" id="cal-legend"></div>
+        <div class="cal-body">
+          <div class="cal-status" id="cal-status">Loading schedule???</div>
+          <div id="cal-grid"></div>
+        </div>
       </div>
-      <div class="cal-grid" id="cal-grid"></div>
     </div>
+
+
 
     <!-- Projects -->
     <div class="tab-panel" id="tab-projects">
@@ -716,44 +783,204 @@ async function loadTasks() {
 
 // Calendar
 let calDate = new Date();
-function renderCal() {
+let calView = 'week';
+let calData = { cronJobs: [], events: [] };
+const CAL_HOUR_HEIGHT = 64;
+const CAL_COLORS = {
+  'cron-low': 'var(--teal)',
+  'cron-medium': 'var(--yellow)',
+  'cron-high': 'var(--pink)',
+  'cron-very-high': 'var(--red)',
+  event: 'var(--blue)',
+  reminder: 'var(--purple)'
+};
+
+function startOfDay(d) {
+  const copy = new Date(d);
+  copy.setHours(0, 0, 0, 0);
+  return copy;
+}
+function addDays(d, days) {
+  const copy = new Date(d);
+  copy.setDate(copy.getDate() + days);
+  return copy;
+}
+function formatDateKey(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function getWeekStart(d) {
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  return startOfDay(addDays(d, diff));
+}
+function getMonthStart(d) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function monthTitle(d) {
+  return d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+}
+function weekTitle(start) {
+  const end = addDays(start, 6);
+  const sameMonth = start.getMonth() === end.getMonth();
+  const sameYear = start.getFullYear() === end.getFullYear();
+  if (sameMonth && sameYear) return `${start.toLocaleDateString(undefined, { month: 'long' })} ${start.getDate()} ??? ${end.getDate()}, ${start.getFullYear()}`;
+  return `${start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} ??? ${end.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
+}
+function describeRange() {
+  if (calView === 'week') {
+    const start = getWeekStart(calDate);
+    return { title: weekTitle(start), subtitle: 'Weekly schedule + cron inspector', start, end: addDays(start, 7) };
+  }
+  const start = getMonthStart(calDate);
+  return { title: monthTitle(start), subtitle: 'Month overview with event density', start, end: new Date(start.getFullYear(), start.getMonth() + 1, 1) };
+}
+function setCalView(view) {
+  calView = view;
+  document.getElementById('cal-week-btn').classList.toggle('active', view === 'week');
+  document.getElementById('cal-month-btn').classList.toggle('active', view === 'month');
+  renderCal();
+}
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+function fmtTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+function classifyItem(item) {
+  if (item.kind === 'cron') return item.costTierClass || 'cron-low';
+  return item.type === 'reminder' || item.type === 'meeting' ? 'reminder' : 'event';
+}
+function itemTitle(item) {
+  return escapeHtml(item.title || item.name || 'Untitled');
+}
+function itemMeta(item) {
+  if (item.kind === 'cron') return `${escapeHtml(item.scheduleLabel || item.schedule || '')} ?? ${escapeHtml(item.costTierLabel || 'Low')}`;
+  return `${fmtTime(item.start)} ??? ${fmtTime(item.end)}${item.description ? ' ?? ' + escapeHtml(item.description) : ''}`;
+}
+function mergeCalendarItems() {
+  const items = [];
+  for (const c of (calData.cronJobs || [])) items.push({ ...c, kind: 'cron', title: c.name });
+  for (const e of (calData.events || [])) items.push({ ...e, kind: 'event' });
+  return items.sort((a, b) => new Date(a.start) - new Date(b.start));
+}
+async function loadCalendarData() {
+  const { start, end } = describeRange();
+  const qs = `from=${encodeURIComponent(start.toISOString())}&to=${encodeURIComponent(end.toISOString())}`;
+  document.getElementById('cal-status').textContent = 'Loading schedule???';
+  const [cron, events] = await Promise.all([api(`/api/cron-schedules?${qs}`), api(`/api/calendar?${qs}`)]);
+  calData = {
+    cronJobs: cron?.items || [],
+    events: events?.events || [],
+    cronMeta: cron?.meta || {},
+    eventMeta: events?.meta || {}
+  };
+  const statusBits = [];
+  if (cron?.meta) statusBits.push(`${cron.meta.totalJobs || 0} cron jobs`);
+  if (events?.meta) statusBits.push(`${events.meta.totalEvents || 0} calendar events`);
+  const statusEl = document.getElementById('cal-status');
+  statusEl.className = 'cal-status';
+  statusEl.textContent = statusBits.length ? statusBits.join(' ?? ') : 'No schedule data available.';
+  if (cron?.error || events?.error) {
+    statusEl.className = 'cal-status error';
+    statusEl.textContent = cron?.error || events?.error;
+  }
+}
+function renderLegend() {
+  const items = [
+    ['Low cron', 'cron-low'],
+    ['Medium cron', 'cron-medium'],
+    ['High cron', 'cron-high'],
+    ['Very high cron', 'cron-very-high'],
+    ['Calendar event', 'event'],
+    ['Reminder', 'reminder']
+  ];
+  document.getElementById('cal-legend').innerHTML = items.map(([label, cls]) => `
+    <span class="cal-legend-item"><span class="cal-legend-swatch" style="background:${CAL_COLORS[cls]}"></span>${label}</span>
+  `).join('');
+}
+function renderWeekView() {
+  const start = getWeekStart(calDate);
   const now = new Date();
-  const y = calDate.getFullYear(), m = calDate.getMonth();
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
-
-  const first = new Date(y, m, 1);
-  const last = new Date(y, m + 1, 0);
-  const startDay = first.getDay();
-
-  let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
-
-  // Fill previous month
-  const prevLast = new Date(y, m, 0).getDate();
-  for (let i = startDay - 1; i >= 0; i--) {
-    html += `<div class="cal-day other"><div class="day-num">${prevLast - i}</div></div>`;
+  const items = mergeCalendarItems();
+  const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
+  let html = '<div class="cal-week"><div class="cal-week-grid">';
+  html += '<div class="cal-time-head"></div>';
+  for (const day of days) {
+    const isToday = formatDateKey(day) === formatDateKey(now);
+    html += `<div class="cal-day-head${isToday ? ' today' : ''}"><div class="dow">${day.toLocaleDateString(undefined, { weekday: 'short' })}</div><div class="date">${day.getDate()}</div></div>`;
   }
-
-  // Current month
-  for (let d = 1; d <= last.getDate(); d++) {
-    const isToday = d === now.getDate() && m === now.getMonth() && y === now.getFullYear();
-    html += `<div class="cal-day${isToday ? ' today' : ''}"><div class="day-num">${d}</div></div>`;
+  for (let hour = 0; hour < 24; hour++) {
+    const label = new Date(2026, 0, 1, hour).toLocaleTimeString([], { hour: 'numeric' });
+    html += `<div class="cal-time-label">${label}</div>`;
+    for (let dayIndex = 0; dayIndex < 7; dayIndex++) html += '<div class="cal-hour-cell"></div>';
   }
-
-  // Fill next month
-  const remaining = 42 - (startDay + last.getDate());
-  for (let i = 1; i <= remaining; i++) {
-    html += `<div class="cal-day other"><div class="day-num">${i}</div></div>`;
+  for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+    const day = days[dayIndex];
+    const dayKey = formatDateKey(day);
+    const isToday = dayKey === formatDateKey(now);
+    const dayItems = items.filter(item => formatDateKey(new Date(item.start)) === dayKey);
+    html += `<div class="cal-day-col${isToday ? ' today' : ''}" style="grid-column:${dayIndex + 2};grid-row:2 / span 24">`;
+    if (isToday) {
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      const top = (minutes / 60) * CAL_HOUR_HEIGHT;
+      html += `<div class="cal-now-line" style="top:${top}px"></div>`;
+    }
+    for (const item of dayItems) {
+      const startTime = new Date(item.start);
+      const endTime = new Date(item.end || item.start);
+      const startMinutes = startTime.getHours() * 60 + startTime.getMinutes();
+      const endMinutes = Math.max(startMinutes + 20, endTime.getHours() * 60 + endTime.getMinutes());
+      const top = (startMinutes / 60) * CAL_HOUR_HEIGHT;
+      const height = Math.max(34, ((endMinutes - startMinutes) / 60) * CAL_HOUR_HEIGHT - 4);
+      const cls = classifyItem(item);
+      html += `<div class="cal-event ${cls}" style="top:${top}px;height:${height}px" title="${itemTitle(item)} ?? ${escapeHtml(itemMeta(item))}"><div class="cal-event-title">${itemTitle(item)}</div><div class="cal-event-meta">${escapeHtml(itemMeta(item))}</div></div>`;
+    }
+    html += '</div>';
   }
-
+  html += '</div></div>';
   document.getElementById('cal-grid').innerHTML = html;
+}
+function renderMonthView() {
+  const now = new Date();
+  const first = new Date(calDate.getFullYear(), calDate.getMonth(), 1);
+  const firstCell = getWeekStart(first);
+  const items = mergeCalendarItems();
+  let html = '<div class="cal-month">' + ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
+  for (let i = 0; i < 42; i++) {
+    const day = addDays(firstCell, i);
+    const dayKey = formatDateKey(day);
+    const dayItems = items.filter(item => formatDateKey(new Date(item.start)) === dayKey);
+    const isOther = day.getMonth() !== calDate.getMonth();
+    const isToday = dayKey === formatDateKey(now);
+    const dots = dayItems.slice(0, 6).map(item => `<span class="cal-day-dot" style="background:${CAL_COLORS[classifyItem(item)]}"></span>`).join('');
+    const list = dayItems.slice(0, 2).map(item => `<div class="cal-day-pill" style="border-left-color:${CAL_COLORS[classifyItem(item)]}">${itemTitle(item)}</div>`).join('');
+    const more = dayItems.length > 2 ? `<div class="cal-day-more">+${dayItems.length - 2} more</div>` : '';
+    html += `<div class="cal-day${isOther ? ' other' : ''}${isToday ? ' today' : ''}"><div class="day-num">${day.getDate()}</div><div class="cal-day-dots">${dots}</div><div class="cal-day-list">${list}${more}</div></div>`;
+  }
+  html += '</div>';
+  document.getElementById('cal-grid').innerHTML = html;
+}
+async function renderCal() {
+  const { title, subtitle } = describeRange();
+  document.getElementById('cal-title').textContent = title;
+  document.getElementById('cal-subtitle').textContent = subtitle;
+  renderLegend();
+  await loadCalendarData();
+  if (calView === 'week') renderWeekView(); else renderMonthView();
 }
 function calNav(dir) {
   if (dir === 0) calDate = new Date();
-  else calDate.setMonth(calDate.getMonth() + dir);
+  else if (calView === 'week') calDate = addDays(calDate, dir * 7);
+  else calDate = new Date(calDate.getFullYear(), calDate.getMonth() + dir, 1);
   renderCal();
 }
 renderCal();
+
+
 
 // Projects
 async function loadProjects() {

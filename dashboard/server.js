@@ -226,6 +226,161 @@ function parseMemoryLong() {
   return { sections };
 }
 
+const CRON_JOBS_PATH = path.join(process.env.HOME || '/Users/minicihan', '.openclaw/cron/jobs.json');
+const CALENDAR_EVENTS_PATH = path.join(__dirname, 'calendar-events.json');
+
+function readJSON(filePath, fallback) {
+  try { return JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch { return fallback; }
+}
+
+function parseDateRange(urlObj) {
+  const now = new Date();
+  const from = urlObj.searchParams.get('from');
+  const to = urlObj.searchParams.get('to');
+  const start = from ? new Date(from) : new Date(now.getTime() - 24 * 3600 * 1000);
+  const end = to ? new Date(to) : new Date(now.getTime() + 7 * 24 * 3600 * 1000);
+  return {
+    start: Number.isNaN(start.getTime()) ? new Date(now.getTime() - 24 * 3600 * 1000) : start,
+    end: Number.isNaN(end.getTime()) ? new Date(now.getTime() + 7 * 24 * 3600 * 1000) : end
+  };
+}
+
+function cronFieldMatches(field, value) {
+  if (!field || field === '*') return true;
+  return field.split(',').some(part => {
+    if (part.includes('/')) {
+      const [base, stepRaw] = part.split('/');
+      const step = parseInt(stepRaw, 10);
+      if (!step) return false;
+      if (base === '*') return value % step === 0;
+      if (base.includes('-')) {
+        const [min, max] = base.split('-').map(n => parseInt(n, 10));
+        return value >= min && value <= max && ((value - min) % step === 0);
+      }
+      return value >= parseInt(base, 10) && ((value - parseInt(base, 10)) % step === 0);
+    }
+    if (part.includes('-')) {
+      const [min, max] = part.split('-').map(n => parseInt(n, 10));
+      return value >= min && value <= max;
+    }
+    return parseInt(part, 10) === value;
+  });
+}
+
+function cronMatches(expr, date) {
+  const parts = String(expr || '').trim().split(/\s+/);
+  if (parts.length !== 5) return false;
+  const [min, hour, dom, month, dow] = parts;
+  const jsDow = date.getDay();
+  const cronDow = jsDow === 0 ? 0 : jsDow;
+  return cronFieldMatches(min, date.getMinutes()) &&
+    cronFieldMatches(hour, date.getHours()) &&
+    cronFieldMatches(dom, date.getDate()) &&
+    cronFieldMatches(month, date.getMonth() + 1) &&
+    cronFieldMatches(dow, cronDow);
+}
+
+function estimateCronCostTier(job) {
+  const msg = job.payload?.message || job.payload?.text || '';
+  const len = msg.length;
+  if (len > 3000) return { label: 'Very high', className: 'cron-very-high' };
+  if (len > 1500) return { label: 'High', className: 'cron-high' };
+  if (len > 500) return { label: 'Medium', className: 'cron-medium' };
+  return { label: 'Low', className: 'cron-low' };
+}
+
+function scheduleLabel(job) {
+  const s = job.schedule || {};
+  if (s.kind === 'every') {
+    const mins = Math.round((s.everyMs || 0) / 60000);
+    return mins >= 60 ? `Every ${Math.round(mins / 60)}h` : `Every ${mins}m`;
+  }
+  if (s.kind === 'cron') return `Cron ${s.expr}`;
+  if (s.kind === 'at') return 'One-time';
+  return s.kind || 'Schedule';
+}
+
+function listCronOccurrences(job, start, end, limit = 80) {
+  const out = [];
+  const s = job.schedule || {};
+  if (s.kind === 'at' && s.at) {
+    const when = new Date(s.at);
+    if (when >= start && when < end) out.push(when);
+    return out;
+  }
+  if (s.kind === 'every' && s.everyMs) {
+    const anchor = s.anchorMs || Date.now();
+    let ts = anchor;
+    if (ts < start.getTime()) {
+      const delta = start.getTime() - ts;
+      ts += Math.floor(delta / s.everyMs) * s.everyMs;
+      while (ts < start.getTime()) ts += s.everyMs;
+    }
+    while (ts < end.getTime() && out.length < limit) {
+      out.push(new Date(ts));
+      ts += s.everyMs;
+    }
+    return out;
+  }
+  if (s.kind === 'cron' && s.expr) {
+    const cursor = new Date(start);
+    cursor.setSeconds(0, 0);
+    while (cursor < end && out.length < limit) {
+      if (cronMatches(s.expr, cursor)) out.push(new Date(cursor));
+      cursor.setMinutes(cursor.getMinutes() + 1);
+    }
+  }
+  return out;
+}
+
+function parseCronSchedules(range) {
+  const jobsFile = readJSON(CRON_JOBS_PATH, { jobs: [] });
+  const jobs = Array.isArray(jobsFile.jobs) ? jobsFile.jobs : [];
+  const items = [];
+  for (const job of jobs) {
+    if (job.enabled === false) continue;
+    const tier = estimateCronCostTier(job);
+    const occurrences = listCronOccurrences(job, range.start, range.end);
+    for (const when of occurrences) {
+      const end = new Date(when.getTime() + 30 * 60000);
+      items.push({
+        id: `${job.id}:${when.toISOString()}`,
+        jobId: job.id,
+        name: job.name || job.id,
+        start: when.toISOString(),
+        end: end.toISOString(),
+        schedule: job.schedule,
+        scheduleLabel: scheduleLabel(job),
+        costTierLabel: tier.label,
+        costTierClass: tier.className,
+        sessionTarget: job.sessionTarget || 'isolated',
+        nextRunAt: job.state?.nextRunAtMs || null,
+        agentId: job.agentId || null
+      });
+    }
+  }
+  items.sort((a, b) => new Date(a.start) - new Date(b.start));
+  return { items, meta: { totalJobs: jobs.length, returned: items.length, rangeStart: range.start.toISOString(), rangeEnd: range.end.toISOString() } };
+}
+
+function parseCalendarEvents(range) {
+  const seed = readJSON(CALENDAR_EVENTS_PATH, { events: [] });
+  const events = Array.isArray(seed.events) ? [...seed.events] : [];
+  for (const t of parseTasks()) {
+    if (t.createdAt) {
+      events.push({ id: `${t.id}:created`, title: `Task created: ${t.id}`, description: t.title, start: `${t.createdAt}T09:00:00`, end: `${t.createdAt}T09:30:00`, type: 'task' });
+    }
+    if (t.completedAt) {
+      events.push({ id: `${t.id}:done`, title: `Task completed: ${t.id}`, description: t.title, start: `${t.completedAt}T17:00:00`, end: `${t.completedAt}T17:30:00`, type: 'reminder' });
+    }
+  }
+  const filtered = events.filter(e => {
+    const start = new Date(e.start);
+    return start >= range.start && start < range.end;
+  }).sort((a, b) => new Date(a.start) - new Date(b.start));
+  return { events: filtered, meta: { totalEvents: filtered.length, sourceFile: CALENDAR_EVENTS_PATH, rangeStart: range.start.toISOString(), rangeEnd: range.end.toISOString() } };
+}
+
 function parseDocs() {
   const docsDir = path.join(MC_ROOT, 'docs');
   const docs = [];
@@ -520,6 +675,14 @@ const server = http.createServer(async (req, res) => {
     res.end(JSON.stringify(data));
   } else if (p === '/api/docs') {
     const data = parseDocs();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/cron-schedules') {
+    const data = parseCronSchedules(parseDateRange(url));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  } else if (p === '/api/calendar') {
+    const data = parseCalendarEvents(parseDateRange(url));
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
   } else if (p === '/api/projects') {

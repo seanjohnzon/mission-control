@@ -192,7 +192,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** Phase 1
-- **Assigned:** human
+- **Assigned:** ⚓ Operations (Jinbe)
 - **Proposed by:** human
 - **Opened:** 2026-03-11
 - **Started:** null
@@ -209,7 +209,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** Phase 1
-- **Assigned:** human
+- **Assigned:** ⚓ Operations (Jinbe)
 - **Proposed by:** human
 - **Opened:** 2026-03-11
 - **Started:** null
@@ -633,7 +633,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** 
-- **Assigned:** Nami (orchestrator)
+- **Assigned:** ⚓ Operations (Jinbe)
 - **Sprint:** Sprint 1 — Foundation Docs
 - **Created:** 2026-03-16
 - **Type:** epic
@@ -646,7 +646,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P0
 - **Points:** 10
 - **Phase:** 
-- **Assigned:** Nami (orchestrator)
+- **Assigned:** 🔧 Engineering (Franky)
 - **Sprint:** Sprint 2 — 3D Office
 - **Created:** 2026-03-16
 - **Type:** epic
@@ -663,7 +663,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** 
-- **Assigned:** human
+- **Assigned:** ⚓ Operations (Jinbe)
 - **Sprint:** Sprint 1 — Foundation Docs
 - **Created:** 2026-03-16
 - **Dependencies:** none
@@ -675,7 +675,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P0
 - **Points:** 10
 - **Phase:** 
-- **Assigned:** Chopper
+- **Assigned:** 🔬 QA (Chopper)
 - **Created:** 2026-03-20
 - **Dependencies:** none
 - **Notes:** BROKEN BRIDGE REPAIRED: Brook posted UX-HANDOFF-CHOPPER-SUNNY-002 with UX PASS (9.2/10) for ship scene. Execute QA checklist: FPS/load test, avatar verification (8 crew .png), camera controls, ship bob consistency, demo mode, WebGL stability.
@@ -686,7 +686,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** Operations
-- **Assigned:** Robin
+- **Assigned:** 🔍 Research (Robin)
 - **Created:** 2026-03-20
 - **Dependencies:** none
 - **Notes:** ROBIN-OVERHAUL-NEEDS-ROBIN-001: Complete overhaul involving loop fixes, Discord reorganization, and new research mandates. ROBIN-ANTILOOP-PAPERCLIP-NEEDS-ROBIN-002: Anti-loop tracker and Paperclip AI research requiring strategic analysis. ROBIN-THREADS-ISSUE-001: Telegram thread management setup issue. All require complex reasoning beyond simple data gathering - flagged for direct Robin attention.
@@ -697,7 +697,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Priority:** P1
 - **Points:** 5
 - **Phase:** 
-- **Assigned:** Usopp (requirements)
+- **Assigned:** 📊 Business Intel (Usopp)
 - **Created:** 2026-03-19
 - **Dependencies:** none
 - **Notes:** BROKEN BRIDGE — 3 handoff entries from Brook to Usopp with no MC task: (1) [22:50 EDT] Integrate Oda blueprint data into requirements — 4 floors, womens quarters, bath, energy room, soldier dock. (2) [23:12 EDT] BLUEPRINT-001 layout coordinates and color palettes for requirements doc. (3) [00:15 EDT] Ship scale-up from 20x16 to 32x28 deck units — ALL crew station coordinates changed, 1.6x multiplier, 4-unit clear radius per station. New position table on bulletin. Usopp must update SUNNY-REQ-001 with new dimensions, coordinates, and blueprint details.
@@ -711,7 +711,7 @@ Tasks required for Phase 1 to be considered complete, but not required before br
 - **Status:** in-progress
 - **Priority:** P0
 - **Points:** 10
-- **Assigned:** Franky (builder subagent)
+- **Assigned:** 🔧 Engineering (Franky)
 - **Sprint:** Sprint 3 — Calendar
 - **Created:** 2026-03-20
 - **Type:** story
