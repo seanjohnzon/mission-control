@@ -654,42 +654,48 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
 
       <div class="org-chart">
-        <!-- Leadership -->
-        <div class="org-divider">👑 Leadership</div>
+
+        <!-- ═══ CAPTAIN ═══ -->
+        <div class="org-divider">👑 Captain</div>
         <div class="org-row">
           <div class="team-card glow-yellow">
             <div class="avatar">👤</div>
-            <h3>Cihan (Captain)</h3>
+            <h3>Cihan</h3>
             <div class="machine">Human — MacBook Air</div>
-            <div class="agent-desc">Sets mission, priorities, constraints, approvals. Final judge on all deliverables.</div>
+            <div class="agent-desc">Architect, Director, Judge. Sets mission, priorities, constraints, approvals.</div>
             <div class="roles"><span class="role-pill yellow">Architect</span><span class="role-pill yellow">Director</span><span class="role-pill yellow">Judge</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
 
-        <!-- Navigation -->
-        <div class="org-divider">🧭 Navigation Department — Nami</div>
+        <!-- ═══ NAVIGATION ═══ -->
+        <div class="org-divider">🧭 Navigation — Nami</div>
         <div class="org-row">
           <div class="team-card glow-blue">
             <div class="avatar">🧭</div>
             <h3>Nami</h3>
             <div class="machine">Mac Mini (10.0.0.152) · Claude Opus 4</div>
-            <div class="agent-desc">Chief of Staff. Orchestrates all departments, assigns missions, tracks budget, recovers gateways.</div>
+            <div class="agent-desc">Chief of Staff. Orchestrates all departments, assigns missions, tracks budget.</div>
             <div class="roles"><span class="role-pill blue">Coordinator</span><span class="role-pill blue">Budget</span><span class="role-pill blue">Dispatcher</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
-          <div class="team-card" style="border-color:rgba(88,166,255,0.2)">
-            <div class="avatar">⚡</div>
-            <h3>Zeus</h3>
-            <div class="machine">Mac Mini · Claude Sonnet</div>
-            <div class="agent-desc">Nami's assistant. Heartbeats, cost reports, standup compilation, gateway health checks.</div>
-            <div class="roles"><span class="role-pill blue">Heartbeat</span><span class="role-pill blue">Reports</span><span class="role-pill blue">Gateway</span></div>
-            <div><span class="status-badge online">Subagent</span></div>
+        </div>
+        <div style="margin-left:24px;border-left:2px solid rgba(88,166,255,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(88,166,255,0.2)">
+              <div class="avatar">⚡</div>
+              <h3>Zeus</h3>
+              <div class="machine">Mac Mini · Claude Sonnet</div>
+              <div class="agent-desc">Heartbeats, cost reports, standup compilation, gateway health checks.</div>
+              <div class="roles"><span class="role-pill blue">Heartbeat</span><span class="role-pill blue">Reports</span><span class="role-pill blue">Gateway</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
           </div>
         </div>
 
-        <!-- Engineering -->
-        <div class="org-divider">🔧 Engineering Department — Franky</div>
+        <!-- ═══ ENGINEERING ═══ -->
+        <div class="org-divider">🔧 Engineering — Franky</div>
         <div class="org-row">
           <div class="team-card glow-orange">
             <div class="avatar">🔧</div>
@@ -700,23 +706,35 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px dashed var(--border);padding-left:16px;margin-bottom:16px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">SUBAGENTS</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <span class="badge badge-orange">Paulie — Teams UI</span>
-            <span class="badge badge-orange">Iceburg — Architecture</span>
-            <span class="badge badge-orange">Yokozuna — Data Layer</span>
-            <span class="badge badge-orange">Mozu — Org Viz</span>
-            <span class="badge badge-orange">Kiwi — Sprint HUD</span>
-            <span class="badge badge-orange">Kokoro — Team Data</span>
+        <div style="margin-left:24px;border-left:2px solid rgba(240,136,62,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(240,136,62,0.2)">
+              <div class="avatar">🏗️</div>
+              <h3>Iceburg</h3>
+              <div class="machine">Desktop · GPT-5.4</div>
+              <div class="agent-desc">Architecture planning, code review, technical decisions.</div>
+              <div class="roles"><span class="role-pill orange">Architecture</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:24px;border-left:2px dashed rgba(240,136,62,0.2);padding-left:12px;margin-top:8px">
+            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="badge badge-orange">Paulie — Teams UI</span>
+              <span class="badge badge-orange">Yokozuna — Data Layer</span>
+              <span class="badge badge-orange">Mozu — Org Viz</span>
+              <span class="badge badge-orange">Kiwi — Sprint HUD</span>
+              <span class="badge badge-orange">Kokoro — Team Data</span>
+            </div>
           </div>
         </div>
 
-        <!-- Automation -->
-        <div class="org-divider">👨🍳 Automation Department — Sanji</div>
+        <!-- ═══ AUTOMATION ═══ -->
+        <div class="org-divider">👨‍🍳 Automation — Sanji</div>
         <div class="org-row">
           <div class="team-card glow-orange">
-            <div class="avatar">👨🍳</div>
+            <div class="avatar">👨‍🍳</div>
             <h3>Sanji</h3>
             <div class="machine">Desktop (10.0.0.251) · GPT-5.4</div>
             <div class="agent-desc">Chief Automation Officer. CI/CD, GitHub Pages deploy, cron management, n8n workflows.</div>
@@ -724,113 +742,157 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px dashed var(--border);padding-left:16px;margin-bottom:16px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">SUBAGENTS</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <span class="badge badge-orange">Cavendish — Workflow Orchestrator</span>
-            <span class="badge badge-orange">Suleiman — Cross-Gateway Routing</span>
-            <span class="badge badge-orange">Pudding — Mobile Automation</span>
-            <span class="badge badge-orange">Duvan — Night Ops</span>
-            <span class="badge badge-orange">Zeff — Device Validation</span>
+        <div style="margin-left:24px;border-left:2px solid rgba(240,136,62,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(240,136,62,0.2)">
+              <div class="avatar">⚔️</div>
+              <h3>Cavendish</h3>
+              <div class="machine">Desktop · GPT-5.4</div>
+              <div class="agent-desc">Workflow orchestrator. Manages n8n flows and message queue automation.</div>
+              <div class="roles"><span class="role-pill orange">Workflows</span><span class="role-pill orange">Queue</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:24px;border-left:2px dashed rgba(240,136,62,0.2);padding-left:12px;margin-top:8px">
+            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="badge badge-orange">Suleiman — Cross-Gateway Routing</span>
+              <span class="badge badge-orange">Pudding — Mobile Automation</span>
+              <span class="badge badge-orange">Duvan — Night Ops</span>
+              <span class="badge badge-orange">Zeff — Device Validation</span>
+            </div>
           </div>
         </div>
 
-        <!-- QA -->
-        <div class="org-divider">🔬 QA Department — Chopper</div>
+        <!-- ═══ QA ═══ -->
+        <div class="org-divider">🔬 QA — Chopper</div>
         <div class="org-row">
           <div class="team-card glow-green">
             <div class="avatar">🔬</div>
             <h3>Chopper</h3>
             <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
-            <div class="agent-desc">Chief QA Officer. Nothing ships without his PASS. Visual, API, regression, accessibility testing.</div>
+            <div class="agent-desc">Chief QA Officer. Nothing ships without his PASS. Visual, API, regression testing.</div>
             <div class="roles"><span class="role-pill green">Visual QA</span><span class="role-pill green">API Test</span><span class="role-pill green">Regression</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px dashed var(--border);padding-left:16px;margin-bottom:16px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">SUBAGENTS</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <span class="badge badge-green">Milky — Integration Testing</span>
-            <span class="badge badge-green">visual-tester</span>
-            <span class="badge badge-green">api-tester</span>
-            <span class="badge badge-green">regression-tester</span>
+        <div style="margin-left:24px;border-left:2px solid rgba(63,185,80,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(63,185,80,0.2)">
+              <div class="avatar">🐄</div>
+              <h3>Milky</h3>
+              <div class="machine">GPU3060 · GPT-5.4</div>
+              <div class="agent-desc">Integration testing. Runs the 6 EPIC-004 demo scenarios.</div>
+              <div class="roles"><span class="role-pill green">Integration</span><span class="role-pill green">Demos</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:24px;border-left:2px dashed rgba(63,185,80,0.2);padding-left:12px;margin-top:8px">
+            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="badge badge-green">visual-tester</span>
+              <span class="badge badge-green">api-tester</span>
+              <span class="badge badge-green">regression-tester</span>
+            </div>
           </div>
         </div>
 
-        <!-- Business Intel -->
+        <!-- ═══ BUSINESS INTELLIGENCE ═══ -->
         <div class="org-divider">🎯 Business Intelligence — Usopp</div>
         <div class="org-row">
           <div class="team-card glow-teal">
             <div class="avatar">🎯</div>
             <h3>Usopp</h3>
             <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
-            <div class="agent-desc">Chief BI Officer. Translates Captain's vision into specs. Validates requirements BEFORE Franky builds.</div>
+            <div class="agent-desc">Chief BI Officer. Translates Captain's vision into specs. Validates requirements BEFORE builds.</div>
             <div class="roles"><span class="role-pill teal">Requirements</span><span class="role-pill teal">Specs</span><span class="role-pill teal">Analytics</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
 
-        <!-- Research -->
-        <div class="org-divider">📚 Research Department — Robin</div>
+        <!-- ═══ RESEARCH ═══ -->
+        <div class="org-divider">📚 Research — Robin</div>
         <div class="org-row">
           <div class="team-card" style="border-color:rgba(139,92,246,0.3);box-shadow:0 0 12px rgba(139,92,246,0.1)">
             <div class="avatar">📚</div>
             <h3>Robin</h3>
             <div class="machine">Mac Mini (10.0.0.152) · Grok 4 (xAI)</div>
-            <div class="agent-desc">Chief Research Officer. X/Twitter analysis, web research, knowledge archiving, thread management.</div>
-            <div class="roles"><span class="role-pill purple">X/Twitter</span><span class="role-pill purple">Web Research</span><span class="role-pill purple">Archives</span></div>
+            <div class="agent-desc">Chief Research Officer. X/Twitter analysis, web research, knowledge archiving.</div>
+            <div class="roles"><span class="role-pill purple">X/Twitter</span><span class="role-pill purple">Research</span><span class="role-pill purple">Archives</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
-          <div class="team-card" style="border-color:rgba(139,92,246,0.15)">
-            <div class="avatar">🔎</div>
-            <h3>Robin-Ops</h3>
-            <div class="machine">Mac Mini · Grok 3 Fast</div>
-            <div class="agent-desc">Robin's subagent. Task patrol, search fetching, simple execution.</div>
-            <div class="roles"><span class="role-pill purple">Patrol</span><span class="role-pill purple">Fetch</span></div>
-            <div><span class="status-badge online">Subagent</span></div>
+        </div>
+        <div style="margin-left:24px;border-left:2px solid rgba(139,92,246,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(139,92,246,0.15)">
+              <div class="avatar">🔎</div>
+              <h3>Robin-Ops</h3>
+              <div class="machine">Mac Mini · Grok 3 Fast</div>
+              <div class="agent-desc">Task patrol, search fetching, simple execution.</div>
+              <div class="roles"><span class="role-pill purple">Patrol</span><span class="role-pill purple">Fetch</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
           </div>
         </div>
 
-        <!-- Creative -->
-        <div class="org-divider">🎨 Creative Department — Brook</div>
+        <!-- ═══ CREATIVE ═══ -->
+        <div class="org-divider">🎨 Creative — Brook</div>
         <div class="org-row">
           <div class="team-card" style="border-color:rgba(236,72,153,0.3);box-shadow:0 0 12px rgba(236,72,153,0.1)">
             <div class="avatar">🎨</div>
             <h3>Brook</h3>
             <div class="machine">Mac Mini (10.0.0.152) · Gemini 2.5 Pro</div>
-            <div class="agent-desc">Chief Creative Officer. UX PASS/FAIL authority, visual design, avatars, crew morale.</div>
+            <div class="agent-desc">Chief Creative Officer. UX PASS/FAIL authority, visual design, avatars.</div>
             <div class="roles"><span class="role-pill pink">UX Review</span><span class="role-pill pink">Visual</span><span class="role-pill pink">Avatars</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
-          <div class="team-card" style="border-color:rgba(236,72,153,0.15)">
-            <div class="avatar">🎵</div>
-            <h3>Brook-Ops</h3>
-            <div class="machine">Mac Mini · Gemini</div>
-            <div class="agent-desc">Brook's subagent. Media watch, build detection, simple tasks.</div>
-            <div class="roles"><span class="role-pill pink">Watch</span><span class="role-pill pink">Detect</span></div>
-            <div><span class="status-badge online">Subagent</span></div>
+        </div>
+        <div style="margin-left:24px;border-left:2px solid rgba(236,72,153,0.3);padding-left:16px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card" style="border-color:rgba(236,72,153,0.15)">
+              <div class="avatar">🎵</div>
+              <h3>Brook-Ops</h3>
+              <div class="machine">Mac Mini · Gemini</div>
+              <div class="agent-desc">Media watch, build detection, simple tasks.</div>
+              <div class="roles"><span class="role-pill pink">Watch</span><span class="role-pill pink">Detect</span></div>
+              <div><span class="status-badge online">Subagent</span></div>
+            </div>
           </div>
         </div>
 
-        <!-- Support & Process -->
-        <div class="org-divider">⚙️ Support & Process</div>
+        <!-- ═══ THREAD MANAGEMENT ═══ -->
+        <div class="org-divider">🕊️ Thread Management — Vivi</div>
         <div class="org-row">
           <div class="team-card" style="border-color:rgba(45,212,191,0.3);box-shadow:0 0 12px rgba(45,212,191,0.1)">
             <div class="avatar">🕊️</div>
             <h3>Vivi</h3>
             <div class="machine">Mac Mini · Claude Sonnet</div>
-            <div class="agent-desc">Thread Manager. Patrols Telegram threads, tracks assignments, ensures agent follow-through.</div>
+            <div class="agent-desc">Thread Manager. Patrols Telegram threads, tracks assignments, ensures follow-through.</div>
             <div class="roles"><span class="role-pill teal">Threads</span><span class="role-pill teal">Follow-up</span><span class="role-pill teal">Workspace</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
+        </div>
+
+        <!-- ═══ SCRUM ═══ -->
+        <div class="org-divider">⚓ Scrum — Jinbe</div>
+        <div class="org-row">
           <div class="team-card" style="border-color:rgba(45,212,191,0.3);box-shadow:0 0 12px rgba(45,212,191,0.1)">
             <div class="avatar">⚓</div>
             <h3>Jinbe</h3>
             <div class="machine">Mac Mini · Claude Sonnet (cron)</div>
-            <div class="agent-desc">Scrum Master. Daily board cleanup, effort enforcement, velocity tracking, sprint ceremonies.</div>
+            <div class="agent-desc">Scrum Master. Board cleanup, effort enforcement, velocity tracking, sprint ceremonies.</div>
             <div class="roles"><span class="role-pill teal">Standup</span><span class="role-pill teal">Board</span><span class="role-pill teal">Velocity</span></div>
             <div><span class="status-badge online">Cron</span></div>
           </div>
+        </div>
+
+        <!-- ═══ SECURITY (FUTURE) ═══ -->
+        <div class="org-divider">🛡️ Security — Zoro <span style="font-size:10px;color:var(--text2);text-transform:none;letter-spacing:0">(planned)</span></div>
+        <div class="org-row">
           <div class="team-card" style="opacity:0.5;border-color:rgba(248,81,73,0.2)">
             <div class="avatar">🛡️</div>
             <h3>Zoro</h3>
@@ -841,25 +903,25 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           </div>
         </div>
 
-        <!-- Infrastructure -->
+        <!-- ═══ INFRASTRUCTURE ═══ -->
         <div class="org-divider">🖥️ Infrastructure — 3 Machines</div>
         <div class="card-grid mb">
           <div class="card">
             <h3>Mac Mini (HQ)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.152 · Apple M4 · 16GB</div>
-            <div style="margin-top:8px;font-size:12px">Agents: Nami, Zeus, Robin, Robin-Ops, Brook, Brook-Ops, Vivi, Jinbe</div>
+            <div style="margin-top:8px;font-size:12px">Nami, Zeus, Robin, Robin-Ops, Brook, Brook-Ops, Vivi, Jinbe</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
           <div class="card">
             <h3>Desktop (Engineering)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.251 · Windows</div>
-            <div style="margin-top:8px;font-size:12px">Agents: Franky + 6 subs, Sanji + 5 subs</div>
+            <div style="margin-top:8px;font-size:12px">Franky + 6 subs, Sanji + 5 subs</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
           <div class="card">
-            <h3>GPU3060 Laptop (QA)</h3>
+            <h3>GPU3060 (QA)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.16 · Windows</div>
-            <div style="margin-top:8px;font-size:12px">Agents: Chopper + 4 subs, Usopp</div>
+            <div style="margin-top:8px;font-size:12px">Chopper + 4 subs, Usopp</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
         </div>
@@ -867,9 +929,9 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <!-- Tool Lanes -->
         <div class="tool-lanes">
           <h3>🔧 Tool Lanes</h3>
-          <div class="tool-lane"><span class="tool-name">OpenClaw</span><span class="tool-desc">Primary autonomous runtime — all agents</span><span class="badge badge-green">Active</span></div>
-          <div class="tool-lane"><span class="tool-name">GitHub Pages</span><span class="tool-desc">Mission Control dashboard (UAT)</span><span class="badge badge-green">Active</span></div>
-          <div class="tool-lane"><span class="tool-name">Mission Control API</span><span class="tool-desc">Task board on localhost:18800</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">OpenClaw</span><span class="tool-desc">Primary runtime — all agents</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">GitHub Pages</span><span class="tool-desc">Mission Control (UAT)</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">MC API</span><span class="tool-desc">Task board · :18800</span><span class="badge badge-green">Active</span></div>
           <div class="tool-lane"><span class="tool-name">Cursor</span><span class="tool-desc">Supervised engineering</span><span class="badge badge-yellow">Supervised</span></div>
           <div class="tool-lane"><span class="tool-name">n8n</span><span class="tool-desc">Workflow automation (Sanji)</span><span class="badge badge-yellow">In Progress</span></div>
         </div>
