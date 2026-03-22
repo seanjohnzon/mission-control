@@ -1739,23 +1739,29 @@ function renderProjectCards() {
   const projects = _projectsData || [];
   const tasks = _tasksData || [];
 
-  // Enrich projects with live task data
-  const projTaskMap = {
-    'Mission Control Dashboard': 'PROJ-MC',
-    '3D Office Visualization': 'PROJ-MC',
-    'Crew Architecture': 'PROJ-OPS',
-    'Bridge Runtime': 'PROJ-OPS'
-  };
+  // Build project→task ID map dynamically from task data
+  const projTaskMap = {};
+  const taskProjects = (_tasksData || []).filter(t => (t.type||'').toLowerCase() === 'project');
+  for (const tp of taskProjects) {
+    projTaskMap[tp.title || tp.id] = tp.id;
+  }
+  // Also map by project ID from projects.json
+  for (const p of projects) {
+    if (p.id && !projTaskMap[p.name]) projTaskMap[p.name] = p.id;
+  }
 
   gridEl.innerHTML = projects.map(p => {
-    const prog = p.progress || 0;
-    const lead = p.lead || 'Nami';
+    const projId = p.id || projTaskMap[p.name] || '';
+    // Calculate progress from live task data
+    const projKids = (_tasksData || []).filter(t => t.parent === projId);
+    const totalKids = projKids.length;
+    const doneKids = projKids.filter(t => isCompletedStatus(t.status)).length;
+    const prog = totalKids > 0 ? Math.round((doneKids / totalKids) * 100) : (p.progress || 0);
+    const lead = p.owner || p.lead || 'Nami';
     const initial = lead.charAt(0).toUpperCase();
     const statusClass = p.status === 'active' ? 'badge-green' : p.status === 'paused' ? 'badge-yellow' : p.status === 'planned' ? 'badge-gray' : 'badge-blue';
     const statusLabel = p.status === 'active' ? '● Active' : p.status === 'paused' ? '⏸ Paused' : p.status === 'planned' ? '○ Planned' : p.status;
     const avatarColor = lead === 'Nami' ? 'var(--blue)' : lead === 'Franky' ? 'var(--orange)' : lead === 'Robin' ? 'var(--purple)' : lead === 'Chopper' ? 'var(--green)' : 'var(--teal)';
-    const projId = projTaskMap[p.name] || '';
-
     return `
     <div class="proj-card" ${projId ? `onclick="projDrillInto('${projId}','${escapeHtml(p.name).replace(/'/g,"\\'")}')" style="cursor:pointer"` : ''}>
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">

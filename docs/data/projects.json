@@ -1,11 +1,93 @@
-{"projects":[
-  {"name":"Mission Control Dashboard","desc":"Full-featured operational dashboard on GitHub Pages","status":"active","phase":"EPIC-003 — Sprint 3","progress":40,"lead":"Nami","taskId":"PROJ-MC"},
-  {"name":"3D Office Visualization","desc":"Isometric 3D office with crew desks and ship","status":"paused","phase":"EPIC-002 — Paused by Captain","progress":75,"lead":"Franky","taskId":"PROJ-MC"},
-  {"name":"Operations & Infrastructure","desc":"Crew architecture, gateway management, agent delivery, documentation","status":"active","phase":"All agents online","progress":70,"lead":"Nami","taskId":"PROJ-OPS"},
-  {"name":"Bridge Runtime","desc":"OpenClaw autonomous runtime on Mac Mini","status":"active","phase":"Operational","progress":95,"lead":"Nami"},
-  {"name":"Telegram Integration","desc":"@CihanHawkBot — StrawHats HQ forum with 17 topics","status":"active","phase":"Connected + Forum topics","progress":100,"lead":"Nami"},
-  {"name":"Discord Integration","desc":"The Straw Hats guild — work log channels","status":"active","phase":"Active","progress":80,"lead":"Robin"},
-  {"name":"Research & Knowledge","desc":"X/Twitter research, market analysis, knowledge archiving","status":"active","phase":"Robin + Robin-Ops active","progress":60,"lead":"Robin","taskId":"PROJ-RESEARCH"},
-  {"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini — 2 models","status":"active","phase":"Stable — qwen2.5:3b + 7b","progress":75,"lead":"Nami"},
-  {"name":"Desktop Integration","desc":"Brain agent on Desktop machine — Phase 2","status":"planned","phase":"Blocked — physical cabling","progress":0,"lead":"Nami","taskId":"PROJ-FUTURE"}
-]}
+{
+  "projects": [
+    {
+      "name": "Mission Control",
+      "id": "PROJ-MC",
+      "status": "active",
+      "desc": "All Mission Control dashboard work. GitHub Pages deployment, tabs, data, visualization.",
+      "owner": "Nami",
+      "progress": 0,
+      "epics": [
+        {
+          "id": "EPIC-002",
+          "title": "3D Office Tab \u2014 Graduation Test",
+          "status": "paused",
+          "assigned": "Nami (orchestrator)",
+          "stories": 22
+        },
+        {
+          "id": "EPIC-003",
+          "title": "Mission Control Dashboard \u2014 Full Feature Completion",
+          "status": "paused",
+          "assigned": "Nami (orchestrator)",
+          "stories": 7
+        }
+      ]
+    },
+    {
+      "name": "Operations & Infrastructure",
+      "id": "PROJ-OPS",
+      "status": "active",
+      "desc": "Crew architecture, gateway management, agent delivery systems, documentation.",
+      "owner": "Nami",
+      "progress": 0,
+      "epics": [
+        {
+          "id": "EPIC-001",
+          "title": "Documentation Update \u2014 Align D-series to crew model",
+          "status": "completed",
+          "assigned": "Nami (orchestrator)",
+          "stories": 5
+        },
+        {
+          "id": "CAPT-SANJI-DATING-EPIC-20260321-0112",
+          "title": "[Captain -> Sanji] Build Epic for Cavendish + Zeff dating rollout",
+          "status": "paused",
+          "assigned": "Sanji",
+          "stories": 0
+        },
+        {
+          "id": "EPIC-CAVENDISH-ZEFF-DATING-ROLL-20260321",
+          "title": "[EPIC] Cavendish + Zeff parallel dating rollout to live-test readiness",
+          "status": "paused",
+          "assigned": "Sanji",
+          "stories": 0
+        },
+        {
+          "id": "EPIC-004",
+          "title": "Communication Reliability & Teams Tab \u2014 SPOF Patch Epic",
+          "status": "in-progress",
+          "assigned": "Nami (orchestrator) + Jinbe (helm) + Franky (build) + Sanji (automation) + Usopp (requirements)",
+          "stories": 13
+        }
+      ]
+    },
+    {
+      "name": "Research & Knowledge",
+      "id": "PROJ-RESEARCH",
+      "status": "active",
+      "desc": "X/Twitter research, market analysis, knowledge archiving, Discord organization.",
+      "owner": "Robin",
+      "progress": 0,
+      "epics": []
+    },
+    {
+      "name": "Future & Backlog",
+      "id": "PROJ-FUTURE",
+      "status": "active",
+      "desc": "Deferred work: Desktop integration, Perplexity eval, n8n migration, Zoro security.",
+      "owner": "Nami",
+      "progress": 0,
+      "epics": []
+    },
+    {
+      "name": "Go OpenSource & Go Viral \u2014 Straw Hat Crew for Everyone",
+      "id": "PROJ-OPENSOURCE",
+      "status": "active",
+      "desc": "VISION: Turn the Straw Hat agent crew into an open-source, self-managing OpenClaw template. Any user installs a crew and becomes their own Captain. Scale by replicating departments across machines. Bu",
+      "owner": "Nami (project owner)",
+      "progress": 0,
+      "epics": []
+    }
+  ]
+}
