@@ -332,27 +332,25 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .team-card .status-badge.offline { background: rgba(139,148,158,0.15); color: var(--text2); }
 .team-card .role-card-link { display: block; text-align: right; margin-top: 12px; font-size: 11px; color: var(--text2); font-weight: 500; letter-spacing: 0.5px; }
 .team-card .role-card-link:hover { color: var(--blue); }
+.team-card.compact { min-width: 160px; padding: 12px 14px; }
+.team-card.compact .avatar { font-size: 20px; width: 36px; height: 36px; margin-bottom: 6px; }
+.team-card.compact h3 { font-size: 13px; }
+.team-card.compact .machine { font-size: 11px; margin-bottom: 4px; }
+.team-card.compact .agent-desc { font-size: 10px; margin-bottom: 6px; }
+.team-card.compact .roles { font-size: 10px; margin-bottom: 6px; }
+.team-card.compact .status-badge { font-size: 10px; }
+.sub-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.sub-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; min-width: 140px; flex: 1; max-width: 200px; }
+.sub-card h4 { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.sub-card .sub-role { font-size: 10px; color: var(--text2); }
+.sub-card .sub-status { font-size: 10px; margin-top: 4px; }
+.sub-card.placeholder { opacity: 0.4; border-style: dashed; }
 .org-divider { width: 100%; max-width: 700px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-.orgviz { width: 100%; max-width: 980px; }
-.orgviz-inner { width: 100%; height: min(700px, 75vh); border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
-.orgviz svg { width: 100%; height: 100%; display: block; }
-.orgviz .hint { position: absolute; left: 12px; top: 10px; color: var(--text2); font-size: 11px; pointer-events: none; }
-.orgviz .tip { position: absolute; pointer-events: none; background: rgba(20,22,32,0.96); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--text); box-shadow: 0 12px 28px rgba(0,0,0,0.4); transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity 0.12s ease; }
-.orgviz .tip.open { opacity: 1; }
-.orgviz .tip .t { font-weight: 650; margin-bottom: 4px; }
-.orgviz .tip .m { color: var(--text2); font-size: 11px; }
-.orgviz .legend { position: absolute; right: 12px; top: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-.orgviz .legend .chip { display:inline-flex; align-items:center; gap:6px; padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); border-radius: 999px; font-size: 11px; color: var(--text2); }
 .org-divider::before, .org-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .tool-lanes { margin-top: 32px; width: 100%; max-width: 700px; }
 .tool-lanes h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
 .tool-lane { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
 
-/* Org Viz (from dashboard — duplicate removed, primary block above) */
-.orgviz .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
-.orgviz .legend .dot.ok { background: var(--green); }
-.orgviz .legend .dot.fail { background: var(--red); }
-.orgviz .legend .dot.idle { background: rgba(139,148,158,0.9); }
 .tool-lane .tool-name { font-weight: 500; }
 .tool-lane .tool-desc { color: var(--text2); }
 
@@ -640,8 +638,6 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div class="section-title" style="font-size:14px;margin-top:4px">🏋️ Department Loads</div>
       <div class="card-grid mb" id="dept-loads"></div>
 
-      <div class="section-title" style="font-size:14px;margin-top:18px">🗺️ Org Comms Map</div>
-      <div id="orgviz" class="orgviz card" style="padding:14px"></div>
 
       <!-- Task Flow -->
       <div class="card mb" style="text-align:center;padding:16px;background:linear-gradient(135deg,#161b22,#1a2332)">
@@ -680,16 +676,23 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(88,166,255,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(88,166,255,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(88,166,255,0.2)">
+            <div class="team-card compact" style="border-color:rgba(88,166,255,0.2)">
               <div class="avatar">⚡</div>
               <h3>Zeus</h3>
               <div class="machine">Mac Mini · Claude Sonnet</div>
-              <div class="agent-desc">Heartbeats, cost reports, standup compilation, gateway health checks.</div>
-              <div class="roles"><span class="role-pill blue">Heartbeat</span><span class="role-pill blue">Reports</span><span class="role-pill blue">Gateway</span></div>
+              <div class="agent-desc">Heartbeats, cost reports, standup, gateway checks.</div>
+              <div class="roles"><span class="role-pill blue">Heartbeat</span><span class="role-pill blue">Reports</span></div>
               <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:16px;border-left:2px dashed rgba(88,166,255,0.15);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card placeholder"><h4>subZoro</h4><div class="sub-role">Interim security checks</div><div class="sub-status"><span class="badge badge-yellow">Interim</span></div></div>
+              <div class="sub-card placeholder"><h4>subJinbe</h4><div class="sub-role">Interim process enforcement</div><div class="sub-status"><span class="badge badge-yellow">Interim</span></div></div>
             </div>
           </div>
         </div>
@@ -701,31 +704,31 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🔧</div>
             <h3>Franky</h3>
             <div class="machine">Desktop (10.0.0.251) · GPT-5.4</div>
-            <div class="agent-desc">Chief Engineer. Breaks specs into build tasks, spawns builder subagents in parallel.</div>
+            <div class="agent-desc">Chief Engineer. Breaks specs into build tasks, spawns builders in parallel.</div>
             <div class="roles"><span class="role-pill orange">Frontend</span><span class="role-pill orange">Backend</span><span class="role-pill orange">3D</span><span class="role-pill orange">Git</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(240,136,62,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(240,136,62,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(240,136,62,0.2)">
+            <div class="team-card compact" style="border-color:rgba(240,136,62,0.2)">
               <div class="avatar">🏗️</div>
               <h3>Iceburg</h3>
               <div class="machine">Desktop · GPT-5.4</div>
-              <div class="agent-desc">Architecture planning, code review, technical decisions.</div>
+              <div class="agent-desc">Architecture, code review, technical decisions.</div>
               <div class="roles"><span class="role-pill orange">Architecture</span></div>
               <div><span class="status-badge online">Subagent</span></div>
             </div>
           </div>
-          <div style="margin-left:24px;border-left:2px dashed rgba(240,136,62,0.2);padding-left:12px;margin-top:8px">
-            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              <span class="badge badge-orange">Paulie — Teams UI</span>
-              <span class="badge badge-orange">Yokozuna — Data Layer</span>
-              <span class="badge badge-orange">Mozu — Org Viz</span>
-              <span class="badge badge-orange">Kiwi — Sprint HUD</span>
-              <span class="badge badge-orange">Kokoro — Team Data</span>
+          <div style="margin-left:16px;border-left:2px dashed rgba(240,136,62,0.15);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card"><h4>Paulie</h4><div class="sub-role">Teams UI</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Yokozuna</h4><div class="sub-role">Data Layer</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Mozu</h4><div class="sub-role">Org Viz</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Kiwi</h4><div class="sub-role">Sprint HUD</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Kokoro</h4><div class="sub-role">Team Data</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
             </div>
           </div>
         </div>
@@ -737,30 +740,30 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">👨‍🍳</div>
             <h3>Sanji</h3>
             <div class="machine">Desktop (10.0.0.251) · GPT-5.4</div>
-            <div class="agent-desc">Chief Automation Officer. CI/CD, GitHub Pages deploy, cron management, n8n workflows.</div>
+            <div class="agent-desc">Chief Automation Officer. CI/CD, deploys, cron, n8n workflows.</div>
             <div class="roles"><span class="role-pill orange">CI/CD</span><span class="role-pill orange">Deploy</span><span class="role-pill orange">n8n</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(240,136,62,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(240,136,62,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(240,136,62,0.2)">
+            <div class="team-card compact" style="border-color:rgba(240,136,62,0.2)">
               <div class="avatar">⚔️</div>
               <h3>Cavendish</h3>
               <div class="machine">Desktop · GPT-5.4</div>
-              <div class="agent-desc">Workflow orchestrator. Manages n8n flows and message queue automation.</div>
-              <div class="roles"><span class="role-pill orange">Workflows</span><span class="role-pill orange">Queue</span></div>
+              <div class="agent-desc">Workflow orchestrator. n8n flows, message queue.</div>
+              <div class="roles"><span class="role-pill orange">Workflows</span></div>
               <div><span class="status-badge online">Subagent</span></div>
             </div>
           </div>
-          <div style="margin-left:24px;border-left:2px dashed rgba(240,136,62,0.2);padding-left:12px;margin-top:8px">
-            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              <span class="badge badge-orange">Suleiman — Cross-Gateway Routing</span>
-              <span class="badge badge-orange">Pudding — Mobile Automation</span>
-              <span class="badge badge-orange">Duvan — Night Ops</span>
-              <span class="badge badge-orange">Zeff — Device Validation</span>
+          <div style="margin-left:16px;border-left:2px dashed rgba(240,136,62,0.15);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card"><h4>Suleiman</h4><div class="sub-role">Cross-Gateway Routing</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Pudding</h4><div class="sub-role">Mobile Automation</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Duvan</h4><div class="sub-role">Night Ops</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
+              <div class="sub-card"><h4>Zeff</h4><div class="sub-role">Device Validation</div><div class="sub-status"><span class="badge badge-orange">Active</span></div></div>
             </div>
           </div>
         </div>
@@ -772,29 +775,29 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🔬</div>
             <h3>Chopper</h3>
             <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
-            <div class="agent-desc">Chief QA Officer. Nothing ships without his PASS. Visual, API, regression testing.</div>
+            <div class="agent-desc">Chief QA Officer. Nothing ships without his PASS.</div>
             <div class="roles"><span class="role-pill green">Visual QA</span><span class="role-pill green">API Test</span><span class="role-pill green">Regression</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(63,185,80,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(63,185,80,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(63,185,80,0.2)">
+            <div class="team-card compact" style="border-color:rgba(63,185,80,0.2)">
               <div class="avatar">🐄</div>
               <h3>Milky</h3>
               <div class="machine">GPU3060 · GPT-5.4</div>
-              <div class="agent-desc">Integration testing. Runs the 6 EPIC-004 demo scenarios.</div>
-              <div class="roles"><span class="role-pill green">Integration</span><span class="role-pill green">Demos</span></div>
+              <div class="agent-desc">Integration testing. EPIC-004 demo scenarios.</div>
+              <div class="roles"><span class="role-pill green">Integration</span></div>
               <div><span class="status-badge online">Subagent</span></div>
             </div>
           </div>
-          <div style="margin-left:24px;border-left:2px dashed rgba(63,185,80,0.2);padding-left:12px;margin-top:8px">
-            <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">SUBAGENTS</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              <span class="badge badge-green">visual-tester</span>
-              <span class="badge badge-green">api-tester</span>
-              <span class="badge badge-green">regression-tester</span>
+          <div style="margin-left:16px;border-left:2px dashed rgba(63,185,80,0.15);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card"><h4>visual-tester</h4><div class="sub-role">Visual regression</div><div class="sub-status"><span class="badge badge-green">Active</span></div></div>
+              <div class="sub-card"><h4>api-tester</h4><div class="sub-role">API validation</div><div class="sub-status"><span class="badge badge-green">Active</span></div></div>
+              <div class="sub-card"><h4>regression-tester</h4><div class="sub-role">Regression suites</div><div class="sub-status"><span class="badge badge-green">Active</span></div></div>
             </div>
           </div>
         </div>
@@ -806,9 +809,29 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🎯</div>
             <h3>Usopp</h3>
             <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
-            <div class="agent-desc">Chief BI Officer. Translates Captain's vision into specs. Validates requirements BEFORE builds.</div>
+            <div class="agent-desc">Chief BI Officer. Specs, requirements, analytics. Validates BEFORE builds.</div>
             <div class="roles"><span class="role-pill teal">Requirements</span><span class="role-pill teal">Specs</span><span class="role-pill teal">Analytics</span></div>
             <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+        <div style="margin-left:20px;border-left:2px solid rgba(45,212,191,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
+          <div class="org-row">
+            <div class="team-card compact placeholder" style="border-color:rgba(45,212,191,0.15)">
+              <div class="avatar">📋</div>
+              <h3>TBD</h3>
+              <div class="machine">Not yet architected</div>
+              <div class="agent-desc">Requirements validation assistant.</div>
+              <div class="roles"><span class="role-pill teal">Planned</span></div>
+              <div><span class="status-badge offline">Planned</span></div>
+            </div>
+          </div>
+          <div style="margin-left:16px;border-left:2px dashed rgba(45,212,191,0.1);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Spec writer</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Analytics runner</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+            </div>
           </div>
         </div>
 
@@ -819,21 +842,28 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">📚</div>
             <h3>Robin</h3>
             <div class="machine">Mac Mini (10.0.0.152) · Grok 4 (xAI)</div>
-            <div class="agent-desc">Chief Research Officer. X/Twitter analysis, web research, knowledge archiving.</div>
+            <div class="agent-desc">Chief Research Officer. X/Twitter, web research, knowledge archiving.</div>
             <div class="roles"><span class="role-pill purple">X/Twitter</span><span class="role-pill purple">Research</span><span class="role-pill purple">Archives</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(139,92,246,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(139,92,246,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(139,92,246,0.15)">
+            <div class="team-card compact" style="border-color:rgba(139,92,246,0.15)">
               <div class="avatar">🔎</div>
               <h3>Robin-Ops</h3>
               <div class="machine">Mac Mini · Grok 3 Fast</div>
               <div class="agent-desc">Task patrol, search fetching, simple execution.</div>
               <div class="roles"><span class="role-pill purple">Patrol</span><span class="role-pill purple">Fetch</span></div>
               <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:16px;border-left:2px dashed rgba(139,92,246,0.1);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">X/Twitter poster</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Knowledge indexer</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
             </div>
           </div>
         </div>
@@ -845,21 +875,28 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🎨</div>
             <h3>Brook</h3>
             <div class="machine">Mac Mini (10.0.0.152) · Gemini 2.5 Pro</div>
-            <div class="agent-desc">Chief Creative Officer. UX PASS/FAIL authority, visual design, avatars.</div>
+            <div class="agent-desc">Chief Creative Officer. UX PASS/FAIL authority, visual design.</div>
             <div class="roles"><span class="role-pill pink">UX Review</span><span class="role-pill pink">Visual</span><span class="role-pill pink">Avatars</span></div>
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:24px;border-left:2px solid rgba(236,72,153,0.3);padding-left:16px;margin-bottom:8px">
-          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;letter-spacing:0.5px">ASSISTANT</div>
+        <div style="margin-left:20px;border-left:2px solid rgba(236,72,153,0.3);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
-            <div class="team-card" style="border-color:rgba(236,72,153,0.15)">
+            <div class="team-card compact" style="border-color:rgba(236,72,153,0.15)">
               <div class="avatar">🎵</div>
               <h3>Brook-Ops</h3>
               <div class="machine">Mac Mini · Gemini</div>
               <div class="agent-desc">Media watch, build detection, simple tasks.</div>
               <div class="roles"><span class="role-pill pink">Watch</span><span class="role-pill pink">Detect</span></div>
               <div><span class="status-badge online">Subagent</span></div>
+            </div>
+          </div>
+          <div style="margin-left:16px;border-left:2px dashed rgba(236,72,153,0.1);padding-left:10px;margin-top:6px">
+            <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
+            <div class="sub-row">
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Avatar generator</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+              <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">UX auditor</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
             </div>
           </div>
         </div>
@@ -871,9 +908,16 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🕊️</div>
             <h3>Vivi</h3>
             <div class="machine">Mac Mini · Claude Sonnet</div>
-            <div class="agent-desc">Thread Manager. Patrols Telegram threads, tracks assignments, ensures follow-through.</div>
+            <div class="agent-desc">Thread Manager. Telegram thread patrol, assignment tracking, follow-through.</div>
             <div class="roles"><span class="role-pill teal">Threads</span><span class="role-pill teal">Follow-up</span><span class="role-pill teal">Workspace</span></div>
             <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+        <div style="margin-left:20px;border-left:2px solid rgba(45,212,191,0.2);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT & SUBAGENTS</div>
+          <div class="sub-row">
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Thread archiver</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Follow-up tracker</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
           </div>
         </div>
 
@@ -884,9 +928,16 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">⚓</div>
             <h3>Jinbe</h3>
             <div class="machine">Mac Mini · Claude Sonnet (cron)</div>
-            <div class="agent-desc">Scrum Master. Board cleanup, effort enforcement, velocity tracking, sprint ceremonies.</div>
+            <div class="agent-desc">Scrum Master. Board cleanup, velocity tracking, sprint ceremonies.</div>
             <div class="roles"><span class="role-pill teal">Standup</span><span class="role-pill teal">Board</span><span class="role-pill teal">Velocity</span></div>
             <div><span class="status-badge online">Cron</span></div>
+          </div>
+        </div>
+        <div style="margin-left:20px;border-left:2px solid rgba(45,212,191,0.2);padding-left:14px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT & SUBAGENTS</div>
+          <div class="sub-row">
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Sprint reporter</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Board auditor</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
           </div>
         </div>
 
@@ -897,9 +948,17 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div class="avatar">🛡️</div>
             <h3>Zoro</h3>
             <div class="machine">TBD — needs new machine</div>
-            <div class="agent-desc">Chief Security Officer [FUTURE]. Token rotation, TLS, firewall, incident response.</div>
+            <div class="agent-desc">Chief Security Officer [FUTURE]. Token rotation, TLS, firewall.</div>
             <div class="roles"><span class="role-pill red">Security</span><span class="role-pill red">Infra</span><span class="role-pill red">Audit</span></div>
             <div><span class="status-badge offline">Planned</span></div>
+          </div>
+        </div>
+        <div style="margin-left:20px;border-left:2px dashed rgba(248,81,73,0.15);padding-left:14px;margin-bottom:12px;opacity:0.4">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">FULL TEAM TBD</div>
+          <div class="sub-row">
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Token rotator</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Firewall monitor</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
+            <div class="sub-card placeholder"><h4>TBD</h4><div class="sub-role">Incident responder</div><div class="sub-status"><span class="badge badge-yellow">Planned</span></div></div>
           </div>
         </div>
 
@@ -909,19 +968,19 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           <div class="card">
             <h3>Mac Mini (HQ)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.152 · Apple M4 · 16GB</div>
-            <div style="margin-top:8px;font-size:12px">Nami, Zeus, Robin, Robin-Ops, Brook, Brook-Ops, Vivi, Jinbe</div>
+            <div style="margin-top:6px;font-size:11px">Nami, Zeus, Robin, Robin-Ops, Brook, Brook-Ops, Vivi, Jinbe</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
           <div class="card">
             <h3>Desktop (Engineering)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.251 · Windows</div>
-            <div style="margin-top:8px;font-size:12px">Franky + 6 subs, Sanji + 5 subs</div>
+            <div style="margin-top:6px;font-size:11px">Franky + 6 subs, Sanji + 5 subs</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
           <div class="card">
             <h3>GPU3060 (QA)</h3>
             <div style="font-size:12px;color:var(--text2)">10.0.0.16 · Windows</div>
-            <div style="margin-top:8px;font-size:12px">Chopper + 4 subs, Usopp</div>
+            <div style="margin-top:6px;font-size:11px">Chopper + 4 subs, Usopp</div>
             <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
           </div>
         </div>
@@ -933,7 +992,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           <div class="tool-lane"><span class="tool-name">GitHub Pages</span><span class="tool-desc">Mission Control (UAT)</span><span class="badge badge-green">Active</span></div>
           <div class="tool-lane"><span class="tool-name">MC API</span><span class="tool-desc">Task board · :18800</span><span class="badge badge-green">Active</span></div>
           <div class="tool-lane"><span class="tool-name">Cursor</span><span class="tool-desc">Supervised engineering</span><span class="badge badge-yellow">Supervised</span></div>
-          <div class="tool-lane"><span class="tool-name">n8n</span><span class="tool-desc">Workflow automation (Sanji)</span><span class="badge badge-yellow">In Progress</span></div>
+          <div class="tool-lane"><span class="tool-name">n8n</span><span class="tool-desc">Workflow automation</span><span class="badge badge-yellow">In Progress</span></div>
         </div>
       </div>
     </div>
@@ -1035,10 +1094,6 @@ function activateTab(tab, { updateHash = true } = {}) {
   navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
   panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
   if (tab === 'office') ensureOfficeFrameLoaded();
-  try {
-    if (tab !== 'team') stopOrgVizAnim();
-    else renderOrgViz(_lastDeptMap || new Map());
-  } catch (e) { /* ignore */ }
   if (updateHash) {
     history.replaceState(null, '', '#' + tab);
   }
@@ -1118,821 +1173,6 @@ async function loadHealth() {
 // Tasks
 let _taskView = 'kanban';
 let _tasksData = [];
-let _orgVizAnim = null;
-let _lastDeptMap = null;
-
-function stopOrgVizAnim() {
-  if (_orgVizAnim) {
-    if (_orgVizAnim?.raf) cancelAnimationFrame(_orgVizAnim.raf);
-    if (typeof _orgVizAnim?.cleanup === 'function') _orgVizAnim.cleanup();
-  }
-  _orgVizAnim = null;
-}
-function deptLoadBadge(load) {
-  if (!load) return { label: 'No load data', tone: 'muted' };
-  const pts = load.points || 0;
-  if (pts >= 25) return { label: `${Math.round(pts * 10) / 10} pts (High)`, tone: 'high' };
-  if (pts >= 12) return { label: `${Math.round(pts * 10) / 10} pts (Med)`, tone: 'med' };
-  return { label: `${Math.round(pts * 10) / 10} pts (Low)`, tone: 'low' };
-}
-
-function renderOrgCommsMap(deptMap) {
-  const host = document.getElementById('orgviz');
-  if (!host) return;
-
-  const depts = [
-    { id: 'ops', name: 'Operations', color: 'var(--blue)' },
-    { id: 'eng', name: 'Engineering', color: 'var(--teal)' },
-    { id: 'product', name: 'Product', color: 'var(--purple)' },
-    { id: 'design', name: 'Design', color: 'var(--pink)' },
-    { id: 'qa', name: 'QA', color: 'var(--yellow)' },
-    { id: 'research', name: 'Research', color: 'var(--orange)' },
-    { id: 'data', name: 'Data', color: '#60a5fa' },
-    { id: 'security', name: 'Security', color: '#f87171' },
-    { id: 'support', name: 'Support', color: '#a7f3d0' },
-  ];
-
-  // Connections: ok = animated flow. broken = red marker + stalled flow.
-  const links = [
-    { from: 'hub', to: 'ops', status: 'ok' },
-    { from: 'hub', to: 'eng', status: 'ok' },
-    { from: 'hub', to: 'product', status: 'ok' },
-    { from: 'hub', to: 'design', status: 'ok' },
-    { from: 'hub', to: 'qa', status: 'ok' },
-    { from: 'hub', to: 'research', status: 'ok' },
-    { from: 'hub', to: 'data', status: 'ok' },
-    { from: 'hub', to: 'security', status: 'broken' },
-    { from: 'hub', to: 'support', status: 'ok' },
-
-    { from: 'product', to: 'eng', status: 'ok' },
-    { from: 'design', to: 'eng', status: 'ok' },
-    { from: 'qa', to: 'eng', status: 'ok' },
-    { from: 'ops', to: 'security', status: 'broken' },
-    { from: 'support', to: 'ops', status: 'ok' },
-    { from: 'data', to: 'research', status: 'ok' },
-  ];
-
-  // --- DOM scaffold (idempotent rebuild) ---
-  stopOrgVizAnim();
-  host.innerHTML = `
-    <div class="orgviz-inner">
-      <div class="hint">Drag/scroll the page as normal — hover nodes for details.</div>
-      <div class="legend">
-        <div class="chip"><span class="dot ok"></span>Flow OK</div>
-        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
-      </div>
-      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
-      <svg viewBox="0 0 980 440" role="img" aria-label="Org communication map">
-        <defs>
-          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
-          </marker>
-          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.7)"></path>
-          </marker>
-          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.75)"></path>
-          </marker>
-          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
-          </filter>
-        </defs>
-        <g id="orgviz-links"></g>
-        <g id="orgviz-lights"></g>
-        <g id="orgviz-nodes"></g>
-      </svg>
-    </div>
-  `;
-
-  const wrap = host.querySelector('.orgviz-inner');
-  const svg = host.querySelector('svg');
-  const gLinks = host.querySelector('#orgviz-links');
-  const gLights = host.querySelector('#orgviz-lights');
-  const gNodes = host.querySelector('#orgviz-nodes');
-  const tip = host.querySelector('#orgviz-tip');
-
-  const W = 980, H = 440;
-  const center = { x: W/2, y: H/2 - 6 };
-
-  // Layout: hub + ring of 9 departments.
-  const ringR = 168;
-  const nodePos = new Map();
-  nodePos.set('hub', { x: center.x, y: center.y, r: 38 });
-
-  for (let i = 0; i < depts.length; i++) {
-    const a = (-Math.PI/2) + (i * (2*Math.PI / depts.length));
-    const x = center.x + ringR * Math.cos(a);
-    const y = center.y + ringR * Math.sin(a);
-    nodePos.set(depts[i].id, { x, y, r: 30 });
-  }
-
-  function makePath(a, b, bend=0.22) {
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
-    // Perp offset
-    const px = -dy, py = dx;
-    const len = Math.max(1, Math.hypot(px, py));
-    const ox = (px/len) * (Math.hypot(dx,dy) * bend);
-    const oy = (py/len) * (Math.hypot(dx,dy) * bend);
-    return `M ${a.x} ${a.y} Q ${mx+ox} ${my+oy} ${b.x} ${b.y}`;
-  }
-
-  function elSvg(tag, attrs = {}) {
-    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, String(v));
-    return e;
-  }
-
-  // --- Links ---
-  const linkPaths = [];
-  for (const l of links) {
-    const a = nodePos.get(l.from);
-    const b = nodePos.get(l.to);
-    if (!a || !b) continue;
-
-    const bend = l.from === 'hub' ? 0.10 : 0.26;
-    const d = makePath(a, b, bend);
-
-    const p = elSvg('path', {
-      d,
-      fill: 'none',
-      stroke: l.status === 'broken' ? 'rgba(248,81,73,0.55)' : 'rgba(139,148,158,0.38)',
-      'stroke-width': l.from === 'hub' ? 2.4 : 2,
-      'marker-end': l.status === 'broken' ? 'url(#orgArrowFail)' : 'url(#orgArrow)',
-      'stroke-linecap': 'round',
-      'stroke-linejoin': 'round',
-      opacity: l.status === 'broken' ? 0.85 : 1,
-    });
-
-    if (l.status !== 'broken') {
-      // subtle animated dash "flow"
-      p.setAttribute('stroke-dasharray', '4 10');
-    } else {
-      p.setAttribute('stroke-dasharray', '2 10');
-    }
-
-    gLinks.appendChild(p);
-    linkPaths.push({ link: l, path: p });
-
-    if (l.status === 'broken') {
-      const mid = p.getPointAtLength(p.getTotalLength() * 0.52);
-      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
-      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
-      ring.style.animation = 'orgPulseFail 1.6s infinite';
-      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
-      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
-      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
-      gLinks.appendChild(badge);
-    }
-  }
-
-  // --- Nodes ---
-  const nodeEls = [];
-  function lookupLoadByName(name) {
-    // deptMap keys come from tasks; be forgiving.
-    if (!deptMap) return null;
-    for (const [k, v] of deptMap.entries()) {
-      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
-    }
-    return null;
-  }
-
-  // hub
-  {
-    const p = nodePos.get('hub');
-    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})` });
-    const c = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(88,166,255,0.10)', stroke: 'rgba(88,166,255,0.55)', 'stroke-width': 2 });
-    c.style.animation = 'orgGlow 2.2s ease-in-out infinite';
-    const t1 = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 14, 'font-weight': 700 });
-    t1.textContent = 'MISSION';
-    const t2 = elSvg('text', { x: 0, y: 19, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 10, 'font-weight': 600 });
-    t2.textContent = 'CONTROL';
-    g.appendChild(c); g.appendChild(t1); g.appendChild(t2);
-    gNodes.appendChild(g);
-  }
-
-  for (const d of depts) {
-    const p = nodePos.get(d.id);
-    const load = lookupLoadByName(d.name);
-    const badge = deptLoadBadge(load);
-
-    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})`, 'data-dept': d.name });
-    const outer = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(15,17,25,0.95)', stroke: 'rgba(255,255,255,0.10)', 'stroke-width': 1.5 });
-    const ring = elSvg('circle', { cx: 0, cy: 0, r: p.r-3, fill: 'none', stroke: d.color, 'stroke-width': 2.6, opacity: 0.85 });
-
-    const label = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 11, 'font-weight': 650 });
-    label.textContent = d.name;
-
-    const sub = elSvg('text', { x: 0, y: 20, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 9.5, 'font-weight': 600 });
-    sub.textContent = badge.tone === 'muted' ? '—' : `${Math.round((load?.points || 0) * 10) / 10} pts`;
-
-    g.appendChild(outer); g.appendChild(ring); g.appendChild(label); g.appendChild(sub);
-    gNodes.appendChild(g);
-    nodeEls.push({ g, dept: d, load });
-  }
-
-  // --- Tooltip ---
-  function showTip(evt, title, meta) {
-    if (!tip) return;
-    tip.querySelector('.t').textContent = title;
-    tip.querySelector('.m').textContent = meta;
-    const r = wrap.getBoundingClientRect();
-    const x = evt.clientX - r.left;
-    const y = evt.clientY - r.top;
-    tip.style.left = `${x}px`;
-    tip.style.top = `${y}px`;
-    tip.classList.add('open');
-  }
-  function hideTip() { tip?.classList.remove('open'); }
-
-  for (const n of nodeEls) {
-    n.g.style.cursor = 'default';
-    n.g.addEventListener('mousemove', (e) => {
-      const load = n.load;
-      const pts = load ? Math.round((load.points || 0) * 10)/10 : null;
-      const tasks = load ? load.tasks : null;
-      const meta = load ? `${pts} pts • ${tasks} active tasks` : 'No active task load data yet';
-      showTip(e, n.dept.name, meta);
-    });
-    n.g.addEventListener('mouseleave', hideTip);
-  }
-
-  // --- Animated lights ---
-  // A few dots travel along each ok link.
-  const lights = [];
-  for (const lp of linkPaths) {
-    const total = lp.path.getTotalLength();
-    const count = lp.link.status === 'broken' ? 0 : (lp.link.from === 'hub' ? 4 : 3);
-    for (let i=0;i<count;i++) {
-      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.link.from === 'hub' ? 2.4 : 2.1, fill: 'rgba(63,185,80,0.85)' });
-      gLights.appendChild(dot);
-      lights.push({ dot, path: lp.path, total, phase: i / count });
-    }
-  }
-
-  const t0 = performance.now();
-  const speed = 0.00018; // fraction of path per ms
-  const anim = { raf: null };
-
-  function frame(now) {
-    const t = now - t0;
-    for (const l of lights) {
-      const u = (l.phase + t * speed) % 1;
-      const pt = l.path.getPointAtLength(l.total * u);
-      l.dot.setAttribute('cx', pt.x);
-      l.dot.setAttribute('cy', pt.y);
-      // subtle fade as it approaches end
-      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
-    }
-    // Animate dash offset for all link strokes
-    for (const lp of linkPaths) {
-      if (lp.link.status !== 'broken') {
-        const off = (t * 0.06) % 999;
-        lp.path.setAttribute('stroke-dashoffset', String(-off));
-      } else {
-        const off = (t * 0.03) % 999;
-        lp.path.setAttribute('stroke-dashoffset', String(-off));
-      }
-    }
-    anim.raf = requestAnimationFrame(frame);
-  }
-
-  anim.raf = requestAnimationFrame(frame);
-  _orgVizAnim = anim;
-}
-
-// ===== Team Org Viz (Hierarchy Tree + Pan/Zoom) =====
-// NOTE: This is the primary orgviz renderer (Captain-style hierarchy). The older ring comms map lives in renderOrgCommsMap().
-function renderOrgViz(deptMap) {
-  const host = document.getElementById('orgviz');
-  if (!host) return;
-
-  // Stop any prior animation/handlers from the previous render.
-  stopOrgVizAnim();
-
-  // --- Helpers ---
-  const toneForPts = (pts) => {
-    if (pts >= 25) return { tone: 'high', color: 'var(--red)' };
-    if (pts >= 12) return { tone: 'med', color: 'var(--yellow)' };
-    return { tone: 'low', color: 'var(--green)' };
-  };
-
-  function lookupLoadByName(name) {
-    if (!deptMap) return null;
-    for (const [k, v] of deptMap.entries()) {
-      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
-    }
-    return null;
-  }
-
-  function elSvg(tag, attrs = {}) {
-    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
-    return e;
-  }
-
-  // --- Define hierarchy (expandable) ---
-  // Keep department node labels aligned with task departments, so loads can map.
-  const deptNodes = [
-    { id: 'dept-ops', name: 'Nami — Navigation', color: 'var(--blue)' },
-    { id: 'dept-eng', name: 'Franky — Engineering', color: 'var(--teal)' },
-    { id: 'dept-auto', name: 'Sanji — Automation', color: 'var(--orange)' },
-    { id: 'dept-qa', name: 'Chopper — QA', color: 'var(--yellow)' },
-    { id: 'dept-research', name: 'Robin — Research', color: 'var(--purple)' },
-    { id: 'dept-creative', name: 'Brook — Creative', color: 'var(--pink)' },
-    { id: 'dept-bi', name: 'Usopp — BI', color: '#60a5fa' },
-    { id: 'dept-threads', name: 'Vivi — Threads', color: '#a7f3d0' },
-    { id: 'dept-scrum', name: 'Jinbe — Scrum', color: '#fbbf24' },
-  ];
-
-  const nodes = [
-    { id: 'root', label: '👑 CAPTAIN CIHAN', sub: 'Human • Architect / Director / Judge', kind: 'human', color: 'var(--yellow)' },
-    { id: 'bridge', label: '🧭 NAMI (HQ)', sub: 'Mac Mini • Orchestrator • Budget', kind: 'agent', color: 'var(--blue)' },
-    { id: 'brain', label: '🔧 FRANKY', sub: 'Desktop • Engineering • Builds', kind: 'agent', color: 'var(--teal)' },
-    { id: 'forge', label: '🔬 CHOPPER', sub: 'GPU3060 • QA • Verification', kind: 'agent', color: 'var(--orange)' },
-    { id: 'mc', label: 'MISSION CONTROL', sub: 'Dashboard • APIs • Observability', kind: 'system', color: 'rgba(88,166,255,0.65)' },
-    { id: 'deptGroup', label: 'DEPARTMENTS', sub: '9 departments • Work intake + load', kind: 'group', color: 'rgba(139,148,158,0.65)' },
-    ...deptNodes.map(d => {
-      const load = lookupLoadByName(d.name);
-      const pts = load?.points || 0;
-      const tasks = load?.tasks || 0;
-      const tone = load ? toneForPts(pts) : { tone: 'muted', color: 'rgba(139,148,158,0.6)' };
-      return {
-        id: d.id,
-        label: d.name.toUpperCase(),
-        sub: load ? `${Math.round(pts * 10) / 10} pts • ${tasks} active` : 'No load data yet',
-        kind: 'dept',
-        color: d.color,
-        accent: tone.color,
-        deptName: d.name,
-        load
-      };
-    }),
-  ];
-
-  // Edges: parent → child
-  const edges = [
-    { from: 'root', to: 'bridge', status: 'ok' },
-    { from: 'bridge', to: 'mc', status: 'ok' },
-    { from: 'bridge', to: 'brain', status: 'idle' },
-    { from: 'bridge', to: 'forge', status: 'idle' },
-    { from: 'bridge', to: 'deptGroup', status: 'ok' },
-    ...deptNodes.map(d => ({ from: 'deptGroup', to: d.id, status: d.id.includes('security') ? 'broken' : 'ok' })),
-  ];
-
-  // --- Compute tree layout (simple tidy) ---
-  const children = new Map();
-  for (const e of edges) {
-    if (!children.has(e.from)) children.set(e.from, []);
-    children.get(e.from).push(e.to);
-  }
-
-  const byId = new Map(nodes.map(n => [n.id, n]));
-
-  function measureNode(n) {
-    // Logical sizes (SVG units) — enlarged for readability
-    if (n.kind === 'dept') return { w: 200, h: 68 };
-    if (n.kind === 'group') return { w: 280, h: 72 };
-    if (n.kind === 'system') return { w: 300, h: 76 };
-    if (n.kind === 'agent') return { w: 280, h: 80 };
-    return { w: 300, h: 84 }; // human
-  }
-
-  const sizeById = new Map();
-  for (const n of nodes) sizeById.set(n.id, measureNode(n));
-
-  // Recursively assign x using subtree widths; y by depth.
-  const xById = new Map();
-  const yById = new Map();
-
-  const levelGap = 110;
-  const siblingGap = 28;
-
-  function subtreeWidth(id) {
-    const kids = (children.get(id) || []);
-    const { w } = sizeById.get(id);
-    if (!kids.length) return w;
-    const widths = kids.map(subtreeWidth);
-    const totalKids = widths.reduce((a, b) => a + b, 0) + siblingGap * (widths.length - 1);
-    return Math.max(w, totalKids);
-  }
-
-  function layout(id, left, depth) {
-    const kids = (children.get(id) || []);
-    const size = sizeById.get(id);
-    const sw = subtreeWidth(id);
-    const centerX = left + sw / 2;
-    xById.set(id, centerX);
-    yById.set(id, 48 + depth * levelGap);
-
-    if (!kids.length) return;
-    // place children in a row underneath
-    let cur = left;
-    for (const kid of kids) {
-      const cw = subtreeWidth(kid);
-      layout(kid, cur, depth + 1);
-      cur += cw + siblingGap;
-    }
-  }
-
-  // Layout starting at root
-  layout('root', 0, 0);
-
-  // Determine viewBox bounds to fit the whole tree
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const n of nodes) {
-    const pX = xById.get(n.id);
-    const pY = yById.get(n.id);
-    if (pX === undefined || pY === undefined) continue;
-    const { w, h } = sizeById.get(n.id);
-    minX = Math.min(minX, pX - w / 2);
-    maxX = Math.max(maxX, pX + w / 2);
-    minY = Math.min(minY, pY - h / 2);
-    maxY = Math.max(maxY, pY + h / 2);
-  }
-
-  const pad = 36;
-  minX -= pad; maxX += pad; minY -= pad; maxY += pad;
-  const viewW = maxX - minX;
-  const viewH = maxY - minY;
-
-  // --- DOM scaffold ---
-  host.innerHTML = `
-    <div class="orgviz-inner grab">
-      <div class="hint">Hierarchy view • wheel=zoom • drag=pan • hover=details</div>
-      <div class="legend">
-        <div class="chip"><span class="dot ok"></span>Flow OK</div>
-        <div class="chip"><span class="dot idle"></span>Idle / Paused</div>
-        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
-      </div>
-      <div class="orgviz-controls">
-        <button class="pill" id="orgviz-fit">Fit</button>
-        <button id="orgviz-zoomout">−</button>
-        <button id="orgviz-zoomin">+</button>
-        <button class="pill" id="orgviz-zoom100">100%</button>
-      </div>
-      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
-      <svg viewBox="${minX} ${minY} ${viewW} ${viewH}" role="img" aria-label="Organization hierarchy map">
-        <defs>
-          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
-          </marker>
-          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.75)"></path>
-          </marker>
-          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.8)"></path>
-          </marker>
-          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
-          </filter>
-        </defs>
-        <g id="orgviz-viewport">
-          <g id="orgviz-links"></g>
-          <g id="orgviz-lights"></g>
-          <g id="orgviz-nodes"></g>
-        </g>
-      </svg>
-    </div>
-  `;
-
-  const wrap = host.querySelector('.orgviz-inner');
-  const svg = host.querySelector('svg');
-  const viewport = host.querySelector('#orgviz-viewport');
-  const gLinks = host.querySelector('#orgviz-links');
-  const gLights = host.querySelector('#orgviz-lights');
-  const gNodes = host.querySelector('#orgviz-nodes');
-  const tip = host.querySelector('#orgviz-tip');
-
-  // --- Render links ---
-  const linkPaths = [];
-  function linkPath(fromId, toId) {
-    const aN = byId.get(fromId), bN = byId.get(toId);
-    if (!aN || !bN) return null;
-    const a = { x: xById.get(fromId), y: yById.get(fromId), ...sizeById.get(fromId) };
-    const b = { x: xById.get(toId), y: yById.get(toId), ...sizeById.get(toId) };
-    const x1 = a.x;
-    const y1 = a.y + a.h / 2;
-    const x2 = b.x;
-    const y2 = b.y - b.h / 2;
-    const midY = (y1 + y2) / 2;
-    // Smooth down connector
-    return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
-  }
-
-  for (const e of edges) {
-    const d = linkPath(e.from, e.to);
-    if (!d) continue;
-
-    const broken = e.status === 'broken';
-    const idle = e.status === 'idle';
-
-    const stroke = broken
-      ? 'rgba(248,81,73,0.55)'
-      : idle
-        ? 'rgba(139,148,158,0.22)'
-        : 'rgba(139,148,158,0.38)';
-
-    const marker = broken ? 'url(#orgArrowFail)' : 'url(#orgArrow)';
-
-    const p = elSvg('path', {
-      d,
-      fill: 'none',
-      stroke,
-      'stroke-width': e.from === 'deptGroup' ? 1.8 : 2.2,
-      'stroke-linecap': 'round',
-      'stroke-linejoin': 'round',
-      'marker-end': marker,
-      opacity: broken ? 0.85 : (idle ? 0.8 : 1),
-    });
-
-    // Visual semantics:
-    // - ok: animated comms flow
-    // - idle: paused / non-delivering (no lights)
-    // - broken: failed delivery marker + stalled flow
-    p.setAttribute('stroke-dasharray', broken ? '2 10' : (idle ? '1 14' : '4 10'));
-    gLinks.appendChild(p);
-    linkPaths.push({ edge: e, path: p });
-
-    if (broken) {
-      const total = p.getTotalLength();
-      const mid = p.getPointAtLength(total * 0.52);
-      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
-      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
-      ring.style.animation = 'orgPulseFail 1.6s infinite';
-      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
-      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
-      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
-      gLinks.appendChild(badge);
-    }
-  }
-
-  // --- Render nodes ---
-  const nodeEls = [];
-
-  function drawNode(n) {
-    const { w, h } = sizeById.get(n.id);
-    const x = xById.get(n.id);
-    const y = yById.get(n.id);
-
-    const g = elSvg('g', { transform: `translate(${x} ${y})`, 'data-id': n.id });
-    const rx = 14;
-    const baseFill = 'rgba(15,17,25,0.92)';
-    const border = n.kind === 'human' ? 'rgba(210,153,34,0.35)' : 'rgba(255,255,255,0.10)';
-    const topGlow = (n.kind === 'human' || n.kind === 'agent') ? 'url(#orgSoftGlow)' : '';
-
-    const rect = elSvg('rect', {
-      x: -w / 2,
-      y: -h / 2,
-      width: w,
-      height: h,
-      rx,
-      ry: rx,
-      fill: baseFill,
-      stroke: border,
-      'stroke-width': 1.4,
-    });
-
-    const accent = elSvg('rect', {
-      x: -w / 2,
-      y: -h / 2,
-      width: w,
-      height: h,
-      rx,
-      ry: rx,
-      fill: 'none',
-      stroke: n.accent || n.color || 'rgba(88,166,255,0.35)',
-      'stroke-width': 2.4,
-      opacity: n.kind === 'group' ? 0.35 : 0.6,
-    });
-
-    if (n.kind === 'human') rect.style.filter = 'drop-shadow(0 0 10px rgba(210,153,34,0.08))';
-    if (n.kind === 'agent' && !n.muted) rect.style.filter = 'drop-shadow(0 0 12px rgba(88,166,255,0.10))';
-
-    if (n.muted) {
-      rect.setAttribute('opacity', '0.55');
-      accent.setAttribute('opacity', '0.35');
-    }
-
-    const title = elSvg('text', {
-      x: -w / 2 + 16,
-      y: -4,
-      fill: 'var(--text)',
-      'font-size': n.kind === 'dept' ? 14 : 15,
-      'font-weight': 800,
-      'letter-spacing': '0.04em',
-    });
-    title.textContent = n.label;
-
-    const sub = elSvg('text', {
-      x: -w / 2 + 16,
-      y: 16,
-      fill: 'var(--text2)',
-      'font-size': 12,
-      'font-weight': 600,
-    });
-    sub.textContent = n.sub || '';
-
-    // status dot
-    const dot = elSvg('circle', {
-      cx: w / 2 - 18,
-      cy: -h / 2 + 18,
-      r: 4.2,
-      fill: n.kind === 'dept'
-        ? (n.accent || 'rgba(139,148,158,0.65)')
-        : (n.muted ? 'rgba(139,148,158,0.65)' : (n.kind === 'human' ? 'rgba(63,185,80,0.9)' : 'rgba(63,185,80,0.85)')),
-    });
-
-    // dept load bar
-    if (n.kind === 'dept' && n.load) {
-      const pts = n.load.points || 0;
-      const { color } = toneForPts(pts);
-      const barW = Math.max(10, Math.min(w - 28, (pts / 28) * (w - 28)));
-      const barBg = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 16, width: w - 32, height: 7, rx: 4, fill: 'rgba(255,255,255,0.06)' });
-      const bar = elSvg('rect', { x: -w / 2 + 16, y: h / 2 - 16, width: barW, height: 6, rx: 4, fill: color, opacity: 0.7 });
-      g.appendChild(barBg); g.appendChild(bar);
-    }
-
-    g.appendChild(rect);
-    g.appendChild(accent);
-    g.appendChild(dot);
-    g.appendChild(title);
-    if (n.sub) g.appendChild(sub);
-
-    if (topGlow) g.style.filter = 'url(#orgSoftGlow)';
-
-    gNodes.appendChild(g);
-    nodeEls.push({ g, n, x, y });
-  }
-
-  for (const n of nodes) {
-    if (!xById.has(n.id)) continue; // skip unplaced
-    drawNode(n);
-  }
-
-  // --- Tooltip ---
-  function showTip(evt, title, meta) {
-    if (!tip) return;
-    tip.querySelector('.t').textContent = title;
-    tip.querySelector('.m').textContent = meta;
-    const r = wrap.getBoundingClientRect();
-    const x = evt.clientX - r.left;
-    const y = evt.clientY - r.top;
-    tip.style.left = `${x}px`;
-    tip.style.top = `${y}px`;
-    tip.classList.add('open');
-  }
-  function hideTip() { tip?.classList.remove('open'); }
-
-  for (const ne of nodeEls) {
-    ne.g.style.cursor = 'default';
-    ne.g.addEventListener('mousemove', (e) => {
-      const meta = ne.n.sub || '';
-      showTip(e, ne.n.label, meta);
-    });
-    ne.g.addEventListener('mouseleave', hideTip);
-  }
-
-  // --- Animated lights (only for ok edges) ---
-  const lights = [];
-  for (const lp of linkPaths) {
-    if (lp.edge.status !== 'ok') continue;
-    const total = lp.path.getTotalLength();
-    const count = lp.edge.from === 'deptGroup' ? 2 : 3;
-    for (let i = 0; i < count; i++) {
-      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.edge.from === 'deptGroup' ? 2.0 : 2.3, fill: 'rgba(63,185,80,0.85)' });
-      gLights.appendChild(dot);
-      lights.push({ dot, path: lp.path, total, phase: i / count });
-    }
-  }
-
-  const t0 = performance.now();
-  const speed = 0.00016;
-  const anim = { raf: null, cleanup: null };
-
-  function frame(now) {
-    const t = now - t0;
-    for (const l of lights) {
-      const u = (l.phase + t * speed) % 1;
-      const pt = l.path.getPointAtLength(l.total * u);
-      l.dot.setAttribute('cx', pt.x);
-      l.dot.setAttribute('cy', pt.y);
-      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
-    }
-    for (const lp of linkPaths) {
-      const rate = lp.edge.status === 'broken' ? 0.03 : (lp.edge.status === 'idle' ? 0.012 : 0.06);
-      const off = (t * rate) % 999;
-      lp.path.setAttribute('stroke-dashoffset', String(-off));
-    }
-    anim.raf = requestAnimationFrame(frame);
-  }
-  anim.raf = requestAnimationFrame(frame);
-
-  // --- Pan/Zoom ---
-  // Apply transform to viewport group (not viewBox), so Fit/Zoom can be smooth.
-  let scale = 1;
-  let panX = 0;
-  let panY = 0;
-
-  function applyTransform() {
-    viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
-  }
-
-  function fitToScreen() {
-    const box = svg.getBoundingClientRect();
-    const vb = svg.viewBox.baseVal;
-    if (!box.width || !box.height || !vb.width || !vb.height) return;
-    // Scale to fit with 8% padding
-    scale = Math.min(box.width / vb.width, box.height / vb.height) * 0.92;
-    scale = Math.max(0.5, Math.min(2.5, scale));
-    panX = 0;
-    panY = 0;
-    applyTransform();
-  }
-
-  function zoomAt(clientX, clientY, nextScale) {
-    const vb = svg.viewBox.baseVal;
-    const box = svg.getBoundingClientRect();
-    const px = (clientX - box.left) / box.width;
-    const py = (clientY - box.top) / box.height;
-    // SVG coord under cursor (in viewBox space)
-    const x = vb.x + px * vb.width;
-    const y = vb.y + py * vb.height;
-    // Keep point under cursor stable by adjusting pan
-    const k = nextScale / scale;
-    panX = x - (x - panX) * k;
-    panY = y - (y - panY) * k;
-    scale = nextScale;
-    applyTransform();
-  }
-
-  let dragging = false;
-  let last = null;
-
-  function onDown(e) {
-    dragging = true;
-    last = { x: e.clientX, y: e.clientY };
-    wrap.classList.remove('grab');
-    wrap.classList.add('grabbing');
-    hideTip();
-  }
-  function onMove(e) {
-    if (!dragging || !last) return;
-    const dx = e.clientX - last.x;
-    const dy = e.clientY - last.y;
-    last = { x: e.clientX, y: e.clientY };
-    // Convert pixels to SVG viewBox units
-    const vb = svg.viewBox.baseVal;
-    const box = svg.getBoundingClientRect();
-    const ux = (dx / box.width) * vb.width;
-    const uy = (dy / box.height) * vb.height;
-    panX += ux;
-    panY += uy;
-    applyTransform();
-  }
-  function onUp() {
-    dragging = false;
-    last = null;
-    wrap.classList.remove('grabbing');
-    wrap.classList.add('grab');
-  }
-
-  function onWheel(e) {
-    // When hovering the orgviz area, allow wheel zoom (and avoid page scroll).
-    e.preventDefault();
-    const delta = -e.deltaY;
-    const step = delta > 0 ? 1.12 : 1 / 1.12;
-    const next = Math.max(0.25, Math.min(2.75, scale * step));
-    zoomAt(e.clientX, e.clientY, next);
-  }
-
-  wrap.addEventListener('mousedown', onDown);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onUp);
-  wrap.addEventListener('wheel', onWheel, { passive: false });
-
-  const fitBtn = host.querySelector('#orgviz-fit');
-  const zIn = host.querySelector('#orgviz-zoomin');
-  const zOut = host.querySelector('#orgviz-zoomout');
-  const z100 = host.querySelector('#orgviz-zoom100');
-
-  fitBtn?.addEventListener('click', () => fitToScreen());
-  zIn?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.min(2.75, scale * 1.18)));
-  zOut?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.max(0.25, scale / 1.18)));
-  z100?.addEventListener('click', () => { scale = 1; panX = 0; panY = 0; applyTransform(); });
-
-  // Initial fit for birds-eye readability
-  setTimeout(() => fitToScreen(), 0);
-
-  anim.cleanup = () => {
-    wrap.removeEventListener('mousedown', onDown);
-    window.removeEventListener('mousemove', onMove);
-    window.removeEventListener('mouseup', onUp);
-    wrap.removeEventListener('wheel', onWheel);
-  };
-
-  _orgVizAnim = anim;
-}
 
 function setTaskView(view) {
   _taskView = view;
@@ -2163,8 +1403,6 @@ function renderDepartmentLoads(tasks) {
       <div class="dept-sub">${d.tasks} active task${d.tasks === 1 ? '' : 's'}</div>
     </div>
   `).join('');
-  _lastDeptMap = deptMap;
-  try { renderOrgViz(deptMap); } catch (e) { console.warn("orgviz render failed", e); }
 }
 
 let _drillPath = []; // breadcrumb: [{id, title}]
