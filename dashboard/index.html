@@ -145,17 +145,54 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .cal-block.tier-red { border-left-color: var(--red); }
 
 /* Projects */
-.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-.proj-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0; transition: border-color 0.2s; }
+.proj-card:hover { border-color: #3d4158; }
+.proj-card-header { padding: 20px 20px 16px; cursor: pointer; user-select: none; }
+.proj-card-header:hover { background: rgba(255,255,255,0.02); border-radius: 10px 10px 0 0; }
+.proj-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.proj-card .proj-icon { font-size: 18px; }
 .proj-card .desc { color: var(--text2); font-size: 13px; margin-bottom: 12px; }
+.proj-card .proj-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text2); margin-top: 8px; }
+.proj-card .proj-stats span { display: flex; align-items: center; gap: 4px; }
 .proj-card .proj-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
 .proj-card .proj-footer .proj-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
 .proj-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
-.proj-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
-.proj-status.planned { background: rgba(88,166,255,0.15); color: var(--blue); }
-.proj-status.paused { background: rgba(210,153,34,0.15); color: var(--yellow); }
-.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-.progress-bar .fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+.proj-status.active, .proj-status.in-progress { background: rgba(63,185,80,0.15); color: var(--green); }
+.proj-status.planned, .proj-status.open { background: rgba(88,166,255,0.15); color: var(--blue); }
+.proj-status.paused, .proj-status.blocked { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.proj-status.completed, .proj-status.done { background: rgba(63,185,80,0.15); color: var(--green); }
+.progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+.progress-bar .fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.progress-bar .fill.green { background: var(--green); }
+.progress-bar .fill.yellow { background: var(--yellow); }
+.progress-bar .fill.blue { background: var(--blue); }
+.proj-epics { border-top: 1px solid var(--border); padding: 0; }
+.proj-epic-row { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: background 0.15s; font-size: 13px; }
+.proj-epic-row:last-child { border-bottom: none; }
+.proj-epic-row:hover { background: rgba(88,166,255,0.06); }
+.proj-epic-row .epic-icon { font-size: 14px; flex-shrink: 0; }
+.proj-epic-row .epic-info { flex: 1; min-width: 0; }
+.proj-epic-row .epic-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proj-epic-row .epic-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.proj-epic-row .epic-progress { width: 80px; flex-shrink: 0; }
+.proj-epic-row .epic-progress .progress-bar { margin-top: 0; height: 4px; }
+.proj-epic-row .epic-pct { font-size: 11px; color: var(--text2); width: 36px; text-align: right; flex-shrink: 0; }
+.proj-toggle { font-size: 12px; color: var(--text2); transition: transform 0.2s; }
+.proj-toggle.open { transform: rotate(90deg); }
+
+/* Task tree hierarchy */
+.tree-level-project > .tree-header { background: rgba(88,166,255,0.08); border-color: rgba(88,166,255,0.2); }
+.tree-level-epic > .tree-header { background: rgba(139,92,246,0.06); border-color: rgba(139,92,246,0.15); }
+.tree-level-story > .tree-header { background: rgba(45,212,191,0.05); border-color: rgba(45,212,191,0.12); }
+.tree-level-task > .tree-header { background: rgba(255,255,255,0.02); }
+.tree-type-icon { font-size: 14px; flex-shrink: 0; }
+.tree-header .tree-status { margin-left: auto; flex-shrink: 0; }
+.tree-children { margin-left: 20px; padding-left: 12px; border-left: 2px solid rgba(139,148,158,0.15); margin-top: 6px; }
+.tree-children .tree-node { margin-bottom: 6px; }
+
+/* Task filter controls */
+.task-filter-select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.task-filter-select:focus { outline: none; border-color: var(--blue); }
 
 /* Memory */
 .mem-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
@@ -433,6 +470,10 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <button class="office-filter" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
             <button class="office-filter" id="view-tree" onclick="setTaskView('tree')">Tree</button>
           </div>
+          <div id="task-project-filter-wrap" style="display:flex;gap:6px;align-items:center"></div>
+          <select id="project-filter" onchange="renderTasks()" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:6px;font-size:12px">
+            <option value="">All Projects</option>
+          </select>
           <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);user-select:none">
             <input type="checkbox" id="active-only" onchange="renderTasks()" />
             Active only
@@ -475,7 +516,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <!-- Projects -->
     <div class="tab-panel" id="tab-projects">
       <div class="section-title">📁 Projects</div>
-      <div class="card-grid" id="projects-grid"></div>
+      <div id="projects-grid"></div>
     </div>
 
     <!-- Memory -->
@@ -722,7 +763,7 @@ async function loadHealth() {
 }
 
 // Tasks
-let _taskView = 'kanban';
+let _taskView = 'tree';
 let _tasksData = [];
 
 function setTaskView(view) {
@@ -858,24 +899,37 @@ function renderTree(tasks) {
     children.get(pid).push(t.id);
   }
 
+  // Build roots: tasks with no parent in the set, prioritizing projects
   const roots = [];
   for (const t of tasks) {
     const hasParent = !!t.parent && byId.has(t.parent);
-    const isProject = (t.type || '').toLowerCase() === 'project';
-    if (isProject || !hasParent) roots.push(t.id);
+    if (!hasParent) roots.push(t.id);
   }
+
+  // Sort: projects first, then epics, then stories, then tasks; alphabetical within
+  const typeOrder = { project: 0, epic: 1, story: 2, task: 3 };
+  const getTypeOrder = (t) => typeOrder[(t?.type || 'task').toLowerCase()] ?? 3;
 
   roots.sort((a, b) => {
     const ta = byId.get(a), tb = byId.get(b);
-    const pa = ((ta?.type || '').toLowerCase() === 'project') ? 0 : 1;
-    const pb = ((tb?.type || '').toLowerCase() === 'project') ? 0 : 1;
-    if (pa !== pb) return pa - pb;
+    const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+    if (oa !== ob) return oa - ob;
     return String(a).localeCompare(String(b));
   });
 
+  const typeIcons = { project: '📂', epic: '📌', story: '📖', task: '📝' };
+  const typeColors = { project: 'var(--blue)', epic: 'var(--purple)', story: 'var(--teal)', task: 'var(--text2)' };
+
+  function statusDot(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'completed' || s === 'done') return '<span style="color:var(--green);font-size:14px">✓</span>';
+    if (s === 'in-progress') return '<span style="color:var(--purple);font-size:10px">●</span>';
+    if (s === 'blocked') return '<span style="color:var(--yellow);font-size:10px">●</span>';
+    if (s === 'cancelled') return '<span style="color:var(--red);font-size:14px">✗</span>';
+    return '<span style="color:var(--text2);font-size:10px">○</span>';
+  }
+
   function nodeLabel(t) {
-    const kind = (t.type || '').toLowerCase();
-    const kindBadge = kind ? `<span class="badge badge-gray">${escapeHtml(kind)}</span>` : '';
     const pts = getTaskPoints(t);
     const ptsBadge = pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : '';
     const dept = taskDept(t);
@@ -883,33 +937,48 @@ function renderTree(tasks) {
     const pri = t.priority || '';
     const pBadge = pri === 'P0' ? 'badge-red' : pri === 'P1' ? 'badge-orange' : pri === 'P2' ? 'badge-blue' : 'badge-gray';
     const priBadge = pri ? `<span class="badge ${pBadge}">${escapeHtml(pri)}</span>` : '';
-    return `${priBadge}${kindBadge}${ptsBadge}${deptBadge}`;
+    const assignee = t.assigned ? `<span class="badge badge-gray">👤 ${escapeHtml(t.assigned)}</span>` : '';
+    return `${priBadge}${ptsBadge}${deptBadge}${assignee}`;
   }
 
-  function renderNode(taskId) {
+  function renderNode(taskId, depth) {
     const t = byId.get(taskId);
     if (!t) return document.createElement('div');
 
-    const kids = (children.get(taskId) || []).slice().sort();
+    const kind = (t.type || 'task').toLowerCase();
+    const kids = (children.get(taskId) || []).slice().sort((a, b) => {
+      const ta = byId.get(a), tb = byId.get(b);
+      const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+      if (oa !== ob) return oa - ob;
+      return String(a).localeCompare(String(b));
+    });
     const hasKids = kids.length > 0;
+    const icon = typeIcons[kind] || '📝';
+    const borderColor = typeColors[kind] || 'var(--text2)';
+    const defaultOpen = kind === 'project' || kind === 'epic';
 
     const node = document.createElement('div');
-    node.className = 'tree-node';
+    node.className = `tree-node tree-level-${kind}`;
 
     const header = document.createElement('div');
     header.className = 'tree-header';
     header.id = 'task-' + t.id;
     header.innerHTML = `
-      <div class="tree-toggle">${hasKids ? '▾' : '•'}</div>
-      <div style="flex:1">
-        <div class="tree-title">${escapeHtml(t.id)} — ${escapeHtml(t.title || '')}</div>
-        <div class="task-meta" style="margin-top:6px">${nodeLabel(t)}</div>
+      <div class="tree-toggle" style="color:${borderColor}">${hasKids ? (defaultOpen ? '▾' : '▸') : '•'}</div>
+      <span class="tree-type-icon">${icon}</span>
+      <div style="flex:1;min-width:0">
+        <div class="tree-title" style="display:flex;align-items:center;gap:6px">
+          <span style="color:var(--text2);font-size:11px;flex-shrink:0">${escapeHtml(t.id)}</span>
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(t.title || '')}</span>
+        </div>
+        <div class="task-meta" style="margin-top:4px">${nodeLabel(t)}</div>
       </div>
+      <div class="tree-status">${statusDot(t.status)}</div>
     `;
 
     const childrenEl = document.createElement('div');
     childrenEl.className = 'tree-children';
-    childrenEl.style.display = hasKids ? '' : 'none';
+    childrenEl.style.display = hasKids ? (defaultOpen ? '' : 'none') : 'none';
 
     if (hasKids) {
       header.addEventListener('click', () => {
@@ -918,20 +987,8 @@ function renderTree(tasks) {
         header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
       });
       for (const kidId of kids) {
-        if ((children.get(kidId) || []).length === 0) {
-          const leafWrap = document.createElement('div');
-          leafWrap.className = 'tree-leaf';
-          const kid = byId.get(kidId);
-          const { pClass, html } = renderTaskCardInner(kid, 'var(--text2)');
-          const card = document.createElement('div');
-          card.className = `kanban-card ${pClass}`;
-          card.id = 'task-' + kid.id;
-          card.innerHTML = html;
-          leafWrap.appendChild(card);
-          childrenEl.appendChild(leafWrap);
-        } else {
-          childrenEl.appendChild(renderNode(kidId));
-        }
+        // Always render as tree nodes for consistent hierarchy
+        childrenEl.appendChild(renderNode(kidId, depth + 1));
       }
     }
 
@@ -940,7 +997,7 @@ function renderTree(tasks) {
     return node;
   }
 
-  for (const rid of roots) container.appendChild(renderNode(rid));
+  for (const rid of roots) container.appendChild(renderNode(rid, 0));
 
   if (!roots.length) {
     container.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No tasks found.</div>';
@@ -980,10 +1037,52 @@ function renderDepartmentLoads(tasks) {
   }).join('');
 }
 
+let _taskProjectFilter = '';
+
 function renderTasks() {
   const tasks = _tasksData || [];
   const activeOnly = document.getElementById('active-only')?.checked;
-  const filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
+  let filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
+
+  // Project filter
+  const projectFilter = _taskProjectFilter || (document.getElementById('task-project-filter')?.value || '');
+  if (projectFilter) {
+    // Include the selected project/epic and all its descendants
+    const byId = new Map(tasks.map(t => [t.id, t]));
+    const childrenMap = new Map();
+    for (const t of tasks) {
+      if (t.parent) {
+        if (!childrenMap.has(t.parent)) childrenMap.set(t.parent, []);
+        childrenMap.get(t.parent).push(t.id);
+      }
+    }
+    function getTree(id) {
+      const result = new Set([id]);
+      for (const kid of (childrenMap.get(id) || [])) {
+        for (const d of getTree(kid)) result.add(d);
+      }
+      return result;
+    }
+    const allowedIds = getTree(projectFilter);
+    filtered = filtered.filter(t => allowedIds.has(t.id));
+  }
+
+  // Build project filter dropdown
+  const filterContainer = document.getElementById('task-project-filter-wrap');
+  if (filterContainer) {
+    const projects = tasks.filter(t => (t.type || '').toLowerCase() === 'project');
+    if (projects.length > 0) {
+      filterContainer.innerHTML = `
+        <span class="text2" style="font-size:12px">Project</span>
+        <select class="task-filter-select" id="task-project-filter" onchange="_taskProjectFilter='';renderTasks()">
+          <option value="">All</option>
+          ${projects.map(p => `<option value="${p.id}" ${projectFilter === p.id ? 'selected' : ''}>${escapeHtml(p.title || p.id)}</option>`).join('')}
+        </select>
+      `;
+    } else {
+      filterContainer.innerHTML = '';
+    }
+  }
 
   const kanbanEl = document.getElementById('kanban');
   const treeEl = document.getElementById('task-tree');
@@ -1026,7 +1125,9 @@ async function loadTasks() {
   const data = await api('/api/tasks');
   if (!data || !data.tasks) return;
   _tasksData = data.tasks;
-  setTaskView(_taskView || 'kanban');
+  setTaskView(_taskView || 'tree');
+  // Projects tab is built from tasks data
+  loadProjects();
 }
 
 // Calendar (Build 2)
@@ -1219,32 +1320,134 @@ function calNav(dir) {
 
 setCalView('week');
 
-// Projects
-async function loadProjects() {
-  const data = await api('/api/projects');
-  if (!data) return;
+// Projects — built from _tasksData, no separate API
+function loadProjects() {
+  const tasks = _tasksData || [];
+  if (!tasks.length) return;
+
+  const byId = new Map(tasks.map(t => [t.id, t]));
+  const childrenMap = new Map();
+  for (const t of tasks) {
+    if (t.parent) {
+      if (!childrenMap.has(t.parent)) childrenMap.set(t.parent, []);
+      childrenMap.get(t.parent).push(t.id);
+    }
+  }
+
+  const projects = tasks.filter(t => (t.type || '').toLowerCase() === 'project');
   const grid = document.getElementById('projects-grid');
-  const progressMap = {'Mission Control':60,'Bridge Runtime':90,'Telegram Integration':95,'Discord Integration':0,'One Piece':10,'Local Inference':85,'Desktop Integration':0};
-  grid.innerHTML = data.projects.map(p => {
-    const prog = progressMap[p.name] !== undefined ? progressMap[p.name] : (p.progress || 0);
-    const assignee = p.owner || p.lead || 'bridge';
+
+  if (!projects.length) {
+    grid.innerHTML = '<div class="card text2" style="text-align:center;padding:40px;grid-column:1/-1">No projects found. Create tasks with type=project.</div>';
+    return;
+  }
+
+  function getDescendants(taskId) {
+    const kids = childrenMap.get(taskId) || [];
+    let all = [];
+    for (const kid of kids) {
+      all.push(kid);
+      all = all.concat(getDescendants(kid));
+    }
+    return all;
+  }
+
+  function calcProgress(taskId) {
+    const descendants = getDescendants(taskId);
+    if (!descendants.length) {
+      const t = byId.get(taskId);
+      return t && isCompletedStatus(t.status) ? 100 : 0;
+    }
+    const total = descendants.length;
+    const done = descendants.filter(id => { const t = byId.get(id); return t && isCompletedStatus(t.status); }).length;
+    return total > 0 ? Math.round((done / total) * 100) : 0;
+  }
+
+  grid.innerHTML = projects.map(p => {
+    const epics = (childrenMap.get(p.id) || []).map(id => byId.get(id)).filter(t => t && (t.type || '').toLowerCase() === 'epic');
+    const allChildren = getDescendants(p.id);
+    const totalTasks = allChildren.length;
+    const doneTasks = allChildren.filter(id => { const t = byId.get(id); return t && isCompletedStatus(t.status); }).length;
+    const prog = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+    const progColor = prog >= 80 ? 'green' : prog >= 40 ? 'yellow' : 'blue';
+
+    const assignee = p.assigned || 'unassigned';
     const initial = assignee.charAt(0).toUpperCase();
-    const avatarColor = assignee.includes('bridge') ? 'var(--blue)' : assignee.includes('forge') ? 'var(--orange)' : assignee.includes('brain') ? 'var(--teal)' : 'var(--yellow)';
+    const avatarColor = assignee.includes('nami') ? 'var(--orange)' : assignee.includes('franky') ? 'var(--blue)' : assignee.includes('chopper') ? 'var(--teal)' : assignee.includes('robin') ? 'var(--purple)' : 'var(--text2)';
+    const statusClass = (p.status || 'open').toLowerCase().replace(/\s+/g, '-');
+    const projId = 'proj-' + p.id.replace(/[^a-zA-Z0-9]/g, '_');
+
+    const epicsHtml = epics.map(e => {
+      const epicProg = calcProgress(e.id);
+      const epicProgColor = epicProg >= 80 ? 'green' : epicProg >= 40 ? 'yellow' : 'blue';
+      const epicKids = getDescendants(e.id);
+      const epicTotal = epicKids.length;
+      const epicDone = epicKids.filter(id => { const t = byId.get(id); return t && isCompletedStatus(t.status); }).length;
+      const epicStatusClass = (e.status || 'open').toLowerCase().replace(/\s+/g, '-');
+      return `
+        <div class="proj-epic-row" onclick="navigateToEpic('${e.id}')">
+          <span class="epic-icon">📌</span>
+          <div class="epic-info">
+            <div class="epic-title">${escapeHtml(e.title || e.id)}</div>
+            <div class="epic-meta">${escapeHtml(e.id)} · ${epicDone}/${epicTotal} done · <span class="proj-status ${epicStatusClass}" style="font-size:10px;padding:1px 6px">${escapeHtml(e.status || 'open')}</span></div>
+          </div>
+          <div class="epic-progress"><div class="progress-bar"><div class="fill ${epicProgColor}" style="width:${epicProg}%"></div></div></div>
+          <span class="epic-pct">${epicProg}%</span>
+        </div>`;
+    }).join('');
+
     return `
-    <div class="proj-card">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
-        <h3>${p.name}</h3>
-        <span class="proj-status ${p.status}">${p.status}</span>
+    <div class="proj-card" style="grid-column: span ${epics.length > 0 ? 2 : 1}">
+      <div class="proj-card-header" onclick="toggleProjectEpics('${projId}')">
+        <div style="display:flex;justify-content:space-between;align-items:start">
+          <h3><span class="proj-icon">📂</span> ${escapeHtml(p.title || p.id)}</h3>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="proj-status ${statusClass}">${escapeHtml(p.status || 'open')}</span>
+            ${epics.length > 0 ? '<span class="proj-toggle" id="toggle-' + projId + '">▶</span>' : ''}
+          </div>
+        </div>
+        ${p.notes ? `<div class="desc">${escapeHtml(p.notes)}</div>` : ''}
+        <div class="proj-stats">
+          <span>📌 ${epics.length} epic${epics.length !== 1 ? 's' : ''}</span>
+          <span>📝 ${totalTasks} task${totalTasks !== 1 ? 's' : ''}</span>
+          <span>✅ ${doneTasks} done</span>
+        </div>
+        <div class="progress-bar"><div class="fill ${progColor}" style="width:${prog}%"></div></div>
+        <div class="proj-footer">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="proj-avatar" style="background:${avatarColor}">${escapeHtml(initial)}</div>
+            <span style="font-size:11px;color:var(--text2)">${escapeHtml(assignee)}</span>
+          </div>
+          <span style="font-size:11px;color:var(--text2)">${prog}% complete</span>
+        </div>
       </div>
-      <div class="desc">${p.desc}</div>
-      ${p.phase ? `<div style="font-size:11px;color:var(--text2);margin-bottom:8px">${p.phase}</div>` : ''}
-      <div class="progress-bar"><div class="fill" style="width:${prog}%"></div></div>
-      <div class="proj-footer">
-        <div class="proj-avatar" style="background:${avatarColor}">${initial}</div>
-        <span style="font-size:11px;color:var(--text2)">${prog}% complete</span>
-      </div>
+      ${epics.length > 0 ? `<div class="proj-epics" id="${projId}" style="display:none">${epicsHtml}</div>` : ''}
     </div>`;
   }).join('');
+}
+
+function toggleProjectEpics(projId) {
+  const el = document.getElementById(projId);
+  const toggle = document.getElementById('toggle-' + projId);
+  if (!el) return;
+  const isOpen = el.style.display !== 'none';
+  el.style.display = isOpen ? 'none' : '';
+  if (toggle) toggle.classList.toggle('open', !isOpen);
+}
+
+function navigateToEpic(epicId) {
+  // Switch to Tasks tab, set tree view, and filter to show this epic
+  _taskView = 'tree';
+  _taskProjectFilter = epicId;
+  navItems.forEach(n => n.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="tasks"]').classList.add('active');
+  document.getElementById('tab-tasks').classList.add('active');
+  renderTasks();
+  setTimeout(() => {
+    _taskProjectFilter = '';
+    focusTask(epicId);
+  }, 100);
 }
 
 // Memory
@@ -1467,7 +1670,7 @@ function selectDesk(agent) {
 
 // Init
 (async function init() {
-  await Promise.all([loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
+  await Promise.all([loadHealth(), loadTasks(), loadMemory(), loadDocs(), loadModelOps()]);
 })();
 </script>
 </body>
