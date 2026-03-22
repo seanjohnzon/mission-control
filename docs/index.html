@@ -1663,20 +1663,20 @@ function renderTasks() {
   if (kb) kb.classList.toggle('active', _taskView === 'kanban');
   if (tb) tb.classList.toggle('active', _taskView === 'tree');
 
-  kanbanEl.style.display = 'none';
-  treeEl.style.display = 'none';
-  drillEl.style.display = 'none';
-  breadEl.style.display = 'none';
+  if (kanbanEl) kanbanEl.style.display = 'none';
+  if (treeEl) treeEl.style.display = 'none';
+  if (drillEl) drillEl.style.display = 'none';
+  if (breadEl) breadEl.style.display = 'none';
 
   if (_taskView === 'drill') {
-    drillEl.style.display = '';
-    breadEl.style.display = '';
+    if (drillEl) drillEl.style.display = '';
+    if (breadEl) breadEl.style.display = '';
     renderDrillDown(filtered);
   } else if (_taskView === 'tree') {
-    treeEl.style.display = '';
+    if (treeEl) treeEl.style.display = '';
     renderTree(filtered);
   } else {
-    kanbanEl.style.display = '';
+    if (kanbanEl) kanbanEl.style.display = '';
     renderKanban(filtered);
   }
   renderDepartmentLoads(tasks);
@@ -2071,13 +2071,13 @@ function renderProjectsView() {
   if (_projDrillPath.length === 0) {
     // TOP LEVEL — show project cards (high-level overview)
     gridEl.style.display = '';
-    drillEl.style.display = 'none';
+    if (drillEl) drillEl.style.display = 'none';
     breadEl.innerHTML = '';
     renderProjectCards();
   } else {
     // DRILLED IN — show epics/stories/tasks for selected project
     gridEl.style.display = 'none';
-    drillEl.style.display = '';
+    if (drillEl) drillEl.style.display = '';
     renderProjectDrill();
   }
 }
