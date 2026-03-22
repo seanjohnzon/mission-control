@@ -662,11 +662,11 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <div class="task-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <div style="display:flex;gap:6px;align-items:center">
             <span class="text2" style="font-size:12px">View</span>
-            <button class="office-filter" id="view-drill" onclick="setTaskView('drill')">Projects</button>
-            <button class="office-filter active" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
+            <button class="office-filter" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
             <button class="office-filter" id="view-tree" onclick="setTaskView('tree')">Tree</button>
           </div>
-          <select id="project-filter" onchange="renderTasks()" style="background:var(--card);color:var(--text);border:1px solid var(--border);padding:4px 8px;border-radius:6px;font-size:12px">
+          <div id="task-project-filter-wrap" style="display:flex;gap:6px;align-items:center"></div>
+          <select id="project-filter" onchange="renderTasks()" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:6px;font-size:12px">
             <option value="">All Projects</option>
           </select>
           <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);user-select:none">
@@ -675,10 +675,6 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
           </label>
         </div>
       </div>
-      <!-- Drill-down breadcrumb -->
-      <div id="drill-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;flex-wrap:wrap"></div>
-      <!-- Drill-down view (Jira-style) -->
-      <div id="task-drill" class="task-tree"></div>
       <div class="kanban" id="kanban" style="display:none"></div>
       <div id="task-tree" class="task-tree" style="display:none"></div>
     </div>
