@@ -334,7 +334,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .team-card .role-card-link:hover { color: var(--blue); }
 .org-divider { width: 100%; max-width: 700px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 .orgviz { width: 100%; max-width: 980px; }
-.orgviz-inner { width: 100%; height: 440px; border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+.orgviz-inner { width: 100%; height: 700px; border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+@media (max-width: 768px) { .orgviz-inner { height: 560px; } }
 .orgviz svg { width: 100%; height: 100%; display: block; }
 .orgviz .hint { position: absolute; left: 12px; top: 10px; color: var(--text2); font-size: 11px; pointer-events: none; }
 .orgviz .tip { position: absolute; pointer-events: none; background: rgba(20,22,32,0.96); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--text); box-shadow: 0 12px 28px rgba(0,0,0,0.4); transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity 0.12s ease; }
@@ -348,17 +349,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .tool-lanes h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
 .tool-lane { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
 
-/* Org Viz (from dashboard) */
-.orgviz { width: 100%; max-width: 980px; }
-.orgviz-inner { width: 100%; height: 440px; border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
-.orgviz svg { width: 100%; height: 100%; display: block; }
-.orgviz .hint { position: absolute; left: 12px; top: 10px; color: var(--text2); font-size: 11px; pointer-events: none; }
-.orgviz .tip { position: absolute; pointer-events: none; background: rgba(20,22,32,0.96); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--text); box-shadow: 0 12px 28px rgba(0,0,0,0.4); transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity 0.12s ease; }
-.orgviz .tip.open { opacity: 1; }
-.orgviz .tip .t { font-weight: 650; margin-bottom: 4px; }
-.orgviz .tip .m { color: var(--text2); font-size: 11px; }
-.orgviz .legend { position: absolute; right: 12px; top: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-.orgviz .legend .chip { display:inline-flex; align-items:center; gap:6px; padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); border-radius: 999px; font-size: 11px; color: var(--text2); }
+/* Org Viz (from dashboard — duplicate removed, primary block above) */
 .orgviz .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
 .orgviz .legend .dot.ok { background: var(--green); }
 .orgviz .legend .dot.fail { background: var(--red); }
@@ -1249,7 +1240,7 @@ function renderOrgCommsMap(deptMap) {
     const g = elSvg('g', { transform: `translate(${p.x} ${p.y})` });
     const c = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(88,166,255,0.10)', stroke: 'rgba(88,166,255,0.55)', 'stroke-width': 2 });
     c.style.animation = 'orgGlow 2.2s ease-in-out infinite';
-    const t1 = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 12, 'font-weight': 700 });
+    const t1 = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 14, 'font-weight': 700 });
     t1.textContent = 'MISSION';
     const t2 = elSvg('text', { x: 0, y: 19, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 10, 'font-weight': 600 });
     t2.textContent = 'CONTROL';
@@ -1380,24 +1371,24 @@ function renderOrgViz(deptMap) {
   // --- Define hierarchy (expandable) ---
   // Keep department node labels aligned with task departments, so loads can map.
   const deptNodes = [
-    { id: 'dept-ops', name: 'Operations', color: 'var(--blue)' },
-    { id: 'dept-eng', name: 'Engineering', color: 'var(--teal)' },
-    { id: 'dept-product', name: 'Product', color: 'var(--purple)' },
-    { id: 'dept-design', name: 'Design', color: 'var(--pink)' },
-    { id: 'dept-qa', name: 'QA', color: 'var(--yellow)' },
-    { id: 'dept-research', name: 'Research', color: 'var(--orange)' },
-    { id: 'dept-data', name: 'Data', color: '#60a5fa' },
-    { id: 'dept-security', name: 'Security', color: '#f87171' },
-    { id: 'dept-support', name: 'Support', color: '#a7f3d0' },
+    { id: 'dept-ops', name: 'Nami — Navigation', color: 'var(--blue)' },
+    { id: 'dept-eng', name: 'Franky — Engineering', color: 'var(--teal)' },
+    { id: 'dept-auto', name: 'Sanji — Automation', color: 'var(--orange)' },
+    { id: 'dept-qa', name: 'Chopper — QA', color: 'var(--yellow)' },
+    { id: 'dept-research', name: 'Robin — Research', color: 'var(--purple)' },
+    { id: 'dept-creative', name: 'Brook — Creative', color: 'var(--pink)' },
+    { id: 'dept-bi', name: 'Usopp — BI', color: '#60a5fa' },
+    { id: 'dept-threads', name: 'Vivi — Threads', color: '#a7f3d0' },
+    { id: 'dept-scrum', name: 'Jinbe — Scrum', color: '#fbbf24' },
   ];
 
   const nodes = [
-    { id: 'root', label: 'CIHAN', sub: 'Human • Architect / Director / Judge', kind: 'human', color: 'var(--yellow)' },
-    { id: 'bridge', label: 'BRIDGE', sub: 'Routing • Scheduling • Gateway', kind: 'agent', color: 'var(--blue)' },
-    { id: 'brain', label: 'BRAIN', sub: 'Memory • Planning • Knowledge', kind: 'agent', color: 'var(--teal)', muted: true },
-    { id: 'forge', label: 'FORGE', sub: 'Build • QA • Research', kind: 'agent', color: 'var(--orange)', muted: true },
+    { id: 'root', label: '👑 CAPTAIN CIHAN', sub: 'Human • Architect / Director / Judge', kind: 'human', color: 'var(--yellow)' },
+    { id: 'bridge', label: '🧭 NAMI (HQ)', sub: 'Mac Mini • Orchestrator • Budget', kind: 'agent', color: 'var(--blue)' },
+    { id: 'brain', label: '🔧 FRANKY', sub: 'Desktop • Engineering • Builds', kind: 'agent', color: 'var(--teal)' },
+    { id: 'forge', label: '🔬 CHOPPER', sub: 'GPU3060 • QA • Verification', kind: 'agent', color: 'var(--orange)' },
     { id: 'mc', label: 'MISSION CONTROL', sub: 'Dashboard • APIs • Observability', kind: 'system', color: 'rgba(88,166,255,0.65)' },
-    { id: 'deptGroup', label: 'DEPARTMENTS', sub: 'Work intake + load view', kind: 'group', color: 'rgba(139,148,158,0.65)' },
+    { id: 'deptGroup', label: 'DEPARTMENTS', sub: '9 departments • Work intake + load', kind: 'group', color: 'rgba(139,148,158,0.65)' },
     ...deptNodes.map(d => {
       const load = lookupLoadByName(d.name);
       const pts = load?.points || 0;
@@ -1436,12 +1427,12 @@ function renderOrgViz(deptMap) {
   const byId = new Map(nodes.map(n => [n.id, n]));
 
   function measureNode(n) {
-    // Logical sizes (SVG units)
-    if (n.kind === 'dept') return { w: 152, h: 54 };
-    if (n.kind === 'group') return { w: 220, h: 56 };
-    if (n.kind === 'system') return { w: 250, h: 62 };
-    if (n.kind === 'agent') return { w: 220, h: 66 };
-    return { w: 240, h: 70 }; // human
+    // Logical sizes (SVG units) — enlarged for readability
+    if (n.kind === 'dept') return { w: 200, h: 68 };
+    if (n.kind === 'group') return { w: 280, h: 72 };
+    if (n.kind === 'system') return { w: 300, h: 76 };
+    if (n.kind === 'agent') return { w: 280, h: 80 };
+    return { w: 300, h: 84 }; // human
   }
 
   const sizeById = new Map();
@@ -1451,8 +1442,8 @@ function renderOrgViz(deptMap) {
   const xById = new Map();
   const yById = new Map();
 
-  const levelGap = 92;
-  const siblingGap = 22;
+  const levelGap = 110;
+  const siblingGap = 28;
 
   function subtreeWidth(id) {
     const kids = (children.get(id) || []);
@@ -1499,8 +1490,8 @@ function renderOrgViz(deptMap) {
 
   const pad = 36;
   minX -= pad; maxX += pad; minY -= pad; maxY += pad;
-  const viewW = Math.max(980, maxX - minX);
-  const viewH = Math.max(440, maxY - minY);
+  const viewW = Math.max(1200, maxX - minX);
+  const viewH = Math.max(700, maxY - minY);
 
   // --- DOM scaffold ---
   host.innerHTML = `
@@ -1661,28 +1652,28 @@ function renderOrgViz(deptMap) {
     }
 
     const title = elSvg('text', {
-      x: -w / 2 + 14,
-      y: -6,
+      x: -w / 2 + 16,
+      y: -4,
       fill: 'var(--text)',
-      'font-size': n.kind === 'dept' ? 11.5 : 12.5,
+      'font-size': n.kind === 'dept' ? 14 : 15,
       'font-weight': 800,
-      'letter-spacing': '0.06em',
+      'letter-spacing': '0.04em',
     });
     title.textContent = n.label;
 
     const sub = elSvg('text', {
-      x: -w / 2 + 14,
-      y: 14,
+      x: -w / 2 + 16,
+      y: 16,
       fill: 'var(--text2)',
-      'font-size': 10.5,
+      'font-size': 12,
       'font-weight': 600,
     });
     sub.textContent = n.sub || '';
 
     // status dot
     const dot = elSvg('circle', {
-      cx: w / 2 - 16,
-      cy: -h / 2 + 16,
+      cx: w / 2 - 18,
+      cy: -h / 2 + 18,
       r: 4.2,
       fill: n.kind === 'dept'
         ? (n.accent || 'rgba(139,148,158,0.65)')
@@ -1694,8 +1685,8 @@ function renderOrgViz(deptMap) {
       const pts = n.load.points || 0;
       const { color } = toneForPts(pts);
       const barW = Math.max(10, Math.min(w - 28, (pts / 28) * (w - 28)));
-      const barBg = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: w - 28, height: 6, rx: 4, fill: 'rgba(255,255,255,0.06)' });
-      const bar = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: barW, height: 6, rx: 4, fill: color, opacity: 0.7 });
+      const barBg = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 16, width: w - 32, height: 7, rx: 4, fill: 'rgba(255,255,255,0.06)' });
+      const bar = elSvg('rect', { x: -w / 2 + 16, y: h / 2 - 16, width: barW, height: 6, rx: 4, fill: color, opacity: 0.7 });
       g.appendChild(barBg); g.appendChild(bar);
     }
 
