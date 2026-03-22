@@ -141,17 +141,26 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .cal-block.tier-red { border-left-color: var(--red); }
 
 /* Projects */
-.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-.proj-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0; transition: border-color 0.2s; }
+.proj-card:hover { border-color: #3d4158; }
+.proj-card-header { padding: 20px 20px 16px; cursor: pointer; user-select: none; }
+.proj-card-header:hover { background: rgba(255,255,255,0.02); border-radius: 10px 10px 0 0; }
+.proj-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.proj-card .proj-icon { font-size: 18px; }
 .proj-card .desc { color: var(--text2); font-size: 13px; margin-bottom: 12px; }
+.proj-card .proj-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text2); margin-top: 8px; }
+.proj-card .proj-stats span { display: flex; align-items: center; gap: 4px; }
 .proj-card .proj-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
 .proj-card .proj-footer .proj-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
 .proj-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
-.proj-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
-.proj-status.planned { background: rgba(88,166,255,0.15); color: var(--blue); }
-.proj-status.paused { background: rgba(210,153,34,0.15); color: var(--yellow); }
-.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-.progress-bar .fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+.proj-status.active, .proj-status.in-progress { background: rgba(63,185,80,0.15); color: var(--green); }
+.proj-status.planned, .proj-status.open { background: rgba(88,166,255,0.15); color: var(--blue); }
+.proj-status.paused, .proj-status.blocked { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.proj-status.completed, .proj-status.done { background: rgba(63,185,80,0.15); color: var(--green); }
+.progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+.progress-bar .fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.progress-bar .fill.green { background: var(--green); }
+.progress-bar .fill.yellow { background: var(--yellow); }
 
 /* Memory */
 .mem-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
@@ -1422,17 +1431,20 @@ function renderTaskCardInner(t, dotColor) {
   const assignInitial = assignName.charAt(0).toUpperCase();
   const assignColor = assignName.includes('bridge') ? 'var(--blue)' : assignName.includes('human') ? 'var(--yellow)' : assignName.includes('forge') ? 'var(--orange)' : assignName.includes('brain') ? 'var(--teal)' : 'var(--text2)';
   const descHtml = t.notes ? `<div class="task-desc">${escapeHtml(t.notes)}</div>` : '';
+
   const pts = getTaskPoints(t);
   const dept = taskDept(t);
   const parentLink = t.parent ? `<a href="#" class="badge badge-gray" onclick="focusTask('${t.parent}');return false;">↑ ${t.parent}</a>` : '';
+
   let deps = '';
   if (t.dependencies && t.dependencies !== 'none') {
     deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${escapeHtml(t.dependencies)}</div>`;
   }
+
   return {
     pClass,
     html: `
-      <div class="task-id">${escapeHtml(t.id)}</div>
+      <div class="task-id">${t.id}</div>
       <div class="task-title"><span class="status-dot" style="background:${dotColor}"></span>${escapeHtml(t.title || '')}</div>
       ${descHtml}
       <div class="task-meta">
@@ -1445,7 +1457,7 @@ function renderTaskCardInner(t, dotColor) {
       ${deps}
       <div class="task-footer">
         <div class="assignee"><span class="avatar-circle" style="background:${assignColor}">${escapeHtml(assignInitial)}</span>${escapeHtml(assignName)}</div>
-        <div class="timestamp">${t.opened || t.created || ''}</div>
+        <div class="timestamp">${t.opened || t.createdAt || ''}</div>
       </div>
     `
   };
@@ -1459,6 +1471,7 @@ function renderKanban(tasks) {
     blocked: { title: 'Blocked', tasks: [] },
     done: { title: 'Done', tasks: [] }
   };
+
   for (const t of tasks) {
     const s = (t.status || '').toLowerCase();
     const p = (t.priority || '').toLowerCase();
@@ -1470,6 +1483,7 @@ function renderKanban(tasks) {
     else if (s === 'cancelled') columns.done.tasks.push(t);
     else columns.backlog.tasks.push(t);
   }
+
   const kanban = document.getElementById('kanban');
   kanban.innerHTML = '';
   for (const [key, col] of Object.entries(columns)) {
@@ -1479,6 +1493,7 @@ function renderKanban(tasks) {
     const cardsEl = colEl.querySelector('.kanban-cards');
     const dotColors = { backlog: 'var(--text2)', todo: 'var(--blue)', inprogress: 'var(--purple)', blocked: 'var(--yellow)', done: 'var(--green)' };
     const dotColor = dotColors[key] || 'var(--text2)';
+
     for (const t of col.tasks) {
       const { pClass, html } = renderTaskCardInner(t, dotColor);
       const card = document.createElement('div');
@@ -1494,6 +1509,7 @@ function renderKanban(tasks) {
 function renderTree(tasks) {
   const container = document.getElementById('task-tree');
   container.innerHTML = '';
+
   const byId = new Map(tasks.map(t => [t.id, t]));
   const children = new Map();
   for (const t of tasks) {
@@ -1502,22 +1518,38 @@ function renderTree(tasks) {
     if (!children.has(pid)) children.set(pid, []);
     children.get(pid).push(t.id);
   }
+
+  // Build roots: tasks with no parent in the set, prioritizing projects
   const roots = [];
   for (const t of tasks) {
     const hasParent = !!t.parent && byId.has(t.parent);
-    const isProject = (t.type || '').toLowerCase() === 'project';
-    if (isProject || !hasParent) roots.push(t.id);
+    if (!hasParent) roots.push(t.id);
   }
+
+  // Sort: projects first, then epics, then stories, then tasks; alphabetical within
+  const typeOrder = { project: 0, epic: 1, story: 2, task: 3 };
+  const getTypeOrder = (t) => typeOrder[(t?.type || 'task').toLowerCase()] ?? 3;
+
   roots.sort((a, b) => {
     const ta = byId.get(a), tb = byId.get(b);
-    const pa = ((ta?.type || '').toLowerCase() === 'project') ? 0 : 1;
-    const pb = ((tb?.type || '').toLowerCase() === 'project') ? 0 : 1;
-    if (pa !== pb) return pa - pb;
+    const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+    if (oa !== ob) return oa - ob;
     return String(a).localeCompare(String(b));
   });
+
+  const typeIcons = { project: '📂', epic: '📌', story: '📖', task: '📝' };
+  const typeColors = { project: 'var(--blue)', epic: 'var(--purple)', story: 'var(--teal)', task: 'var(--text2)' };
+
+  function statusDot(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'completed' || s === 'done') return '<span style="color:var(--green);font-size:14px">✓</span>';
+    if (s === 'in-progress') return '<span style="color:var(--purple);font-size:10px">●</span>';
+    if (s === 'blocked') return '<span style="color:var(--yellow);font-size:10px">●</span>';
+    if (s === 'cancelled') return '<span style="color:var(--red);font-size:14px">✗</span>';
+    return '<span style="color:var(--text2);font-size:10px">○</span>';
+  }
+
   function nodeLabel(t) {
-    const kind = (t.type || '').toLowerCase();
-    const kindBadge = kind ? `<span class="badge badge-gray">${escapeHtml(kind)}</span>` : '';
     const pts = getTaskPoints(t);
     const ptsBadge = pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : '';
     const dept = taskDept(t);
@@ -1525,28 +1557,49 @@ function renderTree(tasks) {
     const pri = t.priority || '';
     const pBadge = pri === 'P0' ? 'badge-red' : pri === 'P1' ? 'badge-orange' : pri === 'P2' ? 'badge-blue' : 'badge-gray';
     const priBadge = pri ? `<span class="badge ${pBadge}">${escapeHtml(pri)}</span>` : '';
-    return `${priBadge}${kindBadge}${ptsBadge}${deptBadge}`;
+    const assignee = t.assigned ? `<span class="badge badge-gray">👤 ${escapeHtml(t.assigned)}</span>` : '';
+    return `${priBadge}${ptsBadge}${deptBadge}${assignee}`;
   }
-  function renderNode(taskId) {
+
+  function renderNode(taskId, depth) {
     const t = byId.get(taskId);
     if (!t) return document.createElement('div');
-    const kids = (children.get(taskId) || []).slice().sort();
+
+    const kind = (t.type || 'task').toLowerCase();
+    const kids = (children.get(taskId) || []).slice().sort((a, b) => {
+      const ta = byId.get(a), tb = byId.get(b);
+      const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+      if (oa !== ob) return oa - ob;
+      return String(a).localeCompare(String(b));
+    });
     const hasKids = kids.length > 0;
+    const icon = typeIcons[kind] || '📝';
+    const borderColor = typeColors[kind] || 'var(--text2)';
+    const defaultOpen = kind === 'project' || kind === 'epic';
+
     const node = document.createElement('div');
-    node.className = 'tree-node';
+    node.className = `tree-node tree-level-${kind}`;
+
     const header = document.createElement('div');
     header.className = 'tree-header';
     header.id = 'task-' + t.id;
     header.innerHTML = `
-      <div class="tree-toggle">${hasKids ? '▾' : '•'}</div>
-      <div style="flex:1">
-        <div class="tree-title">${escapeHtml(t.id)} — ${escapeHtml(t.title || '')}</div>
-        <div class="task-meta" style="margin-top:6px">${nodeLabel(t)}</div>
+      <div class="tree-toggle" style="color:${borderColor}">${hasKids ? (defaultOpen ? '▾' : '▸') : '•'}</div>
+      <span class="tree-type-icon">${icon}</span>
+      <div style="flex:1;min-width:0">
+        <div class="tree-title" style="display:flex;align-items:center;gap:6px">
+          <span style="color:var(--text2);font-size:11px;flex-shrink:0">${escapeHtml(t.id)}</span>
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(t.title || '')}</span>
+        </div>
+        <div class="task-meta" style="margin-top:4px">${nodeLabel(t)}</div>
       </div>
+      <div class="tree-status">${statusDot(t.status)}</div>
     `;
+
     const childrenEl = document.createElement('div');
     childrenEl.className = 'tree-children';
-    childrenEl.style.display = hasKids ? '' : 'none';
+    childrenEl.style.display = hasKids ? (defaultOpen ? '' : 'none') : 'none';
+
     if (hasKids) {
       header.addEventListener('click', () => {
         const open = childrenEl.style.display !== 'none';
@@ -1554,27 +1607,18 @@ function renderTree(tasks) {
         header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
       });
       for (const kidId of kids) {
-        if ((children.get(kidId) || []).length === 0) {
-          const leafWrap = document.createElement('div');
-          leafWrap.className = 'tree-leaf';
-          const kid = byId.get(kidId);
-          const { pClass, html } = renderTaskCardInner(kid, 'var(--text2)');
-          const card = document.createElement('div');
-          card.className = `kanban-card ${pClass}`;
-          card.id = 'task-' + kid.id;
-          card.innerHTML = html;
-          leafWrap.appendChild(card);
-          childrenEl.appendChild(leafWrap);
-        } else {
-          childrenEl.appendChild(renderNode(kidId));
-        }
+        // Always render as tree nodes for consistent hierarchy
+        childrenEl.appendChild(renderNode(kidId, depth + 1));
       }
     }
+
     node.appendChild(header);
     if (hasKids) node.appendChild(childrenEl);
     return node;
   }
-  for (const rid of roots) container.appendChild(renderNode(rid));
+
+  for (const rid of roots) container.appendChild(renderNode(rid, 0));
+
   if (!roots.length) {
     container.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No tasks found.</div>';
   }
@@ -1583,6 +1627,7 @@ function renderTree(tasks) {
 function renderDepartmentLoads(tasks) {
   const el = document.getElementById('dept-loads');
   if (!el) return;
+
   const active = tasks.filter(t => !isCompletedStatus(t.status));
   const deptMap = new Map();
   for (const t of active) {
@@ -1593,93 +1638,917 @@ function renderDepartmentLoads(tasks) {
     row.points += pts;
     row.tasks += 1;
   }
+
   const depts = [...deptMap.values()].sort((a, b) => b.points - a.points);
   if (!depts.length) {
     el.innerHTML = '<div class="card text2" style="text-align:center;padding:28px">No active tasks to compute loads.</div>';
     return;
   }
+
   const cls = (p) => p >= 25 ? 'high' : p >= 12 ? 'med' : 'low';
-  el.innerHTML = depts.map(d => `
-    <div class="card load-card ${cls(d.points)}">
-      <div class="dept-name">${escapeHtml(d.dept)}</div>
-      <div class="dept-points">${Math.round(d.points * 10) / 10}<span class="text2" style="font-size:14px;font-weight:600"> pts</span></div>
-      <div class="dept-sub">${d.tasks} active task${d.tasks === 1 ? '' : 's'}</div>
-    </div>
-  `).join('');
-}
-
-let _drillPath = []; // breadcrumb: [{id, title}]
-
-function populateProjectFilter(tasks) {
-  const sel = document.getElementById('project-filter');
-  if (!sel) return;
-  const current = sel.value;
-  const projects = tasks.filter(t => t.type === 'project');
-  const projIds = new Set(projects.map(p => p.id));
-  // Also find PROJ- parents
-  tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
-  const opts = '<option value="">All Projects</option>' + [...projIds].map(pid => {
-    const proj = tasks.find(t => t.id === pid);
-    const name = proj ? proj.title : pid;
-    return `<option value="${pid}" ${pid===current?'selected':''}>${escapeHtml(name)}</option>`;
+  el.innerHTML = depts.map(d => {
+    return `
+      <div class="card load-card ${cls(d.points)}">
+        <div class="dept-name">${escapeHtml(d.dept)}</div>
+        <div class="dept-points">${Math.round(d.points * 10) / 10}<span class="text2" style="font-size:14px;font-weight:600"> pts</span></div>
+        <div class="dept-sub">${d.tasks} active task${d.tasks === 1 ? '' : 's'}</div>
+      </div>
+    `;
   }).join('');
-  sel.innerHTML = opts;
+
+  // Feed the org comms map with live department load info (if present)
+  _lastDeptMap = deptMap;
+  try { renderOrgViz(deptMap); } catch (e) { console.warn('orgviz render failed', e); }
 }
 
-function getDescendants(tasks, parentId) {
-  const ids = new Set();
-  const queue = [parentId];
-  while (queue.length) {
-    const pid = queue.shift();
-    for (const t of tasks) {
-      if (t.parent === pid && !ids.has(t.id)) {
-        ids.add(t.id);
-        queue.push(t.id);
-      }
+// ===== Team Org Comms Map (birds-eye, animated flow + failures) =====
+let _orgVizAnim = null;
+let _lastDeptMap = null;
+
+function stopOrgVizAnim() {
+  try {
+    if (_orgVizAnim?.raf) cancelAnimationFrame(_orgVizAnim.raf);
+    if (typeof _orgVizAnim?.cleanup === 'function') _orgVizAnim.cleanup();
+  } catch (e) { /* ignore */ }
+  _orgVizAnim = null;
+}
+
+function deptLoadBadge(load) {
+  if (!load) return { label: 'No load data', tone: 'muted' };
+  const pts = load.points || 0;
+  if (pts >= 25) return { label: `${Math.round(pts * 10) / 10} pts (High)`, tone: 'high' };
+  if (pts >= 12) return { label: `${Math.round(pts * 10) / 10} pts (Med)`, tone: 'med' };
+  return { label: `${Math.round(pts * 10) / 10} pts (Low)`, tone: 'low' };
+}
+
+function renderOrgCommsMap(deptMap) {
+  const host = document.getElementById('orgviz');
+  if (!host) return;
+
+  const depts = [
+    { id: 'ops', name: 'Operations', color: 'var(--blue)' },
+    { id: 'eng', name: 'Engineering', color: 'var(--teal)' },
+    { id: 'product', name: 'Product', color: 'var(--purple)' },
+    { id: 'design', name: 'Design', color: 'var(--pink)' },
+    { id: 'qa', name: 'QA', color: 'var(--yellow)' },
+    { id: 'research', name: 'Research', color: 'var(--orange)' },
+    { id: 'data', name: 'Data', color: '#60a5fa' },
+    { id: 'security', name: 'Security', color: '#f87171' },
+    { id: 'support', name: 'Support', color: '#a7f3d0' },
+  ];
+
+  // Connections: ok = animated flow. broken = red marker + stalled flow.
+  const links = [
+    { from: 'hub', to: 'ops', status: 'ok' },
+    { from: 'hub', to: 'eng', status: 'ok' },
+    { from: 'hub', to: 'product', status: 'ok' },
+    { from: 'hub', to: 'design', status: 'ok' },
+    { from: 'hub', to: 'qa', status: 'ok' },
+    { from: 'hub', to: 'research', status: 'ok' },
+    { from: 'hub', to: 'data', status: 'ok' },
+    { from: 'hub', to: 'security', status: 'broken' },
+    { from: 'hub', to: 'support', status: 'ok' },
+
+    { from: 'product', to: 'eng', status: 'ok' },
+    { from: 'design', to: 'eng', status: 'ok' },
+    { from: 'qa', to: 'eng', status: 'ok' },
+    { from: 'ops', to: 'security', status: 'broken' },
+    { from: 'support', to: 'ops', status: 'ok' },
+    { from: 'data', to: 'research', status: 'ok' },
+  ];
+
+  // --- DOM scaffold (idempotent rebuild) ---
+  stopOrgVizAnim();
+  host.innerHTML = `
+    <div class="orgviz-inner">
+      <div class="hint">Drag/scroll the page as normal — hover nodes for details.</div>
+      <div class="legend">
+        <div class="chip"><span class="dot ok"></span>Flow OK</div>
+        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
+      </div>
+      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
+      <svg viewBox="0 0 980 440" role="img" aria-label="Org communication map">
+        <defs>
+          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
+          </marker>
+          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.7)"></path>
+          </marker>
+          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.75)"></path>
+          </marker>
+          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
+          </filter>
+        </defs>
+        <g id="orgviz-links"></g>
+        <g id="orgviz-lights"></g>
+        <g id="orgviz-nodes"></g>
+      </svg>
+    </div>
+  `;
+
+  const wrap = host.querySelector('.orgviz-inner');
+  const svg = host.querySelector('svg');
+  const gLinks = host.querySelector('#orgviz-links');
+  const gLights = host.querySelector('#orgviz-lights');
+  const gNodes = host.querySelector('#orgviz-nodes');
+  const tip = host.querySelector('#orgviz-tip');
+
+  const W = 980, H = 440;
+  const center = { x: W/2, y: H/2 - 6 };
+
+  // Layout: hub + ring of 9 departments.
+  const ringR = 168;
+  const nodePos = new Map();
+  nodePos.set('hub', { x: center.x, y: center.y, r: 38 });
+
+  for (let i = 0; i < depts.length; i++) {
+    const a = (-Math.PI/2) + (i * (2*Math.PI / depts.length));
+    const x = center.x + ringR * Math.cos(a);
+    const y = center.y + ringR * Math.sin(a);
+    nodePos.set(depts[i].id, { x, y, r: 30 });
+  }
+
+  function makePath(a, b, bend=0.22) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+    // Perp offset
+    const px = -dy, py = dx;
+    const len = Math.max(1, Math.hypot(px, py));
+    const ox = (px/len) * (Math.hypot(dx,dy) * bend);
+    const oy = (py/len) * (Math.hypot(dx,dy) * bend);
+    return `M ${a.x} ${a.y} Q ${mx+ox} ${my+oy} ${b.x} ${b.y}`;
+  }
+
+  function elSvg(tag, attrs = {}) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  // --- Links ---
+  const linkPaths = [];
+  for (const l of links) {
+    const a = nodePos.get(l.from);
+    const b = nodePos.get(l.to);
+    if (!a || !b) continue;
+
+    const bend = l.from === 'hub' ? 0.10 : 0.26;
+    const d = makePath(a, b, bend);
+
+    const p = elSvg('path', {
+      d,
+      fill: 'none',
+      stroke: l.status === 'broken' ? 'rgba(248,81,73,0.55)' : 'rgba(139,148,158,0.38)',
+      'stroke-width': l.from === 'hub' ? 2.4 : 2,
+      'marker-end': l.status === 'broken' ? 'url(#orgArrowFail)' : 'url(#orgArrow)',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      opacity: l.status === 'broken' ? 0.85 : 1,
+    });
+
+    if (l.status !== 'broken') {
+      // subtle animated dash "flow"
+      p.setAttribute('stroke-dasharray', '4 10');
+    } else {
+      p.setAttribute('stroke-dasharray', '2 10');
+    }
+
+    gLinks.appendChild(p);
+    linkPaths.push({ link: l, path: p });
+
+    if (l.status === 'broken') {
+      const mid = p.getPointAtLength(p.getTotalLength() * 0.52);
+      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
+      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
+      ring.style.animation = 'orgPulseFail 1.6s infinite';
+      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
+      gLinks.appendChild(badge);
     }
   }
-  return ids;
+
+  // --- Nodes ---
+  const nodeEls = [];
+  function lookupLoadByName(name) {
+    // deptMap keys come from tasks; be forgiving.
+    if (!deptMap) return null;
+    for (const [k, v] of deptMap.entries()) {
+      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
+    }
+    return null;
+  }
+
+  // hub
+  {
+    const p = nodePos.get('hub');
+    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})` });
+    const c = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(88,166,255,0.10)', stroke: 'rgba(88,166,255,0.55)', 'stroke-width': 2 });
+    c.style.animation = 'orgGlow 2.2s ease-in-out infinite';
+    const t1 = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 12, 'font-weight': 700 });
+    t1.textContent = 'MISSION';
+    const t2 = elSvg('text', { x: 0, y: 19, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 10, 'font-weight': 600 });
+    t2.textContent = 'CONTROL';
+    g.appendChild(c); g.appendChild(t1); g.appendChild(t2);
+    gNodes.appendChild(g);
+  }
+
+  for (const d of depts) {
+    const p = nodePos.get(d.id);
+    const load = lookupLoadByName(d.name);
+    const badge = deptLoadBadge(load);
+
+    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})`, 'data-dept': d.name });
+    const outer = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(15,17,25,0.95)', stroke: 'rgba(255,255,255,0.10)', 'stroke-width': 1.5 });
+    const ring = elSvg('circle', { cx: 0, cy: 0, r: p.r-3, fill: 'none', stroke: d.color, 'stroke-width': 2.6, opacity: 0.85 });
+
+    const label = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 11, 'font-weight': 650 });
+    label.textContent = d.name;
+
+    const sub = elSvg('text', { x: 0, y: 20, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 9.5, 'font-weight': 600 });
+    sub.textContent = badge.tone === 'muted' ? '—' : `${Math.round((load?.points || 0) * 10) / 10} pts`;
+
+    g.appendChild(outer); g.appendChild(ring); g.appendChild(label); g.appendChild(sub);
+    gNodes.appendChild(g);
+    nodeEls.push({ g, dept: d, load });
+  }
+
+  // --- Tooltip ---
+  function showTip(evt, title, meta) {
+    if (!tip) return;
+    tip.querySelector('.t').textContent = title;
+    tip.querySelector('.m').textContent = meta;
+    const r = wrap.getBoundingClientRect();
+    const x = evt.clientX - r.left;
+    const y = evt.clientY - r.top;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+    tip.classList.add('open');
+  }
+  function hideTip() { tip?.classList.remove('open'); }
+
+  for (const n of nodeEls) {
+    n.g.style.cursor = 'default';
+    n.g.addEventListener('mousemove', (e) => {
+      const load = n.load;
+      const pts = load ? Math.round((load.points || 0) * 10)/10 : null;
+      const tasks = load ? load.tasks : null;
+      const meta = load ? `${pts} pts • ${tasks} active tasks` : 'No active task load data yet';
+      showTip(e, n.dept.name, meta);
+    });
+    n.g.addEventListener('mouseleave', hideTip);
+  }
+
+  // --- Animated lights ---
+  // A few dots travel along each ok link.
+  const lights = [];
+  for (const lp of linkPaths) {
+    const total = lp.path.getTotalLength();
+    const count = lp.link.status === 'broken' ? 0 : (lp.link.from === 'hub' ? 4 : 3);
+    for (let i=0;i<count;i++) {
+      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.link.from === 'hub' ? 2.4 : 2.1, fill: 'rgba(63,185,80,0.85)' });
+      gLights.appendChild(dot);
+      lights.push({ dot, path: lp.path, total, phase: i / count });
+    }
+  }
+
+  const t0 = performance.now();
+  const speed = 0.00018; // fraction of path per ms
+  const anim = { raf: null };
+
+  function frame(now) {
+    const t = now - t0;
+    for (const l of lights) {
+      const u = (l.phase + t * speed) % 1;
+      const pt = l.path.getPointAtLength(l.total * u);
+      l.dot.setAttribute('cx', pt.x);
+      l.dot.setAttribute('cy', pt.y);
+      // subtle fade as it approaches end
+      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
+    }
+    // Animate dash offset for all link strokes
+    for (const lp of linkPaths) {
+      if (lp.link.status !== 'broken') {
+        const off = (t * 0.06) % 999;
+        lp.path.setAttribute('stroke-dashoffset', String(-off));
+      } else {
+        const off = (t * 0.03) % 999;
+        lp.path.setAttribute('stroke-dashoffset', String(-off));
+      }
+    }
+    anim.raf = requestAnimationFrame(frame);
+  }
+
+  anim.raf = requestAnimationFrame(frame);
+  _orgVizAnim = anim;
 }
+
+// ===== Team Org Viz (Hierarchy Tree + Pan/Zoom) =====
+// NOTE: This is the primary orgviz renderer (Captain-style hierarchy). The older ring comms map lives in renderOrgCommsMap().
+function renderOrgViz(deptMap) {
+  const host = document.getElementById('orgviz');
+  if (!host) return;
+
+  // Stop any prior animation/handlers from the previous render.
+  stopOrgVizAnim();
+
+  // --- Helpers ---
+  const toneForPts = (pts) => {
+    if (pts >= 25) return { tone: 'high', color: 'var(--red)' };
+    if (pts >= 12) return { tone: 'med', color: 'var(--yellow)' };
+    return { tone: 'low', color: 'var(--green)' };
+  };
+
+  function lookupLoadByName(name) {
+    if (!deptMap) return null;
+    for (const [k, v] of deptMap.entries()) {
+      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
+    }
+    return null;
+  }
+
+  function elSvg(tag, attrs = {}) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  // --- Define hierarchy (expandable) ---
+  // Keep department node labels aligned with task departments, so loads can map.
+  const deptNodes = [
+    { id: 'dept-ops', name: 'Operations', color: 'var(--blue)' },
+    { id: 'dept-eng', name: 'Engineering', color: 'var(--teal)' },
+    { id: 'dept-product', name: 'Product', color: 'var(--purple)' },
+    { id: 'dept-design', name: 'Design', color: 'var(--pink)' },
+    { id: 'dept-qa', name: 'QA', color: 'var(--yellow)' },
+    { id: 'dept-research', name: 'Research', color: 'var(--orange)' },
+    { id: 'dept-data', name: 'Data', color: '#60a5fa' },
+    { id: 'dept-security', name: 'Security', color: '#f87171' },
+    { id: 'dept-support', name: 'Support', color: '#a7f3d0' },
+  ];
+
+  const nodes = [
+    { id: 'root', label: 'CIHAN', sub: 'Human • Architect / Director / Judge', kind: 'human', color: 'var(--yellow)' },
+    { id: 'bridge', label: 'BRIDGE', sub: 'Routing • Scheduling • Gateway', kind: 'agent', color: 'var(--blue)' },
+    { id: 'brain', label: 'BRAIN', sub: 'Memory • Planning • Knowledge', kind: 'agent', color: 'var(--teal)', muted: true },
+    { id: 'forge', label: 'FORGE', sub: 'Build • QA • Research', kind: 'agent', color: 'var(--orange)', muted: true },
+    { id: 'mc', label: 'MISSION CONTROL', sub: 'Dashboard • APIs • Observability', kind: 'system', color: 'rgba(88,166,255,0.65)' },
+    { id: 'deptGroup', label: 'DEPARTMENTS', sub: 'Work intake + load view', kind: 'group', color: 'rgba(139,148,158,0.65)' },
+    ...deptNodes.map(d => {
+      const load = lookupLoadByName(d.name);
+      const pts = load?.points || 0;
+      const tasks = load?.tasks || 0;
+      const tone = load ? toneForPts(pts) : { tone: 'muted', color: 'rgba(139,148,158,0.6)' };
+      return {
+        id: d.id,
+        label: d.name.toUpperCase(),
+        sub: load ? `${Math.round(pts * 10) / 10} pts • ${tasks} active` : 'No load data yet',
+        kind: 'dept',
+        color: d.color,
+        accent: tone.color,
+        deptName: d.name,
+        load
+      };
+    }),
+  ];
+
+  // Edges: parent → child
+  const edges = [
+    { from: 'root', to: 'bridge', status: 'ok' },
+    { from: 'bridge', to: 'mc', status: 'ok' },
+    { from: 'bridge', to: 'brain', status: 'idle' },
+    { from: 'bridge', to: 'forge', status: 'idle' },
+    { from: 'bridge', to: 'deptGroup', status: 'ok' },
+    ...deptNodes.map(d => ({ from: 'deptGroup', to: d.id, status: d.id.includes('security') ? 'broken' : 'ok' })),
+  ];
+
+  // --- Compute tree layout (simple tidy) ---
+  const children = new Map();
+  for (const e of edges) {
+    if (!children.has(e.from)) children.set(e.from, []);
+    children.get(e.from).push(e.to);
+  }
+
+  const byId = new Map(nodes.map(n => [n.id, n]));
+
+  function measureNode(n) {
+    // Logical sizes (SVG units)
+    if (n.kind === 'dept') return { w: 152, h: 54 };
+    if (n.kind === 'group') return { w: 220, h: 56 };
+    if (n.kind === 'system') return { w: 250, h: 62 };
+    if (n.kind === 'agent') return { w: 220, h: 66 };
+    return { w: 240, h: 70 }; // human
+  }
+
+  const sizeById = new Map();
+  for (const n of nodes) sizeById.set(n.id, measureNode(n));
+
+  // Recursively assign x using subtree widths; y by depth.
+  const xById = new Map();
+  const yById = new Map();
+
+  const levelGap = 92;
+  const siblingGap = 22;
+
+  function subtreeWidth(id) {
+    const kids = (children.get(id) || []);
+    const { w } = sizeById.get(id);
+    if (!kids.length) return w;
+    const widths = kids.map(subtreeWidth);
+    const totalKids = widths.reduce((a, b) => a + b, 0) + siblingGap * (widths.length - 1);
+    return Math.max(w, totalKids);
+  }
+
+  function layout(id, left, depth) {
+    const kids = (children.get(id) || []);
+    const size = sizeById.get(id);
+    const sw = subtreeWidth(id);
+    const centerX = left + sw / 2;
+    xById.set(id, centerX);
+    yById.set(id, 48 + depth * levelGap);
+
+    if (!kids.length) return;
+    // place children in a row underneath
+    let cur = left;
+    for (const kid of kids) {
+      const cw = subtreeWidth(kid);
+      layout(kid, cur, depth + 1);
+      cur += cw + siblingGap;
+    }
+  }
+
+  // Layout starting at root
+  layout('root', 0, 0);
+
+  // Determine viewBox bounds to fit the whole tree
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const n of nodes) {
+    const pX = xById.get(n.id);
+    const pY = yById.get(n.id);
+    if (pX === undefined || pY === undefined) continue;
+    const { w, h } = sizeById.get(n.id);
+    minX = Math.min(minX, pX - w / 2);
+    maxX = Math.max(maxX, pX + w / 2);
+    minY = Math.min(minY, pY - h / 2);
+    maxY = Math.max(maxY, pY + h / 2);
+  }
+
+  const pad = 36;
+  minX -= pad; maxX += pad; minY -= pad; maxY += pad;
+  const viewW = Math.max(980, maxX - minX);
+  const viewH = Math.max(440, maxY - minY);
+
+  // --- DOM scaffold ---
+  host.innerHTML = `
+    <div class="orgviz-inner grab">
+      <div class="hint">Hierarchy view • wheel=zoom • drag=pan • hover=details</div>
+      <div class="legend">
+        <div class="chip"><span class="dot ok"></span>Flow OK</div>
+        <div class="chip"><span class="dot idle"></span>Idle / Paused</div>
+        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
+      </div>
+      <div class="orgviz-controls">
+        <button class="pill" id="orgviz-fit">Fit</button>
+        <button id="orgviz-zoomout">−</button>
+        <button id="orgviz-zoomin">+</button>
+        <button class="pill" id="orgviz-zoom100">100%</button>
+      </div>
+      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
+      <svg viewBox="${minX} ${minY} ${viewW} ${viewH}" role="img" aria-label="Organization hierarchy map">
+        <defs>
+          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
+          </marker>
+          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.75)"></path>
+          </marker>
+          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.8)"></path>
+          </marker>
+          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
+          </filter>
+        </defs>
+        <g id="orgviz-viewport">
+          <g id="orgviz-links"></g>
+          <g id="orgviz-lights"></g>
+          <g id="orgviz-nodes"></g>
+        </g>
+      </svg>
+    </div>
+  `;
+
+  const wrap = host.querySelector('.orgviz-inner');
+  const svg = host.querySelector('svg');
+  const viewport = host.querySelector('#orgviz-viewport');
+  const gLinks = host.querySelector('#orgviz-links');
+  const gLights = host.querySelector('#orgviz-lights');
+  const gNodes = host.querySelector('#orgviz-nodes');
+  const tip = host.querySelector('#orgviz-tip');
+
+  // --- Render links ---
+  const linkPaths = [];
+  function linkPath(fromId, toId) {
+    const aN = byId.get(fromId), bN = byId.get(toId);
+    if (!aN || !bN) return null;
+    const a = { x: xById.get(fromId), y: yById.get(fromId), ...sizeById.get(fromId) };
+    const b = { x: xById.get(toId), y: yById.get(toId), ...sizeById.get(toId) };
+    const x1 = a.x;
+    const y1 = a.y + a.h / 2;
+    const x2 = b.x;
+    const y2 = b.y - b.h / 2;
+    const midY = (y1 + y2) / 2;
+    // Smooth down connector
+    return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+  }
+
+  for (const e of edges) {
+    const d = linkPath(e.from, e.to);
+    if (!d) continue;
+
+    const broken = e.status === 'broken';
+    const idle = e.status === 'idle';
+
+    const stroke = broken
+      ? 'rgba(248,81,73,0.55)'
+      : idle
+        ? 'rgba(139,148,158,0.22)'
+        : 'rgba(139,148,158,0.38)';
+
+    const marker = broken ? 'url(#orgArrowFail)' : 'url(#orgArrow)';
+
+    const p = elSvg('path', {
+      d,
+      fill: 'none',
+      stroke,
+      'stroke-width': e.from === 'deptGroup' ? 1.8 : 2.2,
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      'marker-end': marker,
+      opacity: broken ? 0.85 : (idle ? 0.8 : 1),
+    });
+
+    // Visual semantics:
+    // - ok: animated comms flow
+    // - idle: paused / non-delivering (no lights)
+    // - broken: failed delivery marker + stalled flow
+    p.setAttribute('stroke-dasharray', broken ? '2 10' : (idle ? '1 14' : '4 10'));
+    gLinks.appendChild(p);
+    linkPaths.push({ edge: e, path: p });
+
+    if (broken) {
+      const total = p.getTotalLength();
+      const mid = p.getPointAtLength(total * 0.52);
+      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
+      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
+      ring.style.animation = 'orgPulseFail 1.6s infinite';
+      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
+      gLinks.appendChild(badge);
+    }
+  }
+
+  // --- Render nodes ---
+  const nodeEls = [];
+
+  function drawNode(n) {
+    const { w, h } = sizeById.get(n.id);
+    const x = xById.get(n.id);
+    const y = yById.get(n.id);
+
+    const g = elSvg('g', { transform: `translate(${x} ${y})`, 'data-id': n.id });
+    const rx = 14;
+    const baseFill = 'rgba(15,17,25,0.92)';
+    const border = n.kind === 'human' ? 'rgba(210,153,34,0.35)' : 'rgba(255,255,255,0.10)';
+    const topGlow = (n.kind === 'human' || n.kind === 'agent') ? 'url(#orgSoftGlow)' : '';
+
+    const rect = elSvg('rect', {
+      x: -w / 2,
+      y: -h / 2,
+      width: w,
+      height: h,
+      rx,
+      ry: rx,
+      fill: baseFill,
+      stroke: border,
+      'stroke-width': 1.4,
+    });
+
+    const accent = elSvg('rect', {
+      x: -w / 2,
+      y: -h / 2,
+      width: w,
+      height: h,
+      rx,
+      ry: rx,
+      fill: 'none',
+      stroke: n.accent || n.color || 'rgba(88,166,255,0.35)',
+      'stroke-width': 2.4,
+      opacity: n.kind === 'group' ? 0.35 : 0.6,
+    });
+
+    if (n.kind === 'human') rect.style.filter = 'drop-shadow(0 0 10px rgba(210,153,34,0.08))';
+    if (n.kind === 'agent' && !n.muted) rect.style.filter = 'drop-shadow(0 0 12px rgba(88,166,255,0.10))';
+
+    if (n.muted) {
+      rect.setAttribute('opacity', '0.55');
+      accent.setAttribute('opacity', '0.35');
+    }
+
+    const title = elSvg('text', {
+      x: -w / 2 + 14,
+      y: -6,
+      fill: 'var(--text)',
+      'font-size': n.kind === 'dept' ? 11.5 : 12.5,
+      'font-weight': 800,
+      'letter-spacing': '0.06em',
+    });
+    title.textContent = n.label;
+
+    const sub = elSvg('text', {
+      x: -w / 2 + 14,
+      y: 14,
+      fill: 'var(--text2)',
+      'font-size': 10.5,
+      'font-weight': 600,
+    });
+    sub.textContent = n.sub || '';
+
+    // status dot
+    const dot = elSvg('circle', {
+      cx: w / 2 - 16,
+      cy: -h / 2 + 16,
+      r: 4.2,
+      fill: n.kind === 'dept'
+        ? (n.accent || 'rgba(139,148,158,0.65)')
+        : (n.muted ? 'rgba(139,148,158,0.65)' : (n.kind === 'human' ? 'rgba(63,185,80,0.9)' : 'rgba(63,185,80,0.85)')),
+    });
+
+    // dept load bar
+    if (n.kind === 'dept' && n.load) {
+      const pts = n.load.points || 0;
+      const { color } = toneForPts(pts);
+      const barW = Math.max(10, Math.min(w - 28, (pts / 28) * (w - 28)));
+      const barBg = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: w - 28, height: 6, rx: 4, fill: 'rgba(255,255,255,0.06)' });
+      const bar = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: barW, height: 6, rx: 4, fill: color, opacity: 0.7 });
+      g.appendChild(barBg); g.appendChild(bar);
+    }
+
+    g.appendChild(rect);
+    g.appendChild(accent);
+    g.appendChild(dot);
+    g.appendChild(title);
+    if (n.sub) g.appendChild(sub);
+
+    if (topGlow) g.style.filter = 'url(#orgSoftGlow)';
+
+    gNodes.appendChild(g);
+    nodeEls.push({ g, n, x, y });
+  }
+
+  for (const n of nodes) {
+    if (!xById.has(n.id)) continue; // skip unplaced
+    drawNode(n);
+  }
+
+  // --- Tooltip ---
+  function showTip(evt, title, meta) {
+    if (!tip) return;
+    tip.querySelector('.t').textContent = title;
+    tip.querySelector('.m').textContent = meta;
+    const r = wrap.getBoundingClientRect();
+    const x = evt.clientX - r.left;
+    const y = evt.clientY - r.top;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+    tip.classList.add('open');
+  }
+  function hideTip() { tip?.classList.remove('open'); }
+
+  for (const ne of nodeEls) {
+    ne.g.style.cursor = 'default';
+    ne.g.addEventListener('mousemove', (e) => {
+      const meta = ne.n.sub || '';
+      showTip(e, ne.n.label, meta);
+    });
+    ne.g.addEventListener('mouseleave', hideTip);
+  }
+
+  // --- Animated lights (only for ok edges) ---
+  const lights = [];
+  for (const lp of linkPaths) {
+    if (lp.edge.status !== 'ok') continue;
+    const total = lp.path.getTotalLength();
+    const count = lp.edge.from === 'deptGroup' ? 2 : 3;
+    for (let i = 0; i < count; i++) {
+      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.edge.from === 'deptGroup' ? 2.0 : 2.3, fill: 'rgba(63,185,80,0.85)' });
+      gLights.appendChild(dot);
+      lights.push({ dot, path: lp.path, total, phase: i / count });
+    }
+  }
+
+  const t0 = performance.now();
+  const speed = 0.00016;
+  const anim = { raf: null, cleanup: null };
+
+  function frame(now) {
+    const t = now - t0;
+    for (const l of lights) {
+      const u = (l.phase + t * speed) % 1;
+      const pt = l.path.getPointAtLength(l.total * u);
+      l.dot.setAttribute('cx', pt.x);
+      l.dot.setAttribute('cy', pt.y);
+      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
+    }
+    for (const lp of linkPaths) {
+      const rate = lp.edge.status === 'broken' ? 0.03 : (lp.edge.status === 'idle' ? 0.012 : 0.06);
+      const off = (t * rate) % 999;
+      lp.path.setAttribute('stroke-dashoffset', String(-off));
+    }
+    anim.raf = requestAnimationFrame(frame);
+  }
+  anim.raf = requestAnimationFrame(frame);
+
+  // --- Pan/Zoom ---
+  // Apply transform to viewport group (not viewBox), so Fit/Zoom can be smooth.
+  let scale = 1;
+  let panX = 0;
+  let panY = 0;
+
+  function applyTransform() {
+    viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
+  }
+
+  function fitToScreen() {
+    // Fit the laid-out bounds into the fixed SVG element box.
+    const box = svg.getBoundingClientRect();
+    // Compute approximate content bounds from viewBox.
+    const vb = svg.viewBox.baseVal;
+    const sx = box.width / vb.width;
+    const sy = box.height / vb.height;
+    scale = Math.max(0.25, Math.min(2.25, Math.min(sx, sy)));
+    panX = 0;
+    panY = 0;
+    applyTransform();
+  }
+
+  function zoomAt(clientX, clientY, nextScale) {
+    const vb = svg.viewBox.baseVal;
+    const box = svg.getBoundingClientRect();
+    const px = (clientX - box.left) / box.width;
+    const py = (clientY - box.top) / box.height;
+    // SVG coord under cursor (in viewBox space)
+    const x = vb.x + px * vb.width;
+    const y = vb.y + py * vb.height;
+    // Keep point under cursor stable by adjusting pan
+    const k = nextScale / scale;
+    panX = x - (x - panX) * k;
+    panY = y - (y - panY) * k;
+    scale = nextScale;
+    applyTransform();
+  }
+
+  let dragging = false;
+  let last = null;
+
+  function onDown(e) {
+    dragging = true;
+    last = { x: e.clientX, y: e.clientY };
+    wrap.classList.remove('grab');
+    wrap.classList.add('grabbing');
+    hideTip();
+  }
+  function onMove(e) {
+    if (!dragging || !last) return;
+    const dx = e.clientX - last.x;
+    const dy = e.clientY - last.y;
+    last = { x: e.clientX, y: e.clientY };
+    // Convert pixels to SVG viewBox units
+    const vb = svg.viewBox.baseVal;
+    const box = svg.getBoundingClientRect();
+    const ux = (dx / box.width) * vb.width;
+    const uy = (dy / box.height) * vb.height;
+    panX += ux;
+    panY += uy;
+    applyTransform();
+  }
+  function onUp() {
+    dragging = false;
+    last = null;
+    wrap.classList.remove('grabbing');
+    wrap.classList.add('grab');
+  }
+
+  function onWheel(e) {
+    // When hovering the orgviz area, allow wheel zoom (and avoid page scroll).
+    e.preventDefault();
+    const delta = -e.deltaY;
+    const step = delta > 0 ? 1.12 : 1 / 1.12;
+    const next = Math.max(0.25, Math.min(2.75, scale * step));
+    zoomAt(e.clientX, e.clientY, next);
+  }
+
+  wrap.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  wrap.addEventListener('wheel', onWheel, { passive: false });
+
+  const fitBtn = host.querySelector('#orgviz-fit');
+  const zIn = host.querySelector('#orgviz-zoomin');
+  const zOut = host.querySelector('#orgviz-zoomout');
+  const z100 = host.querySelector('#orgviz-zoom100');
+
+  fitBtn?.addEventListener('click', () => fitToScreen());
+  zIn?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.min(2.75, scale * 1.18)));
+  zOut?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.max(0.25, scale / 1.18)));
+  z100?.addEventListener('click', () => { scale = 1; panX = 0; panY = 0; applyTransform(); });
+
+  // Initial fit for birds-eye readability
+  setTimeout(() => fitToScreen(), 0);
+
+  anim.cleanup = () => {
+    wrap.removeEventListener('mousedown', onDown);
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+    wrap.removeEventListener('wheel', onWheel);
+  };
+
+  _orgVizAnim = anim;
+}
+
+let _taskProjectFilter = '';
 
 function renderTasks() {
   const tasks = _tasksData || [];
-  populateProjectFilter(tasks);
   const activeOnly = document.getElementById('active-only')?.checked;
-  const projFilter = document.getElementById('project-filter')?.value || '';
   let filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
-  if (projFilter) {
-    const descendants = getDescendants(tasks, projFilter);
-    descendants.add(projFilter);
-    filtered = filtered.filter(t => descendants.has(t.id) || descendants.has(t.parent));
+
+  // Project filter
+  const projectFilter = _taskProjectFilter || (document.getElementById('task-project-filter')?.value || '');
+  if (projectFilter) {
+    // Include the selected project/epic and all its descendants
+    const byId = new Map(tasks.map(t => [t.id, t]));
+    const childrenMap = new Map();
+    for (const t of tasks) {
+      if (t.parent) {
+        if (!childrenMap.has(t.parent)) childrenMap.set(t.parent, []);
+        childrenMap.get(t.parent).push(t.id);
+      }
+    }
+    function getTree(id) {
+      const result = new Set([id]);
+      for (const kid of (childrenMap.get(id) || [])) {
+        for (const d of getTree(kid)) result.add(d);
+      }
+      return result;
+    }
+    const allowedIds = getTree(projectFilter);
+    filtered = filtered.filter(t => allowedIds.has(t.id));
   }
+
+  // Build project filter dropdown
+  const filterContainer = document.getElementById('task-project-filter-wrap');
+  if (filterContainer) {
+    const projects = tasks.filter(t => (t.type || '').toLowerCase() === 'project');
+    if (projects.length > 0) {
+      filterContainer.innerHTML = `
+        <span class="text2" style="font-size:12px">Project</span>
+        <select class="task-filter-select" id="task-project-filter" onchange="_taskProjectFilter='';renderTasks()">
+          <option value="">All</option>
+          ${projects.map(p => `<option value="${p.id}" ${projectFilter === p.id ? 'selected' : ''}>${escapeHtml(p.title || p.id)}</option>`).join('')}
+        </select>
+      `;
+    } else {
+      filterContainer.innerHTML = '';
+    }
+  }
+
   const kanbanEl = document.getElementById('kanban');
   const treeEl = document.getElementById('task-tree');
-  const drillEl = document.getElementById('task-drill');
-  const breadEl = document.getElementById('drill-breadcrumb');
-  const db = document.getElementById('view-drill');
+
   const kb = document.getElementById('view-kanban');
   const tb = document.getElementById('view-tree');
-  if (db) db.classList.toggle('active', _taskView === 'drill');
-  if (kb) kb.classList.toggle('active', _taskView === 'kanban');
-  if (tb) tb.classList.toggle('active', _taskView === 'tree');
+  if (kb && tb) {
+    kb.classList.toggle('active', _taskView === 'kanban');
+    tb.classList.toggle('active', _taskView === 'tree');
+  }
 
-  if (kanbanEl) kanbanEl.style.display = 'none';
-  if (treeEl) treeEl.style.display = 'none';
-  if (drillEl) drillEl.style.display = 'none';
-  if (breadEl) breadEl.style.display = 'none';
-
-  if (_taskView === 'drill') {
-    if (drillEl) drillEl.style.display = '';
-    if (breadEl) breadEl.style.display = '';
-    renderDrillDown(filtered);
-  } else if (_taskView === 'tree') {
-    if (treeEl) treeEl.style.display = '';
+  if (_taskView === 'tree') {
+    kanbanEl.style.display = 'none';
+    treeEl.style.display = '';
     renderTree(filtered);
   } else {
-    if (kanbanEl) kanbanEl.style.display = '';
+    treeEl.style.display = 'none';
+    kanbanEl.style.display = '';
     renderKanban(filtered);
   }
+
   renderDepartmentLoads(tasks);
+
   const priorities = tasks.filter(t => (t.status || '').toLowerCase() === 'in-progress' || ((t.status || '').toLowerCase() === 'open' && (t.priority === 'P0' || t.priority === 'P1'))).slice(0, 5);
   const priEl = document.getElementById('mission-priorities');
   if (priEl) {
@@ -1687,7 +2556,7 @@ function renderTasks() {
       priEl.innerHTML = priorities.map(t => {
         const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : 'badge-blue';
         const pts = getTaskPoints(t);
-        return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${escapeHtml(t.priority || '')}</span><strong>${escapeHtml(t.id)}</strong> — ${escapeHtml(t.title || '')} ${pts !== null ? `<span class="text2">(${pts} pts)</span>` : ''} <span class="text2">(${escapeHtml(t.status || '')})</span></div>`;
+        return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${escapeHtml(t.priority || '')}</span><strong>${escapeHtml(t.id)}</strong> — ${escapeHtml(t.title || '')} ${pts !== null ? `<span class=\"text2\">(${pts} pts)</span>` : ''} <span class="text2">(${escapeHtml(t.status || '')})</span></div>`;
       }).join('');
     } else {
       priEl.textContent = 'No active priorities found.';
@@ -1695,142 +2564,19 @@ function renderTasks() {
   }
 }
 
-function drillInto(id, title) {
-  _drillPath.push({id, title});
-  renderTasks();
-}
-
-function drillTo(index) {
-  _drillPath = _drillPath.slice(0, index);
-  renderTasks();
-}
-
-function statusIcon(s) {
-  s = (s||'').toLowerCase();
-  if (s === 'completed' || s === 'complete' || s === 'done') return '✅';
-  if (s === 'in-progress') return '🔨';
-  if (s === 'queued') return '📋';
-  if (s === 'blocked') return '⏳';
-  if (s === 'open') return '📌';
-  if (s === 'paused') return '⏸️';
-  return '○';
-}
-
-function typeIcon(t) {
-  if (t === 'project') return '📁';
-  if (t === 'epic') return '🎯';
-  if (t === 'story') return '📖';
-  return '🔧';
-}
-
-function renderDrillDown(tasks) {
-  const drillEl = document.getElementById('task-drill');
-  const breadEl = document.getElementById('drill-breadcrumb');
-
-  // Breadcrumb
-  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="drillTo(0)">🏠 All Projects</span>';
-  _drillPath.forEach((p, i) => {
-    bc += ` <span class="text2">›</span> <span style="cursor:pointer;color:var(--blue)" onclick="drillTo(${i+1})">${escapeHtml(p.title)}</span>`;
-  });
-  breadEl.innerHTML = bc;
-
-  const currentParent = _drillPath.length > 0 ? _drillPath[_drillPath.length - 1].id : null;
-
-  let items;
-  if (!currentParent) {
-    // Show projects
-    items = tasks.filter(t => t.type === 'project');
-    if (!items.length) {
-      // Fallback: synthesize projects from PROJ- parents
-      const projIds = new Set();
-      tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
-      items = [...projIds].map(pid => {
-        const found = tasks.find(t => t.id === pid);
-        return found || {id: pid, title: pid, type: 'project', status: 'in-progress', priority: 'P1'};
-      });
-    }
-  } else {
-    // Show children of currentParent
-    items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
-  }
-
-  // Sort: P0 first, then in-progress, then queued, then rest
-  const pOrder = {'P0':0,'P1':1,'P2':2};
-  const sOrder = {'in-progress':0,'queued':1,'open':2,'blocked':3};
-  items.sort((a,b) => {
-    const pa = pOrder[a.priority] ?? 3, pb = pOrder[b.priority] ?? 3;
-    if (pa !== pb) return pa - pb;
-    const sa = sOrder[(a.status||'').toLowerCase()] ?? 4, sb = sOrder[(b.status||'').toLowerCase()] ?? 4;
-    return sa - sb;
-  });
-
-  if (!items.length) {
-    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level.</div>';
-    return;
-  }
-
-  // Count children for each item
-  const childCount = (id) => tasks.filter(t => t.parent === id && t.id !== id).length;
-  const completedChildCount = (id) => tasks.filter(t => t.parent === id && t.id !== id && isCompletedStatus(t.status)).length;
-  const totalPoints = (id) => {
-    let sum = 0;
-    tasks.filter(t => t.parent === id && t.id !== id).forEach(t => { sum += getTaskPoints(t) || 0; });
-    return sum;
-  };
-
-  drillEl.innerHTML = items.map(t => {
-    const kids = childCount(t.id);
-    const doneKids = completedChildCount(t.id);
-    const pts = getTaskPoints(t);
-    const tPts = totalPoints(t.id);
-    const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
-    const canDrill = kids > 0 || t.type === 'project' || t.type === 'epic' || t.type === 'story';
-    const clickAttr = canDrill ? `onclick="drillInto('${t.id}','${escapeHtml(t.title).replace(/'/g,"\\'")}')" style="cursor:pointer"` : '';
-    const progress = kids > 0 ? Math.round((doneKids / kids) * 100) : (isCompletedStatus(t.status) ? 100 : 0);
-    const assignee = t.assigned || '';
-    const assignShort = assignee.split('(')[0].split(' ')[0].trim();
-
-    return `
-      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr} id="task-${t.id}">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-              <span style="font-size:14px">${typeIcon(t.type)}</span>
-              <span class="task-id">${escapeHtml(t.id)}</span>
-              <span class="badge ${pBadge}" style="font-size:10px">${escapeHtml(t.priority || '')}</span>
-              ${pts !== null ? `<span class="badge badge-blue" style="font-size:10px">${pts}pt${pts!==1?'s':''}</span>` : ''}
-              <span style="font-size:11px">${statusIcon(t.status)}</span>
-            </div>
-            <div class="task-title" style="font-size:14px">${escapeHtml(t.title || '')}</div>
-          </div>
-          ${canDrill ? '<span style="color:var(--text2);font-size:18px">›</span>' : ''}
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px">
-          <div style="display:flex;align-items:center;gap:8px">
-            ${assignShort ? `<span style="font-size:11px;color:var(--text2)">👤 ${escapeHtml(assignShort)}</span>` : ''}
-            ${kids > 0 ? `<span style="font-size:11px;color:var(--text2)">${doneKids}/${kids} items</span>` : ''}
-            ${tPts > 0 ? `<span style="font-size:11px;color:var(--text2)">Σ${tPts}pts</span>` : ''}
-          </div>
-          ${kids > 0 ? `<div style="width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${progress}%;background:${progress===100?'var(--green)':'var(--blue)'};border-radius:3px;transition:width 0.3s"></div></div>` : ''}
-        </div>
-        ${t.notes && !canDrill ? `<div class="task-desc" style="margin-top:6px">${escapeHtml((t.notes||'').substring(0,120))}</div>` : ''}
-      </div>
-    `;
-  }).join('');
-}
-
 async function loadTasks() {
   const data = await api('./data/tasks.json');
   if (!data || !data.tasks) return;
   _tasksData = data.tasks;
-  setTaskView(_taskView || 'kanban');
-  // Re-render projects view now that task data is available for drill-down
-  if (_projectsData) renderProjectsView();
+  setTaskView(_taskView || 'tree');
+  // Projects tab is built from tasks data
+  loadProjects();
 }
 
-// Calendar
+// Calendar (Build 3)
 let calAnchorDate = new Date();
-let calView = window.innerWidth <= 768 ? 'list' : 'week';
+let calSelectedDate = startOfDay(new Date());
+let calView = 'week'; // 'day' | 'week' | 'month'
 let calItems = [];
 
 function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
