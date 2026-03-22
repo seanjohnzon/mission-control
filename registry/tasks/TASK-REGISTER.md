@@ -741,7 +741,7 @@ notes:        Chopper verified 2026-03-16 21:34 EDT via SSH to Nami. D1.4 PASS, 
 ```
 task_id:      EPIC-002
 title:        3D Office Tab — Graduation Test
-status:       in-progress
+status:       paused
 priority:     P2
 points:       10
 phase:        
@@ -752,7 +752,7 @@ type:         epic
 estimate:     epic (sum of children)
 parent:       PROJ-MC
 dependencies: none
-notes:        DEPRIORITIZED by Captain 2026-03-21. Mission Control epic (EPIC-003) takes priority. Resume after EPIC-003 is complete.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX.
 ```
 
 ```
@@ -790,7 +790,7 @@ Deliverables: Running at localhost:5173 on Franky. Code in D:\\openclaw-brain\\o
 ```
 task_id:      CREW-009
 title:        3D Office — Character animations and state machine
-status:       complete
+status:       completed
 priority:     P0
 points:       10
 phase:        
@@ -876,7 +876,7 @@ Acceptance: Watch a real crew task assignment — orb flies, character sits, wor
 ```
 task_id:      CREW-012
 title:        3D Office — Polish, integration, and full verification
-status:       queued
+status:       paused
 priority:     P2
 points:       10
 phase:        
@@ -887,7 +887,7 @@ type:         story
 parent:       EPIC-002
 estimate:     5pts
 dependencies: CREW-011
-notes:        PAUSED — Captain ordered MC priority over 3D. Resume after EPIC-003.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 
 All 11 acceptance criteria from spec §13:
 [ ] Scene renders without errors in Chrome/Safari
@@ -1189,7 +1189,7 @@ notes:        Completed by Franky. Sanji+Usopp avatars wired in commit 6a96ce3.
 ```
 task_id:      RELAY-1773893400
 title:        [Brook → Usopp] Update SUNNY-REQ-001 with ship scale-up + blueprint integration
-status:       queued
+status:       paused
 priority:     backlog
 points:       5
 phase:        
@@ -1198,7 +1198,7 @@ type:         task
 created_at:   2026-03-19
 estimate:     2pts
 dependencies: none
-notes:        PAUSED — Ship/3D deprioritized. Resume after EPIC-003.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 ```
 
 
@@ -1212,6 +1212,7 @@ phase:
 assigned_to:  Usopp
 type:         task
 created_at:   2026-03-19
+estimate:     1pts
 dependencies: none
 notes:        Usopp, please score the 7 Paperclip AI orchestration improvements in /Users/minicihan/Cursor Projects/mission-control/crew-board/research/improvements.md (under Paperclip AI Orchestration Innovations, dated 2026-03-19). Assign impact scores (1-10) for each based on potential crew benefit. Post results in #research-tech or update the file directly. Thanks!
 ```
@@ -1334,6 +1335,7 @@ phase:
 assigned_to:  Usopp
 type:         task
 created_at:   2026-03-19
+estimate:     1pts
 dependencies: none
 notes:        Append this section to C:\Users\memeb\workspace-usopp\SOUL.md:
 
@@ -1469,7 +1471,7 @@ notes:        RESOLVED by Zeus: File exists at /Users/minicihan/.openclaw/worksp
 ```
 task_id:      SANJI-PAGES-001
 title:        [P0] Deploy Mission Control to GitHub Pages
-status:       queued
+status:       in-progress
 priority:     P0
 points:       1
 phase:        
@@ -1477,8 +1479,10 @@ assigned_to:  Sanji
 type:         task
 created_at:   2026-03-19
 parent:       EPIC-003
+estimate:     3pts
 dependencies: none
 notes:        Waiting on Franky feature/static-pages branch. Tasks: create deploy-pages.yml workflow, enable GitHub Pages, verify mission-control loads, confirm Office tab iframe from office-3d.
+[Franky 2026-03-22 03:43] Picked up by self-operate cron. Estimated 2-4h. Starting discovery/review and spawning builders if code changes are safe.
 ```
 
 ```
@@ -1985,6 +1989,7 @@ phase:
 assigned_to:  Nami
 type:         task
 created_at:   2026-03-20
+estimate:     1pts
 dependencies: none
 parent:       PROJ-OPS
 notes:        Captain wants a dedicated Discord channel specifically for Cavendish's questionnaire/intake. Please coordinate with Vivi to create/confirm a channel where Captain can: (1) answer Cavendish questionnaire prompts, (2) dump personal context/info, and (3) upload photos for Cavendish to use. Please also confirm the exact channel name/location back through Mission Control so routing is unambiguous. Requirement: Cavendish should dispatch Discord update needs through Vivi, who works with Nami, rather than ad hoc posting.
@@ -2000,6 +2005,7 @@ phase:
 assigned_to:  Duvan
 type:         task
 created_at:   2026-03-20
+estimate:     1pts
 dependencies: none
 parent:       PROJ-OPS
 notes:        Captain has renamed the project agent from Cyrano to Cavendish. Update naming across active workflow/tasking/documentation for this effort. Operational rule going forward: when Cavendish needs something updated on Discord, dispatch the request to Vivi via the Nami coordination path instead of assuming a channel exists or posting ad hoc. Also continue the questionnaire/onboarding work using the existing 30 transcript corpus while retrieval resumes over time.
@@ -2008,7 +2014,7 @@ notes:        Captain has renamed the project agent from Cyrano to Cavendish. Up
 ```
 task_id:      BRIDGE-CHOPPER-QA-20260320
 title:        [BRIDGE REPAIR] Execute ship scene QA after Brook UX PASS
-status:       queued
+status:       paused
 priority:     backlog
 points:       10
 phase:        
@@ -2018,7 +2024,7 @@ created_at:   2026-03-20
 estimate:     3pts
 dependencies: none
 parent:       EPIC-002
-notes:        PAUSED — 3D work deprioritized. Resume after EPIC-003.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 ```
 
 ```
@@ -2062,14 +2068,14 @@ created_at:   2026-03-20
 estimate:     3pts
 parent:       PROJ-RESEARCH
 dependencies: none
-notes:        Robin-Ops flagged 2026-03-20 22:32 EST - This task requires complex strategic synthesis beyond simple execution. Contains three bundled issues: loop fixes, Discord reorganization, and research mandates requiring deep reasoning. Escalated to main Robin for handling. [2026-03-21 03:02 UTC] Robin-Ops patrol confirms this task requires main Robin - complex reasoning beyond ops scope. Task flagged but no action taken per anti-loop rules. [2026-03-21 03:32 UTC] Robin-Ops patrol: Task still requires main Robin attention for complex synthesis work.
+notes:        Robin-Ops flagged 2026-03-20 22:32 EST - This task requires complex strategic synthesis beyond simple execution. Contains three bundled issues: loop fixes, Discord reorganization, and research mandates requiring deep reasoning. Escalated to main Robin for handling. [2026-03-21 03:02 UTC] Robin-Ops patrol confirms this task requires main Robin - complex reasoning beyond ops scope. Task flagged but no action taken per anti-loop rules. [2026-03-21 03:32 UTC] Robin-Ops patrol: Task still requires main Robin attention for complex synthesis work. [2026-03-21 13:35 UTC] Robin-Ops patrol: Task remains queued for main Robin - complex strategic work beyond ops execution scope.
 ```
 
 
 ```
 task_id:      CAL-001
 title:        Calendar Tab Upgrade — Weekly Schedule + Cron Inspector
-status:       in-progress
+status:       paused
 priority:     P0
 points:       10
 phase:        Sprint 3 — Calendar
@@ -2079,20 +2085,20 @@ created_at:   2026-03-20
 estimate:     5pts
 dependencies: none
 parent:       EPIC-003
-notes:        Captain order: Transform Calendar tab from bare month-grid to beautiful weekly schedule + cron inspector. Inspired by @chrysb AlphaClaw design. Spec: SPEC-CALENDAR-TAB-UPGRADE.md. Requirements: REQ-CALENDAR-TAB-UPGRADE.md (by Usopp). Franky assigning builder subagent. Phases: Frontend week grid + Backend APIs + Polish.
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
 ```
 
 ```
 task_id:      STITCH-USOPP-1774064216
 title:        [Brook → Usopp] Stitch by Google Analysis — Evaluate Gemini Image API Integration into Our Framework
-status:       queued
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Usopp
 type:         task
 created_at:   2026-03-21
 dependencies: none
-notes:        Captain's orders: Analyze whether we can inject AI-powered UI generation into our existing framework for better design results.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 
 ## WHAT IS STITCH?
 Google Labs tool at https://stitch.withgoogle.com — generates UI mockups for mobile and web apps from text prompts. Powered by Gemini. Currently in Beta (codename 'Nemo').
@@ -2147,14 +2153,14 @@ Please run a full technical feasibility analysis and report back. Captain wants 
 ```
 task_id:      STITCH-NAMI-1774064233
 title:        [Brook → Nami] Create Epic: Stitch by Google / Gemini UI Generation Integration
-status:       queued
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Nami
 type:         task
 created_at:   2026-03-21
 dependencies: none
-notes:        Captain's orders: Create an epic for Stitch by Google adaptation with all tasks coordinated across departments.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 
 ## EPIC SUMMARY
 Integrate AI-powered UI generation (Google Stitch / Gemini API) into our design-to-build pipeline. Goal: generate production-quality UI mockups programmatically to accelerate Franky's builds and my creative reviews.
@@ -2202,42 +2208,42 @@ Please create the epic and coordinate timelines. This came directly from the Cap
 ```
 task_id:      CAPT-1774064245
 title:        [Captain → Brook] Evaluate Stitch by Google, brief Usopp and Nami
-status:       in-progress
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Brook
 type:         task
 created_at:   2026-03-21
 dependencies: none
-notes:        Captain's directive: Research Stitch by Google (https://stitch.withgoogle.com). Find the link, analyze API adaptation potential, cost. Report findings to Usopp for full technical analysis on injecting into our framework. Report to Nami to create an epic with all coordinated tasks. Captain is already signed in and open to upgrading subscription if Brook can directly access Stitch. Captain does not mind the cost if it improves results.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 ```
 
 ```
 task_id:      CAPT-NOTIFY-1774064245
 title:        [FYI Nami] Captain gave Brook direct orders: Stitch by Google evaluation + cross-dept coordination
-status:       queued
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Nami
 type:         task
 created_at:   2026-03-21
 dependencies: none
-notes:        Captain went directly to Brook about: evaluating Stitch by Google for our workflow. Captain wants Usopp to run a full technical analysis and Nami to create an epic. Captain is signed into Stitch and willing to pay for upgrades. Brook has briefed both departments via MC tasks.
+notes:        PAUSED by Captain's order 2026-03-21: All 3D Office work on hold. Brook reassigned to Mission Control UX. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 ```
 
 ```
 task_id:      CREW-STATUS-REPORT-2345
 title:        [CAPTAIN ORDER] All crew report Mission Control progress to thread 1681 immediately
-status:       in-progress
+status:       paused
 priority:     P0
 phase:        
 assigned_to:  All Departments
 type:         task
-estimate:     1pt
+estimate:     1pts
 created_at:   2026-03-21
 parent:       PROJ-OPS
 dependencies: none
-notes:        Captain directive: Franky, Sanji, Chopper must post status updates to Mission Control thread 1681 within 5 minutes. Include what was built, live links, what is remaining. This is crew discipline - Captain should not have to chase progress reports.
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
 ```
 
 ```
@@ -2249,6 +2255,7 @@ phase:
 assigned_to:  Nami
 type:         task
 created_at:   2026-03-21
+estimate:     1pts
 dependencies: none
 notes:        Requirements gap flagged from CREW-STATUS-REPORT-2345. Please define a mandatory progress-report template for all crews: (1) what was built, (2) live link, (3) validation evidence/device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Captain is currently chasing updates because completion/reporting standards are implicit instead of testable.
 ```
@@ -2256,7 +2263,7 @@ notes:        Requirements gap flagged from CREW-STATUS-REPORT-2345. Please defi
 ```
 task_id:      EPIC-003
 title:        Mission Control Dashboard — Full Feature Completion
-status:       in-progress
+status:       paused
 priority:     P0
 phase:        
 assigned_to:  Nami (orchestrator)
@@ -2266,7 +2273,7 @@ sprint:       Sprint 3 — Mission Control
 estimate:     epic (sum of children)
 created_at:   2026-03-21
 dependencies: none
-notes:        CAPTAIN ORDER 2026-03-21: Stop all 3D work and focus on Mission Control. Get our house in order first. 3D design is lower priority until this epic is DONE.
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
 
 Scope: All tabs functional on GitHub Pages with real data, hierarchy view, calendar upgrade, effort points visible, department loads, office iframe working.
 
@@ -2318,7 +2325,7 @@ sprint:       Sprint 3 — Mission Control
 estimate:     2pts
 created_at:   2026-03-21
 dependencies: none
-notes:        Office tab iframe must load seanjohnzon.github.io/office-3d correctly on both desktop and mobile. Verify with mobile device testing.
+notes:        Office tab iframe must load seanjohnzon.github.io/office-3d correctly on both desktop and mobile. Verify with mobile device testing. | [2026-03-21 13:08] agent: PAUSED by Captain order 2026-03-21: 3D Office work on hold. Focus shifted to Mission Control UX.
 ```
 
 ```
@@ -2340,7 +2347,7 @@ notes:        QA verification of all 10 tabs on GitHub Pages. Test on desktop br
 ```
 task_id:      CAPT-SANJI-DATING-EPIC-20260321-0112
 title:        [Captain -> Sanji] Build Epic for Cavendish + Zeff dating rollout
-status:       in-progress
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Sanji
@@ -2348,7 +2355,7 @@ type:         epic
 created_at:   2026-03-21
 parent:       PROJ-OPS
 dependencies: none
-notes:        Captain confirms Vivi already created the Cavendish Discord channel and has now posted photos there. Next phase: build a coordinated Epic that runs in parallel until ready for live app tests. Scope: (1) Cavendish posts the full questionnaire for what he needs to know about Captain in order to build bio points per app and conversation flow architecture. (2) Zeff creates/sets up Bumble, Hinge, and Tinder accounts and retrieves the profile prompt/field requirements needed for each app bio library. (3) Subagents should be used so work proceeds in parallel and context windows stay clean. Goal state: complete intake, app requirements, bio library inputs, and conversation architecture so team can move to real live tests talking to women.
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
 ```
 
 ```
@@ -2360,6 +2367,7 @@ phase:
 assigned_to:  Nami
 type:         task
 created_at:   2026-03-21
+estimate:     1pts
 dependencies: none
 notes:        Captain says Vivi already created the Cavendish channel but the bridge-back to Sanji failed. New directive: coordinate cleaner department orchestration so thread/channel work dispatches back properly. Sanji is now building an Epic for parallel execution: Cavendish questionnaire + conversation architecture, Zeff app/account/prompt prep for Bumble/Hinge/Tinder, and eventual readiness for live tests. Please keep Vivi looped in for bridge-gap monitoring and dispatch hygiene.
 ```
@@ -2367,7 +2375,7 @@ notes:        Captain says Vivi already created the Cavendish channel but the br
 ```
 task_id:      EPIC-CAVENDISH-ZEFF-DATING-ROLL-20260321
 title:        [EPIC] Cavendish + Zeff parallel dating rollout to live-test readiness
-status:       in-progress
+status:       paused
 priority:     backlog
 phase:        
 assigned_to:  Sanji
@@ -2375,7 +2383,7 @@ type:         epic
 created_at:   2026-03-21
 parent:       PROJ-OPS
 dependencies: none
-notes:        Objective: prepare Captain for live dating-app execution with proper intake, bios, app-specific prompt libraries, and conversation architecture. Parallel lanes: LANE A / Cavendish = analyze existing corpus + photos/context, post questionnaire in dedicated Discord channel, define what he needs to know about Captain, produce app-specific bio input framework, and draft conversation-flow architecture. LANE B / Zeff = prepare Bumble/Hinge/Tinder account setup flow, enumerate required prompts/fields/media constraints for each app, and assemble a bio-library schema mapped to each platform. LANE C / Vivi support = monitor thread/channel bridge gaps so outputs created in Discord get dispatched back into Sanji department without Captain needing to manually relay. Completion criteria: questionnaire posted, app prompt requirements collected, account-setup checklist ready, conversation architecture drafted, and handoff package assembled for real-world testing.
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
 ```
 
 ```
@@ -2387,6 +2395,7 @@ phase:
 assigned_to:  Cavendish
 type:         task
 created_at:   2026-03-21
+estimate:     3pts
 dependencies: none
 notes:        Captain has posted photos in your dedicated Discord channel. Your lane starts now. Use the existing Playing With Fire corpus plus Captain-provided images/context. Deliverables: (1) Post a clean, structured questionnaire in the dedicated Cavendish Discord channel covering everything you need to know about Captain to build strong bio points for Bumble, Hinge, and Tinder. (2) Draft the initial conversation flow architecture: opener styles, qualification flow, flirt escalation guardrails, date conversion logic, and per-app tone differences. (3) If needed, spawn your own subagents so this lane keeps moving without blocking. Goal is readiness for live tests, not perfection before movement.
 ```
@@ -2400,6 +2409,7 @@ phase:
 assigned_to:  Zeff
 type:         task
 created_at:   2026-03-21
+estimate:     3pts
 dependencies: none
 notes:        Parallel lane. Captain wants Bumble, Hinge, and Tinder prepared while Cavendish finishes intake. Deliverables: (1) create/setup flow for Bumble, Hinge, and Tinder accounts, (2) retrieve and document all profile prompts/required fields/media constraints needed for each app so we can build a bio library, (3) structure findings so Cavendish can map bio points to each platform, and (4) use subagents if available so work continues in parallel. Do not begin live messaging yet. This phase is setup and requirements gathering for eventual live tests.
 ```
@@ -2413,6 +2423,7 @@ phase:
 assigned_to:  Vivi
 type:         task
 created_at:   2026-03-21
+estimate:     3pts
 dependencies: none
 notes:        Captain explicitly wants a subagent-style monitor that loops through active threads/channels and catches bridge gaps so departments receive their dispatch without Captain having to manually relay. Please design/implement an operational plan for Vivi to monitor thread activity, detect when work exists in a thread/channel but has not been dispatched back to the responsible department, and escalate/repair those gaps automatically. Tie this into the Cavendish/Zeff dating Epic as the first live use case.
 ```
@@ -2471,4 +2482,1137 @@ estimate:     project
 created_at:   2026-03-21
 dependencies: none
 notes:        Deferred work: Desktop integration, Perplexity eval, n8n migration, Zoro security.
+```
+
+```
+task_id:      TEST-001
+title:        test
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        test
+```
+
+```
+task_id:      CAPT-1774098566
+title:        [Captain → Brook] Clean 3D Office tasks, focus on Mission Control UX
+status:       paused
+priority:     P0
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
+```
+
+```
+task_id:      CAPT-NOTIFY-1774098566
+title:        [FYI Nami] Captain reassigned Brook: 3D Office paused → Mission Control UX
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        Captain went directly to Brook 2026-03-21 09:07 EDT. Orders: (1) Pause all 3D Office tasks (2) Focus on Mission Control UX design across all tabs (3) Move crons from 3D Office thread to Mission Control thread. Brook has executed all three. EPIC-002 and related tasks paused. Brook-ops cron now points to topic 1681.
+```
+
+```
+task_id:      CAPT-1774100823
+title:        [Captain → Brook] Set up MC design research cron in Mission Control thread
+status:       completed
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        Captain order 2026-03-21: Brook to get eyes on Mission Control, research design improvements, set up cron loop pointed to topic 1681 (Mission Control thread). Stop spinning in 3D Office thread. Done — cron updated, delivering to 1681.
+```
+
+```
+task_id:      CAPT-NOTIFY-1774100838
+title:        [FYI Nami] Captain reassigned Brook: cron now targets Mission Control thread 1681
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        Captain told Brook to stop spinning in 3D Office topic, move cron to Mission Control thread (topic 1681), and focus on researching design improvements for the MC dashboard. Brook updated his cron job accordingly. All Brook output now routes to Mission Control thread.
+```
+
+```
+task_id:      CAPT-1774101069
+title:        [Captain → Brook + Robin] Coordinate design research in Mission Control thread
+status:       paused
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+dependencies: none
+notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captain order 2026-03-21 13:10 EDT
+```
+
+```
+task_id:      CAPT-NOTIFY-1774101069
+title:        [FYI Nami] Captain ordered Robin + Brook coordination in MC thread 1681
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        Captain wants Robin to move all cron jobs to Mission Control thread (1681) and align research with Brook's design work. Both agents to coordinate design research together.
+```
+
+```
+task_id:      MC-DESIGN-1737471874
+title:        [MC-UX] Enhance Overview stat cards with progress indicators
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Current stat cards show static values without visual progress context
+
+Solution: Add circular progress rings behind values for Phase/Autonomy/Active systems:
+- Phase: 33% ring (Phase 1 of 3)
+- Autonomy: 0% ring with gradient (0-5 scale)
+- Active Machines/Agents: percentage-based rings
+- Use CSS conic-gradient: background: conic-gradient(var(--blue) 0deg calc(var(--progress) * 3.6deg), var(--border) 0deg)
+
+Reference: Linear dashboard progress indicators, Vercel analytics cards
+Priority: P2
+```
+
+```
+task_id:      MC-DESIGN-1737471875
+title:        [MC-UX] Redesign hero banner with mission progress visualization
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     3pts
+dependencies: none
+notes:        Problem: Hero banner is static text without visual engagement or progress tracking
+
+Solution: Transform into dynamic mission status display:
+- Replace text with horizontal progress bar showing org evolution (0% → 100% autonomy)
+- Add milestone markers: Phase 1 (Foundation), Phase 2 (Automation), Phase 3 (Autonomy)
+- Implement subtle animated background using CSS: background: linear-gradient(135deg, #161b22 0%, #1a2332 50%, #161b22 100%); background-size: 400% 400%; animation: gradient-shift 20s ease infinite
+- Add "Days Active" counter and "Next Milestone" indicator
+
+Reference: GitHub Actions progress bars, Raycast onboarding flows
+Priority: P1
+```
+
+```
+task_id:      MC-DESIGN-RESEARCH-1774101991
+title:        [MC-DESIGN] Research stat card progress indicators and hero banner visualization patterns
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Brook
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Research foundation for MC-DESIGN-1737471874 (stat cards) and MC-DESIGN-1737471875 (hero banner). Current issues: Overview stat cards show static values without progress context, hero banner lacks visual engagement. Research scope: 1) Best practices for dashboard progress indicators (Linear, Vercel, Notion, GitHub) 2) Hero banner mission progress visualization patterns 3) Animation/micro-interaction specs (100-300ms timing) 4) Dark mode progress visualization techniques 5) Specific CSS/code patterns for implementation. Deliverable: Design research digest with specific URLs, techniques, and implementation recommendations for Franky.
+```
+
+```
+task_id:      RELAY-ROBIN-USOPP-PAPERCLIP
+title:        [BRIDGE REPAIR] Robin → Usopp: Score Paperclip AI Improvements
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Usopp
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        BROKEN BRIDGE DETECTED: Robin requested scoring of 7 Paperclip AI improvements in improvements.md (dated 2026-03-19). Assign impact scores 1-10 for each based on crew benefit potential. Post results in #research-tech or update file directly.
+```
+
+```
+task_id:      USOPP-ACCESS-1774104923
+title:        [Usopp -> Nami] Provision observer access for Perona (Discord + Telegram routing audit)
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Nami
+type:         task
+created_at:   2026-03-21
+estimate:     1pts
+dependencies: none
+notes:        Captain asked whether Perona has all access needed. Current observer can report only from exposed outputs unless granted read-only access to: (1) Sanji machine n8n sandbox/uat execution history and workflow runs for Telegram + Discord routing, (2) exact workflow IDs/endpoints in scope, (3) destination-side evidence for routed messages by topic/channel, (4) any patch/change log during the 6h observation window. Need truthful audit data, not inferred status.
+```
+
+```
+task_id:      MC-DESIGN-1774105556
+title:        [MC-UX] Redesign Model Ops tables with data density optimization
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Model Ops tables are data-heavy with poor visual hierarchy and readability. Current tables use basic bootstrap styling without proper data visualization techniques.
+
+Solution: Implement data density improvements:
+- Add mini charts/sparklines for usage trends
+- Color-code status cells with semantic backgrounds
+- Add hover states with expanded details
+- Implement column sorting and filtering controls
+- Use progressive disclosure for complex data
+
+Reference: Linear app uses excellent data table patterns with interactive sorting, color coding, and hover details. Vercel dashboard demonstrates clean data hierarchy.
+
+CSS Changes:
+- Add .data-table class with improved spacing (padding: 6px 12px)
+- Implement status indicators with --green/--red/--yellow backgrounds
+- Add sortable column headers with chevron icons
+- Progressive disclosure with expandable rows for detailed data
+
+Priority: P2
+```
+
+```
+task_id:      MC-DESIGN-1774105567
+title:        [MC-UX] Add real-time cost monitoring dashboard with visual alerts
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     3pts
+dependencies: none
+notes:        Problem: Cost tracking section in Model Ops shows static estimates without visual context or trend awareness. Users cannot quickly assess if spending is normal or concerning.
+
+Solution: Transform cost section into active monitoring dashboard:
+- Add cost trend sparklines showing last 7 days
+- Implement visual budget alerts (green=safe, yellow=approaching limit, red=over budget)
+- Real-time daily spend updates with hourly granularity
+- Cost per model breakdown with usage percentages
+- Projected vs actual comparison charts
+
+Reference: AWS CloudWatch cost dashboards show excellent real-time cost monitoring with visual alerts and trend analysis.
+
+CSS Changes:
+- Add .cost-dashboard grid layout
+- Implement .alert-badge variants for budget status
+- Add mini chart containers with CSS-only bar charts
+- Progressive color coding: rgba(63,185,80,0.1) for safe, rgba(210,153,34,0.1) for warning, rgba(248,81,73,0.1) for critical
+
+Priority: P1
+```
+
+```
+task_id:      MC-DESIGN-1774104000
+title:        [MC-UX] Enhanced Task Card Visual Hierarchy
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Kanban cards lack visual depth and priority scanning speed
+Solution: Add left-border priority flags (P0=4px red, P1=4px orange, P2=4px blue), subtle background gradients, improved typography scale, and better spacing
+Reference: Linear app task cards, Notion database cards
+Priority: P2
+```
+
+```
+task_id:      MC-DESIGN-1774104001
+title:        [MC-UX] Improved Task Tree Visualization
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Tree view lacks visual hierarchy depth cues and relationship clarity
+Solution: Add connecting lines between parent/child tasks, collapsible sections with smooth animations, indentation improvements, and visual depth indicators
+Reference: GitHub repository tree structure, VS Code file explorer
+Priority: P2
+```
+
+```
+task_id:      MC-DESIGN-1774112689
+title:        [MC-UX] Calendar week view event stacking optimization
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Week view events overlap when multiple events occur in same hour, making them unreadable
+Solution: Implement horizontal stacking for concurrent events with:
+- max-width: calc(100% / eventCount) for each event block
+- left offset based on event index
+- z-index layering for hover states
+- Minimum 120px width constraint to maintain readability
+Reference: Linear calendar, Raycast calendar stacking patterns
+Priority: P2
+```
+
+```
+task_id:      MC-DESIGN-1774112695
+title:        [MC-UX] Calendar month view busy day overflow handling
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Brook
+type:         task
+created_at:   2026-03-21
+estimate:     2pts
+dependencies: none
+notes:        Problem: Month view days with 4+ events show truncated view but no indication of additional items
+Solution: Add "+N more" indicator when day exceeds 3 visible events:
+- Show first 3 events as cal-mini-item
+- Add .cal-overflow-indicator with count and subtle background
+- Hover state reveals full event list in tooltip
+- CSS: font-size: 10px, color: var(--text2), padding: 2px 4px
+Reference: Google Calendar, Outlook calendar month overflow patterns
+Priority: P2
+```
+
+```
+task_id:      RELAY-ROBIN-USOPP-PAPERCLIP-REPAIR
+title:        [BRIDGE REPAIR] Robin → Usopp: Score Paperclip AI Improvements from improvements.md
+status:       queued
+priority:     P1
+phase:        Bridge Operations
+assigned_to:  Usopp
+type:         task
+estimate:     1pts
+created_at:   2026-03-21
+dependencies: none
+notes:        BROKEN BRIDGE DETECTED: Robin requested scoring of 7 Paperclip AI improvements in /Users/minicihan/Cursor Projects/mission-control/crew-board/research/improvements.md (dated 2026-03-19). Zeus detected this undelivered handoff. Task: Assign impact scores 1-10 for each based on crew benefit potential. Post results in #research-tech or update file directly.
+```
+
+```
+task_id:      BRIDGE-REPAIR-USOPP-TEMPLATE-20260321
+title:        [BRIDGE REPAIR] Usopp → Nami: Implement mandatory progress reporting template
+status:       queued
+priority:     P0
+phase:        Operations
+assigned_to:  Nami
+type:         task
+parent:       PROJ-OPS
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        BROKEN BRIDGE DETECTED: Usopp has been flagging this gap since 2026-03-21 06:00 UTC with no task creation. Required template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Affects CREW-STATUS-REPORT-2345 and all Mission Control reporting.
+```
+
+```
+task_id:      BRIDGE-REPAIR-MC-ENV-SPLIT-20260321
+title:        [BRIDGE REPAIR] Usopp → Franky: Split Mission Control acceptance criteria by environment
+status:       queued
+priority:     P1
+phase:        Engineering
+assigned_to:  Franky
+type:         task
+parent:       EPIC-003
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        BROKEN BRIDGE DETECTED: Usopp handoff from 2026-03-21 00:00 PT never became a task. MC-003 and MC-004 need separate PASS criteria for (A) public GitHub Pages demo/UAT vs (B) LAN/dev live-data mode. Public build hits mixed-content/CORS/private-network blocking against LAN endpoints, so single acceptance target is not testable.
+```
+
+```
+task_id:      EPIC-004
+title:        Communication Reliability & Teams Tab — SPOF Patch Epic
+status:       in-progress
+priority:     P0
+phase:        
+assigned_to:  Nami (orchestrator) + Jinbe (helm) + Franky (build) + Sanji (automation) + Usopp (requirements)
+type:         epic
+parent:       PROJ-OPS
+created_at:   2026-03-22
+sprint:       Sprint — EPIC-004 SPOF Patch
+dependencies: none
+notes:        Captain-approved epic. Jinbe OWNS and DRIVES this epic to completion. 10 SPOFs to patch. 13 stories. DoD: 6 live demos must pass. See ESCALATION-POLICY.md. Ownership: Jinbe drives, Usopp wrote requirements, Franky builds Teams tab, Sanji builds n8n automation, Chopper validates, Nami coordinates.
+```
+
+```
+task_id:      EPIC-004-STORY-01
+title:        Durable Message Queue
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Sanji/Cavendish
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     5pts
+dependencies: none
+notes:        Owner: Sanji / Cavendish
+Goal: Implement a durable message queue for inter-agent and cross-gateway communications so messages are not lost on delivery failure.
+Acceptance Criteria:
+- All outbound important messages are persisted before dispatch.
+- Queue record includes message_id, correlation_id, sender, target, priority, status, retry_count, and created_at.
+- Queue supports queued, dispatched, delivered, acknowledged, processing, completed, failed, and dead_lettered states.
+- Delivery attempts read from queue storage rather than fire-and-forget transport.
+Definition of Done:
+- Queue write/read path implemented.
+- Messages survive transient delivery failures.
+- Demo shows message persisted before dispatch and visible in queue state.
+```
+
+```
+task_id:      EPIC-004-STORY-02
+title:        Auto-Retry on Failed Delivery
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Sanji/Cavendish
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Sanji / Cavendish
+Goal: Add automatic retry with backoff for failed dispatch attempts.
+Acceptance Criteria:
+- Failed deliveries retry automatically using configurable backoff.
+- Retry count and last failure reason are persisted.
+- Max retry threshold is configurable.
+- Exhausted retries route the message to dead letter handling.
+Definition of Done:
+- Retry engine implemented and tested.
+- Backoff behavior observable in logs/state.
+- Transient failure recovery demo succeeds without manual intervention.
+```
+
+```
+task_id:      EPIC-004-STORY-03
+title:        Cross-Gateway Routing Automation
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Sanji/Suleiman
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     8pts
+dependencies: none
+notes:        Owner: Sanji/Suleiman. SCOPE EXPANDED: Must include automatic endpoint discovery. Every agent must know how to reach every other gateway WITHOUT hardcoded localhost assumptions. Requirements: (1) Gateway registry — single config listing all gateway IPs and ports. (2) Service discovery — agents auto-detect if single-gateway or multi-gateway setup. (3) Health-check before route — verify target is reachable before sending. (4) Fallback on failure — if primary route fails, try alternate path. (5) Must work for BOTH our 3-machine setup AND single-gateway open source setup. SPOF this patches: cross-gateway access failures like Usopp hitting 127.0.0.1 instead of 10.0.0.152. DoD: any agent on any machine can reach MC API and any other gateway without manual URL correction.
+Goal: Automate message routing across gateways without requiring Nami as manual relay.
+Acceptance Criteria:
+- Routing broker selects the best available route based on target gateway and availability.
+- Supports fallback chain across local session, remote dispatch, task board, and notification fallback.
+- Cross-gateway delivery no longer depends on a single live human/session relay.
+Definition of Done:
+- Cross-gateway routing workflow implemented.
+- At least one demo proves remote delivery works without Nami manual forwarding.
+- Route decisions are logged with chosen path and fallback outcome.
+```
+
+```
+task_id:      EPIC-004-STORY-04
+title:        Dead Letter Queue
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Sanji/Cavendish
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Sanji / Cavendish
+Goal: Create a dead letter queue for dispatches that fail after all retries.
+Acceptance Criteria:
+- Exhausted dispatches are persisted to DLQ with full envelope and failure reason.
+- DLQ entries are queryable by message_id and correlation_id.
+- DLQ state is separate from active queue.
+Definition of Done:
+- DLQ workflow implemented.
+- Failed dispatches are visible and recoverable.
+- Demo shows a forced failure landing in DLQ with complete metadata.
+```
+
+```
+task_id:      EPIC-004-STORY-05
+title:        Escalation Trigger Automation
+status:       in-progress
+priority:     P0
+phase:      
+assigned_to:  Sanji/Cavendish + Jinbe
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Sanji / Cavendish + Jinbe
+Goal: Automatically escalate failed or stuck communications to the correct operational owners, while enforcing the Captain-locked MC ownership model.
+Acceptance Criteria:
+- Stuck, dead-lettered, or overdue messages trigger escalation automatically.
+- Escalations identify owning department, message state, and recommended action.
+- Jinbe/process visibility is included for blocker tracking.
+- Ownership automation rules are enforced:
+  - When an epic is created, Jinbe is auto-assigned as helm driver.
+  - When a story is created, it is routed to Usopp for acceptance criteria / requirements completion.
+  - When tasks are created under a story, the assigned department chief is notified automatically.
+  - When a task is marked complete, Chopper QA verification is triggered automatically.
+  - When all tasks under a story pass QA, the story is auto-closed.
+  - When all stories in an epic pass, Jinbe is notified for epic close ceremony.
+- Workflow design supports both multi-gateway deployment and single-gateway deployment without changing the ownership logic.
+Definition of Done:
+- Escalation workflow implemented.
+- Trigger thresholds configurable.
+- Ownership automation path implemented for epic/story/task/verification/closure flow.
+- Demo shows a stuck message generating an actionable escalation.
+- Demo shows story completion automatically gated by Chopper QA and epic completion notifying Jinbe.
+Goal: Automatically escalate failed or stuck communications to the correct operational owners.
+Acceptance Criteria:
+- Stuck, dead-lettered, or overdue messages trigger escalation automatically.
+- Escalations identify owning department, message state, and recommended action.
+- Jinbe/process visibility is included for blocker tracking.
+Definition of Done:
+- Escalation workflow implemented.
+- Trigger thresholds configurable.
+- Demo shows a stuck message generating an actionable escalation.
+```
+
+```
+task_id:      EPIC-004-STORY-06
+title:        Acknowledgment Model
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Sanji
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Sanji
+Goal: Establish a standard acknowledgment model separating delivery from execution.
+Acceptance Criteria:
+- Message lifecycle supports queued, dispatched, delivered, acknowledged, processing, completed, failed, and dead_lettered.
+- Senders can distinguish accepted vs completed vs failed.
+- Long-running tasks do not appear failed solely due to transport timeout.
+Definition of Done:
+- Ack state machine implemented.
+- State changes observable through logs, API, or UI.
+- Demo shows long-running task updating status without false failure.
+```
+
+```
+task_id:      EPIC-004-STORY-07
+title:        Common Routing Envelope
+status:       in-progress
+priority:     P0
+phase:      
+assigned_to:  Sanji + Usopp
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Sanji + Usopp
+Goal: Define and implement a common routing envelope for all inter-agent dispatches, including ownership automation required by the Captain-locked MC model.
+Acceptance Criteria:
+- Standard envelope includes message_id, correlation_id, sender_agent, sender_gateway, target_agent, target_department, target_gateway, task_type, priority, summary, full_payload_ref, requires_ack, deadline, fallback_policy.
+- Envelope also includes ownership fields sufficient to enforce MC workflow rules:
+  - work_item_type (project|epic|story|task|verification)
+  - parent_id
+  - assigned_owner
+  - assigned_department
+  - chief_notified
+  - qa_required
+  - qa_status
+  - closure_state
+- All new routing workflows use the same envelope contract.
+- Envelope supports deterministic ownership automation:
+  - epic creation -> Jinbe helm assignment
+  - story creation -> Usopp requirements routing
+  - task creation -> department chief notification
+  - task complete -> Chopper QA trigger
+  - all tasks QA-passed -> story auto-close
+  - all stories passed -> Jinbe notified for epic closure
+- Envelope supports both single-gateway and multi-gateway deployments with the same logical fields; gateway-specific transport is handled separately from ownership semantics.
+- Envelope supports debugging and deterministic routing decisions.
+Definition of Done:
+- Schema documented and implemented.
+- Producers and consumers validate against the same contract.
+- Example messages across at least 3 workflow types use the envelope successfully.
+- Demo proves the same envelope can drive both single-gateway and multi-gateway routing flows.
+Goal: Define and implement a common routing envelope for all inter-agent dispatches.
+Acceptance Criteria:
+- Standard envelope includes message_id, correlation_id, sender_agent, sender_gateway, target_agent, target_department, target_gateway, task_type, priority, summary, full_payload_ref, requires_ack, deadline, and fallback_policy.
+- All new routing workflows use the same envelope contract.
+- Envelope supports debugging and deterministic routing decisions.
+Definition of Done:
+- Schema documented and implemented.
+- Producers and consumers validate against the same contract.
+- Example messages across at least 3 workflow types use the envelope successfully.
+```
+
+```
+task_id:      EPIC-004-STORY-08
+title:        Teams Tab - Agent Tree Visualization
+status:       completed
+priority:     P0
+phase:       
+assigned_to:  Franky/Paulie
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+dependencies: none
+notes:        Owner: Franky/Paulie. Franky has paulie-teams-tree, mozu-orgviz-ui active. Building full 9-dept tree with 27 subagents and 54 workers. DoD: birds-eye view of entire org visible in Teams tab.
+Goal: Add a Teams tab view that visualizes the 9-department agent tree and hierarchy.
+Acceptance Criteria:
+- UI renders chiefs, subagents, and workers in parent-child hierarchy.
+- Departments and tiers are visually distinct.
+- Data source supports the current architecture model.
+Definition of Done:
+- Teams tab hierarchy view implemented.
+- Tree loads from live or representative data source.
+- Visual review confirms all departments and levels render correctly.
+```
+
+```
+task_id:      EPIC-004-STORY-09
+title:        Teams Tab - Live Flow Animation
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Franky/Paulie
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     5pts
+dependencies: none
+notes:        Owner: Franky/Paulie. Building animated lights on arrows when agents communicate. DoD: real-time flow visible on tree.
+Goal: Show live communication flow between agents in the Teams tab.
+Acceptance Criteria:
+- Active message paths animate between nodes.
+- Flow state reflects message lifecycle or dispatch events.
+- UI can distinguish pending, successful, and failed flow states.
+Definition of Done:
+- Animation layer implemented.
+- Demo shows live or simulated flow across departments and gateways.
+- Visual state changes match backend event status.
+```
+
+```
+task_id:      EPIC-004-STORY-10
+title:        Teams Tab - Failed Comms Markers
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Franky/Yokozuna
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Franky/Yokozuna. Red markers on failed/undelivered connections. DoD: failed delivery shows red on the tree. yokozuna-teams-data building data layer.
+Goal: Surface failed communications and routing issues visually in Mission Control.
+Acceptance Criteria:
+- Failed, stuck, or dead-lettered communications appear with markers/status in UI.
+- Marker links to failure reason or message details.
+- UI supports quick triage of communication failures.
+Definition of Done:
+- Failure markers implemented.
+- Demo shows a forced failed dispatch visible in UI with inspectable metadata.
+```
+
+```
+task_id:      EPIC-004-STORY-11
+title:        Teams Tab - Data Layer and API
+status:       completed
+priority:     P0
+phase:       
+assigned_to:  Franky/Yokozuna
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+dependencies: none
+notes:        Owner: Franky/Yokozuna. Backend API serving agent status, comms flow, failure data. kokoro-team-data + yokozuna-teams-data active. DoD: API returns real-time agent state.
+Goal: Build the backend data layer and API for agent tree, message state, and communication telemetry.
+Acceptance Criteria:
+- API exposes hierarchy data, message state, and communication history/telemetry.
+- Supports Teams tab visualization and failure-state rendering.
+- API contract is documented.
+Definition of Done:
+- Data model and API implemented.
+- UI consumers can retrieve hierarchy and flow/failure data.
+- Demo shows end-to-end data retrieval for the Teams tab.
+```
+
+```
+task_id:      EPIC-004-STORY-12
+title:        Integration Testing - 6 Demo Scenarios
+status:       in-progress
+priority:     P0
+phase:       
+assigned_to:  Chopper/Milky
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     5pts
+dependencies: none
+notes:        Owner: Chopper / Milky
+Goal: Validate the new communication architecture with 6 integration demo scenarios.
+Acceptance Criteria:
+- Covers successful local dispatch, successful cross-gateway dispatch, retry recovery, dead-letter path, escalation trigger, and long-running ack/completion behavior.
+- Each scenario has expected result and pass/fail criteria.
+- Test results are recorded.
+Definition of Done:
+- 6 scenarios executed.
+- Results documented.
+- Failures produce actionable defects/tasks.
+```
+
+```
+task_id:      EPIC-004-STORY-13
+title:        Mission Control Update - Architecture Reflection
+status:       in-progress
+priority:     P0
+phase:      
+assigned_to:  Franky + Usopp
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Owner: Franky + Usopp
+Goal: Update Mission Control so all relevant tabs reflect the new communication architecture.
+Acceptance Criteria:
+- Existing tabs accurately reflect new message states, hierarchy, and routing architecture where relevant.
+- No stale assumptions about direct-only relay remain in UI.
+- Architecture changes are visible and understandable to operators.
+Definition of Done:
+- Mission Control tabs updated.
+- Visual/manual review confirms architecture consistency across views.
+- Dependencies on new data layer integrated.
+
+Planning status:
+- 2026-03-22: STORY-13 moved to in-progress by Usopp.
+- Planning has started for tab-by-tab architecture reflection requirements.
+- Kaya supporting as BA orchestrator for requirements cleanup, structure, and follow-up tracking.
+- Scope includes all Mission Control tabs that expose org structure, routing state, message lifecycle, workload ownership, QA gating, and escalation visibility.
+Goal: Update Mission Control so all relevant tabs reflect the new communication architecture.
+Acceptance Criteria:
+- Existing tabs accurately reflect new message states, hierarchy, and routing architecture where relevant.
+- No stale assumptions about direct-only relay remain in UI.
+- Architecture changes are visible and understandable to operators.
+Definition of Done:
+- Mission Control tabs updated.
+- Visual/manual review confirms architecture consistency across views.
+- Dependencies on new data layer integrated.
+```
+
+```
+task_id:      PROJ-OPENSOURCE
+title:        Go OpenSource & Go Viral — Straw Hat Crew for Everyone
+status:       open
+priority:     backlog
+phase:        
+assigned_to:  Nami (project owner)
+type:         project
+created_at:   2026-03-22
+dependencies: none
+notes:        VISION: Turn the Straw Hat agent crew into an open-source, self-managing OpenClaw template. Any user installs a crew and becomes their own Captain. Scale by replicating departments across machines. Build viral fanbase: OpenClaw x One Piece. Prerequisites: EPIC-004 complete, agent tree operational, MC polished. Ownership model: Projects=Nami, Epics=Jinbe, Stories=Usopp, Tasks=Each dept, Verification=Chopper.
+```
+
+```
+task_id:      EPIC-005
+title:        Mission Control Improvements — One-Click Apply System
+status:       in-progress
+priority:     P1
+phase:        
+assigned_to:  Jinbe (helm driver)
+type:         epic
+parent:       PROJ-MC
+created_at:   2026-03-22
+dependencies: none
+notes:        Track all MC improvements as stories with completion % metrics. Each improvement becomes a one-click apply button in MC. Jinbe monitors progress metrics to keep the wheel moving. Progress % visible at project, epic, and story level.
+```
+
+```
+task_id:      EPIC-004-STORY-14
+title:        Department Assistant SOUL Reporting Standards
+status:       queued
+priority:     P0
+phase:       
+assigned_to:  Nami + Jinbe
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+estimate:     2pts
+dependencies: none
+notes:        Owner: Usopp
+Goal: Define and enforce mandatory reporting standards in every department assistant SOUL configuration so active work is never silent.
+
+Requirements:
+- Every department leader must embed reporting instructions in their assistant/subagent SOUL.md or equivalent spawn persona/config.
+- Required assistant reporting behavior:
+  1. Post progress updates to the relevant Telegram topic every 10 minutes during active work.
+  2. Report completion with evidence: what was built/done, link or artifact location, validation evidence, and timestamp.
+  3. Never go silent; if blocked, report the blocker immediately.
+  4. On task completion, notify the department leader and also post to the relevant channel/topic.
+- Standards must apply across all departments, not only engineering.
+- Standards must be written so they work for both direct assistant runs and spawned assistant/subagent workflows.
+- Reporting requirements must align with EPIC-004 communication reliability goals and reduce silent-work SPOFs.
+
+Acceptance Criteria:
+- A standard assistant-reporting policy is defined and approved for all departments.
+- Each department has updated assistant SOUL/config instructions containing the mandatory reporting rules.
+- Reporting instructions specify cadence, blocker behavior, completion-evidence format, and leader notification requirements.
+- The standard identifies the relevant reporting topic/channel per department or the routing rule used to select it.
+- The policy is compatible with both single-gateway and multi-gateway deployments.
+
+Definition of Done:
+- EPIC-004-STORY-14 exists on the MC board under EPIC-004 as P0.
+- Department assistant SOUL/config updates are written for every department.
+- Verification confirms spawned assistants actually emit progress updates during active work.
+- Verification confirms completion reports include evidence and reach both the department leader and the relevant reporting channel.
+```
+
+```
+task_id:      BRIDGE-REPAIR-USOPP-TEMPLATE-20260322
+title:        [BRIDGE REPAIR] Usopp → Nami: Implement mandatory progress reporting template
+status:       queued
+priority:     P0
+phase:        Operations
+assigned_to:  Nami
+type:         task
+parent:       PROJ-OPS
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        BROKEN BRIDGE DETECTED: Usopp has been flagging this gap since 2026-03-21 06:00 UTC with no task creation. Required template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Affects CREW-STATUS-REPORT-2345 and all Mission Control reporting.
+```
+
+```
+task_id:      BRIDGE-REPAIR-MC-ENV-SPLIT-20260322
+title:        [BRIDGE REPAIR] Usopp ? Franky: Split Mission Control acceptance criteria by environment
+status:       in-progress
+priority:     P1
+phase:        Engineering
+assigned_to:  Franky
+type:         task
+parent:       EPIC-003
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        Franky picked this up at 2026-03-22 06:57 America/New_York. Safe lane chosen because EPIC-003/CAL-001 remain frozen/contradictory and office-3d working tree is dirty. Updating requirements/docs only: public GitHub Pages Demo/UAT vs LAN/dev live-data PASS criteria, plus mandatory Captain-facing proof block.
+```
+
+```
+task_id:      USOPP-NAMI-ESTIMATE-POLICY-20260322
+title:        [Usopp to Nami] Add estimate ownership policy to Mission Control board workflow
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Nami
+type:         task
+parent:       EPIC-005
+estimate:     1pts
+created_at:   2026-03-22
+dependencies: none
+notes:        Policy proposal: whoever owns the work owns the estimate. For any project/epic/story/task, the current owner is responsible for setting and updating estimate when scope, risk, or timeline changes. Usopp/BI should audit estimate quality and drift, not chase departments for updates. Please place this into Mission Control workflow/rules and coordinate implementation path with Jinbe. Acceptance: (1) policy recorded on board/in epic notes or linked workflow doc, (2) ownership rule applies at project/epic/story/task levels, (3) stale-estimate detection/reporting lane defined for Usopp, (4) department leads informed of new rule.
+```
+
+```
+task_id:      EPIC-005-STORY-ESTIMATE-OWNERSHIP-20260322
+title:        Estimate Ownership System — owner updates estimate when scope changes
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Jinbe
+type:         story
+parent:       EPIC-005
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        Implement board-level estimation governance for Mission Control improvements. Rule: task/story/epic/project owner is accountable for estimate freshness. Required outcomes: (1) estimate ownership rule visible in workflow, (2) stale estimates can be identified, (3) original vs revised vs actual can be compared for BI reporting, (4) ownership transfers imply estimate stewardship transfers too. Coordinate with Nami on board policy and with Usopp on audit/reporting fields.
+```
+
+```
+task_id:      USOPP-NAMI-FYI-EPIC5-ESTIMATE-20260322
+title:        [FYI Nami] EPIC-005 now includes estimate ownership policy lane
+status:       queued
+priority:     P1
+phase:        
+assigned_to:  Nami
+type:         task
+parent:       EPIC-005
+estimate:     1pts
+created_at:   2026-03-22
+dependencies: none
+notes:        Captain confirmed the direction: estimates should be self-managed by the department/owner responsible for the work. Update acknowledged as part of EPIC-005. Related board items already created: USOPP-NAMI-ESTIMATE-POLICY-20260322 and EPIC-005-STORY-ESTIMATE-OWNERSHIP-20260322. Please treat this as governance for Mission Control workflow, not EPIC-004 comms reliability scope.
+```
+
+```
+task_id:      USOPP-JINBE-EPIC5-ESTIMATE-20260322
+title:        [Usopp to Jinbe] Drive estimate ownership system under EPIC-005
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Jinbe
+type:         task
+parent:       EPIC-005
+estimate:     1pts
+created_at:   2026-03-22
+dependencies: none
+notes:        Captain direction confirmed: whoever owns the work owns the estimate. This belongs under EPIC-005 as Mission Control governance/workflow behavior. Please align EPIC-005-STORY-ESTIMATE-OWNERSHIP-20260322 accordingly and coordinate with Nami so the rule is visible and enforceable at project/epic/story/task level. Usopp/BI audits drift and stale estimates; departments maintain estimate freshness.
+```
+
+```
+task_id:      EPIC-004-STORY-14
+title:        Department Assistant SOUL Reporting Standards
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Usopp
+type:         story
+parent:       EPIC-004
+created_at:   2026-03-22
+dependencies: none
+notes:        Owner: Usopp
+Goal: Define and enforce mandatory reporting standards in every department assistant SOUL configuration so active work is never silent.
+
+Requirements:
+- Every department leader must embed reporting instructions in their assistant/subagent SOUL.md or equivalent spawn persona/config.
+- Required assistant reporting behavior:
+  1. Post progress updates to the relevant Telegram topic every 10 minutes during active work.
+  2. Report completion with evidence: what was built/done, link or artifact location, validation evidence, and timestamp.
+  3. Never go silent; if blocked, report the blocker immediately.
+  4. On task completion, notify the department leader and also post to the relevant channel/topic.
+- Standards must apply across all departments, not only engineering.
+- Standards must be written so they work for both direct assistant runs and spawned assistant/subagent workflows.
+- Reporting requirements must align with EPIC-004 communication reliability goals and reduce silent-work SPOFs.
+
+Acceptance Criteria:
+- A standard assistant-reporting policy is defined and approved for all departments.
+- Each department has updated assistant SOUL/config instructions containing the mandatory reporting rules.
+- Reporting instructions specify cadence, blocker behavior, completion-evidence format, and leader notification requirements.
+- The standard identifies the relevant reporting topic/channel per department or the routing rule used to select it.
+- The policy is compatible with both single-gateway and multi-gateway deployments.
+
+Definition of Done:
+- EPIC-004-STORY-14 exists on the MC board under EPIC-004 as P0.
+- Department assistant SOUL/config updates are written for every department.
+- Verification confirms spawned assistants actually emit progress updates during active work.
+- Verification confirms completion reports include evidence and reach both the department leader and the relevant reporting channel.
+```
+
+```
+task_id:      EPIC-006
+title:        Unified Memory System - Cross-Agent Shared Knowledge
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Jinbe
+type:         epic
+parent:       PROJ-OPS
+created_at:   2026-03-22
+dependencies: none
+notes:        Owner: Jinbe (helm driver)
+Requirements author: Usopp
+Goal: Create a unified memory system shared across all agents and gateways, with synchronized knowledge across Mac Mini, Desktop, and GPU3060 environments.
+
+Core Requirements:
+- Unified memory across all agents and gateways.
+- Shared knowledge base accessible by all departments.
+- Memory sync between machines: Mac Mini, Desktop, GPU3060.
+- Support both single-gateway deployments and multi-gateway deployments with the same logical memory model.
+- Preserve access control boundaries where needed while keeping shared operational knowledge broadly available.
+- Make memory available for both live agent work and background/cron-driven workflows.
+
+Acceptance Criteria:
+- A canonical shared-memory architecture is defined.
+- Shared knowledge base has a clear storage model, sync model, ownership model, and read/write rules.
+- Cross-machine sync behavior is defined, including conflict handling and failure recovery.
+- Access pattern works for all departments without requiring ad hoc file-copy workarounds.
+- Design explicitly covers both single-gateway and multi-gateway operation.
+- Verification approach is defined for read/write propagation across machines.
+
+Definition of Done:
+- Epic exists on the MC board with Jinbe as helm owner.
+- Stories exist for architecture, sync, access model, implementation, and verification.
+- Team can demonstrate memory written on one machine becoming available to the others according to the defined sync rules.
+```
+
+```
+task_id:      EPIC-006-STORY-01
+title:        Unified Memory Requirements & Architecture Spec
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Usopp
+type:         story
+parent:       EPIC-006
+created_at:   2026-03-22
+estimate:     5pts
+dependencies: none
+notes:        Owner: Usopp
+Goal: Write the requirements and architecture spec for the Unified Memory system.
+
+Requirements:
+- Define the canonical memory model shared across all agents and departments.
+- Define what is globally shared vs what remains scoped/private.
+- Define sync topology for Mac Mini, Desktop, and GPU3060.
+- Define how memory is accessed in single-gateway and multi-gateway deployments.
+- Define conflict resolution, source-of-truth behavior, and offline/reconnect recovery.
+- Define read/write expectations for agents, subagents, and cron/automation flows.
+
+Acceptance Criteria:
+- Spec defines architecture, storage model, sync model, access rules, and failure behavior.
+- Spec identifies required implementation stories for engineering/automation.
+- Spec includes verification scenarios for cross-machine propagation.
+- Spec avoids direct coupling to one specific machine layout so open-source single-gateway use still works.
+
+Definition of Done:
+- Requirements and architecture spec written.
+- Follow-on stories can be created from the spec without ambiguity.
+- Reviewers can tell how memory should behave in both single-gateway and multi-gateway setups.
+```
+
+```
+task_id:      BRIDGE-REPAIR-PROGRESS-TEMPLATE-20260322
+title:        [BRIDGE REPAIR] Implement mandatory progress reporting template for Captain updates
+status:       queued
+priority:     P0
+phase:        Operations
+assigned_to:  Nami
+type:         task
+parent:       PROJ-OPS
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        BROKEN BRIDGE REPAIRED: Usopp has been requesting this since 2026-03-21 06:00 UTC with no task creation. Mandatory template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Without this template, Captain must chase clarifications repeatedly. AFFECTS: All Mission Control reporting and CREW-STATUS-REPORT-2345.
+```
+
+```
+task_id:      BRIDGE-REPAIR-MC-ENV-SPLIT-20260322
+title:        [BRIDGE REPAIR] Split Mission Control acceptance criteria by environment
+status:       queued
+priority:     P1
+phase:        Engineering
+assigned_to:  Franky
+type:         task
+parent:       EPIC-003
+estimate:     2pts
+created_at:   2026-03-22
+dependencies: none
+notes:        BROKEN BRIDGE REPAIRED: Usopp handoff from 2026-03-21 never became a task. MC-003 and MC-004 need separate PASS criteria for (A) public GitHub Pages demo/UAT vs (B) LAN/dev live-data mode. Public build hits mixed-content/CORS/private-network blocking against LAN endpoints, so single acceptance target is not testable.
+```
+
+```
+task_id:      EPIC-007
+title:        Gateway Migration & Consolidation
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Jinbe
+type:         epic
+parent:       PROJ-OPS
+created_at:   2026-03-22
+dependencies: none
+notes:        Owner: Jinbe (helm driver) | Requirements author: Usopp | Goal: migrate Franky and Chopper agents from Desktop (10.0.0.251) and GPU3060 (10.0.0.16) to Nami's gateway on Mac Mini (10.0.0.152) so the crew can run on a single gateway. | Requirements: inventory all agents/subagents/workflows on Franky and Chopper gateways; define migration sequence to Mac Mini; preserve identities, configs, credentials, cron jobs, routing, task-board access, and reporting; support rollback if migration fails; preserve multi-gateway current-state compatibility while enabling a clean single-gateway target state; identify machine-specific dependencies that must be removed or rehomed; define cutover validation and post-migration monitoring. | Acceptance Criteria: canonical migration plan exists; source and target inventories are defined; dependency/risk list exists; cutover sequence and rollback steps are defined; single-gateway operating model is documented; validation covers agent reachability, task delivery, cron/reporting, MC access, and inter-department comms after migration. | Definition of Done: epic exists on board; follow-on stories exist for inventory, config migration, credential/path migration, cron migration, validation, and rollback; team can execute migration on Mac Mini with a defined verification plan.
+```
+
+```
+task_id:      EPIC-007-STORY-01
+title:        Gateway Migration Requirements & Cutover Spec
+status:       queued
+priority:     P0
+phase:        
+assigned_to:  Usopp
+type:         story
+parent:       EPIC-007
+created_at:   2026-03-22
+estimate:     5pts
+dependencies: none
+notes:        Owner: Usopp | Goal: write the requirements and cutover spec for consolidating Franky and Chopper agents onto Nami's Mac Mini gateway. | Requirements: define source systems (10.0.0.251 and 10.0.0.16), target system (10.0.0.152), agent inventory, gateway/plugin/config dependencies, machine-local path and credential dependencies, migration order, verification checkpoints, rollback triggers, and post-cutover success criteria. | Acceptance Criteria: spec covers inventory, architecture target state, migration phases, risks, rollback, and validation; spec works for current multi-machine reality and future single-gateway open-source mode; spec identifies follow-on engineering and QA stories without ambiguity. | Definition of Done: migration requirements doc is written and actionable; follow-on implementation stories can be created directly from the spec.
+```
+
+```
+task_id:      EPIC-004-STORY-15
+title:        [LATER][UX] Teams tab collapsible departments for mobile
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         story
+created_at:   2026-03-22
+estimate:     2pts
+dependencies: none
+notes:        Teams tab is too scroll-heavy on mobile. Add collapsible/expandable department sections to improve navigation on narrow screens. This is a UX refinement, not a blocker.
+```
+
+```
+task_id:      EPIC-004-STORY-16
+title:        [LATER][UX] Teams tab birds-eye summary header
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Usopp
+type:         story
+created_at:   2026-03-22
+estimate:     3pts
+dependencies: none
+notes:        Add a birds-eye summary header at the top of Teams tab showing high-level org health, active tasks, blocked items, failed handoffs, and escalation counts. UX refinement, not a blocker.
+```
+
+```
+task_id:      EPIC-004-STORY-17
+title:        [LATER][UX] Improve tool lanes layout on narrow screens
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Franky
+type:         story
+created_at:   2026-03-22
+estimate:     2pts
+dependencies: none
+notes:        Tool lanes layout feels cramped on narrow/mobile screens. Redesign responsive behavior for readability and usability. UX refinement, not a blocker.
+```
+
+```
+task_id:      EPIC-004-STORY-18
+title:        [LATER][Cleanup] Remove stale subagent labels in Teams tab
+status:       queued
+priority:     backlog
+phase:        
+assigned_to:  Jinbe
+type:         story
+created_at:   2026-03-22
+estimate:     1pts
+dependencies: none
+notes:        Clean up stale or outdated subagent labels such as Mozu Org Viz and similar artifacts so Teams tab reflects current org structure accurately. Cleanup refinement, not a blocker.
 ```
