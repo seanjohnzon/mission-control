@@ -330,6 +330,49 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .team-card .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .team-card .status-badge.online { background: rgba(63,185,80,0.15); color: var(--green); }
 .team-card .status-badge.offline { background: rgba(139,148,158,0.15); color: var(--text2); }
+
+/* STORY-10 (Team tab): comms failure markers */
+#tab-team .team-card.comms-fail {
+  border-color: rgba(248,81,73,0.55);
+  box-shadow: 0 0 0 1px rgba(248,81,73,0.08), 0 0 18px rgba(248,81,73,0.08);
+}
+#tab-team .team-card.comms-fail .status-badge {
+  background: rgba(248,81,73,0.18);
+  color: var(--red);
+}
+#tab-team .team-card.comms-fail::after {
+  content: '✖';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(248,81,73,0.18);
+  border: 1px solid rgba(248,81,73,0.35);
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+}
+#tab-team .comms-fail-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(248,81,73,0.35);
+  background: rgba(248,81,73,0.12);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  max-width: 100%;
+}
+
 .team-card .role-card-link { display: block; text-align: right; margin-top: 12px; font-size: 11px; color: var(--text2); font-weight: 500; letter-spacing: 0.5px; }
 .team-card .role-card-link:hover { color: var(--blue); }
 .team-card.compact { min-width: 160px; padding: 12px 14px; }
@@ -1176,6 +1219,9 @@ function startTeamFlow() {
   // Restart animation each time the tab is activated (cheap + deterministic)
   panel.classList.remove('flow-on');
 
+  // STORY-10: mark broken comms clearly (Team tab only)
+  applyTeamCommsFailureMarkers(panel);
+
   // Stagger cards so the hierarchy reads top→down on entry
   const cards = panel.querySelectorAll('.team-card');
   cards.forEach((card, i) => {
@@ -1190,6 +1236,41 @@ function startTeamFlow() {
   });
 
   requestAnimationFrame(() => panel.classList.add('flow-on'));
+}
+
+function applyTeamCommsFailureMarkers(panel) {
+  if (!panel) return;
+
+  // Reset any previous state so re-activating the tab is deterministic
+  panel.querySelectorAll('.team-card.comms-fail').forEach(c => c.classList.remove('comms-fail'));
+  panel.querySelectorAll('.comms-fail-pill').forEach(p => p.remove());
+
+  // Heuristic: an Offline status-badge indicates the agent is unreachable
+  const offlineBadges = panel.querySelectorAll('.team-card .status-badge.offline');
+  offlineBadges.forEach(badge => {
+    const card = badge.closest('.team-card');
+    if (!card) return;
+
+    card.classList.add('comms-fail');
+    card.title = (card.title ? card.title + "\n" : '') + 'Comms: failed/unreachable';
+
+    // Add a small, readable red label under the status line
+    if (!card.querySelector('.comms-fail-pill')) {
+      const pill = document.createElement('div');
+      pill.className = 'comms-fail-pill';
+      pill.textContent = '⛔ Comms failed';
+      const statusWrap = badge.parentElement;
+      if (statusWrap) statusWrap.insertAdjacentElement('afterend', pill);
+      else card.appendChild(pill);
+    }
+
+    // Escalate the nearest "rail" to a red/dashed stroke, without impacting other tabs
+    const rail = card.closest('.flow-rail, div[style*="border-left:2px"]');
+    if (rail) {
+      rail.style.borderLeftColor = 'rgba(248,81,73,0.55)';
+      rail.style.borderLeftStyle = 'dashed';
+    }
+  });
 }
 
 navItems.forEach(item => {
