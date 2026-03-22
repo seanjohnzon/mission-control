@@ -354,6 +354,74 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .tool-lane .tool-name { font-weight: 500; }
 .tool-lane .tool-desc { color: var(--text2); }
 
+/* STORY-09 (Team tab): lightweight hierarchy flow animation */
+#tab-team { --team-flow-speed: 1600ms; }
+#tab-team .org-chart { position: relative; }
+#tab-team .org-divider { position: relative; }
+#tab-team.flow-on .org-divider {
+  animation: teamDividerGlow 2600ms ease-in-out infinite;
+}
+@keyframes teamDividerGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(88,166,255,0)); }
+  50% { filter: drop-shadow(0 0 10px rgba(88,166,255,0.18)); }
+}
+
+/* Animated "rails" (assistant/subagent nesting blocks).
+   We support both an explicit .flow-rail class and the existing inline style blocks
+   that define a border-left (keeps this change isolated to the Team tab). */
+#tab-team .flow-rail,
+#tab-team div[style*="border-left:2px"] { position: relative; }
+#tab-team .flow-rail::before,
+#tab-team div[style*="border-left:2px"]::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(88,166,255,0) 0%,
+    rgba(88,166,255,0.55) 22%,
+    rgba(88,166,255,0) 44%
+  );
+  background-size: 100% 140px;
+  background-position: 0 0;
+  transition: opacity 220ms ease;
+}
+#tab-team.flow-on .flow-rail::before,
+#tab-team.flow-on div[style*="border-left:2px"]::before {
+  opacity: 1;
+  animation: teamRailFlow var(--team-flow-speed) linear infinite;
+  animation-delay: var(--flow-delay, 0ms);
+}
+@keyframes teamRailFlow {
+  from { background-position: 0 -140px; }
+  to { background-position: 0 calc(100% + 140px); }
+}
+
+/* Card entrance (subtle, staggered) */
+#tab-team .team-card { will-change: transform, opacity; }
+#tab-team.flow-on .team-card {
+  animation: teamCardIn 520ms cubic-bezier(.2,.9,.2,1) both;
+  animation-delay: var(--stagger, 0ms);
+}
+@keyframes teamCardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tab-team.flow-on .org-divider,
+  #tab-team.flow-on .flow-rail::before,
+  #tab-team.flow-on div[style*="border-left:2px"]::before,
+  #tab-team.flow-on .team-card { animation: none !important; }
+  #tab-team .flow-rail::before,
+  #tab-team div[style*="border-left:2px"]::before { opacity: 0 !important; }
+}
+
 /* LLM Usage */
 .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 12px 0; }
 .bar-legend { display: flex; gap: 16px; margin-top: 12px; font-size: 12px; color: var(--text2); }
@@ -676,7 +744,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
             <div><span class="status-badge online">Online</span></div>
           </div>
         </div>
-        <div style="margin-left:20px;border-left:2px solid rgba(88,166,255,0.3);padding-left:14px;margin-bottom:12px">
+        <div class="flow-rail" style="margin-left:20px;border-left:2px solid rgba(88,166,255,0.3);padding-left:14px;margin-bottom:12px">
           <div style="font-size:10px;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px">ASSISTANT</div>
           <div class="org-row">
             <div class="team-card compact" style="border-color:rgba(88,166,255,0.2)">
@@ -688,7 +756,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
               <div><span class="status-badge online">Subagent</span></div>
             </div>
           </div>
-          <div style="margin-left:16px;border-left:2px dashed rgba(88,166,255,0.15);padding-left:10px;margin-top:6px">
+          <div class="flow-rail" style="margin-left:16px;border-left:2px dashed rgba(88,166,255,0.15);padding-left:10px;margin-top:6px">
             <div style="font-size:9px;color:var(--text2);margin-bottom:4px;letter-spacing:0.5px">SUBAGENTS</div>
             <div class="sub-row">
               <div class="sub-card placeholder"><h4>subZoro</h4><div class="sub-role">Interim security checks</div><div class="sub-status"><span class="badge badge-yellow">Interim</span></div></div>
@@ -1094,9 +1162,34 @@ function activateTab(tab, { updateHash = true } = {}) {
   navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
   panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
   if (tab === 'office') ensureOfficeFrameLoaded();
+  if (tab === 'team') startTeamFlow();
   if (updateHash) {
     history.replaceState(null, '', '#' + tab);
   }
+}
+
+// Team tab: tasteful flow animation (STORY-09)
+function startTeamFlow() {
+  const panel = document.getElementById('tab-team');
+  if (!panel) return;
+
+  // Restart animation each time the tab is activated (cheap + deterministic)
+  panel.classList.remove('flow-on');
+
+  // Stagger cards so the hierarchy reads top→down on entry
+  const cards = panel.querySelectorAll('.team-card');
+  cards.forEach((card, i) => {
+    const delay = Math.min(i * 28, 420);
+    card.style.setProperty('--stagger', delay + 'ms');
+  });
+
+  // Flow rails: stagger the "scan" so it feels like routing propagates downward
+  const rails = panel.querySelectorAll('.flow-rail, div[style*="border-left:2px"]');
+  rails.forEach((rail, i) => {
+    rail.style.setProperty('--flow-delay', (i * 120) + 'ms');
+  });
+
+  requestAnimationFrame(() => panel.classList.add('flow-on'));
 }
 
 navItems.forEach(item => {
