@@ -1,1 +1,1 @@
-{"gateway":{"ok":true,"status":"Nami ✅ Franky ✅ Chopper ✅ — All 3 gateways live"},"ollama":{"ok":true,"models":["qwen2.5:7b","qwen2.5:3b"]},"disk":{"total":"228Gi","used":"12Gi","free":"96Gi","percent":"11%"}}
+{"gateway":{"ok":true,"status":"healthy"},"ollama":{"ok":true,"models":["qwen2.5:7b","qwen2.5:3b"]},"disk":{"total":"228Gi","used":"12Gi","free":"88Gi","percent":"12%"}}
