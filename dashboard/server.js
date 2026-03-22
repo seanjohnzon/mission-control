@@ -297,96 +297,273 @@ function handleActivity() {
   return { commits, lastHeartbeat: null, lastDigest: null };
 }
 
-async function handleModelOps() {
-  // Fetch local models from Ollama
-  const ollamaData = await fetchJSON('http://127.0.0.1:11434/api/tags');
-  const localModels = [];
-  const localRoleMap = {
-    'qwen2.5:7b': { status: 'installed-configured', role: 'Local workhorse — digest, maintenance, build/docs' },
-    'qwen2.5:3b': { status: 'installed-configured', role: 'Local lightweight — heartbeat, hygiene' }
+const MODEL_OPS_CACHE_MS = 30_000;
+let modelOpsCache = { expiresAt: 0, data: null };
+
+function deepClone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function formatMoney(value) {
+  return value === 0 ? '$0' : `$${Number(value || 0).toFixed(2)}`;
+}
+
+function shortModel(model) {
+  if (!model) return '?';
+  if (/gpt-5.4/i.test(model)) return 'GPT-5.4';
+  if (/gpt-5.3/i.test(model)) return 'GPT-5.3';
+  if (/claude-opus-4-6/i.test(model)) return 'Opus 4.6';
+  if (/claude-sonnet-4-6/i.test(model)) return 'Sonnet 4.6';
+  return model;
+}
+
+function loadAgentSessions(agentId) {
+  try {
+    const home = process.env.USERPROFILE || process.env.HOME || '';
+    const p = path.join(home, '.openclaw', 'agents', agentId, 'sessions', 'sessions.json');
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function summarizeAgentSessions(agentId, sessionKeyPrefix) {
+  const sessions = loadAgentSessions(agentId);
+  if (!sessions) return null;
+  const values = Object.entries(sessions)
+    .filter(([key]) => key.startsWith(sessionKeyPrefix))
+    .map(([, value]) => value || {});
+  if (!values.length) return null;
+  const newest = values.slice().sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0] || {};
+  return {
+    sessions: values.length,
+    tokensToday: values.reduce((acc, s) => {
+      acc.input += Number(s.inputTokens || 0);
+      acc.output += Number(s.outputTokens || 0);
+      return acc;
+    }, { input: 0, output: 0 }),
+    contextUsed: Number(newest.inputTokens || newest.totalTokens || newest.contextUsed || 0),
+    contextWindow: Number(newest.contextTokens || newest.contextWindow || 0),
+    model: newest.model || null,
+    modelProvider: newest.modelProvider || null,
+    updatedAt: newest.updatedAt || null,
+    status: (Date.now() - Number(newest.updatedAt || 0)) < 30 * 60 * 1000 ? 'active' : 'idle'
   };
-  if (ollamaData && ollamaData.models) {
-    for (const m of ollamaData.models) {
-      const name = m.name || '';
-      const mapping = localRoleMap[name] || { status: 'installed-unused', role: '—' };
-      const paramSize = m.details?.parameter_size || '—';
-      localModels.push({
-        id: name,
-        provider: 'Ollama (local)',
-        status: mapping.status,
-        role: mapping.role,
-        directCost: '$0',
-        infraCost: 'not yet modeled',
-        paramSize
-      });
+}
+
+function mergeAgentLiveSession(agent, summary) {
+  if (!agent || !summary) return;
+  if (summary.tokensToday) agent.tokensToday = summary.tokensToday;
+  if (typeof summary.sessions === 'number') agent.sessions = summary.sessions;
+  if (summary.contextUsed) agent.contextUsed = summary.contextUsed;
+  if (summary.contextWindow) agent.contextWindow = summary.contextWindow;
+  if (summary.model) agent.model = summary.model;
+  agent.modelShort = shortModel(agent.model);
+  if (summary.updatedAt) agent.updatedAt = summary.updatedAt;
+  if (summary.status) agent.status = summary.status;
+}
+
+async function fetchOllamaNames(url) {
+  const data = await fetchJSON(url);
+  return Array.isArray(data?.models) ? data.models.map((m) => m.name).filter(Boolean) : null;
+}
+
+async function buildLiveModelOps() {
+  const defaults = JSON.parse(fs.readFileSync(path.join(MC_ROOT, 'docs/data/model-ops.json'), 'utf8'));
+  const result = deepClone(defaults);
+  const nowIso = new Date().toISOString();
+  // Best-effort: merge live session telemetry from any locally-available agent registries.
+  // (On a given host you may only have a subset of agents; missing files are fine.)
+  const macModels = await fetchOllamaNames('http://127.0.0.1:11434/api/tags');
+  const desktopModels = await fetchOllamaNames('http://10.0.0.251:11434/api/tags') || await fetchOllamaNames('http://127.0.0.1:11434/api/tags');
+  const laptopModels = await fetchOllamaNames('http://10.0.0.16:11434/api/tags');
+
+  for (const subscription of result.subscriptions || []) {
+    for (const agent of subscription.agents || []) {
+      const liveSummary = summarizeAgentSessions(agent.id, `agent:${agent.id}:`);
+      mergeAgentLiveSession(agent, liveSummary);
+
+      // Local model availability checks (best-effort).
+      if (subscription.provider === 'Local / Ollama') {
+        const sourceNames = agent.id === 'mikan' ? macModels : agent.id === 'cola' ? desktopModels : agent.id === 'sakura' ? laptopModels : null;
+        if (Array.isArray(sourceNames)) {
+          const present = sourceNames.includes(agent.model);
+          agent.status = present ? 'active' : 'offline';
+          agent.sessions = present ? Math.max(agent.sessions || 0, 1) : 0;
+        }
+      }
+    }
+
+    const subCost = (subscription.agents || []).reduce((sum, agent) => sum + Number(agent.costToday || 0), 0);
+    if (subscription.type === 'local') {
+      subscription.monthlyCost = 0;
+      subscription.costLabel = '$0';
+    } else if (subCost > 0) {
+      subscription.costLabel = `today ${formatMoney(subCost)}`;
     }
   }
 
-  const runtime = {
-    activeDefault: "anthropic/claude-sonnet-4-6",
-    routerMode: "manual — category map defined, verification in progress",
-    cloudModels: [
-      {id: "claude-opus-4-6", provider: "Anthropic", status: "escalation-only", role: "Escalation / orchestrator", costIn: "$15/MTok", costOut: "$75/MTok", cacheRead: "$1.50/MTok", cacheWrite: "$18.75/MTok", notes: "Not default for routine categories. Used for complex orchestration and escalation."},
-      {id: "claude-sonnet-4-6", provider: "Anthropic", status: "available — intended baseline", role: "Cloud baseline for complex categories", costIn: "$3/MTok", costOut: "$15/MTok", cacheRead: "$0.30/MTok", cacheWrite: "$3.75/MTok", notes: "Intended default for build/debug, research, visual/UI, interactive, repair."}
-    ],
-    localModels
+  result.meta = {
+    ...(result.meta || {}),
+    lastUpdated: nowIso,
+    refreshInterval: 30,
+    live: true,
+    notes: [
+      'Merged live Desktop session data from local .openclaw session registries for Franky/Sanji.',
+      'Merged live Ollama model availability from Mac Mini/Desktop/Laptop tag endpoints when reachable.',
+      'Best-effort: for each agent, if a local .openclaw agent session registry exists on this host, its sessions/tokens/model/status are merged into the schema. Missing registries simply fall back to schema defaults.'
+    ]
   };
 
-  const routingMap = [
-    {category: "heartbeat",            intended: "ollama/qwen2.5:3b",      fallback: "ollama/qwen2.5:7b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:3b",        runs: 1, successRate: "100% (1/1)", spend: "$0.00",    taskIds: ["verify-heartbeat"],          status: "verified"},
-    {category: "digest",               intended: "ollama/qwen2.5:7b",      fallback: "ollama/qwen2.5:3b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-digest"],      status: "routing confirmed, execution failed"},
-    {category: "hygiene",              intended: "ollama/qwen2.5:3b",      fallback: "ollama/qwen2.5:7b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "100% (1/1)", spend: "$0.00",    taskIds: ["direct-verify-hygiene"],     status: "verified via fallback"},
-    {category: "maintenance",          intended: "ollama/qwen2.5:7b",      fallback: "ollama/qwen2.5:3b",       escalation: "claude-sonnet-4-6",         lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-maintenance"], status: "routing confirmed, execution failed"},
-    {category: "build/docs",           intended: "ollama/qwen2.5:7b",      fallback: "claude-sonnet-4-6",       escalation: "claude-opus-4-6",           lastUsed: "qwen2.5:7b",        runs: 1, successRate: "0% (0/1)",   spend: "$0.00",    taskIds: ["direct-verify-builddocs"],   status: "routing confirmed, execution failed"},
-    {category: "build/debug",          intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-builddebug"],  status: "verified"},
-    {category: "research",             intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0001", taskIds: ["direct-verify-research"],    status: "verified"},
-    {category: "visual/UI generation", intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-visualui"],    status: "verified"},
-    {category: "interactive",          intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6",           lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "50% (1/1)",  spend: "~$0.0001", taskIds: ["direct-verify-interactive"], status: "partially verified"},
-    {category: "repair",               intended: "claude-sonnet-4-6",      fallback: "claude-opus-4-6",         escalation: "claude-opus-4-6 + Claude Code", lastUsed: "claude-sonnet-4-6", runs: 1, successRate: "100% (1/1)", spend: "~$0.0002", taskIds: ["direct-verify-repair"], status: "verified"}
-  ];
+  return result;
+}
 
-  // Read verification results from a file if it exists
-  let verificationResults = [];
+async function handleModelOps() {
+  if (modelOpsCache.data && modelOpsCache.expiresAt > Date.now()) return modelOpsCache.data;
   try {
-    const vr = fs.readFileSync(path.join(MC_ROOT, 'registry/routing/verification-results.json'), 'utf8');
-    verificationResults = JSON.parse(vr);
-  } catch { verificationResults = []; }
+    const data = await buildLiveModelOps();
+    modelOpsCache = { data, expiresAt: Date.now() + MODEL_OPS_CACHE_MS };
+    return data;
+  } catch {
+    const fallback = JSON.parse(fs.readFileSync(path.join(MC_ROOT, 'docs/data/model-ops.json'), 'utf8'));
+    fallback.meta = { ...(fallback.meta || {}), lastUpdated: new Date().toISOString(), refreshInterval: 30, live: false, notes: ['Serving schema defaults because live model-ops refresh failed.'] };
+    modelOpsCache = { data: fallback, expiresAt: Date.now() + MODEL_OPS_CACHE_MS };
+    return fallback;
+  }
+}
 
-  const routingHealth = {
-    currentPolicy: "Default: Sonnet 4.6 (cloud baseline, confirmed). Heartbeat: qwen2.5:3b (local, confirmed). Digest/maintenance/hygiene/build-docs: qwen2.5:7b (local, routing confirmed). Opus 4.6: escalation-only (not appearing in any direct run).",
-    localSuccessRate: "2/5 local categories fully verified (heartbeat, hygiene). 3/5 routing confirmed but execution failed (exec unreliable with space-containing paths). Local runtime: ~3.9min estimated across 5 runs.",
-    cloudFallbackCount: 0,
-    rollbackCount: 0,
-    modelFailureCount: 1,
-    modelFailureNote: "1 auth failure on first startup (resolved). qwen2.5:7b exec tool unreliable for paths containing spaces (affects digest, maintenance, build/docs).",
-    canaryStatus: "not deployed — awaiting local exec reliability fix",
-    recommendation: "1) Sonnet baseline confirmed — no changes needed for cloud categories. 2) Fix qwen2.5:7b exec reliability for space-containing paths, then re-run digest/maintenance/build-docs. 3) Confirm qwen2.5:3b for hygiene (currently running on 7b as fallback). 4) After 3 successful local runs per category, assess canary readiness. 5) Opus not appearing in any run — escalation-only policy is working."
+// ---- TEAM / ORG (Dashboard Team Tab) ----
+const TEAM_ORG_DEFAULT_PATH = path.join(MC_ROOT, 'docs/data/team-org.json');
+
+function loadTeamOrgDefaults() {
+  try {
+    return JSON.parse(fs.readFileSync(TEAM_ORG_DEFAULT_PATH, 'utf8'));
+  } catch {
+    // Minimal fallback: enough for callers to render something.
+    return {
+      meta: { lastUpdated: new Date().toISOString(), live: false, notes: ['team-org.json missing; serving minimal fallback'] },
+      nodes: [],
+      edges: [],
+      comms: { links: [] }
+    };
+  }
+}
+
+function normalizeAgentStateFromSession(summary) {
+  if (!summary || !summary.updatedAt) return { status: 'offline', updatedAt: null };
+  const ageMs = Date.now() - Number(summary.updatedAt || 0);
+  if (!Number.isFinite(ageMs)) return { status: 'offline', updatedAt: summary.updatedAt || null };
+  if (ageMs < 10 * 60 * 1000) return { status: 'online', updatedAt: summary.updatedAt };
+  if (ageMs < 60 * 60 * 1000) return { status: 'idle', updatedAt: summary.updatedAt };
+  return { status: 'offline', updatedAt: summary.updatedAt };
+}
+
+async function buildLiveTeamOrg() {
+  const base = deepClone(loadTeamOrgDefaults());
+  const nowIso = new Date().toISOString();
+
+  // Live signals (best-effort): gateway health.
+  // - localGatewayOk: gateway on THIS host (useful for local dev)
+  // - remote probes: if a node has machine.ip, we can *try* to probe its gateway too
+  const localGw = await fetchJSON('http://127.0.0.1:18789/health');
+  const localGatewayOk = !!localGw;
+
+  async function probeGateway(ip) {
+    if (!ip) return null;
+    // Keep very tight: we don't want Team tab to hang if a machine is offline.
+    return await fetchJSON(`http://${ip}:18789/health`, 800);
+  }
+
+  // Map agent session summaries (if present on this host). Prefer schema-driven agentIds/sessionKeyPrefix.
+  function resolveNodeSummary(node) {
+    const ids = Array.isArray(node?.agentIds) ? node.agentIds.filter(Boolean) : [];
+    for (const agentId of ids) {
+      const prefix = node.sessionKeyPrefix || `agent:${agentId}:`;
+      const s = summarizeAgentSessions(agentId, prefix);
+      if (s) return s;
+    }
+    return null;
+  }
+
+  for (const node of base.nodes || []) {
+    if (!node || !node.id) continue;
+
+    // Best-effort live session freshness for any agent/subagent node.
+    if (node.kind === 'agent' || node.kind === 'subagent') {
+      const summary = resolveNodeSummary(node);
+      if (summary) {
+        const live = normalizeAgentStateFromSession(summary);
+        if (live?.status) node.status = live.status;
+        if (live?.updatedAt) node.updatedAt = live.updatedAt;
+      }
+    }
+
+    // Navigation / bridge node additionally reflects gateway reachability.
+    // Prefer probing the bridge machine IP (if known). Fallback to local gateway if running on the bridge host.
+    if (node.id === 'bridge') {
+      const bridgeSummary = resolveNodeSummary(node);
+      const bridgeLive = normalizeAgentStateFromSession(bridgeSummary);
+
+      const remoteGw = await probeGateway(node.machine?.ip);
+      const bridgeGatewayOk = !!remoteGw || localGatewayOk;
+
+      node.status = bridgeGatewayOk ? (bridgeLive.status === 'offline' ? 'online' : bridgeLive.status) : 'offline';
+      node.updatedAt = bridgeLive.updatedAt;
+      node.health = { ...(node.health || {}), gateway: bridgeGatewayOk ? 'ok' : 'down' };
+      node.health.gatewaySource = remoteGw ? `http://${node.machine?.ip}:18789/health` : 'http://127.0.0.1:18789/health';
+    }
+  }
+
+  // Communication link health.
+  // Conservative: mark OpenClaw dispatch links ok if the BRIDGE gateway is reachable.
+  const links = (base.comms && Array.isArray(base.comms.links)) ? base.comms.links : [];
+  const bridgeNode = (base.nodes || []).find(n => n && n.id === 'bridge');
+  const bridgeGatewayOk = bridgeNode?.health?.gateway === 'ok';
+  const bridgeGatewaySource = bridgeNode?.health?.gatewaySource || null;
+
+  for (const link of links) {
+    if (!link || !link.id) continue;
+    const channel = String(link.channel || '');
+    const isDispatch = link.from === 'bridge' && /openclaw/i.test(channel);
+    if (isDispatch) {
+      link.ok = bridgeGatewayOk;
+      link.status = bridgeGatewayOk ? 'ok' : 'unknown';
+      link.lastOkAt = bridgeGatewayOk ? nowIso : (link.lastOkAt || null);
+      link.notes = bridgeGatewayOk
+        ? `Bridge gateway reachable (${bridgeGatewaySource || 'probe'}). Remote node reachability not yet instrumented.`
+        : `Bridge gateway unreachable (${bridgeGatewaySource || 'probe'}).`;
+    }
+  }
+
+  base.meta = {
+    ...(base.meta || {}),
+    lastUpdated: nowIso,
+    live: true,
+    notes: [
+      'Merged best-effort gateway health: prefers probing bridge.machine.ip:18789 when available, falls back to 127.0.0.1:18789.',
+      'Merged best-effort agent session freshness from local .openclaw agent session registries when present.',
+      'Comms link status is currently derived from bridge gateway reachability; per-link remote probes are staged but not instrumented yet.'
+    ]
   };
 
-  return {
-    runtime,
-    routingMap,
-    verificationResults,
-    ledger: [
-      { ts: '2026-03-13 20:48', taskId: 'session-start', category: 'interactive', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'default model — no routing rules', success: true, fallback: false },
-      { ts: '2026-03-13 21:01', taskId: 'TASK-018', category: 'build/docs', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'complex doc authoring — cloud appropriate', success: true, fallback: false },
-      { ts: '2026-03-13 21:55', taskId: 'TASK-020', category: 'build/audit', agent: 'bridge', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'complex analysis — cloud appropriate', success: true, fallback: false },
-      { ts: '2026-03-13 22:31', taskId: 'mc-dashboard-build', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false },
-      { ts: '2026-03-13 22:44', taskId: 'mc-dashboard-v2', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false },
-      { ts: '2026-03-13 22:50', taskId: 'mc-visual-refinement', category: 'visual/UI generation', agent: 'subagent', model: 'claude-opus-4-6', provider: 'Anthropic', local: false, reason: 'subagent default model', success: true, fallback: false }
-    ],
-    ledgerNote: 'ledger is manually reconstructed — live instrumentation not yet available',
-    cost: {
-      todayCloud: '$0.17',
-      todayLocal: '$0.00',
-      localRunCount: 5,
-      localRuntimeMinutes: '~3.9 (estimated)',
-      confidence: 'estimated — incomplete instrumentation',
-      projectedMonthly: '$3-82',
-      projectedConfidence: 'wide range — insufficient history'
-    },
-    routingHealth
-  };
+  return base;
+}
+
+const TEAM_CACHE_MS = 15_000;
+let teamCache = { expiresAt: 0, data: null };
+
+async function handleTeamOrg() {
+  if (teamCache.data && teamCache.expiresAt > Date.now()) return teamCache.data;
+  try {
+    const data = await buildLiveTeamOrg();
+    teamCache = { data, expiresAt: Date.now() + TEAM_CACHE_MS };
+    return data;
+  } catch {
+    const fallback = loadTeamOrgDefaults();
+    fallback.meta = { ...(fallback.meta || {}), lastUpdated: new Date().toISOString(), live: false, notes: ['Serving team-org schema defaults because live refresh failed.'] };
+    teamCache = { data: fallback, expiresAt: Date.now() + TEAM_CACHE_MS };
+    return fallback;
+  }
 }
 
 const PROJECTS = [
@@ -658,6 +835,11 @@ const server = http.createServer(async (req, res) => {
     const data = parseDocs();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
+  } else if (p === '/api/team-org') {
+    const data = await handleTeamOrg();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+
   } else if (p === '/api/projects') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ projects: PROJECTS }));

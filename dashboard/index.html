@@ -99,43 +99,52 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .tree-leaf .kanban-card { cursor: default; }
 
 /* Calendar */
-.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.cal-header h2 { font-size: 18px; min-width: 200px; }
-.cal-header button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.cal-header h2 { font-size: 18px; min-width: 200px; flex: 1 1 180px; }
+.cal-header button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer; font-size: 14px; min-height: 44px; transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease; }
 .cal-header button:hover { background: var(--border); }
 .cal-header button.active { border-color: rgba(88,166,255,0.35); background: rgba(88,166,255,0.12); }
 
+.cal-view-toggle { margin-left:auto; display:flex; gap:6px; flex-wrap: wrap; }
 .cal-legend-swatch { display:inline-block; width: 14px; height: 12px; border-radius: 4px; margin-right: 6px; border-left: 3px solid var(--border); background: rgba(255,255,255,0.06); vertical-align: -2px; }
+.cal-scroller { overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.cal-hint { display:none; margin: 8px 0 12px; color: var(--text2); font-size: 12px; }
+.cal-day-pill { display:inline-flex; align-items:center; gap:6px; padding: 6px 10px; border:1px solid rgba(88,166,255,0.25); border-radius:999px; background: rgba(88,166,255,0.08); color: var(--blue); font-size: 12px; margin-left: 8px; }
 
 /* Month grid */
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.cal-day-name { background: var(--sidebar); padding: 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; }
-.cal-day { background: var(--bg); padding: 8px; min-height: 92px; font-size: 12px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-width: 840px; }
+.cal-day-name { background: var(--sidebar); padding: 10px 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; min-height: 44px; display:flex; align-items:center; justify-content:center; }
+.cal-day { background: var(--bg); padding: 10px; min-height: 112px; font-size: 12px; cursor: pointer; transition: background 0.18s ease, transform 0.18s ease; }
+.cal-day:hover { background: rgba(255,255,255,0.03); }
 .cal-day.other { color: var(--text2); opacity: 0.3; }
 .cal-day.today { background: rgba(88,166,255,0.08); }
-.cal-day .day-num { font-weight: 600; margin-bottom: 6px; }
+.cal-day.selected { box-shadow: inset 0 0 0 2px rgba(88,166,255,0.35); }
+.cal-day .day-num { font-weight: 600; margin-bottom: 8px; display:flex; align-items:center; justify-content:space-between; gap: 6px; }
+.cal-day .day-count { font-size: 10px; color: var(--text2); }
 .cal-day.today .day-num { color: var(--blue); }
 
 /* Neutral event chips (left-border accent only) */
-.cal-mini-item { font-size: 11px; padding: 3px 6px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid var(--border); color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cal-mini-item { font-size: 11px; padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid var(--border); color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-height: 44px; display:flex; align-items:center; width:100%; text-align:left; cursor:pointer; }
 .cal-mini-item.kind-event { border-left-color: var(--blue); }
 .cal-mini-item.kind-reminder { border-left-color: var(--purple); }
 .cal-mini-item.tier-teal { border-left-color: var(--teal); }
 .cal-mini-item.tier-yellow { border-left-color: var(--yellow); }
 .cal-mini-item.tier-pink { border-left-color: var(--pink); }
 .cal-mini-item.tier-red { border-left-color: var(--red); }
+.cal-more-link { background: transparent; border: 0; color: var(--blue); font-size: 11px; padding: 6px 2px 0; cursor: pointer; }
 
 /* Week view grid with vertical time axis */
-.cal-week-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.cal-week-grid { display: grid; grid-template-columns: 64px repeat(7, 1fr); background: var(--border); gap: 1px; }
-.cal-week-head { background: var(--sidebar); padding: 10px 8px; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; text-align: center; }
+.cal-week-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: visible; min-width: 860px; }
+.cal-week-grid { display: grid; grid-template-columns: 64px repeat(7, minmax(114px, 1fr)); background: var(--border); gap: 1px; }
+.cal-week-head { background: var(--sidebar); padding: 10px 8px; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; text-align: center; min-height: 54px; display:flex; flex-direction:column; justify-content:center; cursor:pointer; }
 .cal-week-head .num { display:block; font-size: 12px; color: var(--text); margin-top: 2px; }
-.cal-week-time { background: var(--sidebar); padding: 6px 8px; font-size: 11px; color: var(--text2); text-align: right; }
+.cal-week-head.selected { background: rgba(88,166,255,0.12); color: var(--blue); }
+.cal-week-time { background: var(--sidebar); padding: 6px 8px; font-size: 11px; color: var(--text2); text-align: right; min-height: 44px; }
 .cal-week-cell { background: #101321; position: relative; height: 44px; }
 .cal-week-cell.now { background: rgba(88,166,255,0.06); }
 
 .cal-day-layer { position: relative; height: 100%; }
-.cal-block { position: absolute; left: 6px; right: 6px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--border); padding: 6px 8px; font-size: 11px; color: var(--text); overflow: hidden; }
+.cal-block { position: absolute; left: 6px; right: 6px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--border); padding: 8px 10px; font-size: 11px; color: var(--text); overflow: hidden; cursor: pointer; min-height: 44px; }
 .cal-block .meta { color: var(--text2); font-size: 10px; margin-top: 3px; }
 .cal-block.kind-event { border-left-color: var(--blue); }
 .cal-block.kind-reminder { border-left-color: var(--purple); }
@@ -143,6 +152,44 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .cal-block.tier-yellow { border-left-color: var(--yellow); }
 .cal-block.tier-pink { border-left-color: var(--pink); }
 .cal-block.tier-red { border-left-color: var(--red); }
+
+.cal-day-list { display: grid; gap: 10px; }
+.cal-day-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.cal-day-card-header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.cal-day-card-header h3 { font-size: 16px; }
+.cal-day-card-header .sub { font-size: 12px; color: var(--text2); }
+.cal-day-empty { color: var(--text2); font-size: 13px; padding: 10px 0; }
+.cal-day-card .cal-mini-item { white-space: normal; }
+
+.cal-detail-backdrop { position: fixed; inset: 0; background: rgba(5, 8, 15, 0.68); opacity: 0; pointer-events: none; transition: opacity 0.22s ease; z-index: 80; }
+.cal-detail-backdrop.open { opacity: 1; pointer-events: auto; }
+.cal-detail-sheet { position: fixed; left: 50%; bottom: 16px; transform: translate(-50%, calc(100% + 32px)); width: min(680px, calc(100vw - 20px)); background: linear-gradient(180deg, rgba(19,24,38,0.98), rgba(11,14,24,0.98)); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.45); transition: transform 0.26s ease; z-index: 81; max-height: min(78vh, 720px); overflow: hidden; }
+.cal-detail-sheet.open { transform: translate(-50%, 0); }
+.cal-detail-grabber { width: 44px; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.18); margin: 10px auto 0; }
+.cal-detail-body { padding: 16px 18px 18px; overflow-y: auto; max-height: calc(min(78vh, 720px) - 18px); }
+.cal-detail-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 14px; }
+.cal-detail-head h3 { font-size: 18px; margin-bottom: 6px; }
+.cal-detail-close { background: transparent; border: 0; color: var(--text2); font-size: 24px; line-height: 1; min-width: 44px; min-height: 44px; cursor:pointer; }
+.cal-detail-chip { display:inline-flex; align-items:center; gap:6px; border-radius:999px; border:1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); padding: 6px 10px; font-size: 12px; color: var(--text2); }
+.cal-detail-stack { display:grid; gap:10px; }
+.cal-detail-card { border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px; }
+.cal-detail-card .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.cal-detail-meta { white-space: pre-wrap; word-break: break-word; color: var(--text); font-size: 13px; }
+
+@media (max-width: 767px) {
+  .cal-header { gap: 10px; }
+  .cal-header h2 { width: 100%; min-width: 0; order: -1; }
+  .cal-view-toggle { width: 100%; margin-left: 0; }
+  .cal-view-toggle button, .cal-header > button { flex: 1 1 auto; }
+  .cal-hint { display:block; }
+  .cal-grid { min-width: 700px; }
+  .cal-week-wrap { min-width: 520px; }
+  .cal-week-grid { grid-template-columns: 56px repeat(7, minmax(88px, 1fr)); }
+  .cal-week-head.mobile-hidden, .cal-week-cell.mobile-hidden, .cal-day-layer.mobile-hidden { display:none; }
+  .cal-day-card { padding: 12px; }
+  .cal-detail-sheet { width: calc(100vw - 12px); left: 6px; right: 6px; bottom: 6px; transform: translate(0, calc(100% + 24px)); }
+  .cal-detail-sheet.open { transform: translate(0, 0); }
+}
 
 /* Projects */
 .proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0; transition: border-color 0.2s; }
@@ -282,6 +329,29 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
 /* Team */
 .org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
+.orgviz { width: 100%; max-width: 980px; }
+.orgviz-inner { width: 100%; height: 440px; border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+.orgviz svg { width: 100%; height: 100%; display: block; }
+.orgviz .hint { position: absolute; left: 12px; top: 10px; color: var(--text2); font-size: 11px; pointer-events: none; }
+.orgviz .tip { position: absolute; pointer-events: none; background: rgba(20,22,32,0.96); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--text); box-shadow: 0 12px 28px rgba(0,0,0,0.4); transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity 0.12s ease; }
+.orgviz .tip.open { opacity: 1; }
+.orgviz .tip .t { font-weight: 650; margin-bottom: 4px; }
+.orgviz .tip .m { color: var(--text2); font-size: 11px; }
+.orgviz .legend { position: absolute; right: 12px; top: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.orgviz .legend .chip { display:inline-flex; align-items:center; gap:6px; padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); border-radius: 999px; font-size: 11px; color: var(--text2); }
+.orgviz .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+.orgviz .legend .dot.ok { background: var(--green); }
+.orgviz .legend .dot.fail { background: var(--red); }
+.orgviz .legend .dot.idle { background: rgba(139,148,158,0.9); }
+.orgviz .orgviz-controls { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+.orgviz .orgviz-controls button { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.10); color: var(--text2); padding: 6px 10px; border-radius: 10px; font-size: 11px; cursor: pointer; min-height: 34px; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.orgviz .orgviz-controls button:hover { background: rgba(88,166,255,0.08); border-color: rgba(88,166,255,0.25); color: var(--text); }
+.orgviz .orgviz-controls .pill { padding: 6px 10px; border-radius: 999px; }
+.orgviz .grab { cursor: grab; }
+.orgviz .grabbing { cursor: grabbing; }
+@keyframes orgPulseFail { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.35; } }
+@keyframes orgGlow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(88,166,255,0)); } 50% { filter: drop-shadow(0 0 10px rgba(88,166,255,0.25)); } }
+
 .load-card { position: relative; }
 .load-card .dept-name { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
 .load-card .dept-points { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
@@ -492,7 +562,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         <button onclick="calNav(1)">Next →</button>
         <button onclick="calNav(0)">Today</button>
 
-        <div class="cal-view-toggle" style="margin-left:auto;display:flex;gap:6px">
+        <div class="cal-view-toggle">
+          <button id="cal-btn-day" onclick="setCalView('day')">Day</button>
           <button id="cal-btn-week" onclick="setCalView('week')">Week</button>
           <button id="cal-btn-month" onclick="setCalView('month')">Month</button>
         </div>
@@ -509,8 +580,16 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
         </div>
       </div>
 
-      <div id="cal-month" class="cal-grid" style="display:none"></div>
-      <div id="cal-week" style="display:none"></div>
+      <div class="cal-hint">Swipe horizontally on mobile, or tap a day to zoom in.</div>
+      <div class="cal-scroller"><div id="cal-month" class="cal-grid" style="display:none"></div></div>
+      <div class="cal-scroller"><div id="cal-week" style="display:none"></div></div>
+      <div id="cal-day" style="display:none"></div>
+
+      <div id="cal-detail-backdrop" class="cal-detail-backdrop" onclick="closeCalDetail()"></div>
+      <div id="cal-detail-sheet" class="cal-detail-sheet" aria-hidden="true">
+        <div class="cal-detail-grabber"></div>
+        <div id="cal-detail-body" class="cal-detail-body"></div>
+      </div>
     </div>
 
     <!-- Projects -->
@@ -552,6 +631,9 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
       <div class="section-title" style="font-size:14px;margin-top:4px">🏋️ Department Loads</div>
       <div class="card-grid mb" id="dept-loads"></div>
+
+      <div class="section-title" style="font-size:14px;margin-top:18px">🗺️ Org Comms Map</div>
+      <div id="orgviz" class="orgviz card" style="padding:14px"></div>
 
       <div class="org-chart">
         <div class="org-divider">Leadership</div>
@@ -728,6 +810,12 @@ navItems.forEach(item => {
     panels.forEach(p => p.classList.remove('active'));
     item.classList.add('active');
     document.getElementById('tab-' + tab).classList.add('active');
+
+    // Pause expensive animations when leaving the Team tab
+    try {
+      if (tab !== 'team') stopOrgVizAnim();
+      else renderOrgViz(_lastDeptMap || new Map());
+    } catch (e) { /* ignore */ }
   });
 });
 
@@ -1035,6 +1123,829 @@ function renderDepartmentLoads(tasks) {
       </div>
     `;
   }).join('');
+
+  // Feed the org comms map with live department load info (if present)
+  _lastDeptMap = deptMap;
+  try { renderOrgViz(deptMap); } catch (e) { console.warn('orgviz render failed', e); }
+}
+
+// ===== Team Org Comms Map (birds-eye, animated flow + failures) =====
+let _orgVizAnim = null;
+let _lastDeptMap = null;
+
+function stopOrgVizAnim() {
+  try {
+    if (_orgVizAnim?.raf) cancelAnimationFrame(_orgVizAnim.raf);
+    if (typeof _orgVizAnim?.cleanup === 'function') _orgVizAnim.cleanup();
+  } catch (e) { /* ignore */ }
+  _orgVizAnim = null;
+}
+
+function deptLoadBadge(load) {
+  if (!load) return { label: 'No load data', tone: 'muted' };
+  const pts = load.points || 0;
+  if (pts >= 25) return { label: `${Math.round(pts * 10) / 10} pts (High)`, tone: 'high' };
+  if (pts >= 12) return { label: `${Math.round(pts * 10) / 10} pts (Med)`, tone: 'med' };
+  return { label: `${Math.round(pts * 10) / 10} pts (Low)`, tone: 'low' };
+}
+
+function renderOrgCommsMap(deptMap) {
+  const host = document.getElementById('orgviz');
+  if (!host) return;
+
+  const depts = [
+    { id: 'ops', name: 'Operations', color: 'var(--blue)' },
+    { id: 'eng', name: 'Engineering', color: 'var(--teal)' },
+    { id: 'product', name: 'Product', color: 'var(--purple)' },
+    { id: 'design', name: 'Design', color: 'var(--pink)' },
+    { id: 'qa', name: 'QA', color: 'var(--yellow)' },
+    { id: 'research', name: 'Research', color: 'var(--orange)' },
+    { id: 'data', name: 'Data', color: '#60a5fa' },
+    { id: 'security', name: 'Security', color: '#f87171' },
+    { id: 'support', name: 'Support', color: '#a7f3d0' },
+  ];
+
+  // Connections: ok = animated flow. broken = red marker + stalled flow.
+  const links = [
+    { from: 'hub', to: 'ops', status: 'ok' },
+    { from: 'hub', to: 'eng', status: 'ok' },
+    { from: 'hub', to: 'product', status: 'ok' },
+    { from: 'hub', to: 'design', status: 'ok' },
+    { from: 'hub', to: 'qa', status: 'ok' },
+    { from: 'hub', to: 'research', status: 'ok' },
+    { from: 'hub', to: 'data', status: 'ok' },
+    { from: 'hub', to: 'security', status: 'broken' },
+    { from: 'hub', to: 'support', status: 'ok' },
+
+    { from: 'product', to: 'eng', status: 'ok' },
+    { from: 'design', to: 'eng', status: 'ok' },
+    { from: 'qa', to: 'eng', status: 'ok' },
+    { from: 'ops', to: 'security', status: 'broken' },
+    { from: 'support', to: 'ops', status: 'ok' },
+    { from: 'data', to: 'research', status: 'ok' },
+  ];
+
+  // --- DOM scaffold (idempotent rebuild) ---
+  stopOrgVizAnim();
+  host.innerHTML = `
+    <div class="orgviz-inner">
+      <div class="hint">Drag/scroll the page as normal — hover nodes for details.</div>
+      <div class="legend">
+        <div class="chip"><span class="dot ok"></span>Flow OK</div>
+        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
+      </div>
+      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
+      <svg viewBox="0 0 980 440" role="img" aria-label="Org communication map">
+        <defs>
+          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
+          </marker>
+          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.7)"></path>
+          </marker>
+          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.75)"></path>
+          </marker>
+          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
+          </filter>
+        </defs>
+        <g id="orgviz-links"></g>
+        <g id="orgviz-lights"></g>
+        <g id="orgviz-nodes"></g>
+      </svg>
+    </div>
+  `;
+
+  const wrap = host.querySelector('.orgviz-inner');
+  const svg = host.querySelector('svg');
+  const gLinks = host.querySelector('#orgviz-links');
+  const gLights = host.querySelector('#orgviz-lights');
+  const gNodes = host.querySelector('#orgviz-nodes');
+  const tip = host.querySelector('#orgviz-tip');
+
+  const W = 980, H = 440;
+  const center = { x: W/2, y: H/2 - 6 };
+
+  // Layout: hub + ring of 9 departments.
+  const ringR = 168;
+  const nodePos = new Map();
+  nodePos.set('hub', { x: center.x, y: center.y, r: 38 });
+
+  for (let i = 0; i < depts.length; i++) {
+    const a = (-Math.PI/2) + (i * (2*Math.PI / depts.length));
+    const x = center.x + ringR * Math.cos(a);
+    const y = center.y + ringR * Math.sin(a);
+    nodePos.set(depts[i].id, { x, y, r: 30 });
+  }
+
+  function makePath(a, b, bend=0.22) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+    // Perp offset
+    const px = -dy, py = dx;
+    const len = Math.max(1, Math.hypot(px, py));
+    const ox = (px/len) * (Math.hypot(dx,dy) * bend);
+    const oy = (py/len) * (Math.hypot(dx,dy) * bend);
+    return `M ${a.x} ${a.y} Q ${mx+ox} ${my+oy} ${b.x} ${b.y}`;
+  }
+
+  function elSvg(tag, attrs = {}) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  // --- Links ---
+  const linkPaths = [];
+  for (const l of links) {
+    const a = nodePos.get(l.from);
+    const b = nodePos.get(l.to);
+    if (!a || !b) continue;
+
+    const bend = l.from === 'hub' ? 0.10 : 0.26;
+    const d = makePath(a, b, bend);
+
+    const p = elSvg('path', {
+      d,
+      fill: 'none',
+      stroke: l.status === 'broken' ? 'rgba(248,81,73,0.55)' : 'rgba(139,148,158,0.38)',
+      'stroke-width': l.from === 'hub' ? 2.4 : 2,
+      'marker-end': l.status === 'broken' ? 'url(#orgArrowFail)' : 'url(#orgArrow)',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      opacity: l.status === 'broken' ? 0.85 : 1,
+    });
+
+    if (l.status !== 'broken') {
+      // subtle animated dash "flow"
+      p.setAttribute('stroke-dasharray', '4 10');
+    } else {
+      p.setAttribute('stroke-dasharray', '2 10');
+    }
+
+    gLinks.appendChild(p);
+    linkPaths.push({ link: l, path: p });
+
+    if (l.status === 'broken') {
+      const mid = p.getPointAtLength(p.getTotalLength() * 0.52);
+      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
+      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
+      ring.style.animation = 'orgPulseFail 1.6s infinite';
+      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
+      gLinks.appendChild(badge);
+    }
+  }
+
+  // --- Nodes ---
+  const nodeEls = [];
+  function lookupLoadByName(name) {
+    // deptMap keys come from tasks; be forgiving.
+    if (!deptMap) return null;
+    for (const [k, v] of deptMap.entries()) {
+      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
+    }
+    return null;
+  }
+
+  // hub
+  {
+    const p = nodePos.get('hub');
+    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})` });
+    const c = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(88,166,255,0.10)', stroke: 'rgba(88,166,255,0.55)', 'stroke-width': 2 });
+    c.style.animation = 'orgGlow 2.2s ease-in-out infinite';
+    const t1 = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 12, 'font-weight': 700 });
+    t1.textContent = 'MISSION';
+    const t2 = elSvg('text', { x: 0, y: 19, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 10, 'font-weight': 600 });
+    t2.textContent = 'CONTROL';
+    g.appendChild(c); g.appendChild(t1); g.appendChild(t2);
+    gNodes.appendChild(g);
+  }
+
+  for (const d of depts) {
+    const p = nodePos.get(d.id);
+    const load = lookupLoadByName(d.name);
+    const badge = deptLoadBadge(load);
+
+    const g = elSvg('g', { transform: `translate(${p.x} ${p.y})`, 'data-dept': d.name });
+    const outer = elSvg('circle', { cx: 0, cy: 0, r: p.r, fill: 'rgba(15,17,25,0.95)', stroke: 'rgba(255,255,255,0.10)', 'stroke-width': 1.5 });
+    const ring = elSvg('circle', { cx: 0, cy: 0, r: p.r-3, fill: 'none', stroke: d.color, 'stroke-width': 2.6, opacity: 0.85 });
+
+    const label = elSvg('text', { x: 0, y: 4, 'text-anchor':'middle', fill: 'var(--text)', 'font-size': 11, 'font-weight': 650 });
+    label.textContent = d.name;
+
+    const sub = elSvg('text', { x: 0, y: 20, 'text-anchor':'middle', fill: 'var(--text2)', 'font-size': 9.5, 'font-weight': 600 });
+    sub.textContent = badge.tone === 'muted' ? '—' : `${Math.round((load?.points || 0) * 10) / 10} pts`;
+
+    g.appendChild(outer); g.appendChild(ring); g.appendChild(label); g.appendChild(sub);
+    gNodes.appendChild(g);
+    nodeEls.push({ g, dept: d, load });
+  }
+
+  // --- Tooltip ---
+  function showTip(evt, title, meta) {
+    if (!tip) return;
+    tip.querySelector('.t').textContent = title;
+    tip.querySelector('.m').textContent = meta;
+    const r = wrap.getBoundingClientRect();
+    const x = evt.clientX - r.left;
+    const y = evt.clientY - r.top;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+    tip.classList.add('open');
+  }
+  function hideTip() { tip?.classList.remove('open'); }
+
+  for (const n of nodeEls) {
+    n.g.style.cursor = 'default';
+    n.g.addEventListener('mousemove', (e) => {
+      const load = n.load;
+      const pts = load ? Math.round((load.points || 0) * 10)/10 : null;
+      const tasks = load ? load.tasks : null;
+      const meta = load ? `${pts} pts • ${tasks} active tasks` : 'No active task load data yet';
+      showTip(e, n.dept.name, meta);
+    });
+    n.g.addEventListener('mouseleave', hideTip);
+  }
+
+  // --- Animated lights ---
+  // A few dots travel along each ok link.
+  const lights = [];
+  for (const lp of linkPaths) {
+    const total = lp.path.getTotalLength();
+    const count = lp.link.status === 'broken' ? 0 : (lp.link.from === 'hub' ? 4 : 3);
+    for (let i=0;i<count;i++) {
+      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.link.from === 'hub' ? 2.4 : 2.1, fill: 'rgba(63,185,80,0.85)' });
+      gLights.appendChild(dot);
+      lights.push({ dot, path: lp.path, total, phase: i / count });
+    }
+  }
+
+  const t0 = performance.now();
+  const speed = 0.00018; // fraction of path per ms
+  const anim = { raf: null };
+
+  function frame(now) {
+    const t = now - t0;
+    for (const l of lights) {
+      const u = (l.phase + t * speed) % 1;
+      const pt = l.path.getPointAtLength(l.total * u);
+      l.dot.setAttribute('cx', pt.x);
+      l.dot.setAttribute('cy', pt.y);
+      // subtle fade as it approaches end
+      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
+    }
+    // Animate dash offset for all link strokes
+    for (const lp of linkPaths) {
+      if (lp.link.status !== 'broken') {
+        const off = (t * 0.06) % 999;
+        lp.path.setAttribute('stroke-dashoffset', String(-off));
+      } else {
+        const off = (t * 0.03) % 999;
+        lp.path.setAttribute('stroke-dashoffset', String(-off));
+      }
+    }
+    anim.raf = requestAnimationFrame(frame);
+  }
+
+  anim.raf = requestAnimationFrame(frame);
+  _orgVizAnim = anim;
+}
+
+// ===== Team Org Viz (Hierarchy Tree + Pan/Zoom) =====
+// NOTE: This is the primary orgviz renderer (Captain-style hierarchy). The older ring comms map lives in renderOrgCommsMap().
+function renderOrgViz(deptMap) {
+  const host = document.getElementById('orgviz');
+  if (!host) return;
+
+  // Stop any prior animation/handlers from the previous render.
+  stopOrgVizAnim();
+
+  // --- Helpers ---
+  const toneForPts = (pts) => {
+    if (pts >= 25) return { tone: 'high', color: 'var(--red)' };
+    if (pts >= 12) return { tone: 'med', color: 'var(--yellow)' };
+    return { tone: 'low', color: 'var(--green)' };
+  };
+
+  function lookupLoadByName(name) {
+    if (!deptMap) return null;
+    for (const [k, v] of deptMap.entries()) {
+      if ((k || '').toLowerCase() === name.toLowerCase()) return v;
+    }
+    return null;
+  }
+
+  function elSvg(tag, attrs = {}) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  // --- Define hierarchy (expandable) ---
+  // Keep department node labels aligned with task departments, so loads can map.
+  const deptNodes = [
+    { id: 'dept-ops', name: 'Operations', color: 'var(--blue)' },
+    { id: 'dept-eng', name: 'Engineering', color: 'var(--teal)' },
+    { id: 'dept-product', name: 'Product', color: 'var(--purple)' },
+    { id: 'dept-design', name: 'Design', color: 'var(--pink)' },
+    { id: 'dept-qa', name: 'QA', color: 'var(--yellow)' },
+    { id: 'dept-research', name: 'Research', color: 'var(--orange)' },
+    { id: 'dept-data', name: 'Data', color: '#60a5fa' },
+    { id: 'dept-security', name: 'Security', color: '#f87171' },
+    { id: 'dept-support', name: 'Support', color: '#a7f3d0' },
+  ];
+
+  const nodes = [
+    { id: 'root', label: 'CIHAN', sub: 'Human • Architect / Director / Judge', kind: 'human', color: 'var(--yellow)' },
+    { id: 'bridge', label: 'BRIDGE', sub: 'Routing • Scheduling • Gateway', kind: 'agent', color: 'var(--blue)' },
+    { id: 'brain', label: 'BRAIN', sub: 'Memory • Planning • Knowledge', kind: 'agent', color: 'var(--teal)', muted: true },
+    { id: 'forge', label: 'FORGE', sub: 'Build • QA • Research', kind: 'agent', color: 'var(--orange)', muted: true },
+    { id: 'mc', label: 'MISSION CONTROL', sub: 'Dashboard • APIs • Observability', kind: 'system', color: 'rgba(88,166,255,0.65)' },
+    { id: 'deptGroup', label: 'DEPARTMENTS', sub: 'Work intake + load view', kind: 'group', color: 'rgba(139,148,158,0.65)' },
+    ...deptNodes.map(d => {
+      const load = lookupLoadByName(d.name);
+      const pts = load?.points || 0;
+      const tasks = load?.tasks || 0;
+      const tone = load ? toneForPts(pts) : { tone: 'muted', color: 'rgba(139,148,158,0.6)' };
+      return {
+        id: d.id,
+        label: d.name.toUpperCase(),
+        sub: load ? `${Math.round(pts * 10) / 10} pts • ${tasks} active` : 'No load data yet',
+        kind: 'dept',
+        color: d.color,
+        accent: tone.color,
+        deptName: d.name,
+        load
+      };
+    }),
+  ];
+
+  // Edges: parent → child
+  const edges = [
+    { from: 'root', to: 'bridge', status: 'ok' },
+    { from: 'bridge', to: 'mc', status: 'ok' },
+    { from: 'bridge', to: 'brain', status: 'idle' },
+    { from: 'bridge', to: 'forge', status: 'idle' },
+    { from: 'bridge', to: 'deptGroup', status: 'ok' },
+    ...deptNodes.map(d => ({ from: 'deptGroup', to: d.id, status: d.id.includes('security') ? 'broken' : 'ok' })),
+  ];
+
+  // --- Compute tree layout (simple tidy) ---
+  const children = new Map();
+  for (const e of edges) {
+    if (!children.has(e.from)) children.set(e.from, []);
+    children.get(e.from).push(e.to);
+  }
+
+  const byId = new Map(nodes.map(n => [n.id, n]));
+
+  function measureNode(n) {
+    // Logical sizes (SVG units)
+    if (n.kind === 'dept') return { w: 152, h: 54 };
+    if (n.kind === 'group') return { w: 220, h: 56 };
+    if (n.kind === 'system') return { w: 250, h: 62 };
+    if (n.kind === 'agent') return { w: 220, h: 66 };
+    return { w: 240, h: 70 }; // human
+  }
+
+  const sizeById = new Map();
+  for (const n of nodes) sizeById.set(n.id, measureNode(n));
+
+  // Recursively assign x using subtree widths; y by depth.
+  const xById = new Map();
+  const yById = new Map();
+
+  const levelGap = 92;
+  const siblingGap = 22;
+
+  function subtreeWidth(id) {
+    const kids = (children.get(id) || []);
+    const { w } = sizeById.get(id);
+    if (!kids.length) return w;
+    const widths = kids.map(subtreeWidth);
+    const totalKids = widths.reduce((a, b) => a + b, 0) + siblingGap * (widths.length - 1);
+    return Math.max(w, totalKids);
+  }
+
+  function layout(id, left, depth) {
+    const kids = (children.get(id) || []);
+    const size = sizeById.get(id);
+    const sw = subtreeWidth(id);
+    const centerX = left + sw / 2;
+    xById.set(id, centerX);
+    yById.set(id, 48 + depth * levelGap);
+
+    if (!kids.length) return;
+    // place children in a row underneath
+    let cur = left;
+    for (const kid of kids) {
+      const cw = subtreeWidth(kid);
+      layout(kid, cur, depth + 1);
+      cur += cw + siblingGap;
+    }
+  }
+
+  // Layout starting at root
+  layout('root', 0, 0);
+
+  // Determine viewBox bounds to fit the whole tree
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const n of nodes) {
+    const pX = xById.get(n.id);
+    const pY = yById.get(n.id);
+    if (pX === undefined || pY === undefined) continue;
+    const { w, h } = sizeById.get(n.id);
+    minX = Math.min(minX, pX - w / 2);
+    maxX = Math.max(maxX, pX + w / 2);
+    minY = Math.min(minY, pY - h / 2);
+    maxY = Math.max(maxY, pY + h / 2);
+  }
+
+  const pad = 36;
+  minX -= pad; maxX += pad; minY -= pad; maxY += pad;
+  const viewW = Math.max(980, maxX - minX);
+  const viewH = Math.max(440, maxY - minY);
+
+  // --- DOM scaffold ---
+  host.innerHTML = `
+    <div class="orgviz-inner grab">
+      <div class="hint">Hierarchy view • wheel=zoom • drag=pan • hover=details</div>
+      <div class="legend">
+        <div class="chip"><span class="dot ok"></span>Flow OK</div>
+        <div class="chip"><span class="dot idle"></span>Idle / Paused</div>
+        <div class="chip"><span class="dot fail"></span>Delivery failed</div>
+      </div>
+      <div class="orgviz-controls">
+        <button class="pill" id="orgviz-fit">Fit</button>
+        <button id="orgviz-zoomout">−</button>
+        <button id="orgviz-zoomin">+</button>
+        <button class="pill" id="orgviz-zoom100">100%</button>
+      </div>
+      <div class="tip" id="orgviz-tip"><div class="t">—</div><div class="m">—</div></div>
+      <svg viewBox="${minX} ${minY} ${viewW} ${viewH}" role="img" aria-label="Organization hierarchy map">
+        <defs>
+          <marker id="orgArrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(139,148,158,0.55)"></path>
+          </marker>
+          <marker id="orgArrowOk" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(63,185,80,0.75)"></path>
+          </marker>
+          <marker id="orgArrowFail" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(248,81,73,0.8)"></path>
+          </marker>
+          <filter id="orgSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(88,166,255,0.25)"/>
+          </filter>
+        </defs>
+        <g id="orgviz-viewport">
+          <g id="orgviz-links"></g>
+          <g id="orgviz-lights"></g>
+          <g id="orgviz-nodes"></g>
+        </g>
+      </svg>
+    </div>
+  `;
+
+  const wrap = host.querySelector('.orgviz-inner');
+  const svg = host.querySelector('svg');
+  const viewport = host.querySelector('#orgviz-viewport');
+  const gLinks = host.querySelector('#orgviz-links');
+  const gLights = host.querySelector('#orgviz-lights');
+  const gNodes = host.querySelector('#orgviz-nodes');
+  const tip = host.querySelector('#orgviz-tip');
+
+  // --- Render links ---
+  const linkPaths = [];
+  function linkPath(fromId, toId) {
+    const aN = byId.get(fromId), bN = byId.get(toId);
+    if (!aN || !bN) return null;
+    const a = { x: xById.get(fromId), y: yById.get(fromId), ...sizeById.get(fromId) };
+    const b = { x: xById.get(toId), y: yById.get(toId), ...sizeById.get(toId) };
+    const x1 = a.x;
+    const y1 = a.y + a.h / 2;
+    const x2 = b.x;
+    const y2 = b.y - b.h / 2;
+    const midY = (y1 + y2) / 2;
+    // Smooth down connector
+    return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+  }
+
+  for (const e of edges) {
+    const d = linkPath(e.from, e.to);
+    if (!d) continue;
+
+    const broken = e.status === 'broken';
+    const idle = e.status === 'idle';
+
+    const stroke = broken
+      ? 'rgba(248,81,73,0.55)'
+      : idle
+        ? 'rgba(139,148,158,0.22)'
+        : 'rgba(139,148,158,0.38)';
+
+    const marker = broken ? 'url(#orgArrowFail)' : 'url(#orgArrow)';
+
+    const p = elSvg('path', {
+      d,
+      fill: 'none',
+      stroke,
+      'stroke-width': e.from === 'deptGroup' ? 1.8 : 2.2,
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      'marker-end': marker,
+      opacity: broken ? 0.85 : (idle ? 0.8 : 1),
+    });
+
+    // Visual semantics:
+    // - ok: animated comms flow
+    // - idle: paused / non-delivering (no lights)
+    // - broken: failed delivery marker + stalled flow
+    p.setAttribute('stroke-dasharray', broken ? '2 10' : (idle ? '1 14' : '4 10'));
+    gLinks.appendChild(p);
+    linkPaths.push({ edge: e, path: p });
+
+    if (broken) {
+      const total = p.getTotalLength();
+      const mid = p.getPointAtLength(total * 0.52);
+      const badge = elSvg('g', { transform: `translate(${mid.x} ${mid.y})` });
+      const ring = elSvg('circle', { cx: 0, cy: 0, r: 10, fill: 'rgba(248,81,73,0.10)', stroke: 'rgba(248,81,73,0.7)', 'stroke-width': 2 });
+      ring.style.animation = 'orgPulseFail 1.6s infinite';
+      const x1 = elSvg('line', { x1: -5.5, y1: -5.5, x2: 5.5, y2: 5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      const x2 = elSvg('line', { x1: -5.5, y1: 5.5, x2: 5.5, y2: -5.5, stroke: 'rgba(248,81,73,0.9)', 'stroke-width': 2, 'stroke-linecap': 'round' });
+      badge.appendChild(ring); badge.appendChild(x1); badge.appendChild(x2);
+      gLinks.appendChild(badge);
+    }
+  }
+
+  // --- Render nodes ---
+  const nodeEls = [];
+
+  function drawNode(n) {
+    const { w, h } = sizeById.get(n.id);
+    const x = xById.get(n.id);
+    const y = yById.get(n.id);
+
+    const g = elSvg('g', { transform: `translate(${x} ${y})`, 'data-id': n.id });
+    const rx = 14;
+    const baseFill = 'rgba(15,17,25,0.92)';
+    const border = n.kind === 'human' ? 'rgba(210,153,34,0.35)' : 'rgba(255,255,255,0.10)';
+    const topGlow = (n.kind === 'human' || n.kind === 'agent') ? 'url(#orgSoftGlow)' : '';
+
+    const rect = elSvg('rect', {
+      x: -w / 2,
+      y: -h / 2,
+      width: w,
+      height: h,
+      rx,
+      ry: rx,
+      fill: baseFill,
+      stroke: border,
+      'stroke-width': 1.4,
+    });
+
+    const accent = elSvg('rect', {
+      x: -w / 2,
+      y: -h / 2,
+      width: w,
+      height: h,
+      rx,
+      ry: rx,
+      fill: 'none',
+      stroke: n.accent || n.color || 'rgba(88,166,255,0.35)',
+      'stroke-width': 2.4,
+      opacity: n.kind === 'group' ? 0.35 : 0.6,
+    });
+
+    if (n.kind === 'human') rect.style.filter = 'drop-shadow(0 0 10px rgba(210,153,34,0.08))';
+    if (n.kind === 'agent' && !n.muted) rect.style.filter = 'drop-shadow(0 0 12px rgba(88,166,255,0.10))';
+
+    if (n.muted) {
+      rect.setAttribute('opacity', '0.55');
+      accent.setAttribute('opacity', '0.35');
+    }
+
+    const title = elSvg('text', {
+      x: -w / 2 + 14,
+      y: -6,
+      fill: 'var(--text)',
+      'font-size': n.kind === 'dept' ? 11.5 : 12.5,
+      'font-weight': 800,
+      'letter-spacing': '0.06em',
+    });
+    title.textContent = n.label;
+
+    const sub = elSvg('text', {
+      x: -w / 2 + 14,
+      y: 14,
+      fill: 'var(--text2)',
+      'font-size': 10.5,
+      'font-weight': 600,
+    });
+    sub.textContent = n.sub || '';
+
+    // status dot
+    const dot = elSvg('circle', {
+      cx: w / 2 - 16,
+      cy: -h / 2 + 16,
+      r: 4.2,
+      fill: n.kind === 'dept'
+        ? (n.accent || 'rgba(139,148,158,0.65)')
+        : (n.muted ? 'rgba(139,148,158,0.65)' : (n.kind === 'human' ? 'rgba(63,185,80,0.9)' : 'rgba(63,185,80,0.85)')),
+    });
+
+    // dept load bar
+    if (n.kind === 'dept' && n.load) {
+      const pts = n.load.points || 0;
+      const { color } = toneForPts(pts);
+      const barW = Math.max(10, Math.min(w - 28, (pts / 28) * (w - 28)));
+      const barBg = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: w - 28, height: 6, rx: 4, fill: 'rgba(255,255,255,0.06)' });
+      const bar = elSvg('rect', { x: -w / 2 + 14, y: h / 2 - 14, width: barW, height: 6, rx: 4, fill: color, opacity: 0.7 });
+      g.appendChild(barBg); g.appendChild(bar);
+    }
+
+    g.appendChild(rect);
+    g.appendChild(accent);
+    g.appendChild(dot);
+    g.appendChild(title);
+    if (n.sub) g.appendChild(sub);
+
+    if (topGlow) g.style.filter = 'url(#orgSoftGlow)';
+
+    gNodes.appendChild(g);
+    nodeEls.push({ g, n, x, y });
+  }
+
+  for (const n of nodes) {
+    if (!xById.has(n.id)) continue; // skip unplaced
+    drawNode(n);
+  }
+
+  // --- Tooltip ---
+  function showTip(evt, title, meta) {
+    if (!tip) return;
+    tip.querySelector('.t').textContent = title;
+    tip.querySelector('.m').textContent = meta;
+    const r = wrap.getBoundingClientRect();
+    const x = evt.clientX - r.left;
+    const y = evt.clientY - r.top;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+    tip.classList.add('open');
+  }
+  function hideTip() { tip?.classList.remove('open'); }
+
+  for (const ne of nodeEls) {
+    ne.g.style.cursor = 'default';
+    ne.g.addEventListener('mousemove', (e) => {
+      const meta = ne.n.sub || '';
+      showTip(e, ne.n.label, meta);
+    });
+    ne.g.addEventListener('mouseleave', hideTip);
+  }
+
+  // --- Animated lights (only for ok edges) ---
+  const lights = [];
+  for (const lp of linkPaths) {
+    if (lp.edge.status !== 'ok') continue;
+    const total = lp.path.getTotalLength();
+    const count = lp.edge.from === 'deptGroup' ? 2 : 3;
+    for (let i = 0; i < count; i++) {
+      const dot = elSvg('circle', { cx: 0, cy: 0, r: lp.edge.from === 'deptGroup' ? 2.0 : 2.3, fill: 'rgba(63,185,80,0.85)' });
+      gLights.appendChild(dot);
+      lights.push({ dot, path: lp.path, total, phase: i / count });
+    }
+  }
+
+  const t0 = performance.now();
+  const speed = 0.00016;
+  const anim = { raf: null, cleanup: null };
+
+  function frame(now) {
+    const t = now - t0;
+    for (const l of lights) {
+      const u = (l.phase + t * speed) % 1;
+      const pt = l.path.getPointAtLength(l.total * u);
+      l.dot.setAttribute('cx', pt.x);
+      l.dot.setAttribute('cy', pt.y);
+      l.dot.setAttribute('opacity', String(0.25 + 0.75 * (1 - Math.abs(u - 0.5) * 1.6)));
+    }
+    for (const lp of linkPaths) {
+      const rate = lp.edge.status === 'broken' ? 0.03 : (lp.edge.status === 'idle' ? 0.012 : 0.06);
+      const off = (t * rate) % 999;
+      lp.path.setAttribute('stroke-dashoffset', String(-off));
+    }
+    anim.raf = requestAnimationFrame(frame);
+  }
+  anim.raf = requestAnimationFrame(frame);
+
+  // --- Pan/Zoom ---
+  // Apply transform to viewport group (not viewBox), so Fit/Zoom can be smooth.
+  let scale = 1;
+  let panX = 0;
+  let panY = 0;
+
+  function applyTransform() {
+    viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
+  }
+
+  function fitToScreen() {
+    // Fit the laid-out bounds into the fixed SVG element box.
+    const box = svg.getBoundingClientRect();
+    // Compute approximate content bounds from viewBox.
+    const vb = svg.viewBox.baseVal;
+    const sx = box.width / vb.width;
+    const sy = box.height / vb.height;
+    scale = Math.max(0.25, Math.min(2.25, Math.min(sx, sy)));
+    panX = 0;
+    panY = 0;
+    applyTransform();
+  }
+
+  function zoomAt(clientX, clientY, nextScale) {
+    const vb = svg.viewBox.baseVal;
+    const box = svg.getBoundingClientRect();
+    const px = (clientX - box.left) / box.width;
+    const py = (clientY - box.top) / box.height;
+    // SVG coord under cursor (in viewBox space)
+    const x = vb.x + px * vb.width;
+    const y = vb.y + py * vb.height;
+    // Keep point under cursor stable by adjusting pan
+    const k = nextScale / scale;
+    panX = x - (x - panX) * k;
+    panY = y - (y - panY) * k;
+    scale = nextScale;
+    applyTransform();
+  }
+
+  let dragging = false;
+  let last = null;
+
+  function onDown(e) {
+    dragging = true;
+    last = { x: e.clientX, y: e.clientY };
+    wrap.classList.remove('grab');
+    wrap.classList.add('grabbing');
+    hideTip();
+  }
+  function onMove(e) {
+    if (!dragging || !last) return;
+    const dx = e.clientX - last.x;
+    const dy = e.clientY - last.y;
+    last = { x: e.clientX, y: e.clientY };
+    // Convert pixels to SVG viewBox units
+    const vb = svg.viewBox.baseVal;
+    const box = svg.getBoundingClientRect();
+    const ux = (dx / box.width) * vb.width;
+    const uy = (dy / box.height) * vb.height;
+    panX += ux;
+    panY += uy;
+    applyTransform();
+  }
+  function onUp() {
+    dragging = false;
+    last = null;
+    wrap.classList.remove('grabbing');
+    wrap.classList.add('grab');
+  }
+
+  function onWheel(e) {
+    // When hovering the orgviz area, allow wheel zoom (and avoid page scroll).
+    e.preventDefault();
+    const delta = -e.deltaY;
+    const step = delta > 0 ? 1.12 : 1 / 1.12;
+    const next = Math.max(0.25, Math.min(2.75, scale * step));
+    zoomAt(e.clientX, e.clientY, next);
+  }
+
+  wrap.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  wrap.addEventListener('wheel', onWheel, { passive: false });
+
+  const fitBtn = host.querySelector('#orgviz-fit');
+  const zIn = host.querySelector('#orgviz-zoomin');
+  const zOut = host.querySelector('#orgviz-zoomout');
+  const z100 = host.querySelector('#orgviz-zoom100');
+
+  fitBtn?.addEventListener('click', () => fitToScreen());
+  zIn?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.min(2.75, scale * 1.18)));
+  zOut?.addEventListener('click', () => zoomAt(wrap.getBoundingClientRect().left + wrap.clientWidth / 2, wrap.getBoundingClientRect().top + wrap.clientHeight / 2, Math.max(0.25, scale / 1.18)));
+  z100?.addEventListener('click', () => { scale = 1; panX = 0; panY = 0; applyTransform(); });
+
+  // Initial fit for birds-eye readability
+  setTimeout(() => fitToScreen(), 0);
+
+  anim.cleanup = () => {
+    wrap.removeEventListener('mousedown', onDown);
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+    wrap.removeEventListener('wheel', onWheel);
+  };
+
+  _orgVizAnim = anim;
 }
 
 let _taskProjectFilter = '';
@@ -1130,20 +2041,48 @@ async function loadTasks() {
   loadProjects();
 }
 
-// Calendar (Build 2)
+// Calendar (Build 3)
 let calAnchorDate = new Date();
-let calView = 'week'; // 'week' | 'month'
+let calSelectedDate = startOfDay(new Date());
+let calView = 'week'; // 'day' | 'week' | 'month'
 let calItems = [];
 
 function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 function isoDate(d) { return d.toISOString().slice(0, 10); }
 function fmtTime(d) { return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
 function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+function formatCalDate(d, opts) { return d.toLocaleDateString([], opts); }
+function isSameDay(a, b) { return isoDate(startOfDay(a)) === isoDate(startOfDay(b)); }
+function isMobileCalendar() { return window.innerWidth < 768; }
+function safeMeta(value) {
+  if (!value) return '—';
+  if (typeof value === 'string') return value;
+  try { return JSON.stringify(value, null, 2); } catch { return String(value); }
+}
+function itemLabel(it) { return it.kind === 'cron' ? `⏱ ${it.title}` : it.title; }
+function itemDetailTime(it) {
+  const s = new Date(it.start);
+  const e = new Date(it.end);
+  const sameDay = isSameDay(s, e);
+  return sameDay
+    ? `${formatCalDate(s, { weekday: 'short', month: 'short', day: 'numeric' })} • ${fmtTime(s)}–${fmtTime(e)}`
+    : `${formatCalDate(s, { month: 'short', day: 'numeric' })} ${fmtTime(s)} → ${formatCalDate(e, { month: 'short', day: 'numeric' })} ${fmtTime(e)}`;
+}
+function getItemsForDate(items, date) {
+  const key = isoDate(startOfDay(date));
+  return items.filter(it => isoDate(startOfDay(new Date(it.start))) === key).sort((a, b) => new Date(a.start) - new Date(b.start));
+}
+function setSelectedDate(date, nextView) {
+  calSelectedDate = startOfDay(date);
+  if (nextView) calView = nextView;
+}
 
 function setCalView(view) {
   calView = view;
+  document.getElementById('cal-btn-day').classList.toggle('active', view === 'day');
   document.getElementById('cal-btn-week').classList.toggle('active', view === 'week');
   document.getElementById('cal-btn-month').classList.toggle('active', view === 'month');
+  document.getElementById('cal-day').style.display = view === 'day' ? '' : 'none';
   document.getElementById('cal-week').style.display = view === 'week' ? '' : 'none';
   document.getElementById('cal-month').style.display = view === 'month' ? '' : 'none';
   renderCalendar();
@@ -1158,7 +2097,7 @@ async function fetchCalendar(rangeStart, rangeEnd) {
 function getWeekRange(anchor) {
   const d = startOfDay(anchor);
   const start = new Date(d);
-  start.setDate(start.getDate() - start.getDay()); // Sunday
+  start.setDate(start.getDate() - start.getDay());
   const end = new Date(start);
   end.setDate(end.getDate() + 7);
   return { start, end };
@@ -1169,6 +2108,13 @@ function getMonthRange(anchor) {
   return { start: new Date(y, m, 1), end: new Date(y, m + 1, 1) };
 }
 
+function getDayRange(anchor) {
+  const start = startOfDay(anchor);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  return { start, end };
+}
+
 function itemClass(item) {
   if (item.kind === 'event') return 'kind-event';
   if (item.kind === 'reminder') return 'kind-reminder';
@@ -1176,23 +2122,95 @@ function itemClass(item) {
   return '';
 }
 
+function encodeItemPayload(item) {
+  return encodeURIComponent(JSON.stringify(item));
+}
+
+function decodeItemPayload(payload) {
+  try { return JSON.parse(decodeURIComponent(payload)); } catch { return null; }
+}
+
+function openCalDetail(config) {
+  const backdrop = document.getElementById('cal-detail-backdrop');
+  const sheet = document.getElementById('cal-detail-sheet');
+  const body = document.getElementById('cal-detail-body');
+  if (!backdrop || !sheet || !body) return;
+
+  if (config.type === 'day') {
+    const date = startOfDay(config.date);
+    const items = getItemsForDate(calItems, date);
+    body.innerHTML = `
+      <div class="cal-detail-head">
+        <div>
+          <h3>${escapeHtml(formatCalDate(date, { weekday: 'long', month: 'long', day: 'numeric' }))}</h3>
+          <div class="cal-detail-chip">${items.length} item${items.length === 1 ? '' : 's'}</div>
+        </div>
+        <button class="cal-detail-close" onclick="closeCalDetail()" aria-label="Close">×</button>
+      </div>
+      <div class="cal-detail-stack">
+        ${items.length ? items.map(it => `
+          <button class="cal-mini-item ${itemClass(it)}" onclick="openCalendarItemFromPayload('${encodeItemPayload(it)}')">${escapeHtml(itemLabel(it))}</button>
+        `).join('') : '<div class="cal-day-empty">No events, reminders, or cron runs scheduled.</div>'}
+      </div>`;
+  } else if (config.type === 'item') {
+    const it = config.item;
+    body.innerHTML = `
+      <div class="cal-detail-head">
+        <div>
+          <div class="cal-detail-chip">${escapeHtml((it.kind || 'item').toUpperCase())}</div>
+          <h3>${escapeHtml(it.title || 'Untitled')}</h3>
+        </div>
+        <button class="cal-detail-close" onclick="closeCalDetail()" aria-label="Close">×</button>
+      </div>
+      <div class="cal-detail-stack">
+        <div class="cal-detail-card"><div class="label">Time</div><div>${escapeHtml(itemDetailTime(it))}</div></div>
+        <div class="cal-detail-card"><div class="label">Kind</div><div>${escapeHtml(it.kind || 'unknown')}</div></div>
+        ${it.kind === 'cron' ? `<div class="cal-detail-card"><div class="label">Schedule</div><div>${escapeHtml(it.schedule || it.cron || '—')}</div></div>` : ''}
+        <div class="cal-detail-card"><div class="label">Metadata</div><div class="cal-detail-meta">${escapeHtml(safeMeta(it.meta || it.metadata || it.details || {}))}</div></div>
+      </div>`;
+  }
+
+  backdrop.classList.add('open');
+  sheet.classList.add('open');
+  sheet.setAttribute('aria-hidden', 'false');
+}
+
+function closeCalDetail() {
+  const backdrop = document.getElementById('cal-detail-backdrop');
+  const sheet = document.getElementById('cal-detail-sheet');
+  if (!backdrop || !sheet) return;
+  backdrop.classList.remove('open');
+  sheet.classList.remove('open');
+  sheet.setAttribute('aria-hidden', 'true');
+}
+
+function openCalendarItem(item) {
+  openCalDetail({ type: 'item', item });
+}
+
+function openCalendarItemFromPayload(payload) {
+  const item = decodeItemPayload(payload);
+  if (item) openCalendarItem(item);
+}
+
+function openDayZoom(date, forceSheet = false) {
+  setSelectedDate(date);
+  if (forceSheet || isMobileCalendar()) {
+    openCalDetail({ type: 'day', date });
+    return;
+  }
+  setCalView('day');
+}
+
 function renderMonthGrid(range, items) {
   const now = new Date();
   const y = calAnchorDate.getFullYear(), m = calAnchorDate.getMonth();
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
+  document.getElementById('cal-title').innerHTML = `${months[m]} ${y}${isMobileCalendar() ? '<span class="cal-day-pill">Tap day to zoom</span>' : ''}`;
 
   const first = new Date(y, m, 1);
   const last = new Date(y, m + 1, 0);
   const startDay = first.getDay();
-
-  const byDay = {};
-  for (const it of items) {
-    const d = new Date(it.start);
-    const key = isoDate(d);
-    if (!byDay[key]) byDay[key] = [];
-    byDay[key].push(it);
-  }
 
   let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
 
@@ -1202,14 +2220,17 @@ function renderMonthGrid(range, items) {
   }
 
   for (let d = 1; d <= last.getDate(); d++) {
-    const isToday = d === now.getDate() && m === now.getMonth() && y === now.getFullYear();
-    const key = isoDate(new Date(y, m, d));
-    const dayItems = (byDay[key] || []).slice(0, 4);
-    const itemsHtml = dayItems.map(it => {
-      const label = it.kind === 'cron' ? `⏱ ${it.title}` : it.title;
-      return `<div class="cal-mini-item ${itemClass(it)}">${escapeHtml(label)}</div>`;
-    }).join('');
-    html += `<div class="cal-day${isToday ? ' today' : ''}"><div class="day-num">${d}</div>${itemsHtml}</div>`;
+    const date = new Date(y, m, d);
+    const isToday = isSameDay(date, now);
+    const isSelected = isSameDay(date, calSelectedDate);
+    const key = isoDate(date);
+    const dayItems = getItemsForDate(items, date);
+    const visibleItems = dayItems.slice(0, isMobileCalendar() ? 2 : 4);
+    const itemsHtml = visibleItems.map(it => `
+      <button class="cal-mini-item ${itemClass(it)}" onclick="event.stopPropagation(); openCalendarItemFromPayload('${encodeItemPayload(it)}')">${escapeHtml(itemLabel(it))}</button>`
+    ).join('');
+    const moreCount = dayItems.length - visibleItems.length;
+    html += `<div class="cal-day${isToday ? ' today' : ''}${isSelected ? ' selected' : ''}" onclick="openDayZoom(new Date('${key}T00:00:00'), ${isMobileCalendar() ? 'true' : 'false'})"><div class="day-num"><span>${d}</span>${dayItems.length ? `<span class="day-count">${dayItems.length} item${dayItems.length === 1 ? '' : 's'}</span>` : ''}</div>${itemsHtml}${moreCount > 0 ? `<button class="cal-more-link" onclick="event.stopPropagation(); openDayZoom(new Date('${key}T00:00:00'), true)">+${moreCount} more</button>` : ''}</div>`;
   }
 
   const remaining = 42 - (startDay + last.getDate());
@@ -1225,10 +2246,11 @@ function renderWeekGrid(range, items) {
   const end = range.end;
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const endDay = new Date(end.getTime() - 1);
-  document.getElementById('cal-title').textContent = `${months[start.getMonth()]} ${start.getDate()} – ${months[endDay.getMonth()]} ${endDay.getDate()}`;
+  document.getElementById('cal-title').innerHTML = `${months[start.getMonth()]} ${start.getDate()} – ${months[endDay.getMonth()]} ${endDay.getDate()}${isMobileCalendar() ? '<span class="cal-day-pill">Tap header for day view</span>' : ''}`;
 
   const HOUR_H = 44;
   const HOURS = Array.from({ length: 24 }, (_, i) => i);
+  const singleDayMode = false;
 
   const dayItems = Array.from({ length: 7 }, () => []);
   for (const it of items) {
@@ -1244,7 +2266,9 @@ function renderWeekGrid(range, items) {
   for (let i = 0; i < 7; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
-    html += `<div class="cal-week-head">${names[i]}<span class="num">${d.getDate()}</span></div>`;
+    const hidden = singleDayMode && !isSameDay(d, calSelectedDate) ? ' mobile-hidden' : '';
+    const selected = isSameDay(d, calSelectedDate) ? ' selected' : '';
+    html += `<div class="cal-week-head${hidden}${selected}" onclick="setSelectedDate(new Date('${isoDate(d)}T00:00:00'), 'day'); renderCalendar()">${names[i]}<span class="num">${d.getDate()}</span></div>`;
   }
 
   const now = new Date();
@@ -1256,7 +2280,8 @@ function renderWeekGrid(range, items) {
       cellStart.setDate(start.getDate() + d);
       cellStart.setHours(h, 0, 0, 0);
       const isNow = now >= cellStart && now < new Date(cellStart.getTime() + 3600000);
-      html += `<div class="cal-week-cell${isNow ? ' now' : ''}"></div>`;
+      const hidden = singleDayMode && !isSameDay(cellStart, calSelectedDate) ? ' mobile-hidden' : '';
+      html += `<div class="cal-week-cell${isNow ? ' now' : ''}${hidden}"></div>`;
     }
   }
 
@@ -1266,7 +2291,9 @@ function renderWeekGrid(range, items) {
   const gridEl = document.querySelector('#cal-week .cal-week-grid');
   for (let d = 0; d < 7; d++) {
     const layer = document.createElement('div');
-    layer.className = 'cal-day-layer';
+    const colDate = new Date(start);
+    colDate.setDate(start.getDate() + d);
+    layer.className = `cal-day-layer${singleDayMode && !isSameDay(colDate, calSelectedDate) ? ' mobile-hidden' : ''}`;
     layer.style.gridColumn = String(d + 2);
     layer.style.gridRow = `2 / span ${HOURS.length}`;
     layer.style.position = 'relative';
@@ -1280,17 +2307,20 @@ function renderWeekGrid(range, items) {
       const s = new Date(it.start);
       const e = new Date(it.end);
       const topMin = (s - colStart) / 60000;
-      const durMin = Math.max(10, (e - s) / 60000);
+      const durMin = Math.max(30, (e - s) / 60000);
       const top = clamp(topMin, 0, 24 * 60) * (HOUR_H / 60);
-      const height = clamp(durMin, 10, 24 * 60) * (HOUR_H / 60);
+      const height = clamp(durMin, 30, 24 * 60) * (HOUR_H / 60);
 
-      const block = document.createElement('div');
+      const block = document.createElement('button');
+      block.type = 'button';
       block.className = `cal-block ${itemClass(it)}`;
       block.style.top = top + 'px';
-      block.style.height = height + 'px';
-
-      const label = it.kind === 'cron' ? `⏱ ${it.title}` : it.title;
-      block.innerHTML = `<div>${escapeHtml(label)}</div><div class="meta">${fmtTime(s)}–${fmtTime(e)}</div>`;
+      block.style.height = Math.max(height, 44) + 'px';
+      block.innerHTML = `<div>${escapeHtml(itemLabel(it))}</div><div class="meta">${fmtTime(s)}–${fmtTime(e)}</div>`;
+      block.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openCalendarItem(it);
+      });
       layer.appendChild(block);
     }
 
@@ -1298,25 +2328,75 @@ function renderWeekGrid(range, items) {
   }
 }
 
+function renderDayView(range, items) {
+  const day = startOfDay(calSelectedDate);
+  const dayItems = getItemsForDate(items, day);
+  document.getElementById('cal-title').innerHTML = `${formatCalDate(day, { weekday: 'long', month: 'long', day: 'numeric' })}<span class="cal-day-pill">Focused day view</span>`;
+  const listHtml = dayItems.length ? dayItems.map(it => `
+    <button class="cal-mini-item ${itemClass(it)}" onclick="openCalendarItemFromPayload('${encodeItemPayload(it)}')">
+      <span style="display:flex;flex-direction:column;gap:4px;width:100%">
+        <span>${escapeHtml(itemLabel(it))}</span>
+        <span style="font-size:11px;color:var(--text2)">${escapeHtml(itemDetailTime(it))}</span>
+      </span>
+    </button>`).join('') : '<div class="cal-day-empty">Nothing scheduled for this day.</div>';
+  document.getElementById('cal-day').innerHTML = `
+    <div class="cal-day-list">
+      <div class="cal-day-card">
+        <div class="cal-day-card-header">
+          <div>
+            <h3>${escapeHtml(formatCalDate(day, { weekday: 'long' }))}</h3>
+            <div class="sub">${escapeHtml(formatCalDate(day, { month: 'long', day: 'numeric', year: 'numeric' }))}</div>
+          </div>
+          <button onclick="setCalView('week')">Back to Week</button>
+        </div>
+        ${listHtml}
+      </div>
+    </div>`;
+}
+
 async function renderCalendar() {
+  closeCalDetail();
   if (calView === 'month') {
     const range = getMonthRange(calAnchorDate);
     await fetchCalendar(range.start, range.end);
     renderMonthGrid(range, calItems);
+  } else if (calView === 'day') {
+    const range = getDayRange(calSelectedDate);
+    calAnchorDate = new Date(calSelectedDate);
+    await fetchCalendar(range.start, range.end);
+    renderDayView(range, calItems);
   } else {
     const range = getWeekRange(calAnchorDate);
+    if (calSelectedDate < range.start || calSelectedDate >= range.end) calSelectedDate = startOfDay(range.start);
     await fetchCalendar(range.start, range.end);
     renderWeekGrid(range, calItems);
   }
 }
 
 function calNav(dir) {
-  if (dir === 0) calAnchorDate = new Date();
-  else if (calView === 'month') calAnchorDate = new Date(calAnchorDate.getFullYear(), calAnchorDate.getMonth() + dir, 1);
-  else calAnchorDate = new Date(calAnchorDate.getTime() + dir * 7 * 86400000);
+  if (dir === 0) {
+    calAnchorDate = new Date();
+    calSelectedDate = startOfDay(new Date());
+  } else if (calView === 'month') {
+    calAnchorDate = new Date(calAnchorDate.getFullYear(), calAnchorDate.getMonth() + dir, 1);
+    calSelectedDate = startOfDay(calAnchorDate);
+  } else if (calView === 'day') {
+    calSelectedDate = new Date(calSelectedDate.getTime() + dir * 86400000);
+    calAnchorDate = new Date(calSelectedDate);
+  } else {
+    calAnchorDate = new Date(calAnchorDate.getTime() + dir * 7 * 86400000);
+    calSelectedDate = startOfDay(calAnchorDate);
+  }
 
   renderCalendar();
 }
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeCalDetail();
+});
+window.addEventListener('resize', () => {
+  if (calView === 'week' || calView === 'month') renderCalendar();
+});
 
 setCalView('week');
 
