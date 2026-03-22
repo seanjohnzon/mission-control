@@ -1490,8 +1490,8 @@ function renderOrgViz(deptMap) {
 
   const pad = 36;
   minX -= pad; maxX += pad; minY -= pad; maxY += pad;
-  const viewW = Math.max(1200, maxX - minX);
-  const viewH = Math.max(700, maxY - minY);
+  const viewW = maxX - minX;
+  const viewH = maxY - minY;
 
   // --- DOM scaffold ---
   host.innerHTML = `
@@ -1778,13 +1778,16 @@ function renderOrgViz(deptMap) {
   function fitToScreen() {
     // Fit the laid-out bounds into the fixed SVG element box.
     const box = svg.getBoundingClientRect();
-    // Compute approximate content bounds from viewBox.
     const vb = svg.viewBox.baseVal;
+    if (!box.width || !box.height || !vb.width || !vb.height) return;
     const sx = box.width / vb.width;
     const sy = box.height / vb.height;
-    scale = Math.max(0.25, Math.min(2.25, Math.min(sx, sy)));
-    panX = 0;
-    panY = 0;
+    scale = Math.max(0.4, Math.min(2.5, Math.min(sx, sy) * 0.92));
+    // Center the content
+    const scaledW = vb.width * scale;
+    const scaledH = vb.height * scale;
+    panX = (box.width / scale - vb.width) / 2 - vb.x;
+    panY = (box.height / scale - vb.height) / 2 - vb.y;
     applyTransform();
   }
 
