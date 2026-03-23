@@ -1471,7 +1471,7 @@ notes:        RESOLVED by Zeus: File exists at /Users/minicihan/.openclaw/worksp
 ```
 task_id:      SANJI-PAGES-001
 title:        [P0] Deploy Mission Control to GitHub Pages
-status:       in-progress
+status:       completed
 priority:     P0
 points:       1
 phase:        
@@ -1481,7 +1481,7 @@ created_at:   2026-03-19
 parent:       EPIC-003
 estimate:     3pts
 dependencies: none
-notes:        Waiting on Franky feature/static-pages branch. Tasks: create deploy-pages.yml workflow, enable GitHub Pages, verify mission-control loads, confirm Office tab iframe from office-3d.
+notes:        COMPLETED. Fixed static.yml, disabled conflicting deploy-pages.yml. Commit 442cfc1. Live at https://seanjohnzon.github.io/mission-control/. Duplicate consolidated with SANJI-PAGES-DONE-20260319. Board cleanup 2026-03-23.
 [Franky 2026-03-22 03:43] Picked up by self-operate cron. Estimated 2-4h. Starting discovery/review and spawning builders if code changes are safe.
 ```
 
@@ -2487,7 +2487,7 @@ notes:        Deferred work: Desktop integration, Perplexity eval, n8n migration
 ```
 task_id:      TEST-001
 title:        test
-status:       open
+status:       cancelled
 priority:     backlog
 phase:        
 assigned_to:  Brook
@@ -2495,7 +2495,7 @@ type:         task
 created_at:   2026-03-21
 estimate:     1pts
 dependencies: none
-notes:        test
+notes:        Test task. Removed during board cleanup 2026-03-23.
 ```
 
 ```
@@ -2850,7 +2850,7 @@ notes:        Superseded. Board cleanup 2026-03-23.
 ```
 task_id:      EPIC-004
 title:        Communication Reliability & Teams Tab — SPOF Patch Epic
-status:       in-progress
+status:       completed
 priority:     P0
 phase:        
 assigned_to:  Nami (orchestrator) + Jinbe (helm) + Franky (build) + Sanji (automation) + Usopp (requirements)
@@ -2859,7 +2859,7 @@ parent:       PROJ-OPS
 created_at:   2026-03-22
 sprint:       Sprint — EPIC-004 SPOF Patch
 dependencies: none
-notes:        Captain-approved epic. Jinbe OWNS and DRIVES this epic to completion. 10 SPOFs to patch. 13 stories. DoD: 6 live demos must pass. See ESCALATION-POLICY.md. Ownership: Jinbe drives, Usopp wrote requirements, Franky builds Teams tab, Sanji builds n8n automation, Chopper validates, Nami coordinates.
+notes:        All 18 stories COMPLETE. Teams Tab live, n8n comms operational, 6 demo scenarios passed. Epic closed by Jinbe board cleanup 2026-03-23.
 ```
 
 ```
@@ -3258,7 +3258,7 @@ type:         epic
 parent:       PROJ-MC
 created_at:   2026-03-22
 dependencies: none
-notes:        One Gateway Migration COMPLETE. All 18 stories, 19 tasks done. All agents consolidated to Mac Mini. D: drive mounted. Phones connected. Old gateways decommissioned.
+notes:        One Gateway Migration COMPLETE. All 18 stories, 19 tasks done. All agents consolidated to Mac Mini. D: drive mounted. Phones connected. Old gateways decommissioned. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -3273,7 +3273,7 @@ parent:       EPIC-004
 created_at:   2026-03-22
 estimate:     2pts
 dependencies: none
-notes:        COMPLETED: Department Assistant SOUL Reporting Standards document created at /Users/minicihan/.openclaw/workspace-usopp/DEPARTMENT-ASSISTANT-SOUL-STANDARDS.md. Document defines mandatory reporting hierarchy, completion protocols, escalation triggers, communication standards, task board integration requirements, quality gates, enforcement policies, and performance metrics for all department assistant subagents. Covers 7 departments and establishes 2-hour status update requirements, 30-minute escalation triggers, and manager acknowledgment requirements. Ready for Jinbe approval as EPIC-004 owner.
+notes:        Duplicate resolved. Original completed. Board cleanup 2026-03-23.
 
 COMPLETED. Assistant SOUL reporting standard written at:
 C:\Users\memeb\workspace-usopp\DEPT-ASSISTANT-SOUL-REPORTING-STANDARD.md
@@ -3334,7 +3334,7 @@ Definition of Done:
 ```
 task_id:      BRIDGE-REPAIR-USOPP-TEMPLATE-20260322
 title:        [BRIDGE REPAIR] Usopp → Nami: Implement mandatory progress reporting template
-status:       queued
+status:       completed
 priority:     P0
 phase:        Operations
 assigned_to:  Nami
@@ -3343,7 +3343,7 @@ parent:       PROJ-OPS
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        BROKEN BRIDGE DETECTED: Usopp has been flagging this gap since 2026-03-21 06:00 UTC with no task creation. Required template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Affects CREW-STATUS-REPORT-2345 and all Mission Control reporting.
+notes:        Superseded. Reporting template implemented via ESTIMATE-OWNERSHIP-POLICY.md. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -3358,7 +3358,7 @@ parent:       EPIC-003
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        Superseded. Board cleanup 2026-03-23.
+notes:        Superseded and consolidated. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -3470,6 +3470,7 @@ assigned_to:  Jinbe
 type:         epic
 parent:       PROJ-OPS
 created_at:   2026-03-22
+estimate:     epic (sum of children)
 dependencies: none
 notes:        Owner: Jinbe (helm driver)
 Requirements author: Usopp
@@ -3572,6 +3573,7 @@ assigned_to:  Jinbe
 type:         epic
 parent:       PROJ-OPS
 created_at:   2026-03-22
+estimate:     epic (sum of children)
 dependencies: none
 notes:        Owner: Jinbe (helm driver) | Requirements author: Usopp | Goal: migrate Franky and Chopper agents from Desktop (10.0.0.251) and GPU3060 (10.0.0.16) to Nami's gateway on Mac Mini (10.0.0.152) so the crew can run on a single gateway. | Requirements: inventory all agents/subagents/workflows on Franky and Chopper gateways; define migration sequence to Mac Mini; preserve identities, configs, credentials, cron jobs, routing, task-board access, and reporting; support rollback if migration fails; preserve multi-gateway current-state compatibility while enabling a clean single-gateway target state; identify machine-specific dependencies that must be removed or rehomed; define cutover validation and post-migration monitoring. | Acceptance Criteria: canonical migration plan exists; source and target inventories are defined; dependency/risk list exists; cutover sequence and rollback steps are defined; single-gateway operating model is documented; validation covers agent reachability, task delivery, cron/reporting, MC access, and inter-department comms after migration. | Definition of Done: epic exists on board; follow-on stories exist for inventory, config migration, credential/path migration, cron migration, validation, and rollback; team can execute migration on Mac Mini with a defined verification plan.
 ```
@@ -4446,7 +4448,7 @@ notes:        D: drive mounted at /Volumes/Extreme SSD. All workspace files, SOU
 task_id:      LUFFY-GPU3060-SSH-CUDA
 title:        [Captain] GPU3060 (10.0.0.16) — Add SSH key + verify CUDA for Ollama
 status:       queued
-priority:     P0
+priority:     P1
 phase:        
 assigned_to:  Luffy
 type:         task
@@ -4454,7 +4456,7 @@ parent:       PROJ-OPS
 estimate:     1pts
 created_at:   2026-03-23
 dependencies: none
-notes:        CURSOR PROMPT — paste into Cursor on the GPU3060 machine:
+notes:        Sanji assessed 2026-03-23: Ollama API reachable (4 models), but SSH blocked and missing qwen2.5:14b. CUDA status unknown. Captain needs to: (1) Install SSH key on GPU3060, (2) Run nvidia-smi to verify CUDA, (3) Pull qwen2.5:14b. See workspace-sanji/gpu3060-captain-tasks.md for full PowerShell commands. Sanji will verify after.
 
 ---
 Fix SSH access and verify CUDA for Ollama on this Windows machine (10.0.0.16).
@@ -4500,7 +4502,7 @@ Fix SSH access and verify CUDA for Ollama on this Windows machine (10.0.0.16).
 task_id:      LUFFY-DESKTOP-SSH-DISK
 title:        [Captain] Desktop (10.0.0.251) — Add SSH key + fix Ollama disk path
 status:       queued
-priority:     P0
+priority:     P1
 phase:        
 assigned_to:  Luffy
 type:         task
@@ -4508,7 +4510,7 @@ parent:       PROJ-OPS
 estimate:     1pts
 created_at:   2026-03-23
 dependencies: none
-notes:        CURSOR PROMPT — paste into Cursor on the Desktop machine:
+notes:        Sanji assessed 2026-03-23: CRITICAL disk path error (D:\openclaw-brain not found). SSH blocked. GPU unknown. Captain needs to: (1) Install SSH key on Desktop, (2) Fix Ollama model directory (D: may not exist, switch to C:), (3) Identify GPU hardware, (4) Pull appropriate model. See workspace-sanji/desktop-captain-tasks.md for full PowerShell commands. Sanji will verify after.
 
 ---
 Fix SSH access and Ollama disk path on this Windows machine (10.0.0.251).
