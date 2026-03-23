@@ -72,7 +72,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 .kanban-col-header { padding: 10px 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .kanban-col-header .count { background: var(--border); color: var(--text2); font-size: 11px; padding: 1px 7px; border-radius: 10px; }
 .kanban-cards { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
-.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: default; transition: border-color 0.15s; }
+.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: border-color 0.15s; }
 .kanban-card:hover { border-color: #3d4158; }
 .kanban-card .task-id { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
 .kanban-card .task-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; line-height: 1.35; display: flex; align-items: center; gap: 8px; }
@@ -611,6 +611,22 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
   .hero p { font-size: 13px; }
   .card .val { font-size: 20px; }
 }
+
+/* Task Detail Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal-dialog { background: var(--card); border: 1px solid var(--border); border-radius: 12px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+.modal-header { padding: 24px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; }
+.modal-header h2 { font-size: 18px; font-weight: 600; margin: 0; padding-right: 16px; }
+.modal-close { background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+.modal-close:hover { background: rgba(88,166,255,0.1); color: var(--text); }
+.modal-body { padding: 0 24px 24px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-field { margin-bottom: 12px; }
+.modal-field-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.modal-field-value { font-size: 14px; line-height: 1.5; }
+.modal-notes { background: rgba(139,148,158,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -625,6 +641,7 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
     <nav class="nav" id="nav">
       <button class="nav-item" type="button" data-tab="mission"><span class="icon">🎯</span>Mission</button>
       <button class="nav-item active" type="button" data-tab="tasks"><span class="icon">📋</span>Tasks</button>
+      <button class="nav-item" type="button" data-tab="sprint"><span class="icon">🏃</span>Sprint Board</button>
       <button class="nav-item" type="button" data-tab="calendar"><span class="icon">📅</span>Calendar</button>
       <button class="nav-item" type="button" data-tab="projects"><span class="icon">📁</span>Projects</button>
       <button class="nav-item" type="button" data-tab="memory"><span class="icon">🧠</span>Memory</button>
@@ -686,6 +703,26 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       </div>
       <div class="kanban" id="kanban" style="display:none"></div>
       <div id="task-tree" class="task-tree" style="display:none"></div>
+    </div>
+
+    <!-- Sprint Board -->
+    <div class="tab-panel" id="tab-sprint">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="section-title" style="margin:0">🏃 Sprint Board</div>
+        <div class="task-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="text2" style="font-size:12px">View</span>
+            <button class="office-filter" id="sprint-view-kanban" onclick="setSprintView('kanban')">Kanban</button>
+            <button class="office-filter" id="sprint-view-tree" onclick="setSprintView('tree')">Tree</button>
+          </div>
+          <div id="sprint-project-filter-wrap" style="display:flex;gap:6px;align-items:center"></div>
+          <select id="sprint-project-filter" onchange="renderSprint()" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:6px;font-size:12px">
+            <option value="">All Projects</option>
+          </select>
+        </div>
+      </div>
+      <div class="kanban" id="sprint-kanban" style="display:none"></div>
+      <div id="sprint-task-tree" class="task-tree" style="display:none"></div>
     </div>
 
     <!-- Calendar -->
@@ -1244,6 +1281,7 @@ function activateTab(tab, { updateHash = true } = {}) {
   panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
   if (tab === 'office') ensureOfficeFrameLoaded();
   if (tab === 'team') startTeamFlow();
+  if (tab === 'sprint') setSprintView(_sprintView || 'kanban');
   if (updateHash) {
     history.replaceState(null, '', '#' + tab);
   }
@@ -1517,7 +1555,9 @@ function renderKanban(tasks) {
       const card = document.createElement('div');
       card.id = 'task-' + t.id;
       card.className = `kanban-card ${pClass}`;
+      card.style.cursor = 'pointer';
       card.innerHTML = html;
+      card.addEventListener('click', () => openTaskDetail(t.id));
       cardsEl.appendChild(card);
     }
     kanban.appendChild(colEl);
@@ -1619,15 +1659,24 @@ function renderTree(tasks) {
     childrenEl.style.display = hasKids ? (defaultOpen ? '' : 'none') : 'none';
 
     if (hasKids) {
-      header.addEventListener('click', () => {
-        const open = childrenEl.style.display !== 'none';
-        childrenEl.style.display = open ? 'none' : '';
-        header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
+      header.addEventListener('click', (e) => {
+        // Check if the click was on the toggle area specifically
+        if (e.target.classList.contains('tree-toggle') || e.target.closest('.tree-toggle')) {
+          const open = childrenEl.style.display !== 'none';
+          childrenEl.style.display = open ? 'none' : '';
+          header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
+        } else {
+          // Otherwise open the task detail modal
+          openTaskDetail(t.id);
+        }
       });
       for (const kidId of kids) {
         // Always render as tree nodes for consistent hierarchy
         childrenEl.appendChild(renderNode(kidId, depth + 1));
       }
+    } else {
+      // For leaf nodes without children, clicking anywhere opens the detail
+      header.addEventListener('click', () => openTaskDetail(t.id));
     }
 
     node.appendChild(header);
@@ -3381,6 +3430,329 @@ function selectDesk(agent) {
   }, 60000);
 })();
 
+// Sprint Board Functions
+let _sprintView = 'kanban';
+let _sprintProjectFilter = '';
+
+function setSprintView(view) {
+  _sprintView = view;
+  document.getElementById('sprint-view-kanban').classList.toggle('active', view === 'kanban');
+  document.getElementById('sprint-view-tree').classList.toggle('active', view === 'tree');
+  document.getElementById('sprint-kanban').style.display = view === 'kanban' ? '' : 'none';
+  document.getElementById('sprint-task-tree').style.display = view === 'tree' ? '' : 'none';
+  renderSprint();
+}
+
+function renderSprint() {
+  const tasks = _tasksData || [];
+  // Filter to active sprint tasks only (in-progress + queued, NOT completed)
+  let filtered = tasks.filter(t => !isCompletedStatus(t.status));
+
+  // Project filter
+  const projectFilter = document.getElementById('sprint-project-filter')?.value || '';
+  if (projectFilter) {
+    // Include the selected project/epic and all its descendants
+    const byId = new Map(tasks.map(t => [t.id, t]));
+    const childrenMap = new Map();
+    for (const t of tasks) {
+      if (t.parent) {
+        if (!childrenMap.has(t.parent)) childrenMap.set(t.parent, []);
+        childrenMap.get(t.parent).push(t.id);
+      }
+    }
+    function getTree(id) {
+      const result = new Set([id]);
+      for (const kid of (childrenMap.get(id) || [])) {
+        for (const d of getTree(kid)) result.add(d);
+      }
+      return result;
+    }
+    const allowedIds = getTree(projectFilter);
+    filtered = filtered.filter(t => allowedIds.has(t.id));
+  }
+
+  // Build project filter dropdown
+  const filterContainer = document.getElementById('sprint-project-filter-wrap');
+  if (filterContainer) {
+    // Same logic as task board but for sprint context
+    const projects = new Set();
+    for (const t of tasks) {
+      if (t.type === 'project' || t.type === 'epic') projects.add(t.id);
+    }
+    const projectSelect = document.getElementById('sprint-project-filter');
+    if (projectSelect) {
+      const currentVal = projectSelect.value;
+      projectSelect.innerHTML = '<option value="">All Projects</option>';
+      for (const pid of Array.from(projects).sort()) {
+        const pTask = tasks.find(t => t.id === pid);
+        const pTitle = pTask?.title || pid;
+        const opt = document.createElement('option');
+        opt.value = pid;
+        opt.textContent = `${pid} — ${pTitle}`;
+        if (pid === currentVal) opt.selected = true;
+        projectSelect.appendChild(opt);
+      }
+    }
+  }
+
+  if (_sprintView === 'kanban') {
+    renderSprintKanban(filtered);
+  } else {
+    renderSprintTree(filtered);
+  }
+}
+
+function renderSprintKanban(tasks) {
+  const columns = {
+    backlog: { title: 'Backlog', tasks: [] },
+    todo: { title: 'To Do', tasks: [] },
+    inprogress: { title: 'In Progress', tasks: [] },
+    blocked: { title: 'Blocked', tasks: [] }
+  };
+
+  for (const t of tasks) {
+    const s = (t.status || '').toLowerCase();
+    const p = (t.priority || '').toLowerCase();
+    if (s === 'blocked') columns.blocked.tasks.push(t);
+    else if (s === 'in-progress') columns.inprogress.tasks.push(t);
+    else if (s === 'open' && p === 'backlog') columns.backlog.tasks.push(t);
+    else if (s === 'open' || s === 'queued') columns.todo.tasks.push(t);
+    else columns.backlog.tasks.push(t);
+  }
+
+  const kanban = document.getElementById('sprint-kanban');
+  kanban.innerHTML = '';
+  for (const [key, col] of Object.entries(columns)) {
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.innerHTML = `<div class="kanban-col-header">${col.title}<span class="count">${col.tasks.length}</span></div><div class="kanban-cards" id="sprint-col-${key}"></div>`;
+    const cardsEl = colEl.querySelector('.kanban-cards');
+    const dotColors = { backlog: 'var(--text2)', todo: 'var(--blue)', inprogress: 'var(--purple)', blocked: 'var(--yellow)' };
+    const dotColor = dotColors[key] || 'var(--text2)';
+
+    for (const t of col.tasks) {
+      const { pClass, html } = renderTaskCardInner(t, dotColor);
+      const card = document.createElement('div');
+      card.id = 'sprint-task-' + t.id;
+      card.className = `kanban-card ${pClass}`;
+      card.style.cursor = 'pointer';
+      card.innerHTML = html;
+      card.addEventListener('click', () => openTaskDetail(t.id));
+      cardsEl.appendChild(card);
+    }
+    kanban.appendChild(colEl);
+  }
+}
+
+function renderSprintTree(tasks) {
+  const container = document.getElementById('sprint-task-tree');
+  container.innerHTML = '';
+
+  const byId = new Map(tasks.map(t => [t.id, t]));
+  const children = new Map();
+  for (const t of tasks) {
+    const pid = t.parent || '';
+    if (!pid) continue;
+    if (!children.has(pid)) children.set(pid, []);
+    children.get(pid).push(t.id);
+  }
+
+  // Build roots: tasks with no parent in the set, prioritizing projects
+  const roots = [];
+  for (const t of tasks) {
+    const hasParent = !!t.parent && byId.has(t.parent);
+    if (!hasParent) roots.push(t.id);
+  }
+
+  // Sort: projects first, then epics, then stories, then tasks; alphabetical within
+  const typeOrder = { project: 0, epic: 1, story: 2, task: 3 };
+  const getTypeOrder = (t) => typeOrder[(t?.type || 'task').toLowerCase()] ?? 3;
+
+  roots.sort((a, b) => {
+    const ta = byId.get(a), tb = byId.get(b);
+    const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+    if (oa !== ob) return oa - ob;
+    return String(a).localeCompare(String(b));
+  });
+
+  const typeIcons = { project: '🏗️', epic: '📦', story: '📋', task: '✅' };
+  const typeColors = { project: 'var(--green)', epic: 'var(--blue)', story: 'var(--purple)', task: 'var(--text2)' };
+
+  function nodeLabel(t) {
+    const pClass = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+    const pts = getTaskPoints(t);
+    const dept = taskDept(t);
+    return [
+      t.priority ? `<span class="badge ${pClass}">${escapeHtml(t.priority)}</span>` : '',
+      pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : '',
+      dept ? `<span class="badge badge-teal">${escapeHtml(dept)}</span>` : ''
+    ].filter(x => x).join(' ');
+  }
+
+  function statusDot(status) {
+    const s = (status || '').toLowerCase();
+    const colors = { 'in-progress': 'var(--purple)', blocked: 'var(--yellow)', completed: 'var(--green)', cancelled: 'var(--red)' };
+    const color = colors[s] || 'var(--blue)';
+    return `<div class="health-dot" style="background:${color}"></div>`;
+  }
+
+  function renderSprintNode(taskId, depth) {
+    const t = byId.get(taskId);
+    if (!t) return document.createElement('div');
+
+    const kind = (t.type || 'task').toLowerCase();
+    const kids = (children.get(taskId) || []).slice().sort((a, b) => {
+      const ta = byId.get(a), tb = byId.get(b);
+      const oa = getTypeOrder(ta), ob = getTypeOrder(tb);
+      if (oa !== ob) return oa - ob;
+      return String(a).localeCompare(String(b));
+    });
+    const hasKids = kids.length > 0;
+    const icon = typeIcons[kind] || '📝';
+    const borderColor = typeColors[kind] || 'var(--text2)';
+    const defaultOpen = kind === 'project' || kind === 'epic';
+
+    const node = document.createElement('div');
+    node.className = `tree-node tree-level-${kind}`;
+
+    const header = document.createElement('div');
+    header.className = 'tree-header';
+    header.id = 'sprint-task-' + t.id;
+    header.innerHTML = `
+      <div class="tree-toggle" style="color:${borderColor}">${hasKids ? (defaultOpen ? '▾' : '▸') : '•'}</div>
+      <span class="tree-type-icon">${icon}</span>
+      <div style="flex:1;min-width:0">
+        <div class="tree-title" style="display:flex;align-items:center;gap:6px">
+          <span style="color:var(--text2);font-size:11px;flex-shrink:0">${escapeHtml(t.id)}</span>
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(t.title || '')}</span>
+        </div>
+        <div class="task-meta" style="margin-top:4px">${nodeLabel(t)}</div>
+      </div>
+      <div class="tree-status">${statusDot(t.status)}</div>
+    `;
+
+    const childrenEl = document.createElement('div');
+    childrenEl.className = 'tree-children';
+    childrenEl.style.display = hasKids ? (defaultOpen ? '' : 'none') : 'none';
+
+    if (hasKids) {
+      header.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tree-toggle') || e.target.closest('.tree-toggle')) {
+          const open = childrenEl.style.display !== 'none';
+          childrenEl.style.display = open ? 'none' : '';
+          header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
+        } else {
+          openTaskDetail(t.id);
+        }
+      });
+      for (const kidId of kids) {
+        childrenEl.appendChild(renderSprintNode(kidId, depth + 1));
+      }
+    } else {
+      header.addEventListener('click', () => openTaskDetail(t.id));
+    }
+
+    node.appendChild(header);
+    if (hasKids) node.appendChild(childrenEl);
+    return node;
+  }
+
+  for (const rid of roots) container.appendChild(renderSprintNode(rid, 0));
+
+  if (!roots.length) {
+    container.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No active sprint tasks found.</div>';
+  }
+}
+
+// Task Detail Modal Functions
+function openTaskDetail(taskId) {
+  const task = _tasksData.find(t => t.id === taskId);
+  if (!task) return;
+
+  document.getElementById('modal-task-title').textContent = task.title || '';
+  document.getElementById('modal-task-id').textContent = task.id || '';
+  
+  // Status with badge
+  const statusBadge = getStatusBadge(task.status);
+  document.getElementById('modal-task-status').innerHTML = `<span class="badge ${statusBadge}">${task.status || 'Unknown'}</span>`;
+  
+  // Priority with badge
+  const priorityBadge = getPriorityBadge(task.priority);
+  document.getElementById('modal-task-priority').innerHTML = `<span class="badge ${priorityBadge}">${task.priority || 'None'}</span>`;
+  
+  document.getElementById('modal-task-assigned').textContent = task.assigned || 'Unassigned';
+
+  // Show/hide estimate field
+  const estimate = getTaskPoints(task);
+  const estimateField = document.getElementById('modal-estimate-field');
+  if (estimate !== null) {
+    document.getElementById('modal-task-estimate').innerHTML = `<span class="badge badge-purple">${estimate} pts</span>`;
+    estimateField.style.display = '';
+  } else {
+    estimateField.style.display = 'none';
+  }
+
+  // Show/hide parent field
+  const parentField = document.getElementById('modal-parent-field');
+  if (task.parent) {
+    document.getElementById('modal-task-parent').innerHTML = `<a href="#" onclick="openTaskDetail('${task.parent}');return false;" class="badge badge-gray">↑ ${task.parent}</a>`;
+    parentField.style.display = '';
+  } else {
+    parentField.style.display = 'none';
+  }
+
+  // Show/hide dependencies field
+  const depsField = document.getElementById('modal-dependencies-field');
+  if (task.dependencies && task.dependencies !== 'none') {
+    document.getElementById('modal-task-dependencies').textContent = task.dependencies;
+    depsField.style.display = '';
+  } else {
+    depsField.style.display = 'none';
+  }
+
+  // Show/hide notes section
+  const notesSection = document.getElementById('modal-notes-section');
+  if (task.notes) {
+    document.getElementById('modal-task-notes').textContent = task.notes;
+    notesSection.style.display = '';
+  } else {
+    notesSection.style.display = 'none';
+  }
+
+  document.getElementById('task-detail-modal').classList.add('active');
+}
+
+function closeTaskDetail() {
+  document.getElementById('task-detail-modal').classList.remove('active');
+}
+
+function getStatusBadge(status) {
+  switch((status || '').toLowerCase()) {
+    case 'completed': return 'badge-green';
+    case 'in-progress': return 'badge-purple';
+    case 'blocked': return 'badge-yellow';
+    case 'paused': return 'badge-orange';
+    case 'cancelled': return 'badge-red';
+    default: return 'badge-blue';
+  }
+}
+
+function getPriorityBadge(priority) {
+  switch(priority) {
+    case 'P0': return 'badge-red';
+    case 'P1': return 'badge-orange';
+    case 'P2': return 'badge-blue';
+    default: return 'badge-gray';
+  }
+}
+
+// Close modal when clicking overlay
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    closeTaskDetail();
+  }
+});
+
 // Mobile sidebar toggle
 function toggleSidebar() {
   var sidebar = document.querySelector('.sidebar');
@@ -3399,5 +3771,52 @@ document.querySelectorAll('.nav-item').forEach(function(item) {
 });
 
 </script>
+
+<!-- Task Detail Modal -->
+<div class="modal-overlay" id="task-detail-modal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2 id="modal-task-title">Task Details</h2>
+      <button class="modal-close" onclick="closeTaskDetail()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-field">
+          <div class="modal-field-label">ID</div>
+          <div class="modal-field-value" id="modal-task-id"></div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-field-label">Status</div>
+          <div class="modal-field-value" id="modal-task-status"></div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-field-label">Priority</div>
+          <div class="modal-field-value" id="modal-task-priority"></div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-field-label">Assigned To</div>
+          <div class="modal-field-value" id="modal-task-assigned"></div>
+        </div>
+        <div class="modal-field" id="modal-estimate-field" style="display:none;">
+          <div class="modal-field-label">Estimate</div>
+          <div class="modal-field-value" id="modal-task-estimate"></div>
+        </div>
+        <div class="modal-field" id="modal-parent-field" style="display:none;">
+          <div class="modal-field-label">Parent Epic/Story</div>
+          <div class="modal-field-value" id="modal-task-parent"></div>
+        </div>
+        <div class="modal-field" id="modal-dependencies-field" style="display:none;">
+          <div class="modal-field-label">Dependencies</div>
+          <div class="modal-field-value" id="modal-task-dependencies"></div>
+        </div>
+      </div>
+      <div class="modal-section" id="modal-notes-section" style="display:none;">
+        <h3>Notes & Description</h3>
+        <div class="modal-notes" id="modal-task-notes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
