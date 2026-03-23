@@ -1,92 +1,61 @@
-[
-  {
-    "agent": "Nami",
-    "action": "Deployed crew-wide goal tracking protocol",
-    "timestamp": "2026-03-23T11:00:00Z",
-    "type": "ops"
-  },
-  {
-    "agent": "Nami",
-    "action": "Board cleanup \u2014 8 stale tasks completed, pushed to remote",
-    "timestamp": "2026-03-23T10:44:00Z",
-    "type": "ops"
-  },
-  {
-    "agent": "Nami",
-    "action": "Pulled qwen2.5:14b on Mac Mini \u2014 13.2 tok/s",
-    "timestamp": "2026-03-23T09:56:00Z",
-    "type": "infra"
-  },
-  {
-    "agent": "Nami",
-    "action": "Created 3 local model agents: tangerine, helm, dock",
-    "timestamp": "2026-03-23T08:35:00Z",
-    "type": "infra"
-  },
-  {
-    "agent": "Franky",
-    "action": "Mock goal drill \u2014 delivered in 60s",
-    "timestamp": "2026-03-23T11:02:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Sanji",
-    "action": "Mock goal drill \u2014 delivered in 120s",
-    "timestamp": "2026-03-23T11:03:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Chopper",
-    "action": "Mock goal drill \u2014 delivered in 180s",
-    "timestamp": "2026-03-23T11:04:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Usopp",
-    "action": "Mock goal drill \u2014 delivered in 180s",
-    "timestamp": "2026-03-23T11:04:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Jinbe",
-    "action": "Mock goal drill \u2014 delivered in 210s",
-    "timestamp": "2026-03-23T11:05:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Vivi",
-    "action": "Mock goal drill \u2014 delivered in 240s",
-    "timestamp": "2026-03-23T11:05:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Zoro",
-    "action": "Mock goal drill \u2014 delivered in 210s",
-    "timestamp": "2026-03-23T11:04:00Z",
-    "type": "drill"
-  },
-  {
-    "agent": "Sanji",
-    "action": "Scoped GPU3060 + Desktop device connections",
-    "timestamp": "2026-03-23T11:20:00Z",
-    "type": "infra"
-  },
-  {
-    "agent": "Nami",
-    "action": "Created model prompting guides for all 6 model families",
-    "timestamp": "2026-03-23T07:30:00Z",
-    "type": "docs"
-  },
-  {
-    "agent": "Jinbe",
-    "action": "Daily board cleanup \u2014 pre-standup duty",
-    "timestamp": "2026-03-22T12:30:00Z",
-    "type": "ops"
-  },
-  {
-    "agent": "Zeus",
-    "action": "Daily cost report \u2014 Finances thread",
-    "timestamp": "2026-03-23T00:00:00Z",
-    "type": "finance"
-  }
-]
+{
+  "commits": [
+    {
+      "hash": "bd71459",
+      "msg": "data(nami): sync all dashboard data files",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "dbf7742",
+      "msg": "ops(nami): board cleanup \u2014 8 stale tasks completed",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "21ba2e2",
+      "msg": "ops(nami): model prompting guides for all agents",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "dafe835",
+      "msg": "feat(franky): EPIC-004 Teams tab complete",
+      "date": "2026-03-22",
+      "author": "Franky"
+    },
+    {
+      "hash": "442cfc1",
+      "msg": "fix(sanji): MC live on GitHub Pages",
+      "date": "2026-03-20",
+      "author": "Sanji"
+    }
+  ],
+  "recent": [
+    {
+      "agent": "Nami",
+      "action": "Deployed crew-wide goal tracking protocol",
+      "time": "2026-03-23 07:08 EDT"
+    },
+    {
+      "agent": "Nami",
+      "action": "Pulled qwen2.5:14b, created 3 local model agents",
+      "time": "2026-03-23 05:30 EDT"
+    },
+    {
+      "agent": "Franky",
+      "action": "Mock goal drill delivered in 60s",
+      "time": "2026-03-23 07:02 EDT"
+    },
+    {
+      "agent": "Sanji",
+      "action": "Scoped GPU3060 + Desktop device connections",
+      "time": "2026-03-23 07:20 EDT"
+    },
+    {
+      "agent": "Jinbe",
+      "action": "Daily board cleanup pre-standup",
+      "time": "2026-03-22 08:30 EDT"
+    }
+  ]
+}

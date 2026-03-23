@@ -1,54 +1,56 @@
-[
-  {
-    "id": "PROJ-MC",
-    "name": "Mission Control",
-    "status": "in-progress",
-    "priority": "P0",
-    "owner": "Nami",
-    "epics": [
-      "EPIC-003"
-    ],
-    "description": "Dashboard, GitHub Pages, all tabs with live data"
-  },
-  {
-    "id": "PROJ-OPS",
-    "name": "Operations & Infrastructure",
-    "status": "in-progress",
-    "priority": "P1",
-    "owner": "Nami",
-    "epics": [
-      "EPIC-004",
-      "EPIC-005",
-      "EPIC-006",
-      "EPIC-007"
-    ],
-    "description": "Crew architecture, gateways, agent delivery, local models"
-  },
-  {
-    "id": "PROJ-RESEARCH",
-    "name": "Research & Knowledge",
-    "status": "in-progress",
-    "priority": "P2",
-    "owner": "Robin",
-    "epics": [],
-    "description": "X/Twitter research, market analysis, knowledge archiving"
-  },
-  {
-    "id": "PROJ-FUTURE",
-    "name": "Future & Backlog",
-    "status": "open",
-    "priority": "backlog",
-    "owner": "Nami",
-    "epics": [],
-    "description": "Desktop integration, Perplexity, n8n, Zoro security"
-  },
-  {
-    "id": "PROJ-OPENSOURCE",
-    "name": "Go OpenSource & Go Viral",
-    "status": "open",
-    "priority": "backlog",
-    "owner": "Nami",
-    "epics": [],
-    "description": "Straw Hat crew as open-source OpenClaw template"
-  }
-]
+{
+  "projects": [
+    {
+      "id": "PROJ-MC",
+      "name": "Mission Control",
+      "status": "in-progress",
+      "priority": "P0",
+      "owner": "Nami",
+      "epics": [
+        "EPIC-003"
+      ],
+      "description": "Dashboard, GitHub Pages, all tabs with live data"
+    },
+    {
+      "id": "PROJ-OPS",
+      "name": "Operations & Infrastructure",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "Nami",
+      "epics": [
+        "EPIC-004",
+        "EPIC-005",
+        "EPIC-006",
+        "EPIC-007"
+      ],
+      "description": "Crew architecture, gateways, agent delivery, local models"
+    },
+    {
+      "id": "PROJ-RESEARCH",
+      "name": "Research & Knowledge",
+      "status": "in-progress",
+      "priority": "P2",
+      "owner": "Robin",
+      "epics": [],
+      "description": "X/Twitter research, market analysis, knowledge archiving"
+    },
+    {
+      "id": "PROJ-FUTURE",
+      "name": "Future & Backlog",
+      "status": "open",
+      "priority": "backlog",
+      "owner": "Nami",
+      "epics": [],
+      "description": "Desktop integration, Perplexity, n8n, Zoro security"
+    },
+    {
+      "id": "PROJ-OPENSOURCE",
+      "name": "Go OpenSource & Go Viral",
+      "status": "open",
+      "priority": "backlog",
+      "owner": "Nami",
+      "epics": [],
+      "description": "Straw Hat crew as open-source OpenClaw template"
+    }
+  ]
+}

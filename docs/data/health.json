@@ -1,28 +1,19 @@
 {
   "gateway": {
-    "status": "healthy",
-    "url": "http://127.0.0.1:18789",
-    "lastCheck": "2026-03-23T13:05:07.067419Z"
-  },
-  "agents": {
-    "total": 28,
-    "active": 28,
-    "models": {
-      "anthropic": 15,
-      "ollama": 4,
-      "xai": 4,
-      "google": 4,
-      "haiku": 6
-    }
+    "ok": true,
+    "status": "Healthy \u2014 28 agents on 127.0.0.1:18789"
   },
   "ollama": {
-    "status": "running",
+    "ok": true,
     "models": [
       "qwen2.5:14b",
       "qwen2.5:7b",
       "qwen2.5:3b"
-    ],
-    "endpoint": "http://127.0.0.1:11434"
+    ]
   },
-  "updatedAt": "2026-03-23T13:05:07.067750Z"
+  "disk": {
+    "used": "12 GB",
+    "total": "228 GB",
+    "percent": "5%"
+  }
 }

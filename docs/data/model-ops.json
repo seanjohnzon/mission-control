@@ -1,189 +1,410 @@
 {
-  "infrastructure": {
-    "mac_mini": {
-      "host": "127.0.0.1",
-      "chip": "Apple M4",
-      "ram": "16GB",
-      "role": "Primary gateway + all agents",
-      "ollama": {
-        "status": "running",
-        "port": 11434,
-        "models": [
-          {
-            "name": "qwen2.5:14b",
-            "size": "9.0GB",
-            "speed": "13.2 tok/s",
-            "status": "active"
+  "subscriptions": [
+    {
+      "provider": "Anthropic",
+      "type": "subscription",
+      "monthlyCost": 200,
+      "costLabel": "$200/mo",
+      "color": "#8B5CF6",
+      "colorRgb": "139,92,246",
+      "agents": [
+        {
+          "id": "nami",
+          "name": "Nami",
+          "emoji": "\ud83e\udded",
+          "model": "claude-opus-4-6",
+          "modelShort": "Opus 4.6",
+          "role": "Orchestrator",
+          "contextWindow": 200000,
+          "contextUsed": 24500,
+          "tokensToday": {
+            "input": 48200,
+            "output": 12800
           },
-          {
-            "name": "qwen2.5:7b",
-            "size": "4.7GB",
-            "speed": "15-30 tok/s",
-            "status": "active"
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 3,
+          "status": "active"
+        },
+        {
+          "id": "zeus",
+          "name": "Zeus",
+          "emoji": "\u26a1",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Subagent / Heartbeat",
+          "contextWindow": 200000,
+          "contextUsed": 8200,
+          "tokensToday": {
+            "input": 18400,
+            "output": 4200
           },
-          {
-            "name": "qwen2.5:3b",
-            "size": "1.9GB",
-            "speed": "fast",
-            "status": "heartbeat-only"
-          }
-        ]
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 7,
+          "status": "active"
+        },
+        {
+          "id": "vivi",
+          "name": "Vivi",
+          "emoji": "\u2728",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Dispatcher",
+          "contextWindow": 200000,
+          "contextUsed": 3100,
+          "tokensToday": {
+            "input": 9600,
+            "output": 2100
+          },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 2,
+          "status": "idle"
+        },
+        {
+          "id": "jinbe",
+          "name": "Jinbe",
+          "emoji": "\ud83d\udee1\ufe0f",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4.6",
+          "role": "Security / Infra",
+          "contextWindow": 200000,
+          "contextUsed": 1800,
+          "tokensToday": {
+            "input": 4200,
+            "output": 900
+          },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 1,
+          "status": "idle"
+        }
+      ],
+      "usage": {
+        "plan": "Max 5x",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "opusTokensPerMin": 40000,
+          "sonnetTokensPerMin": 80000,
+          "opusRequestsPerDay": 1200,
+          "sonnetRequestsPerDay": 3600
+        },
+        "current": {
+          "opusRequestsToday": 0,
+          "sonnetRequestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "lastRateLimitAt": null,
+          "peakUsagePct": 0
+        }
       }
     },
-    "gpu3060": {
-      "host": "10.0.0.16",
-      "gpu": "NVIDIA RTX 3060 (12GB VRAM)",
-      "role": "Inference node (CUDA pending)",
-      "ollama": {
-        "status": "running",
-        "port": 11434,
-        "models": [
-          {
-            "name": "llama3.1:8b",
-            "size": "4.9GB",
-            "status": "active"
+    {
+      "provider": "OpenAI",
+      "type": "subscription",
+      "monthlyCost": 200,
+      "costLabel": "$200/mo",
+      "color": "#3FB950",
+      "colorRgb": "63,185,80",
+      "agents": [
+        {
+          "id": "franky",
+          "name": "Franky",
+          "emoji": "\ud83d\udd27",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Chief Engineer",
+          "contextWindow": 128000,
+          "contextUsed": 41200,
+          "tokensToday": {
+            "input": 62400,
+            "output": 28600
           },
-          {
-            "name": "qwen2.5-coder:7b",
-            "size": "4.7GB",
-            "status": "active"
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 5,
+          "status": "active"
+        },
+        {
+          "id": "sanji",
+          "name": "Sanji",
+          "emoji": "\ud83d\udc68\u200d\ud83c\udf73",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Automation / CI",
+          "contextWindow": 128000,
+          "contextUsed": 18700,
+          "tokensToday": {
+            "input": 31200,
+            "output": 14800
           },
-          {
-            "name": "llama3.2:3b",
-            "size": "2.0GB",
-            "status": "active"
-          }
-        ],
-        "cuda": "NOT ACTIVE \u2014 size_vram=0, needs driver fix"
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 4,
+          "status": "active"
+        },
+        {
+          "id": "chopper",
+          "name": "Chopper",
+          "emoji": "\ud83d\udd2c",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "QA / Testing",
+          "contextWindow": 128000,
+          "contextUsed": 22100,
+          "tokensToday": {
+            "input": 28800,
+            "output": 11200
+          },
+          "costToday": 0,
+          "machine": "GPU3060",
+          "sessions": 6,
+          "status": "active"
+        },
+        {
+          "id": "usopp",
+          "name": "Usopp",
+          "emoji": "\ud83c\udfaf",
+          "model": "gpt-5.4",
+          "modelShort": "GPT-5.4",
+          "role": "Business Intel",
+          "contextWindow": 128000,
+          "contextUsed": 9400,
+          "tokensToday": {
+            "input": 14600,
+            "output": 6200
+          },
+          "costToday": 0,
+          "machine": "GPU3060",
+          "sessions": 2,
+          "status": "idle"
+        }
+      ],
+      "usage": {
+        "plan": "ChatGPT Pro",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "gpt54RequestsPerDay": "unlimited",
+          "note": "Pro plan \u2014 fair use policy"
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "peakUsagePct": 0
+        }
       }
     },
-    "desktop": {
-      "host": "10.0.0.251",
-      "gpu": "Unknown (possibly RTX 3080)",
-      "role": "Inference node (broken)",
-      "ollama": {
-        "status": "error",
-        "error": "mkdir D:\\openclaw-brain: path not found",
-        "models": []
+    {
+      "provider": "xAI / Grok",
+      "type": "variable",
+      "monthlyCost": 50,
+      "costLabel": "~$50/mo cap",
+      "color": "#58A6FF",
+      "colorRgb": "88,166,255",
+      "agents": [
+        {
+          "id": "robin",
+          "name": "Robin",
+          "emoji": "\ud83d\udcda",
+          "model": "grok-4",
+          "modelShort": "Grok 4",
+          "role": "Research",
+          "contextWindow": 131072,
+          "contextUsed": 52800,
+          "tokensToday": {
+            "input": 38400,
+            "output": 9600
+          },
+          "costToday": 1.24,
+          "machine": "Mac Mini M4",
+          "sessions": 4,
+          "status": "active"
+        },
+        {
+          "id": "robin-ops",
+          "name": "Robin-Ops",
+          "emoji": "\ud83d\udd0e",
+          "model": "grok-3-fast",
+          "modelShort": "Grok 3 Fast",
+          "role": "Task Patrol",
+          "contextWindow": 131072,
+          "contextUsed": 14200,
+          "tokensToday": {
+            "input": 12800,
+            "output": 3400
+          },
+          "costToday": 0.18,
+          "machine": "Mac Mini M4",
+          "sessions": 9,
+          "status": "active"
+        }
+      ],
+      "usage": {
+        "plan": "API (pay-per-use)",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "monthlyCap": 50,
+          "spentThisMonth": 0
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "spendToday": 0,
+          "peakUsagePct": 0
+        }
+      }
+    },
+    {
+      "provider": "Google / Gemini",
+      "type": "variable",
+      "monthlyCost": 5,
+      "costLabel": "~$5/mo",
+      "color": "#F0883E",
+      "colorRgb": "240,136,62",
+      "agents": [
+        {
+          "id": "brook",
+          "name": "Brook",
+          "emoji": "\ud83c\udfa8",
+          "model": "gemini-2.5-pro",
+          "modelShort": "Gemini 2.5 Pro",
+          "role": "Creative / UX",
+          "contextWindow": 1000000,
+          "contextUsed": 186000,
+          "tokensToday": {
+            "input": 42600,
+            "output": 18400
+          },
+          "costToday": 0.31,
+          "machine": "Mac Mini M4",
+          "sessions": 3,
+          "status": "active"
+        },
+        {
+          "id": "brook-ops",
+          "name": "Brook-Ops",
+          "emoji": "\ud83c\udfb5",
+          "model": "gemini-2.5-flash",
+          "modelShort": "Gemini 2.5 Flash",
+          "role": "Quick Creative",
+          "contextWindow": 1000000,
+          "contextUsed": 48000,
+          "tokensToday": {
+            "input": 18200,
+            "output": 7800
+          },
+          "costToday": 0.04,
+          "machine": "Mac Mini M4",
+          "sessions": 5,
+          "status": "idle"
+        }
+      ],
+      "usage": {
+        "plan": "API (free tier)",
+        "billingCycle": {
+          "start": "2026-03-01",
+          "end": "2026-03-31"
+        },
+        "limits": {
+          "monthlyCap": 5,
+          "freeRequestsPerDay": 1500,
+          "spentThisMonth": 0
+        },
+        "current": {
+          "requestsToday": 0,
+          "rateLimitHitsToday": 0,
+          "spendToday": 0,
+          "peakUsagePct": 0
+        }
+      }
+    },
+    {
+      "provider": "Local / Ollama",
+      "type": "local",
+      "monthlyCost": 0,
+      "costLabel": "$0",
+      "color": "#2DD4BF",
+      "colorRgb": "45,212,191",
+      "agents": [
+        {
+          "id": "mikan",
+          "name": "Mikan",
+          "emoji": "\ud83c\udf4a",
+          "model": "qwen2.5:7b",
+          "modelShort": "qwen2.5:7b",
+          "role": "Local Workhorse",
+          "contextWindow": 32768,
+          "contextUsed": 18400,
+          "tokensToday": {
+            "input": 24800,
+            "output": 8200
+          },
+          "costToday": 0,
+          "machine": "Mac Mini M4",
+          "sessions": 5,
+          "status": "active"
+        },
+        {
+          "id": "cola",
+          "name": "Cola",
+          "emoji": "\ud83e\udd64",
+          "model": "qwen2.5-coder:7b",
+          "modelShort": "qwen2.5-coder:7b",
+          "role": "Light Patrol Local",
+          "contextWindow": 32768,
+          "contextUsed": 2600,
+          "tokensToday": {
+            "input": 2200,
+            "output": 400
+          },
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 1,
+          "status": "active"
+        },
+        {
+          "id": "sakura",
+          "name": "Sakura",
+          "emoji": "\ud83c\udf38",
+          "model": "llama3.1:8b",
+          "modelShort": "llama3.1:8b",
+          "role": "Light Patrol Local",
+          "contextWindow": 32768,
+          "contextUsed": 2100,
+          "tokensToday": {
+            "input": 1800,
+            "output": 300
+          },
+          "costToday": 0,
+          "machine": "Laptop",
+          "sessions": 1,
+          "status": "active"
+        }
+      ],
+      "usage": {
+        "plan": "Local compute",
+        "limits": {
+          "contextWindow": 32768,
+          "note": "Limited by RAM and context, not billing"
+        },
+        "current": {
+          "contextOverflows": 0,
+          "avgContextUsePct": 0
+        }
       }
     }
-  },
-  "agents": {
-    "cloud": [
-      {
-        "name": "Nami",
-        "model": "claude-opus-4-6",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Franky",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Sanji",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Chopper",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Usopp",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Jinbe",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Vivi",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Zoro",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Zeus",
-        "model": "claude-sonnet-4",
-        "provider": "Anthropic",
-        "cost": "/bin/zsh (subscription)"
-      },
-      {
-        "name": "Robin",
-        "model": "grok-4",
-        "provider": "xAI",
-        "cost": "Variable (~$25/mo cap)"
-      },
-      {
-        "name": "Brook",
-        "model": "gemini-2.5-pro",
-        "provider": "Google",
-        "cost": "~$0-5/mo"
-      }
-    ],
-    "local": [
-      {
-        "name": "Tangerine",
-        "model": "qwen2.5:7b",
-        "host": "Mac Mini",
-        "role": "Gateway health monitor",
-        "status": "active",
-        "cost": "$0"
-      },
-      {
-        "name": "Helm",
-        "model": "qwen2.5:14b",
-        "host": "Mac Mini",
-        "role": "Board monitor",
-        "status": "testing",
-        "cost": "$0"
-      },
-      {
-        "name": "Dock",
-        "model": "qwen2.5:14b",
-        "host": "Mac Mini",
-        "role": "Build monitor",
-        "status": "testing",
-        "cost": "$0"
-      },
-      {
-        "name": "Mikan",
-        "model": "qwen2.5:7b",
-        "host": "Mac Mini",
-        "role": "Local utility",
-        "status": "active",
-        "cost": "$0"
-      }
-    ]
-  },
-  "budget": {
-    "subscriptions": {
-      "anthropic_max": 100,
-      "openai_pro": 200,
-      "total": 300
-    },
-    "variable": {
-      "robin_xai": 25,
-      "brook_gemini": 5,
-      "cap": 100
-    },
-    "total_monthly": "350-400"
-  },
-  "updatedAt": "2026-03-23T13:00:00Z"
+  ],
+  "meta": {
+    "lastUpdated": "2026-03-21T00:00:00Z",
+    "refreshInterval": 60
+  }
 }
