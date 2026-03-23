@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Control v2</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0f1119; --sidebar: #141620; --card: #1a1d2e; --border: #2a2d3d;
+  --text: #e6edf3; --text2: #8b949e; --blue: #58a6ff; --green: #3fb950;
+  --red: #f85149; --yellow: #d29922; --orange: #f0883e; --purple: #8b5cf6;
+  --teal: #2dd4bf; --pink: #ec4899;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
+a { color: var(--blue); text-decoration: none; }
+
+/* Layout */
+.app { display: flex; height: 100vh; }
+.sidebar { width: 240px; min-width: 240px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid var(--border); }
+.sidebar-header h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+.sidebar-header .subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.sidebar-footer .gw-status { display: flex; align-items: center; gap: 6px; }
+.nav { flex: 1; padding: 8px 0; }
+.nav-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 16px; cursor: pointer; font-size: 13px; color: var(--text2); border: 0; border-left: 3px solid transparent; background: transparent; text-align: left; transition: all 0.15s; }
+.nav-item:hover { background: rgba(88,166,255,0.06); color: var(--text); }
+.nav-item:focus-visible { outline: 2px solid rgba(88,166,255,0.45); outline-offset: -2px; }
+.nav-item.active { background: rgba(88,166,255,0.14); color: var(--text); border-left-color: var(--blue); }
+.nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text2); }
+
+.content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Cards & Utils */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.15s; }
+.card:hover { border-color: #3d4158; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.card-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+@media (max-width: 1100px) { .card-row { grid-template-columns: repeat(2, 1fr); } }
+.card h3 { font-size: 13px; color: var(--text2); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.card .val { font-size: 24px; font-weight: 600; }
+.card .val-lg { font-size: 32px; font-weight: 700; }
+.section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+.badge-orange { background: rgba(240,136,62,0.15); color: var(--orange); }
+.badge-blue { background: rgba(88,166,255,0.15); color: var(--blue); }
+.badge-gray { background: rgba(139,148,158,0.15); color: var(--text2); }
+.badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.badge-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+.health-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.health-dot.ok { background: var(--green); }
+.health-dot.err { background: var(--red); }
+.health-dot.warn { background: var(--yellow); }
+.mt { margin-top: 20px; }
+.mb { margin-bottom: 20px; }
+.text2 { color: var(--text2); }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.hero { background: linear-gradient(135deg, #161b22, #1a2332); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+.hero h2 { font-size: 20px; margin-bottom: 12px; }
+.hero p { color: var(--text2); font-size: 15px; line-height: 1.6; max-width: 700px; }
+
+/* Kanban */
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; height: calc(100vh - 80px); }
+.kanban-col { min-width: 260px; width: 260px; flex-shrink: 0; display: flex; flex-direction: column; }
+.kanban-col-header { padding: 10px 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.kanban-col-header .count { background: var(--border); color: var(--text2); font-size: 11px; padding: 1px 7px; border-radius: 10px; }
+.kanban-cards { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
+.kanban-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: default; transition: border-color 0.15s; }
+.kanban-card:hover { border-color: #3d4158; }
+.kanban-card .task-id { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
+.kanban-card .task-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; line-height: 1.35; display: flex; align-items: center; gap: 8px; }
+.kanban-card .task-title .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.kanban-card .task-desc { font-size: 12px; color: var(--text2); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.kanban-card .task-meta { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.kanban-card .task-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+.kanban-card .task-footer .assignee { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+.kanban-card .task-footer .assignee .avatar-circle { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.kanban-card .task-footer .timestamp { font-size: 10px; color: var(--text2); }
+.kanban-card.p0 { border-left: 3px solid var(--red); }
+.kanban-card.p1 { border-left: 3px solid var(--orange); }
+.kanban-card.p2 { border-left: 3px solid var(--blue); }
+.kanban-card.backlog { border-left: 3px solid var(--text2); }
+
+/* Task Tree */
+.task-tree { height: calc(100vh - 140px); overflow-y: auto; padding-right: 6px; }
+.tree-node { margin-bottom: 8px; }
+.tree-header { display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border); background: rgba(26,29,46,0.7); border-radius: 8px; cursor: pointer; user-select:none; }
+.tree-header:hover { border-color:#3d4158; }
+.tree-toggle { width: 14px; text-align:center; color: var(--text2); font-weight: 700; }
+.tree-title { font-size: 13px; font-weight: 600; }
+.tree-children { margin-left: 18px; padding-left: 10px; border-left: 1px dashed rgba(139,148,158,0.25); margin-top: 8px; }
+.tree-leaf { margin: 8px 0; }
+.tree-leaf .kanban-card { cursor: default; }
+
+/* Calendar */
+.cal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.cal-header h2 { font-size: 18px; min-width: 200px; }
+.cal-header button { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.cal-header button:hover { background: var(--border); }
+.cal-header button.active { border-color: rgba(88,166,255,0.35); background: rgba(88,166,255,0.12); }
+.cal-legend-swatch { display:inline-block; width: 14px; height: 12px; border-radius: 4px; margin-right: 6px; border-left: 3px solid var(--border); background: rgba(255,255,255,0.06); vertical-align: -2px; }
+/* Month grid */
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cal-day-name { background: var(--sidebar); padding: 8px; text-align: center; font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; }
+.cal-day { background: var(--bg); padding: 8px; min-height: 92px; font-size: 12px; }
+.cal-day.other { color: var(--text2); opacity: 0.3; }
+.cal-day.today { background: rgba(88,166,255,0.08); }
+.cal-day .day-num { font-weight: 600; margin-bottom: 6px; }
+.cal-day.today .day-num { color: var(--blue); }
+/* Neutral event chips */
+.cal-mini-item { font-size: 11px; padding: 3px 6px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid var(--border); color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cal-mini-item.kind-event { border-left-color: var(--blue); }
+.cal-mini-item.kind-reminder { border-left-color: var(--purple); }
+.cal-mini-item.tier-teal { border-left-color: var(--teal); }
+.cal-mini-item.tier-yellow { border-left-color: var(--yellow); }
+.cal-mini-item.tier-pink { border-left-color: var(--pink); }
+.cal-mini-item.tier-red { border-left-color: var(--red); }
+/* Week view grid */
+.cal-week-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.cal-week-grid { display: grid; grid-template-columns: 64px repeat(7, 1fr); background: var(--border); gap: 1px; }
+.cal-week-head { background: var(--sidebar); padding: 10px 8px; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; text-align: center; }
+.cal-week-head .num { display:block; font-size: 12px; color: var(--text); margin-top: 2px; }
+.cal-week-time { background: var(--sidebar); padding: 6px 8px; font-size: 11px; color: var(--text2); text-align: right; }
+.cal-week-cell { background: #101321; position: relative; height: 44px; }
+.cal-week-cell.now { background: rgba(88,166,255,0.06); }
+.cal-day-layer { position: relative; height: 100%; }
+.cal-block { position: absolute; left: 6px; right: 6px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--border); padding: 6px 8px; font-size: 11px; color: var(--text); overflow: hidden; }
+.cal-block .meta { color: var(--text2); font-size: 10px; margin-top: 3px; }
+.cal-block.kind-event { border-left-color: var(--blue); }
+.cal-block.kind-reminder { border-left-color: var(--purple); }
+.cal-block.tier-teal { border-left-color: var(--teal); }
+.cal-block.tier-yellow { border-left-color: var(--yellow); }
+.cal-block.tier-pink { border-left-color: var(--pink); }
+.cal-block.tier-red { border-left-color: var(--red); }
+
+/* Projects */
+.proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.proj-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.proj-card .desc { color: var(--text2); font-size: 13px; margin-bottom: 12px; }
+.proj-card .proj-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.proj-card .proj-footer .proj-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+.proj-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+.proj-status.active { background: rgba(63,185,80,0.15); color: var(--green); }
+.proj-status.planned { background: rgba(88,166,255,0.15); color: var(--blue); }
+.proj-status.paused { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+
+/* Memory */
+.mem-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.mem-tab { padding: 10px 20px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.mem-tab:hover { color: var(--text); }
+.mem-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.mem-timeline { position: relative; padding-left: 24px; }
+.mem-timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--border); border-radius: 1px; }
+.mem-entry { margin-bottom: 16px; position: relative; }
+.mem-timeline .mem-entry::before { content: ''; position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid var(--bg); }
+.mem-entry .date { font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
+.mem-content { font-size: 13px; line-height: 1.6; color: var(--text2); }
+.mem-content .md-header { color: var(--text); font-weight: 600; font-size: 14px; margin: 10px 0 4px; }
+.mem-content .md-bold { font-weight: 600; color: var(--text); }
+.mem-content .md-list { padding-left: 16px; margin: 4px 0; }
+.mem-content .md-list li { margin: 2px 0; }
+.mem-content h1, .mem-content h2, .mem-content h3 { color: var(--text); margin: 12px 0 6px; }
+.mem-section { margin-bottom: 16px; }
+.mem-section h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+
+/* Docs */
+.docs-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 100px); }
+.docs-list { overflow-y: auto; }
+.doc-group { margin-bottom: 16px; }
+.doc-group h3 { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.doc-row { padding: 8px 12px; cursor: pointer; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; transition: background 0.1s; }
+.doc-row:hover { background: rgba(88,166,255,0.06); }
+.doc-row.active { background: rgba(88,166,255,0.1); color: var(--blue); }
+.doc-row .modified { font-size: 11px; color: var(--text2); }
+.doc-reader { overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+
+/* Office v2 */
+.office-topbar { display: flex; align-items: center; gap: 16px; padding: 12px 0 16px; flex-wrap: wrap; }
+.office-topbar-title { font-size: 18px; font-weight: 600; }
+.office-topbar-counts { font-size: 13px; }
+.office-topbar-filters { display: flex; gap: 4px; margin-left: auto; }
+.office-filter { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.office-filter:hover { background: var(--border); color: var(--text); }
+.office-filter.active { background: rgba(88,166,255,0.15); color: var(--blue); border-color: rgba(88,166,255,0.3); }
+.office-canvas { position: relative; width: 100%; height: calc(100vh - 140px); display: flex; min-height: 460px; }
+.office-floor { flex: 1; position: relative; background: #12141f; overflow: hidden; border-radius: 10px 0 0 10px; border: 1px solid var(--border); border-right: none; }
+.office-floor::before { content: ''; position: absolute; inset: 0; background: repeating-conic-gradient(#161828 0% 25%, #12141f 0% 50%) 0 0 / 24px 24px; opacity: 0.4; }
+.office-furniture { position: absolute; z-index: 1; background: #1e2235; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; font-size: 10px; color: var(--text2); }
+.office-desk { position: absolute; width: 200px; padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; z-index: 1; }
+.office-desk:hover { border-color: var(--text2); transform: translateY(-2px); }
+.office-desk.online { border-color: rgba(63,185,80,0.3); box-shadow: 0 0 12px rgba(63,185,80,0.1); }
+.office-desk.offline { opacity: 0.45; }
+.office-desk.selected { border-color: var(--blue); box-shadow: 0 0 16px rgba(88,166,255,0.15); }
+.desk-surface { text-align: center; margin-bottom: 6px; }
+.desk-surface .monitor { font-size: 14px; }
+.agent-sprite { font-size: 26px; text-align: center; margin-bottom: 4px; }
+.agent-label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.office-desk .agent-name { font-size: 14px; font-weight: 600; }
+.agent-status { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 10px; }
+.agent-status.working { background: rgba(63,185,80,0.15); color: var(--green); }
+.agent-status.working::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 4px; }
+.agent-status.idle { background: rgba(139,148,158,0.15); color: var(--text2); }
+.agent-status.idle::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--text2); margin-right: 4px; }
+.agent-status.blocked { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.agent-status.blocked::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); margin-right: 4px; }
+.agent-status.reviewing { background: rgba(88,166,255,0.15); color: var(--blue); }
+.agent-status.reviewing::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); margin-right: 4px; }
+.agent-status.offline-status { background: rgba(139,148,158,0.1); color: var(--text2); }
+.office-desk .agent-detail { font-size: 11px; color: var(--text2); line-height: 1.6; }
+.standup-table { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--border); background: rgba(30,34,53,0.6); margin: 0 auto; }
+.standup-chairs { position: relative; width: 80px; height: 0; margin: 0 auto; margin-top: -80px; }
+.standup-chair { position: absolute; width: 16px; height: 16px; border-radius: 3px; background: var(--border); }
+.office-sidebar { width: 250px; background: var(--sidebar); border: 1px solid var(--border); border-radius: 0 10px 10px 0; overflow-y: auto; }
+.office-sidebar-header { padding: 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.office-activity-feed { padding: 8px 0; }
+.activity-entry { padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 12px; line-height: 1.5; }
+.activity-agent { font-weight: 600; }
+.activity-time { font-size: 10px; color: var(--text2); margin-top: 2px; }
+.agent-detail-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 340px; background: var(--sidebar); border-left: 1px solid var(--border); z-index: 100; box-shadow: -4px 0 24px rgba(0,0,0,0.3); }
+.agent-detail-panel-inner { padding: 24px; }
+.agent-detail-panel .adp-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.agent-detail-panel .adp-row .adp-label { color: var(--text2); }
+
+/* Model Ops — Redesign */
+.badge-teal { background: rgba(45,212,191,0.15); color: var(--teal); }
+.mo-section { margin-bottom: 28px; }
+.mo-section-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+
+/* Subscription Cards */
+.mo-sub-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 28px; }
+@media (max-width: 1300px) { .mo-sub-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) { .mo-sub-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .mo-sub-cards { grid-template-columns: 1fr; } }
+.mo-sub-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; cursor: default; }
+.mo-sub-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+.mo-sub-card .mo-sub-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 10px 10px 0 0; }
+.mo-sub-card .mo-sub-provider { font-size: 13px; font-weight: 700; margin-bottom: 2px; margin-top: 6px; }
+.mo-sub-card .mo-sub-cost { font-size: 11px; color: var(--text2); margin-bottom: 12px; }
+.mo-sub-card .mo-sub-stat { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; }
+.mo-sub-card .mo-sub-stat:last-child { border-bottom: none; }
+.mo-sub-card .mo-sub-stat-label { color: var(--text2); }
+.mo-sub-card .mo-sub-stat-val { font-weight: 600; }
+.mo-cost-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+.mo-agent-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.mo-agent-pill { padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; background: rgba(255,255,255,0.06); color: var(--text2); }
+.mo-agent-pill.active { color: var(--text); }
+
+/* Usage Bars */
+.mo-usage-wrap { overflow-x: auto; }
+.mo-usage-chart { min-width: 480px; display: flex; flex-direction: column; gap: 10px; }
+.mo-bar-row { display: grid; grid-template-columns: 120px 1fr 110px; align-items: center; gap: 12px; }
+.mo-bar-agent { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mo-bar-agent-model { font-size: 10px; color: var(--text2); margin-top: 1px; }
+.mo-bar-track { background: rgba(255,255,255,0.05); border-radius: 4px; height: 22px; overflow: hidden; position: relative; }
+.mo-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; min-width: 4px; transition: width 0.6s ease; }
+.mo-bar-tokens { font-size: 11px; color: var(--text2); text-align: right; white-space: nowrap; }
+
+/* Context Window */
+.mo-ctx-grid { display: flex; flex-direction: column; gap: 10px; }
+.mo-ctx-row { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+.mo-ctx-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.mo-ctx-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.mo-ctx-info { font-size: 11px; color: var(--text2); text-align: right; }
+.mo-ctx-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.mo-ctx-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.mo-ctx-warn { border-left: 3px solid; }
+.mo-ctx-pct { font-size: 11px; font-weight: 700; margin-top: 4px; text-align: right; }
+
+/* Agent Filter */
+.mo-filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.mo-filter-select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; min-width: 180px; }
+@media (max-width: 600px) { .mo-filter-select { width: 100%; } }
+.mo-filter-select:focus { outline: 1px solid var(--blue); }
+.mo-detail-panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.mo-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 600px) { .mo-detail-grid { grid-template-columns: 1fr; } }
+.mo-detail-kv { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+.mo-detail-kv:last-child { border-bottom: none; }
+.mo-detail-label { color: var(--text2); }
+.mo-detail-val { font-weight: 500; text-align: right; max-width: 65%; }
+.mo-empty-state { text-align: center; padding: 32px; color: var(--text2); font-size: 13px; }
+.mo-status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+.mo-status-dot.active { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.mo-status-dot.idle { background: var(--text2); }
+.mo-status-dot.future { background: var(--border); }
+
+/* Team */
+.org-chart { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 20px; }
+.load-card { position: relative; }
+.load-card .dept-name { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
+.load-card .dept-points { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+.load-card .dept-sub { margin-top: 6px; font-size: 12px; color: var(--text2); }
+.load-card.low { border-left: 3px solid var(--green); }
+.load-card.med { border-left: 3px solid var(--yellow); }
+.load-card.high { border-left: 3px solid var(--red); }
+.org-line { width: 2px; height: 32px; background: var(--border); }
+.org-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.team-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px 20px; text-align: center; min-width: 220px; position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
+.team-card:hover { border-color: #3d4158; }
+.team-card.glow-blue { border-color: rgba(88,166,255,0.3); box-shadow: 0 0 20px rgba(88,166,255,0.08); }
+.team-card.glow-teal { border-color: rgba(45,212,191,0.3); box-shadow: 0 0 20px rgba(45,212,191,0.08); }
+.team-card.glow-orange { border-color: rgba(240,136,62,0.3); box-shadow: 0 0 20px rgba(240,136,62,0.08); }
+.team-card.glow-yellow { border-color: rgba(210,153,34,0.3); box-shadow: 0 0 20px rgba(210,153,34,0.08); }
+.team-card .avatar { font-size: 28px; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
+.team-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.team-card .machine { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.team-card .agent-desc { font-size: 11px; color: var(--text2); line-height: 1.4; margin-bottom: 10px; max-width: 220px; margin-left: auto; margin-right: auto; }
+.team-card .roles { font-size: 11px; margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+.team-card .roles .role-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-weight: 500; border: 1px solid; }
+.team-card .role-pill.blue { color: var(--blue); border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.08); }
+.team-card .role-pill.teal { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.08); }
+.team-card .role-pill.orange { color: var(--orange); border-color: rgba(240,136,62,0.3); background: rgba(240,136,62,0.08); }
+.team-card .role-pill.yellow { color: var(--yellow); border-color: rgba(210,153,34,0.3); background: rgba(210,153,34,0.08); }
+.team-card .role-pill.purple { color: var(--purple); border-color: rgba(139,92,246,0.3); background: rgba(139,92,246,0.08); }
+.team-card .role-pill.pink { color: var(--pink); border-color: rgba(236,72,153,0.3); background: rgba(236,72,153,0.08); }
+.team-card .role-pill.green { color: var(--green); border-color: rgba(63,185,80,0.3); background: rgba(63,185,80,0.08); }
+.team-card .role-pill.red { color: var(--red); border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.08); }
+.glow-green { border-color: rgba(63,185,80,0.3); box-shadow: 0 0 12px rgba(63,185,80,0.1); }
+.team-card .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.team-card .status-badge.online { background: rgba(63,185,80,0.15); color: var(--green); }
+.team-card .status-badge.offline { background: rgba(139,148,158,0.15); color: var(--text2); }
+.team-card .role-card-link { display: block; text-align: right; margin-top: 12px; font-size: 11px; color: var(--text2); font-weight: 500; letter-spacing: 0.5px; }
+.team-card .role-card-link:hover { color: var(--blue); }
+.org-divider { width: 100%; max-width: 700px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.org-divider::before, .org-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.tool-lanes { margin-top: 32px; width: 100%; max-width: 700px; }
+.tool-lanes h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
+.tool-lane { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+
+/* Org Viz (from dashboard) */
+.orgviz { width: 100%; max-width: 980px; }
+.orgviz-inner { width: 100%; height: 440px; border-radius: 10px; background: rgba(8, 10, 18, 0.45); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+.orgviz svg { width: 100%; height: 100%; display: block; }
+.orgviz .hint { position: absolute; left: 12px; top: 10px; color: var(--text2); font-size: 11px; pointer-events: none; }
+.orgviz .tip { position: absolute; pointer-events: none; background: rgba(20,22,32,0.96); border: 1px solid rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--text); box-shadow: 0 12px 28px rgba(0,0,0,0.4); transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity 0.12s ease; }
+.orgviz .tip.open { opacity: 1; }
+.orgviz .tip .t { font-weight: 650; margin-bottom: 4px; }
+.orgviz .tip .m { color: var(--text2); font-size: 11px; }
+.orgviz .legend { position: absolute; right: 12px; top: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.orgviz .legend .chip { display:inline-flex; align-items:center; gap:6px; padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); border-radius: 999px; font-size: 11px; color: var(--text2); }
+.orgviz .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+.orgviz .legend .dot.ok { background: var(--green); }
+.orgviz .legend .dot.fail { background: var(--red); }
+.orgviz .legend .dot.idle { background: rgba(139,148,158,0.9); }
+.tool-lane .tool-name { font-weight: 500; }
+.tool-lane .tool-desc { color: var(--text2); }
+
+/* LLM Usage */
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 12px 0; }
+.bar-legend { display: flex; gap: 16px; margin-top: 12px; font-size: 12px; color: var(--text2); }
+.bar-legend .legend-item { display: flex; align-items: center; gap: 6px; }
+.bar-legend .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+.bar-chart .bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.bar-chart .bar-stack { display: flex; flex-direction: column-reverse; width: 100%; max-width: 40px; }
+.bar-chart .bar { min-height: 2px; }
+.bar-chart .bar.cloud { background: var(--blue); border-radius: 3px 3px 0 0; }
+.bar-chart .bar.local { background: var(--green); border-radius: 3px 3px 0 0; }
+.bar-chart .bar-label { font-size: 10px; color: var(--text2); margin-top: 6px; }
+
+/* Routing */
+.guardrail { display: flex; align-items: center; gap: 10px; padding: 10px; }
+.guardrail .check { font-size: 16px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+/* Office v2 */
+.office-tab-content { display: flex; flex-direction: column; height: calc(100vh - 60px); }
+.office-topbar { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: var(--sidebar); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.office-topbar h2 { font-size: 15px; font-weight: 600; margin: 0; }
+.office-topbar .agent-counts { font-size: 12px; color: var(--text2); }
+.office-filter-btns { display: flex; gap: 4px; margin-left: auto; }
+.office-filter-btns button { background: transparent; border: 1px solid var(--border); color: var(--text2); padding: 3px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+.office-filter-btns button.active { background: rgba(88,166,255,0.15); border-color: var(--blue); color: var(--blue); }
+.office-canvas { display: flex; flex: 1; overflow: hidden; }
+.office-floor { flex: 1; position: relative; background: #0e1018; overflow: hidden; cursor: default; }
+.office-floor-grid { position: absolute; inset: 0; background: repeating-conic-gradient(#131621 0% 25%, #0e1018 0% 50%) 0 0 / 32px 32px; opacity: 0.6; pointer-events: none; }
+.office-activity { width: 250px; flex-shrink: 0; background: var(--sidebar); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+.office-activity-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(63,185,80,0.4); } 50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(63,185,80,0); } }
+.office-activity-feed { flex: 1; overflow-y: auto; padding: 8px; }
+.activity-entry { padding: 8px; border-radius: 6px; margin-bottom: 4px; font-size: 12px; }
+.activity-entry .act-agent { font-weight: 600; margin-right: 4px; }
+.activity-entry .act-time { color: var(--text2); font-size: 11px; float: right; }
+.activity-entry .act-action { color: var(--text2); }
+.act-bridge { color: var(--blue); }
+.act-brain { color: var(--teal); }
+.act-forge { color: var(--orange); }
+
+/* Agent Desks */
+.agent-desk { position: absolute; width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+.agent-desk:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.agent-desk.state-working { border-color: rgba(63,185,80,0.4); box-shadow: 0 0 16px rgba(63,185,80,0.08); }
+.agent-desk.state-idle { opacity: 0.7; }
+.agent-desk.state-offline { opacity: 0.35; filter: grayscale(0.5); }
+.agent-desk.state-blocked { border-color: rgba(210,153,34,0.4); }
+.agent-desk.desk-selected { border-color: var(--blue); box-shadow: 0 0 20px rgba(88,166,255,0.2); }
+.desk-header { padding: 12px 14px 8px; display: flex; align-items: center; gap: 10px; }
+.desk-avatar { font-size: 28px; line-height: 1; }
+.desk-info { flex: 1; }
+.desk-name { font-size: 14px; font-weight: 600; }
+.desk-machine { font-size: 11px; color: var(--text2); }
+.desk-status-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.desk-state-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.state-working .desk-state-dot { background: var(--green); }
+.state-idle .desk-state-dot { background: var(--text2); }
+.state-offline .desk-state-dot { background: #3d3d3d; }
+.state-blocked .desk-state-dot { background: var(--yellow); }
+.desk-state-label { font-size: 11px; }
+.state-working .desk-state-label { color: var(--green); }
+.state-idle .desk-state-label { color: var(--text2); }
+.state-offline .desk-state-label { color: #555; }
+.state-blocked .desk-state-label { color: var(--yellow); }
+.desk-body { padding: 0 14px 12px; border-top: 1px solid var(--border); margin-top: 4px; }
+.desk-row { display: flex; font-size: 11px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 6px; }
+.desk-row:last-child { border-bottom: none; }
+.desk-row .dr-label { color: var(--text2); width: 62px; flex-shrink: 0; }
+.desk-row .dr-val { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.desk-row .dr-val.online { color: var(--green); }
+.desk-row .dr-val.offline { color: #555; }
+.desk-monitor { position: absolute; top: -18px; right: 14px; font-size: 18px; opacity: 0.7; }
+
+/* Office furniture v2 */
+.office-furniture { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); cursor: default; }
+.furniture-icon { font-size: 22px; line-height: 1; }
+.office-whiteboard { position: absolute; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; font-size: 11px; color: var(--text2); }
+.office-whiteboard .wb-title { font-weight: 600; color: var(--text); font-size: 12px; margin-bottom: 4px; }
+.standup-area { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.standup-table { width: 64px; height: 64px; border-radius: 50%; background: rgba(88,166,255,0.06); border: 2px dashed rgba(88,166,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(88,166,255,0.5); }
+.standup-label { font-size: 10px; color: var(--text2); }
+
+.conn-lines { position: relative; height: 32px; width: 100%; display: flex; justify-content: center; }
+.conn-lines svg { overflow: visible; }
+
+/* ========== MOBILE RESPONSIVE ========== */
+.hamburger { display: none; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 4px; line-height: 1; }
+.hamburger:hover { background: rgba(88,166,255,0.1); }
+.mobile-menu-btn { position: fixed; top: 12px; left: 12px; z-index: 250; background: rgba(20,22,32,0.92); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199; }
+.sidebar-overlay.active { display: block; }
+
+@media (max-width: 768px) {
+  .hamburger { display: block; }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 200; transform: translateX(-100%); transition: transform 0.25s ease; width: 240px; min-width: 240px; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+  .content { padding: 60px 14px 16px; }
+  .sidebar .hamburger { display: none; }
+  .card-row { grid-template-columns: repeat(2, 1fr); }
+  .kanban { height: auto; padding-bottom: 20px; }
+  .kanban-col { min-width: 240px; }
+  .docs-layout { grid-template-columns: 1fr; height: auto; }
+  .docs-list { max-height: 300px; }
+  .doc-reader { max-height: 50vh; overflow-y: auto; }
+  .nav-item { padding: 12px 16px; font-size: 14px; }
+  .office-activity { display: none; }
+  .org-row { flex-direction: column; align-items: center; }
+  .team-card { min-width: 280px; width: 100%; max-width: 340px; }
+  .conn-lines { display: none; }
+  html, body { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .card-row { grid-template-columns: 1fr; }
+  .content { padding: 60px 10px 12px; }
+  .section-title { font-size: 16px; }
+  .hero { padding: 20px 16px; }
+  .hero h2 { font-size: 17px; }
+  .hero p { font-size: 13px; }
+  .card .val { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <button class="hamburger mobile-menu-btn" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar">
+    <div class="sidebar-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;">
+      <h1>⚡ Mission Control</h1>
+      <div class="subtitle">v2 • Phase 1</div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="nav-item" type="button" data-tab="mission"><span class="icon">🎯</span>Mission</button>
+      <button class="nav-item active" type="button" data-tab="tasks"><span class="icon">📋</span>Tasks</button>
+      <button class="nav-item" type="button" data-tab="calendar"><span class="icon">📅</span>Calendar</button>
+      <button class="nav-item" type="button" data-tab="projects"><span class="icon">📁</span>Projects</button>
+      <button class="nav-item" type="button" data-tab="memory"><span class="icon">🧠</span>Memory</button>
+      <button class="nav-item" type="button" data-tab="docs"><span class="icon">📚</span>Docs</button>
+      <button class="nav-item" type="button" data-tab="office"><span class="icon">🏢</span>Office</button>
+      <button class="nav-item" type="button" data-tab="team"><span class="icon">👥</span>Team</button>
+      <button class="nav-item" type="button" data-tab="ship"><span class="icon">🚢</span>Ship</button>
+      <button class="nav-item" type="button" data-tab="modelops"><span class="icon">⚡</span>Model Ops</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="gw-status" id="health-status"><span class="health-dot warn"></span>Checking...</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:4px;opacity:0.7">Static snapshot</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <!-- Mission -->
+    <div class="tab-panel" id="tab-mission">
+      <div class="hero">
+        <h2>🎯 Organization Mission</h2>
+        <p>Build and operate an autonomous organization of AI agents that produces real value 24/7 without requiring constant human attention.</p>
+      </div>
+      <div class="card-row" id="mission-state">
+        <div class="card"><h3>Phase</h3><div class="val">Phase 1</div><div class="text2" style="font-size:12px;margin-top:4px">Bridge Online</div></div>
+        <div class="card"><h3>Autonomy Level</h3><div class="val">0</div><div class="text2" style="font-size:12px;margin-top:4px">Human-directed</div></div>
+        <div class="card"><h3>Active Machines</h3><div class="val">1<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Mac Mini online</div></div>
+        <div class="card"><h3>Active Agents</h3><div class="val">1<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Bridge operational</div></div>
+      </div>
+      <div class="section-title">🔑 Key Priorities</div>
+      <div id="mission-priorities" class="card mb" style="font-size:13px;line-height:2">Loading...</div>
+      <div class="section-title">🏥 System Health</div>
+      <div class="card-row" id="mission-health">
+        <div class="card"><h3>Gateway</h3><div id="h-gw">...</div></div>
+        <div class="card"><h3>Ollama</h3><div id="h-ollama">...</div></div>
+        <div class="card"><h3>Disk</h3><div id="h-disk">...</div></div>
+        <div class="card"><h3>Git</h3><div id="h-git">...</div></div>
+      </div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="tab-panel active" id="tab-tasks">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="section-title" style="margin:0">📋 Task Board</div>
+        <div class="task-controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="text2" style="font-size:12px">View</span>
+            <button class="office-filter" id="view-drill" onclick="setTaskView('drill')">Projects</button>
+            <button class="office-filter active" id="view-kanban" onclick="setTaskView('kanban')">Kanban</button>
+            <button class="office-filter" id="view-tree" onclick="setTaskView('tree')">Tree</button>
+          </div>
+          <select id="project-filter" onchange="renderTasks()" style="background:var(--card);color:var(--text);border:1px solid var(--border);padding:4px 8px;border-radius:6px;font-size:12px">
+            <option value="">All Projects</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);user-select:none">
+            <input type="checkbox" id="active-only" onchange="renderTasks()" />
+            Active only
+          </label>
+        </div>
+      </div>
+      <!-- Drill-down breadcrumb -->
+      <div id="drill-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;flex-wrap:wrap"></div>
+      <!-- Drill-down view (Jira-style) -->
+      <div id="task-drill" class="task-tree"></div>
+      <div class="kanban" id="kanban" style="display:none"></div>
+      <div id="task-tree" class="task-tree" style="display:none"></div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="tab-panel" id="tab-calendar">
+      <div class="cal-header">
+        <button onclick="calNav(-1)">← Prev</button>
+        <h2 id="cal-title"></h2>
+        <button onclick="calNav(1)">Next →</button>
+        <button onclick="calNav(0)">Today</button>
+        <div class="cal-view-toggle" style="margin-left:auto;display:flex;gap:6px">
+          <button id="cal-btn-list" onclick="setCalView('list')">List</button>
+          <button id="cal-btn-week" onclick="setCalView('week')">Week</button>
+          <button id="cal-btn-month" onclick="setCalView('month')">Month</button>
+        </div>
+      </div>
+      <div class="card" style="padding:12px 14px;margin-bottom:12px;border-left:3px solid var(--border)">
+        <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text2)">
+          <div><span class="cal-legend-swatch" style="background:rgba(88,166,255,0.18);border-left-color:var(--blue)"></span>Events</div>
+          <div><span class="cal-legend-swatch" style="background:rgba(139,92,246,0.18);border-left-color:var(--purple)"></span>Reminders</div>
+          <div><span class="cal-legend-swatch" style="background:rgba(45,212,191,0.18);border-left-color:var(--teal)"></span>Cron (Tier 1)</div>
+          <div><span class="cal-legend-swatch" style="background:rgba(210,153,34,0.18);border-left-color:var(--yellow)"></span>Cron (Tier 2)</div>
+          <div><span class="cal-legend-swatch" style="background:rgba(236,72,153,0.18);border-left-color:var(--pink)"></span>Cron (Tier 3)</div>
+          <div><span class="cal-legend-swatch" style="background:rgba(248,81,73,0.18);border-left-color:var(--red)"></span>Cron (Tier 4)</div>
+        </div>
+      </div>
+      <div id="cal-month" class="cal-grid" style="display:none"></div>
+      <div id="cal-week" style="display:none"></div>
+      <!-- Mobile-friendly list view -->
+      <div id="cal-list" style="display:none"></div>
+    </div>
+
+    <!-- Projects (high-level overview + epic drill) -->
+    <div class="tab-panel" id="tab-projects">
+      <div class="section-title">📁 Projects</div>
+      <div id="proj-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;flex-wrap:wrap"></div>
+      <div class="card-grid" id="projects-grid"></div>
+      <div id="proj-drill" class="task-tree" style="display:none"></div>
+    </div>
+
+    <!-- Memory -->
+    <div class="tab-panel" id="tab-memory">
+      <div class="section-title">🧠 Memory</div>
+      <div class="mem-tabs">
+        <div class="mem-tab active" onclick="switchMemTab('daily')">📝 Daily Journal</div>
+        <div class="mem-tab" onclick="switchMemTab('long')">🧬 Long-Term Memory</div>
+      </div>
+      <div id="mem-daily"></div>
+      <div id="mem-long" style="display:none"></div>
+    </div>
+
+    <!-- Docs -->
+    <div class="tab-panel" id="tab-docs">
+      <div class="section-title">📚 Documents</div>
+      <div class="docs-layout">
+        <div class="docs-list" id="docs-list"></div>
+        <div class="doc-reader" id="doc-reader">Select a document to read</div>
+      </div>
+    </div>
+
+    <!-- Office (Miniverse) -->
+    <div id="tab-office" class="tab-panel">
+      <div style="width:100%;height:calc(100vh - 56px);display:flex;flex-direction:column;gap:12px;">
+        <div id="office-status" class="text2" style="font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span>Loading Office 3D scene…</span>
+          <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open directly</a>
+        </div>
+        <iframe id="miniverse-frame" data-src="https://seanjohnzon.github.io/office-3d/" src="https://seanjohnzon.github.io/office-3d/" style="flex:1;border:none;width:100%;background:#0f1119;border-radius:8px;min-height:70vh;" allow="autoplay; fullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="tab-panel" id="tab-team">
+      <div class="section-title">👥 Department Architecture</div>
+      <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Captain → Nami (orchestrate) → Department Chiefs (break down & spawn subagents) → Subagents (execute) → Jinbe (enforce process)</div>
+
+      <div class="section-title" style="font-size:14px;margin-top:4px">🏋️ Department Loads</div>
+      <div class="card-grid mb" id="dept-loads"></div>
+
+      <!-- Task Flow -->
+      <div class="card mb" style="text-align:center;padding:16px;background:linear-gradient(135deg,#161b22,#1a2332)">
+        <div style="font-size:12px;color:var(--text2);letter-spacing:1px;margin-bottom:8px">TASK ROUTING FLOW</div>
+        <div style="font-size:13px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px">
+          <span class="badge badge-yellow">👤 Captain</span> → <span class="badge badge-blue">🧭 Nami</span> → <span class="badge badge-orange">Chiefs</span> → <span class="badge badge-green">Subagents</span> → <span class="badge badge-blue">🔬 QA</span> → <span class="badge badge-yellow">👤 Approve</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-top:8px">Full pipeline: Robin researches → Usopp specs → Franky builds → Brook UX review → Chopper QA → Captain approves</div>
+      </div>
+
+      <div class="section-title" style="font-size:14px;margin-top:18px">🗺️ Org Comms Map</div>
+      <div id="orgviz" class="orgviz card" style="padding:14px"></div>
+
+      <div class="org-chart">
+        <!-- Leadership -->
+        <div class="org-divider">👑 Leadership</div>
+        <div class="org-row">
+          <div class="team-card glow-yellow">
+            <div class="avatar">👤</div>
+            <h3>Cihan (Captain)</h3>
+            <div class="machine">Human — MacBook Air</div>
+            <div class="agent-desc">Sets mission, priorities, constraints, approvals. Final judge on all deliverables.</div>
+            <div class="roles"><span class="role-pill yellow">Architect</span><span class="role-pill yellow">Director</span><span class="role-pill yellow">Judge</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="org-divider">🧭 Navigation Department — Nami</div>
+        <div class="org-row">
+          <div class="team-card glow-blue">
+            <div class="avatar">🧭</div>
+            <h3>Nami</h3>
+            <div class="machine">Mac Mini (10.0.0.152) · Claude Opus 4</div>
+            <div class="agent-desc">Chief of Staff. Breaks epics into stories, assigns to departments, tracks budget, recovers gateways.</div>
+            <div class="roles"><span class="role-pill blue">Coordinator</span><span class="role-pill blue">Budget</span><span class="role-pill blue">Dispatcher</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="border-color:rgba(88,166,255,0.2)">
+            <div class="avatar">⚡</div>
+            <h3>Zeus</h3>
+            <div class="machine">Mac Mini · Claude Sonnet</div>
+            <div class="agent-desc">Nami's subagent. Heartbeats, cost reports, standup compilation, gateway checks.</div>
+            <div class="roles"><span class="role-pill blue">Heartbeat</span><span class="role-pill blue">Reports</span></div>
+            <div><span class="status-badge online">Subagent</span></div>
+          </div>
+        </div>
+
+        <!-- Engineering -->
+        <div class="org-divider">🔧 Engineering Department — Franky</div>
+        <div class="org-row">
+          <div class="team-card glow-orange">
+            <div class="avatar">🔧</div>
+            <h3>Franky</h3>
+            <div class="machine">Desktop (10.0.0.251) · GPT-5.4</div>
+            <div class="agent-desc">Chief Engineer. Receives specs, spawns builder subagents in parallel. All code goes through him.</div>
+            <div class="roles"><span class="role-pill orange">Frontend</span><span class="role-pill orange">Backend</span><span class="role-pill orange">3D</span><span class="role-pill orange">Git</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+        <div style="margin-left:24px;border-left:2px dashed var(--border);padding-left:16px;margin-bottom:16px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">SUBAGENT POOL</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="badge badge-orange">frontend-builder</span>
+            <span class="badge badge-orange">backend-builder</span>
+            <span class="badge badge-orange">3d-scene-builder</span>
+            <span class="badge badge-orange">mobile-optimizer</span>
+            <span class="badge badge-orange">git-deployer</span>
+          </div>
+        </div>
+
+        <!-- Automation -->
+        <div class="org-divider">👨‍🍳 Automation Department — Sanji</div>
+        <div class="org-row">
+          <div class="team-card glow-orange">
+            <div class="avatar">👨‍🍳</div>
+            <h3>Sanji</h3>
+            <div class="machine">Desktop (10.0.0.251) · GPT-5.4</div>
+            <div class="agent-desc">Chief Automation Officer. CI/CD, GitHub Pages deploy, cron management, mobile testing.</div>
+            <div class="roles"><span class="role-pill orange">CI/CD</span><span class="role-pill orange">Deploy</span><span class="role-pill orange">Cron</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="border-color:rgba(240,136,62,0.2)">
+            <div class="avatar">🍳</div>
+            <h3>Duvan</h3>
+            <div class="machine">Desktop · Sonnet</div>
+            <div class="agent-desc">Sanji's subagent. Nightly training, app adaptation, ops cycles.</div>
+            <div class="roles"><span class="role-pill orange">Nightly</span><span class="role-pill orange">Adapt</span></div>
+            <div><span class="status-badge online">Subagent</span></div>
+          </div>
+        </div>
+
+        <!-- QA -->
+        <div class="org-divider">🔬 QA Department — Chopper</div>
+        <div class="org-row">
+          <div class="team-card glow-green">
+            <div class="avatar">🔬</div>
+            <h3>Chopper</h3>
+            <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
+            <div class="agent-desc">Chief QA Officer. Nothing ships without his PASS. Visual, API, regression, accessibility testing.</div>
+            <div class="roles"><span class="role-pill green">Visual QA</span><span class="role-pill green">API Test</span><span class="role-pill green">Regression</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+        <div style="margin-left:24px;border-left:2px dashed var(--border);padding-left:16px;margin-bottom:16px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px">SUBAGENT POOL</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="badge badge-green">visual-tester</span>
+            <span class="badge badge-green">api-tester</span>
+            <span class="badge badge-green">regression-tester</span>
+            <span class="badge badge-green">accessibility-checker</span>
+          </div>
+        </div>
+
+        <!-- Business Intel -->
+        <div class="org-divider">🎯 Business Intelligence — Usopp</div>
+        <div class="org-row">
+          <div class="team-card glow-teal">
+            <div class="avatar">🎯</div>
+            <h3>Usopp</h3>
+            <div class="machine">GPU3060 (10.0.0.16) · GPT-5.4</div>
+            <div class="agent-desc">Chief BI Officer. Translates Captain's vision into specs. Validates requirements BEFORE Franky builds.</div>
+            <div class="roles"><span class="role-pill teal">Requirements</span><span class="role-pill teal">Specs</span><span class="role-pill teal">Analytics</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+        </div>
+
+        <!-- Research -->
+        <div class="org-divider">📚 Research Department — Robin</div>
+        <div class="org-row">
+          <div class="team-card" style="border-color:rgba(139,92,246,0.3);box-shadow:0 0 12px rgba(139,92,246,0.1)">
+            <div class="avatar">📚</div>
+            <h3>Robin</h3>
+            <div class="machine">Mac Mini (10.0.0.152) · Grok 4 (xAI)</div>
+            <div class="agent-desc">Chief Research Officer. X/Twitter analysis, web research, knowledge archiving, Discord organization.</div>
+            <div class="roles"><span class="role-pill purple">X/Twitter</span><span class="role-pill purple">Web Research</span><span class="role-pill purple">Archives</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="border-color:rgba(139,92,246,0.15)">
+            <div class="avatar">🔎</div>
+            <h3>Robin-Ops</h3>
+            <div class="machine">Mac Mini · Grok 3 Fast</div>
+            <div class="agent-desc">Robin's subagent. Task patrol, simple execution, search fetching.</div>
+            <div class="roles"><span class="role-pill purple">Patrol</span><span class="role-pill purple">Fetch</span></div>
+            <div><span class="status-badge online">Subagent</span></div>
+          </div>
+        </div>
+
+        <!-- Creative -->
+        <div class="org-divider">🎨 Creative Department — Brook</div>
+        <div class="org-row">
+          <div class="team-card" style="border-color:rgba(236,72,153,0.3);box-shadow:0 0 12px rgba(236,72,153,0.1)">
+            <div class="avatar">🎨</div>
+            <h3>Brook</h3>
+            <div class="machine">Mac Mini (10.0.0.152) · Gemini 2.5 Pro</div>
+            <div class="agent-desc">Chief Creative Officer. UX PASS/FAIL authority, visual design, avatars, crew morale.</div>
+            <div class="roles"><span class="role-pill pink">UX Review</span><span class="role-pill pink">Visual</span><span class="role-pill pink">Avatars</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="border-color:rgba(236,72,153,0.15)">
+            <div class="avatar">🎵</div>
+            <h3>Brook-Ops</h3>
+            <div class="machine">Mac Mini · Gemini</div>
+            <div class="agent-desc">Brook's subagent. Media watch, build detection, simple tasks.</div>
+            <div class="roles"><span class="role-pill pink">Watch</span><span class="role-pill pink">Detect</span></div>
+            <div><span class="status-badge online">Subagent</span></div>
+          </div>
+        </div>
+
+        <!-- Support Staff -->
+        <div class="org-divider">⚙️ Support & Process</div>
+        <div class="org-row">
+          <div class="team-card" style="border-color:rgba(45,212,191,0.3);box-shadow:0 0 12px rgba(45,212,191,0.1)">
+            <div class="avatar">🕊️</div>
+            <h3>Vivi</h3>
+            <div class="machine">Mac Mini · Claude Sonnet</div>
+            <div class="agent-desc">Thread Manager. Patrols Telegram threads, tracks assignments, ensures follow-through.</div>
+            <div class="roles"><span class="role-pill teal">Threads</span><span class="role-pill teal">Follow-up</span><span class="role-pill teal">Workspace</span></div>
+            <div><span class="status-badge online">Online</span></div>
+          </div>
+          <div class="team-card" style="border-color:rgba(45,212,191,0.3);box-shadow:0 0 12px rgba(45,212,191,0.1)">
+            <div class="avatar">⚓</div>
+            <h3>Jinbe</h3>
+            <div class="machine">Mac Mini · Claude Sonnet (cron)</div>
+            <div class="agent-desc">Scrum Master. Daily board cleanup, effort enforcement, velocity tracking, sprint ceremonies.</div>
+            <div class="roles"><span class="role-pill teal">Standup</span><span class="role-pill teal">Board</span><span class="role-pill teal">Velocity</span></div>
+            <div><span class="status-badge online">Cron</span></div>
+          </div>
+          <div class="team-card" style="opacity:0.5;border-color:rgba(248,81,73,0.2)">
+            <div class="avatar">🛡️</div>
+            <h3>Zoro</h3>
+            <div class="machine">TBD — needs new machine</div>
+            <div class="agent-desc">Chief Security Officer [FUTURE]. Token rotation, TLS, firewall, incident response.</div>
+            <div class="roles"><span class="role-pill red">Security</span><span class="role-pill red">Infra</span><span class="role-pill red">Audit</span></div>
+            <div><span class="status-badge offline">Planned</span></div>
+          </div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="org-divider">🖥️ Infrastructure</div>
+        <div class="card-grid mb">
+          <div class="card">
+            <h3>Mac Mini (HQ)</h3>
+            <div style="font-size:12px;color:var(--text2)">10.0.0.152 · Apple M4 · 16GB</div>
+            <div style="margin-top:8px;font-size:12px">Agents: Nami, Zeus, Robin, Brook, Vivi, Jinbe</div>
+            <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
+          </div>
+          <div class="card">
+            <h3>Desktop (Engineering)</h3>
+            <div style="font-size:12px;color:var(--text2)">10.0.0.251 · Windows</div>
+            <div style="margin-top:8px;font-size:12px">Agents: Franky, Sanji, Duvan</div>
+            <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
+          </div>
+          <div class="card">
+            <h3>GPU3060 Laptop (QA)</h3>
+            <div style="font-size:12px;color:var(--text2)">10.0.0.16 · Windows</div>
+            <div style="margin-top:8px;font-size:12px">Agents: Chopper, Usopp</div>
+            <div style="margin-top:4px"><span class="badge badge-green">Online</span></div>
+          </div>
+        </div>
+
+        <!-- Tool Lanes -->
+        <div class="tool-lanes">
+          <h3>🔧 Tool Lanes</h3>
+          <div class="tool-lane"><span class="tool-name">OpenClaw</span><span class="tool-desc">Primary autonomous runtime — all agents</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">GitHub Pages</span><span class="tool-desc">Mission Control dashboard (UAT)</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">Mission Control API</span><span class="tool-desc">Task board on localhost:18800</span><span class="badge badge-green">Active</span></div>
+          <div class="tool-lane"><span class="tool-name">Cursor</span><span class="tool-desc">Supervised engineering</span><span class="badge badge-yellow">Supervised</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ship -->
+    <div class="tab-panel" id="tab-ship">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;gap:16px;">
+        <div style="font-size:72px;line-height:1;">🚢</div>
+        <div style="font-size:28px;font-weight:700;letter-spacing:-0.5px;">The Thousand Sunny</div>
+        <div style="font-size:15px;color:var(--text2);max-width:420px;line-height:1.6;">
+          Ship systems, logs, and voyage telemetry are being prepared.<br>
+          This tab will display live ship status, crew positions, and operational metrics.
+        </div>
+        <div style="margin-top:8px;">
+          <span style="background:rgba(88,166,255,0.12);color:var(--blue);border:1px solid rgba(88,166,255,0.25);padding:6px 20px;border-radius:20px;font-size:13px;font-weight:600;letter-spacing:0.5px;">
+            ⚓ COMING SOON
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Ops -->
+    <div class="tab-panel" id="tab-modelops">
+      <div class="section-title">⚡ Model Ops</div>
+
+      <!-- Section 1: Subscription Cards -->
+      <div class="mo-section">
+        <div class="mo-section-title">Subscriptions &amp; Providers</div>
+        <div class="mo-sub-cards" id="mo-sub-cards">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Section 2: Agent Usage Bar Chart -->
+      <div class="mo-section">
+        <div class="mo-section-title">Agent Token Usage — Today</div>
+        <div class="mo-usage-wrap">
+          <div class="mo-usage-chart" id="mo-usage-chart">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Context Window Monitor -->
+      <div class="mo-section">
+        <div class="mo-section-title">Context Window Monitor</div>
+        <div class="mo-ctx-grid" id="mo-ctx-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Section 4: Agent Filter + Detail -->
+      <div class="mo-section">
+        <div class="mo-section-title">Agent Detail</div>
+        <div class="mo-filter-row">
+          <select class="mo-filter-select" id="mo-agent-select" onchange="moSelectAgent(this.value)">
+            <option value="">— Select an agent —</option>
+          </select>
+          <span id="mo-filter-status" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+        <div id="mo-detail-panel" class="mo-empty-state">Select an agent above to view details.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Tab navigation
+const navItems = document.querySelectorAll('.nav-item');
+const panels = document.querySelectorAll('.tab-panel');
+const validTabs = new Set(Array.from(navItems, item => item.dataset.tab));
+let officeFrameLoaded = false;
+let officeFrameListenersBound = false;
+
+function ensureOfficeFrameLoaded() {
+  const frame = document.getElementById('miniverse-frame');
+  const status = document.getElementById('office-status');
+  if (!frame || !status) return;
+
+  if (!officeFrameListenersBound) {
+    officeFrameListenersBound = true;
+    frame.addEventListener('load', () => {
+      officeFrameLoaded = true;
+      status.innerHTML = 'Office 3D scene loaded from GitHub Pages. <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open directly</a>';
+    });
+    frame.addEventListener('error', () => {
+      officeFrameLoaded = false;
+      status.innerHTML = 'Office 3D embed hit a loading issue. <a id="office-direct-link" href="https://seanjohnzon.github.io/office-3d/" target="_blank" rel="noopener noreferrer">Open the scene directly</a>';
+    });
+  }
+
+  if (!officeFrameLoaded && frame.dataset.src && frame.src === 'about:blank') {
+    frame.src = frame.dataset.src;
+  }
+}
+
+function activateTab(tab, { updateHash = true } = {}) {
+  if (!validTabs.has(tab)) tab = 'tasks';
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
+  panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+  if (tab === 'office') ensureOfficeFrameLoaded();
+  if (updateHash) {
+    history.replaceState(null, '', '#' + tab);
+  }
+}
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => activateTab(item.dataset.tab));
+});
+
+window.addEventListener('hashchange', () => activateTab(location.hash.slice(1), { updateHash: false }));
+
+// API helpers
+async function api(path) {
+  try {
+    const r = await fetch(path, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status} for ${path}`);
+    return await r.json();
+  } catch (e) {
+    console.error('[Mission Control data fetch failed]', path, e);
+    return null;
+  }
+}
+
+async function verifyDataFiles() {
+  const paths = [
+    './data/activity.json',
+    './data/docs.json',
+    './data/health.json',
+    './data/memory-long.json',
+    './data/memory.json',
+    './data/model-ops.json',
+    './data/projects.json',
+    './data/tasks.json'
+  ];
+  const results = await Promise.all(paths.map(async (path) => {
+    try {
+      const r = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+      return { path, ok: r.ok, status: r.status };
+    } catch (e) {
+      return { path, ok: false, status: 'ERR' };
+    }
+  }));
+
+  const failed = results.filter(r => !r.ok);
+  const healthStatus = document.getElementById('health-status');
+  if (failed.length && healthStatus) {
+    healthStatus.innerHTML = `<span class="health-dot err"></span>Data issue (${failed.length})`;
+    healthStatus.title = failed.map(f => `${f.path} [${f.status}]`).join('\n');
+  }
+  console.info('[Mission Control data files]', results);
+  return results;
+}
+
+// Health
+async function loadHealth() {
+  const h = await api('./data/health.json');
+  if (!h) return;
+  const gwEl = document.getElementById('h-gw');
+  const olEl = document.getElementById('h-ollama');
+  const dkEl = document.getElementById('h-disk');
+  gwEl.innerHTML = `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>${h.gateway.status}`;
+  olEl.innerHTML = `<span class="health-dot ${h.ollama.ok?'ok':'err'}"></span>${h.ollama.ok ? h.ollama.models.length+' models' : 'unreachable'}`;
+  dkEl.innerHTML = `<span class="health-dot ${parseInt(h.disk.percent)>90?'err':'ok'}"></span>${h.disk.used} / ${h.disk.total} (${h.disk.percent})`;
+  document.getElementById('health-status').innerHTML =
+    `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>Gateway ${h.gateway.ok?'OK':'Down'}`;
+
+  // Git
+  const act = await api('./data/activity.json');
+  const gitEl = document.getElementById('h-git');
+  if (act && act.commits && act.commits.length) {
+    gitEl.innerHTML = `<span class="health-dot ok"></span>${act.commits.length} recent commits`;
+  } else {
+    gitEl.innerHTML = `<span class="health-dot warn"></span>No data`;
+  }
+}
+
+// Tasks
+let _taskView = 'kanban';
+let _tasksData = [];
+let _orgVizAnim = null;
+
+function stopOrgVizAnim() {
+  if (_orgVizAnim) {
+    if (_orgVizAnim?.raf) cancelAnimationFrame(_orgVizAnim.raf);
+    if (typeof _orgVizAnim?.cleanup === 'function') _orgVizAnim.cleanup();
+  }
+  _orgVizAnim = null;
+}
+
+function setTaskView(view) {
+  _taskView = view;
+  renderTasks();
+}
+
+function getTaskPoints(t) {
+  const raw = t.points ?? t.estimate ?? '';
+  if (raw === null || raw === undefined) return null;
+  const m = String(raw).match(/(\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  const n = Number(m[1]);
+  return Number.isFinite(n) ? n : null;
+}
+
+function taskDept(t) {
+  return t.department || t.dept || t.team || '';
+}
+
+function isCompletedStatus(status) {
+  const s = (status || '').toLowerCase();
+  return s === 'completed' || s === 'cancelled' || s === 'done';
+}
+
+function focusTask(taskId) {
+  const el = document.getElementById('task-' + taskId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.borderColor = 'rgba(88,166,255,0.7)';
+    setTimeout(() => { el.style.borderColor = ''; }, 1200);
+    return;
+  }
+  if (_taskView !== 'tree') {
+    _taskView = 'tree';
+    renderTasks();
+    setTimeout(() => focusTask(taskId), 50);
+  }
+}
+
+function renderTaskCardInner(t, dotColor) {
+  const pClass = t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog';
+  const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+  const assignName = t.assigned || 'unassigned';
+  const assignInitial = assignName.charAt(0).toUpperCase();
+  const assignColor = assignName.includes('bridge') ? 'var(--blue)' : assignName.includes('human') ? 'var(--yellow)' : assignName.includes('forge') ? 'var(--orange)' : assignName.includes('brain') ? 'var(--teal)' : 'var(--text2)';
+  const descHtml = t.notes ? `<div class="task-desc">${escapeHtml(t.notes)}</div>` : '';
+  const pts = getTaskPoints(t);
+  const dept = taskDept(t);
+  const parentLink = t.parent ? `<a href="#" class="badge badge-gray" onclick="focusTask('${t.parent}');return false;">↑ ${t.parent}</a>` : '';
+  let deps = '';
+  if (t.dependencies && t.dependencies !== 'none') {
+    deps = `<div style="font-size:10px;color:var(--text2);margin-top:4px">⛓ ${escapeHtml(t.dependencies)}</div>`;
+  }
+  return {
+    pClass,
+    html: `
+      <div class="task-id">${escapeHtml(t.id)}</div>
+      <div class="task-title"><span class="status-dot" style="background:${dotColor}"></span>${escapeHtml(t.title || '')}</div>
+      ${descHtml}
+      <div class="task-meta">
+        <span class="badge ${pBadge}">${escapeHtml(t.priority || '')}</span>
+        ${t.phase ? `<span class="badge badge-blue">${escapeHtml(t.phase)}</span>` : ''}
+        ${pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : ''}
+        ${dept ? `<span class="badge badge-teal">${escapeHtml(dept)}</span>` : ''}
+        ${parentLink}
+      </div>
+      ${deps}
+      <div class="task-footer">
+        <div class="assignee"><span class="avatar-circle" style="background:${assignColor}">${escapeHtml(assignInitial)}</span>${escapeHtml(assignName)}</div>
+        <div class="timestamp">${t.opened || t.created || ''}</div>
+      </div>
+    `
+  };
+}
+
+function renderKanban(tasks) {
+  const columns = {
+    backlog: { title: 'Backlog', tasks: [] },
+    todo: { title: 'To Do', tasks: [] },
+    inprogress: { title: 'In Progress', tasks: [] },
+    blocked: { title: 'Blocked', tasks: [] },
+    done: { title: 'Done', tasks: [] }
+  };
+  for (const t of tasks) {
+    const s = (t.status || '').toLowerCase();
+    const p = (t.priority || '').toLowerCase();
+    if (s === 'completed') columns.done.tasks.push(t);
+    else if (s === 'blocked') columns.blocked.tasks.push(t);
+    else if (s === 'in-progress') columns.inprogress.tasks.push(t);
+    else if (s === 'open' && p === 'backlog') columns.backlog.tasks.push(t);
+    else if (s === 'open') columns.todo.tasks.push(t);
+    else if (s === 'cancelled') columns.done.tasks.push(t);
+    else columns.backlog.tasks.push(t);
+  }
+  const kanban = document.getElementById('kanban');
+  kanban.innerHTML = '';
+  for (const [key, col] of Object.entries(columns)) {
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.innerHTML = `<div class="kanban-col-header">${col.title}<span class="count">${col.tasks.length}</span></div><div class="kanban-cards" id="col-${key}"></div>`;
+    const cardsEl = colEl.querySelector('.kanban-cards');
+    const dotColors = { backlog: 'var(--text2)', todo: 'var(--blue)', inprogress: 'var(--purple)', blocked: 'var(--yellow)', done: 'var(--green)' };
+    const dotColor = dotColors[key] || 'var(--text2)';
+    for (const t of col.tasks) {
+      const { pClass, html } = renderTaskCardInner(t, dotColor);
+      const card = document.createElement('div');
+      card.id = 'task-' + t.id;
+      card.className = `kanban-card ${pClass}`;
+      card.innerHTML = html;
+      cardsEl.appendChild(card);
+    }
+    kanban.appendChild(colEl);
+  }
+}
+
+function renderTree(tasks) {
+  const container = document.getElementById('task-tree');
+  container.innerHTML = '';
+  const byId = new Map(tasks.map(t => [t.id, t]));
+  const children = new Map();
+  for (const t of tasks) {
+    const pid = t.parent || '';
+    if (!pid) continue;
+    if (!children.has(pid)) children.set(pid, []);
+    children.get(pid).push(t.id);
+  }
+  const roots = [];
+  for (const t of tasks) {
+    const hasParent = !!t.parent && byId.has(t.parent);
+    const isProject = (t.type || '').toLowerCase() === 'project';
+    if (isProject || !hasParent) roots.push(t.id);
+  }
+  roots.sort((a, b) => {
+    const ta = byId.get(a), tb = byId.get(b);
+    const pa = ((ta?.type || '').toLowerCase() === 'project') ? 0 : 1;
+    const pb = ((tb?.type || '').toLowerCase() === 'project') ? 0 : 1;
+    if (pa !== pb) return pa - pb;
+    return String(a).localeCompare(String(b));
+  });
+  function nodeLabel(t) {
+    const kind = (t.type || '').toLowerCase();
+    const kindBadge = kind ? `<span class="badge badge-gray">${escapeHtml(kind)}</span>` : '';
+    const pts = getTaskPoints(t);
+    const ptsBadge = pts !== null ? `<span class="badge badge-purple">${pts} pts</span>` : '';
+    const dept = taskDept(t);
+    const deptBadge = dept ? `<span class="badge badge-teal">${escapeHtml(dept)}</span>` : '';
+    const pri = t.priority || '';
+    const pBadge = pri === 'P0' ? 'badge-red' : pri === 'P1' ? 'badge-orange' : pri === 'P2' ? 'badge-blue' : 'badge-gray';
+    const priBadge = pri ? `<span class="badge ${pBadge}">${escapeHtml(pri)}</span>` : '';
+    return `${priBadge}${kindBadge}${ptsBadge}${deptBadge}`;
+  }
+  function renderNode(taskId) {
+    const t = byId.get(taskId);
+    if (!t) return document.createElement('div');
+    const kids = (children.get(taskId) || []).slice().sort();
+    const hasKids = kids.length > 0;
+    const node = document.createElement('div');
+    node.className = 'tree-node';
+    const header = document.createElement('div');
+    header.className = 'tree-header';
+    header.id = 'task-' + t.id;
+    header.innerHTML = `
+      <div class="tree-toggle">${hasKids ? '▾' : '•'}</div>
+      <div style="flex:1">
+        <div class="tree-title">${escapeHtml(t.id)} — ${escapeHtml(t.title || '')}</div>
+        <div class="task-meta" style="margin-top:6px">${nodeLabel(t)}</div>
+      </div>
+    `;
+    const childrenEl = document.createElement('div');
+    childrenEl.className = 'tree-children';
+    childrenEl.style.display = hasKids ? '' : 'none';
+    if (hasKids) {
+      header.addEventListener('click', () => {
+        const open = childrenEl.style.display !== 'none';
+        childrenEl.style.display = open ? 'none' : '';
+        header.querySelector('.tree-toggle').textContent = open ? '▸' : '▾';
+      });
+      for (const kidId of kids) {
+        if ((children.get(kidId) || []).length === 0) {
+          const leafWrap = document.createElement('div');
+          leafWrap.className = 'tree-leaf';
+          const kid = byId.get(kidId);
+          const { pClass, html } = renderTaskCardInner(kid, 'var(--text2)');
+          const card = document.createElement('div');
+          card.className = `kanban-card ${pClass}`;
+          card.id = 'task-' + kid.id;
+          card.innerHTML = html;
+          leafWrap.appendChild(card);
+          childrenEl.appendChild(leafWrap);
+        } else {
+          childrenEl.appendChild(renderNode(kidId));
+        }
+      }
+    }
+    node.appendChild(header);
+    if (hasKids) node.appendChild(childrenEl);
+    return node;
+  }
+  for (const rid of roots) container.appendChild(renderNode(rid));
+  if (!roots.length) {
+    container.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No tasks found.</div>';
+  }
+}
+
+function renderDepartmentLoads(tasks) {
+  const el = document.getElementById('dept-loads');
+  if (!el) return;
+  const active = tasks.filter(t => !isCompletedStatus(t.status));
+  const deptMap = new Map();
+  for (const t of active) {
+    const dept = taskDept(t) || 'Unassigned';
+    const pts = getTaskPoints(t) ?? 0;
+    if (!deptMap.has(dept)) deptMap.set(dept, { dept, points: 0, tasks: 0 });
+    const row = deptMap.get(dept);
+    row.points += pts;
+    row.tasks += 1;
+  }
+  const depts = [...deptMap.values()].sort((a, b) => b.points - a.points);
+  if (!depts.length) {
+    el.innerHTML = '<div class="card text2" style="text-align:center;padding:28px">No active tasks to compute loads.</div>';
+    return;
+  }
+  const cls = (p) => p >= 25 ? 'high' : p >= 12 ? 'med' : 'low';
+  el.innerHTML = depts.map(d => `
+    <div class="card load-card ${cls(d.points)}">
+      <div class="dept-name">${escapeHtml(d.dept)}</div>
+      <div class="dept-points">${Math.round(d.points * 10) / 10}<span class="text2" style="font-size:14px;font-weight:600"> pts</span></div>
+      <div class="dept-sub">${d.tasks} active task${d.tasks === 1 ? '' : 's'}</div>
+    </div>
+  `).join('');
+}
+
+let _drillPath = []; // breadcrumb: [{id, title}]
+
+function populateProjectFilter(tasks) {
+  const sel = document.getElementById('project-filter');
+  if (!sel) return;
+  const current = sel.value;
+  const projects = tasks.filter(t => t.type === 'project');
+  const projIds = new Set(projects.map(p => p.id));
+  // Also find PROJ- parents
+  tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
+  const opts = '<option value="">All Projects</option>' + [...projIds].map(pid => {
+    const proj = tasks.find(t => t.id === pid);
+    const name = proj ? proj.title : pid;
+    return `<option value="${pid}" ${pid===current?'selected':''}>${escapeHtml(name)}</option>`;
+  }).join('');
+  sel.innerHTML = opts;
+}
+
+function getDescendants(tasks, parentId) {
+  const ids = new Set();
+  const queue = [parentId];
+  while (queue.length) {
+    const pid = queue.shift();
+    for (const t of tasks) {
+      if (t.parent === pid && !ids.has(t.id)) {
+        ids.add(t.id);
+        queue.push(t.id);
+      }
+    }
+  }
+  return ids;
+}
+
+function renderTasks() {
+  const tasks = _tasksData || [];
+  populateProjectFilter(tasks);
+  const activeOnly = document.getElementById('active-only')?.checked;
+  const projFilter = document.getElementById('project-filter')?.value || '';
+  let filtered = activeOnly ? tasks.filter(t => !isCompletedStatus(t.status)) : tasks;
+  if (projFilter) {
+    const descendants = getDescendants(tasks, projFilter);
+    descendants.add(projFilter);
+    filtered = filtered.filter(t => descendants.has(t.id) || descendants.has(t.parent));
+  }
+  const kanbanEl = document.getElementById('kanban');
+  const treeEl = document.getElementById('task-tree');
+  const drillEl = document.getElementById('task-drill');
+  const breadEl = document.getElementById('drill-breadcrumb');
+  const db = document.getElementById('view-drill');
+  const kb = document.getElementById('view-kanban');
+  const tb = document.getElementById('view-tree');
+  if (db) db.classList.toggle('active', _taskView === 'drill');
+  if (kb) kb.classList.toggle('active', _taskView === 'kanban');
+  if (tb) tb.classList.toggle('active', _taskView === 'tree');
+
+  kanbanEl.style.display = 'none';
+  treeEl.style.display = 'none';
+  drillEl.style.display = 'none';
+  breadEl.style.display = 'none';
+
+  if (_taskView === 'drill') {
+    drillEl.style.display = '';
+    breadEl.style.display = '';
+    renderDrillDown(filtered);
+  } else if (_taskView === 'tree') {
+    treeEl.style.display = '';
+    renderTree(filtered);
+  } else {
+    kanbanEl.style.display = '';
+    renderKanban(filtered);
+  }
+  renderDepartmentLoads(tasks);
+  const priorities = tasks.filter(t => (t.status || '').toLowerCase() === 'in-progress' || ((t.status || '').toLowerCase() === 'open' && (t.priority === 'P0' || t.priority === 'P1'))).slice(0, 5);
+  const priEl = document.getElementById('mission-priorities');
+  if (priEl) {
+    if (priorities.length) {
+      priEl.innerHTML = priorities.map(t => {
+        const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : 'badge-blue';
+        const pts = getTaskPoints(t);
+        return `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><span class="badge ${pBadge}" style="margin-right:8px">${escapeHtml(t.priority || '')}</span><strong>${escapeHtml(t.id)}</strong> — ${escapeHtml(t.title || '')} ${pts !== null ? `<span class="text2">(${pts} pts)</span>` : ''} <span class="text2">(${escapeHtml(t.status || '')})</span></div>`;
+      }).join('');
+    } else {
+      priEl.textContent = 'No active priorities found.';
+    }
+  }
+}
+
+function drillInto(id, title) {
+  _drillPath.push({id, title});
+  renderTasks();
+}
+
+function drillTo(index) {
+  _drillPath = _drillPath.slice(0, index);
+  renderTasks();
+}
+
+function statusIcon(s) {
+  s = (s||'').toLowerCase();
+  if (s === 'completed' || s === 'complete' || s === 'done') return '✅';
+  if (s === 'in-progress') return '🔨';
+  if (s === 'queued') return '📋';
+  if (s === 'blocked') return '⏳';
+  if (s === 'open') return '📌';
+  if (s === 'paused') return '⏸️';
+  return '○';
+}
+
+function typeIcon(t) {
+  if (t === 'project') return '📁';
+  if (t === 'epic') return '🎯';
+  if (t === 'story') return '📖';
+  return '🔧';
+}
+
+function renderDrillDown(tasks) {
+  const drillEl = document.getElementById('task-drill');
+  const breadEl = document.getElementById('drill-breadcrumb');
+
+  // Breadcrumb
+  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="drillTo(0)">🏠 All Projects</span>';
+  _drillPath.forEach((p, i) => {
+    bc += ` <span class="text2">›</span> <span style="cursor:pointer;color:var(--blue)" onclick="drillTo(${i+1})">${escapeHtml(p.title)}</span>`;
+  });
+  breadEl.innerHTML = bc;
+
+  const currentParent = _drillPath.length > 0 ? _drillPath[_drillPath.length - 1].id : null;
+
+  let items;
+  if (!currentParent) {
+    // Show projects
+    items = tasks.filter(t => t.type === 'project');
+    if (!items.length) {
+      // Fallback: synthesize projects from PROJ- parents
+      const projIds = new Set();
+      tasks.forEach(t => { const p = t.parent || ''; if (p.startsWith('PROJ-')) projIds.add(p); });
+      items = [...projIds].map(pid => {
+        const found = tasks.find(t => t.id === pid);
+        return found || {id: pid, title: pid, type: 'project', status: 'in-progress', priority: 'P1'};
+      });
+    }
+  } else {
+    // Show children of currentParent
+    items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
+  }
+
+  // Sort: P0 first, then in-progress, then queued, then rest
+  const pOrder = {'P0':0,'P1':1,'P2':2};
+  const sOrder = {'in-progress':0,'queued':1,'open':2,'blocked':3};
+  items.sort((a,b) => {
+    const pa = pOrder[a.priority] ?? 3, pb = pOrder[b.priority] ?? 3;
+    if (pa !== pb) return pa - pb;
+    const sa = sOrder[(a.status||'').toLowerCase()] ?? 4, sb = sOrder[(b.status||'').toLowerCase()] ?? 4;
+    return sa - sb;
+  });
+
+  if (!items.length) {
+    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level.</div>';
+    return;
+  }
+
+  // Count children for each item
+  const childCount = (id) => tasks.filter(t => t.parent === id && t.id !== id).length;
+  const completedChildCount = (id) => tasks.filter(t => t.parent === id && t.id !== id && isCompletedStatus(t.status)).length;
+  const totalPoints = (id) => {
+    let sum = 0;
+    tasks.filter(t => t.parent === id && t.id !== id).forEach(t => { sum += getTaskPoints(t) || 0; });
+    return sum;
+  };
+
+  drillEl.innerHTML = items.map(t => {
+    const kids = childCount(t.id);
+    const doneKids = completedChildCount(t.id);
+    const pts = getTaskPoints(t);
+    const tPts = totalPoints(t.id);
+    const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+    const canDrill = kids > 0 || t.type === 'project' || t.type === 'epic' || t.type === 'story';
+    const clickAttr = canDrill ? `onclick="drillInto('${t.id}','${escapeHtml(t.title).replace(/'/g,"\\'")}')" style="cursor:pointer"` : '';
+    const progress = kids > 0 ? Math.round((doneKids / kids) * 100) : (isCompletedStatus(t.status) ? 100 : 0);
+    const assignee = t.assigned || '';
+    const assignShort = assignee.split('(')[0].split(' ')[0].trim();
+
+    return `
+      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr} id="task-${t.id}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+              <span style="font-size:14px">${typeIcon(t.type)}</span>
+              <span class="task-id">${escapeHtml(t.id)}</span>
+              <span class="badge ${pBadge}" style="font-size:10px">${escapeHtml(t.priority || '')}</span>
+              ${pts !== null ? `<span class="badge badge-blue" style="font-size:10px">${pts}pt${pts!==1?'s':''}</span>` : ''}
+              <span style="font-size:11px">${statusIcon(t.status)}</span>
+            </div>
+            <div class="task-title" style="font-size:14px">${escapeHtml(t.title || '')}</div>
+          </div>
+          ${canDrill ? '<span style="color:var(--text2);font-size:18px">›</span>' : ''}
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            ${assignShort ? `<span style="font-size:11px;color:var(--text2)">👤 ${escapeHtml(assignShort)}</span>` : ''}
+            ${kids > 0 ? `<span style="font-size:11px;color:var(--text2)">${doneKids}/${kids} items</span>` : ''}
+            ${tPts > 0 ? `<span style="font-size:11px;color:var(--text2)">Σ${tPts}pts</span>` : ''}
+          </div>
+          ${kids > 0 ? `<div style="width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${progress}%;background:${progress===100?'var(--green)':'var(--blue)'};border-radius:3px;transition:width 0.3s"></div></div>` : ''}
+        </div>
+        ${t.notes && !canDrill ? `<div class="task-desc" style="margin-top:6px">${escapeHtml((t.notes||'').substring(0,120))}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+async function loadTasks() {
+  const data = await api('./data/tasks.json');
+  if (!data || !data.tasks) return;
+  _tasksData = data.tasks;
+  setTaskView(_taskView || 'kanban');
+  // Re-render projects view now that task data is available for drill-down
+  if (_projectsData) renderProjectsView();
+}
+
+// Calendar
+let calAnchorDate = new Date();
+let calView = window.innerWidth <= 768 ? 'list' : 'week';
+let calItems = [];
+
+function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function isoDate(d) { return d.toISOString().slice(0, 10); }
+function fmtTime(d) { return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+function setCalView(view) {
+  calView = view;
+  const lb = document.getElementById('cal-btn-list');
+  if (lb) lb.classList.toggle('active', view === 'list');
+  document.getElementById('cal-btn-week').classList.toggle('active', view === 'week');
+  document.getElementById('cal-btn-month').classList.toggle('active', view === 'month');
+  document.getElementById('cal-list').style.display = view === 'list' ? '' : 'none';
+  document.getElementById('cal-week').style.display = view === 'week' ? '' : 'none';
+  document.getElementById('cal-month').style.display = view === 'month' ? '' : 'none';
+  renderCalendar();
+}
+
+async function fetchCalendar(rangeStart, rangeEnd) {
+  const data = await api('./data/calendar.json');
+  if (!data || !data.items) { calItems = []; return; }
+  calItems = data.items.filter(it => {
+    const s = new Date(it.start);
+    return s >= rangeStart && s < rangeEnd;
+  });
+}
+
+function getWeekRange(anchor) {
+  const d = startOfDay(anchor);
+  const start = new Date(d);
+  start.setDate(start.getDate() - start.getDay());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 7);
+  return { start, end };
+}
+
+function getMonthRange(anchor) {
+  const y = anchor.getFullYear(), m = anchor.getMonth();
+  return { start: new Date(y, m, 1), end: new Date(y, m + 1, 1) };
+}
+
+function itemClass(item) {
+  if (item.kind === 'event') return 'kind-event';
+  if (item.kind === 'reminder') return 'kind-reminder';
+  if (item.kind === 'cron') return 'tier-' + (item.tier || 'teal');
+  return '';
+}
+
+function renderMonthGrid(range, items) {
+  const now = new Date();
+  const y = calAnchorDate.getFullYear(), m = calAnchorDate.getMonth();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
+  const first = new Date(y, m, 1);
+  const last = new Date(y, m + 1, 0);
+  const startDay = first.getDay();
+  const byDay = {};
+  for (const it of items) {
+    const d = new Date(it.start);
+    const key = isoDate(d);
+    if (!byDay[key]) byDay[key] = [];
+    byDay[key].push(it);
+  }
+  let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
+  const prevLast = new Date(y, m, 0).getDate();
+  for (let i = startDay - 1; i >= 0; i--) {
+    html += `<div class="cal-day other"><div class="day-num">${prevLast - i}</div></div>`;
+  }
+  for (let d = 1; d <= last.getDate(); d++) {
+    const isToday = d === now.getDate() && m === now.getMonth() && y === now.getFullYear();
+    const key = isoDate(new Date(y, m, d));
+    const dayItems = (byDay[key] || []).slice(0, 4);
+    const itemsHtml = dayItems.map(it => {
+      const label = it.kind === 'cron' ? `⏱ ${it.title}` : it.title;
+      return `<div class="cal-mini-item ${itemClass(it)}">${escapeHtml(label)}</div>`;
+    }).join('');
+    html += `<div class="cal-day${isToday ? ' today' : ''}"><div class="day-num">${d}</div>${itemsHtml}</div>`;
+  }
+  const remaining = 42 - (startDay + last.getDate());
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-day other"><div class="day-num">${i}</div></div>`;
+  }
+  document.getElementById('cal-month').innerHTML = html;
+}
+
+function renderWeekGrid(range, items) {
+  const start = range.start;
+  const end = range.end;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const endDay = new Date(end.getTime() - 1);
+  document.getElementById('cal-title').textContent = `${months[start.getMonth()]} ${start.getDate()} – ${months[endDay.getMonth()]} ${endDay.getDate()}`;
+  const HOUR_H = 44;
+  const HOURS = Array.from({ length: 24 }, (_, i) => i);
+  const dayItems = Array.from({ length: 7 }, () => []);
+  for (const it of items) {
+    const s = new Date(it.start);
+    if (s < start || s >= end) continue;
+    const idx = Math.floor((startOfDay(s) - start) / 86400000);
+    if (idx >= 0 && idx < 7) dayItems[idx].push(it);
+  }
+  let html = `<div class="cal-week-wrap"><div class="cal-week-grid">`;
+  html += `<div class="cal-week-head"></div>`;
+  const names = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    html += `<div class="cal-week-head">${names[i]}<span class="num">${d.getDate()}</span></div>`;
+  }
+  const now = new Date();
+  for (const h of HOURS) {
+    const label = new Date(2000, 0, 1, h, 0).toLocaleTimeString([], { hour: 'numeric' });
+    html += `<div class="cal-week-time">${label}</div>`;
+    for (let d = 0; d < 7; d++) {
+      const cellStart = new Date(start);
+      cellStart.setDate(start.getDate() + d);
+      cellStart.setHours(h, 0, 0, 0);
+      const isNow = now >= cellStart && now < new Date(cellStart.getTime() + 3600000);
+      html += `<div class="cal-week-cell${isNow ? ' now' : ''}"></div>`;
+    }
+  }
+  html += `</div></div>`;
+  document.getElementById('cal-week').innerHTML = html;
+  const gridEl = document.querySelector('#cal-week .cal-week-grid');
+  for (let d = 0; d < 7; d++) {
+    const layer = document.createElement('div');
+    layer.className = 'cal-day-layer';
+    layer.style.gridColumn = String(d + 2);
+    layer.style.gridRow = `2 / span ${HOURS.length}`;
+    layer.style.position = 'relative';
+    layer.style.height = (HOURS.length * HOUR_H) + 'px';
+    const colStart = new Date(start);
+    colStart.setDate(start.getDate() + d);
+    colStart.setHours(0, 0, 0, 0);
+    for (const it of dayItems[d]) {
+      const s = new Date(it.start);
+      const e = new Date(it.end);
+      const topMin = (s - colStart) / 60000;
+      const durMin = Math.max(10, (e - s) / 60000);
+      const top = clamp(topMin, 0, 24 * 60) * (HOUR_H / 60);
+      const height = clamp(durMin, 10, 24 * 60) * (HOUR_H / 60);
+      const block = document.createElement('div');
+      block.className = `cal-block ${itemClass(it)}`;
+      block.style.top = top + 'px';
+      block.style.height = height + 'px';
+      const label = it.kind === 'cron' ? `⏱ ${it.title}` : it.title;
+      block.innerHTML = `<div>${escapeHtml(label)}</div><div class="meta">${fmtTime(s)}–${fmtTime(e)}</div>`;
+      layer.appendChild(block);
+    }
+    gridEl.appendChild(layer);
+  }
+}
+
+function renderCalList(items) {
+  const el = document.getElementById('cal-list');
+  if (!items.length) { el.innerHTML = '<div class="card text2" style="text-align:center;padding:24px">No scheduled items this week.</div>'; return; }
+  // Group by day
+  const byDay = {};
+  for (const it of items) {
+    const d = new Date(it.start);
+    const key = d.toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'});
+    if (!byDay[key]) byDay[key] = [];
+    byDay[key].push(it);
+  }
+  // Sort items within each day by start time
+  for (const k of Object.keys(byDay)) byDay[k].sort((a,b) => new Date(a.start) - new Date(b.start));
+
+  let html = '';
+  for (const [day, dayItems] of Object.entries(byDay)) {
+    html += `<div style="margin-bottom:16px"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;padding:4px 0;border-bottom:1px solid var(--border)">${day}</div>`;
+    for (const it of dayItems) {
+      const s = new Date(it.start);
+      const e = it.end ? new Date(it.end) : null;
+      const time = s.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+      const endTime = e ? e.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'}) : '';
+      const cls = itemClass(it);
+      const borderColor = cls.includes('event') ? 'var(--blue)' : cls.includes('reminder') ? 'var(--purple)' : cls.includes('teal') ? 'var(--teal)' : cls.includes('yellow') ? 'var(--yellow)' : cls.includes('pink') ? 'var(--pink)' : cls.includes('red') ? 'var(--red)' : 'var(--border)';
+      const kindLabel = it.kind === 'cron' ? '⚙️' : it.kind === 'event' ? '📅' : it.kind === 'reminder' ? '🔔' : '📌';
+      html += `<div class="card" style="padding:12px 14px;margin-bottom:6px;border-left:3px solid ${borderColor};cursor:default">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">${kindLabel}</span>
+            <div style="min-width:0">
+              <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(it.title)}</div>
+              <div style="font-size:11px;color:var(--text2)">${time}${endTime ? ' – '+endTime : ''}${it.agent ? ' · '+escapeHtml(it.agent) : ''}</div>
+            </div>
+          </div>
+          ${it.recur ? `<span class="badge badge-gray" style="flex-shrink:0;font-size:10px">${escapeHtml(it.recur)}</span>` : ''}
+        </div>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+async function renderCalendar() {
+  if (calView === 'list') {
+    const range = getWeekRange(calAnchorDate);
+    await fetchCalendar(range.start, range.end);
+    renderCalList(calItems);
+  } else if (calView === 'month') {
+    const range = getMonthRange(calAnchorDate);
+    await fetchCalendar(range.start, range.end);
+    renderMonthGrid(range, calItems);
+  } else {
+    const range = getWeekRange(calAnchorDate);
+    await fetchCalendar(range.start, range.end);
+    renderWeekGrid(range, calItems);
+  }
+}
+
+function calNav(dir) {
+  if (dir === 0) calAnchorDate = new Date();
+  else if (calView === 'month') calAnchorDate = new Date(calAnchorDate.getFullYear(), calAnchorDate.getMonth() + dir, 1);
+  else calAnchorDate = new Date(calAnchorDate.getTime() + dir * 7 * 86400000);
+  renderCalendar();
+}
+
+// Projects
+let _projDrillPath = [];
+let _projectsData = null;
+
+function projDrillInto(id, title) {
+  _projDrillPath.push({id, title});
+  renderProjectsView();
+}
+function projDrillTo(index) {
+  _projDrillPath = _projDrillPath.slice(0, index);
+  renderProjectsView();
+}
+
+function renderProjectsView() {
+  const gridEl = document.getElementById('projects-grid');
+  const drillEl = document.getElementById('proj-drill');
+  const breadEl = document.getElementById('proj-breadcrumb');
+
+  if (_projDrillPath.length === 0) {
+    // TOP LEVEL — show project cards (high-level overview)
+    gridEl.style.display = '';
+    drillEl.style.display = 'none';
+    breadEl.innerHTML = '';
+    renderProjectCards();
+  } else {
+    // DRILLED IN — show epics/stories/tasks for selected project
+    gridEl.style.display = 'none';
+    drillEl.style.display = '';
+    renderProjectDrill();
+  }
+}
+
+function renderProjectCards() {
+  const gridEl = document.getElementById('projects-grid');
+  const projects = _projectsData || [];
+  const tasks = _tasksData || [];
+
+  // Build project→task ID map dynamically from task data
+  const projTaskMap = {};
+  const taskProjects = (_tasksData || []).filter(t => (t.type||'').toLowerCase() === 'project');
+  for (const tp of taskProjects) {
+    projTaskMap[tp.title || tp.id] = tp.id;
+  }
+  // Also map by project ID from projects.json
+  for (const p of projects) {
+    if (p.id && !projTaskMap[p.name]) projTaskMap[p.name] = p.id;
+  }
+
+  gridEl.innerHTML = projects.map(p => {
+    const projId = p.id || projTaskMap[p.name] || '';
+    // Calculate progress from live task data
+    const projKids = (_tasksData || []).filter(t => t.parent === projId);
+    const totalKids = projKids.length;
+    const doneKids = projKids.filter(t => isCompletedStatus(t.status)).length;
+    const prog = totalKids > 0 ? Math.round((doneKids / totalKids) * 100) : (p.progress || 0);
+    const lead = p.owner || p.lead || 'Nami';
+    const initial = lead.charAt(0).toUpperCase();
+    const statusClass = p.status === 'active' ? 'badge-green' : p.status === 'paused' ? 'badge-yellow' : p.status === 'planned' ? 'badge-gray' : 'badge-blue';
+    const statusLabel = p.status === 'active' ? '● Active' : p.status === 'paused' ? '⏸ Paused' : p.status === 'planned' ? '○ Planned' : p.status;
+    const avatarColor = lead === 'Nami' ? 'var(--blue)' : lead === 'Franky' ? 'var(--orange)' : lead === 'Robin' ? 'var(--purple)' : lead === 'Chopper' ? 'var(--green)' : 'var(--teal)';
+    return `
+    <div class="proj-card" ${projId ? `onclick="projDrillInto('${projId}','${escapeHtml(p.name).replace(/'/g,"\\'")}')" style="cursor:pointer"` : ''}>
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+        <h3 style="font-size:15px;font-weight:600">${escapeHtml(p.name)}</h3>
+        <span class="badge ${statusClass}" style="flex-shrink:0">${statusLabel}</span>
+      </div>
+      <div class="desc" style="color:var(--text2);font-size:13px;margin-bottom:8px">${escapeHtml(p.desc)}</div>
+      ${p.phase ? `<div style="font-size:11px;color:var(--text2);margin-bottom:10px">📌 ${escapeHtml(p.phase)}</div>` : ''}
+      <div class="progress-bar" style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:10px">
+        <div class="fill" style="height:100%;width:${prog}%;background:${prog===100?'var(--green)':prog>60?'var(--blue)':'var(--yellow)'};border-radius:3px"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:24px;height:24px;border-radius:50%;background:${avatarColor};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff">${initial}</div>
+          <span style="font-size:12px;color:var(--text2)">${escapeHtml(lead)}</span>
+        </div>
+        <span style="font-size:12px;color:var(--text2)">${prog}%</span>
+      </div>
+      ${projId ? '<div style="text-align:right;margin-top:6px;font-size:11px;color:var(--blue)">View epics →</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderProjectDrill() {
+  const tasks = _tasksData || [];
+  const drillEl = document.getElementById('proj-drill');
+  const breadEl = document.getElementById('proj-breadcrumb');
+
+  let bc = '<span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(0)">🏠 Projects</span>';
+  _projDrillPath.forEach((p, i) => {
+    bc += ` <span class="text2">›</span> <span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(${i+1})">${escapeHtml(p.title)}</span>`;
+  });
+  breadEl.innerHTML = bc;
+
+  const currentParent = _projDrillPath[_projDrillPath.length - 1].id;
+  const items = tasks.filter(t => t.parent === currentParent && t.id !== currentParent);
+
+  // Completion % banner
+  if (items.length) {
+    const compW = {completed:100, complete:100, done:100, 'in-progress':40, queued:0, open:0, blocked:0, paused:0};
+    const pctSum = items.reduce((s,t) => s + (compW[(t.status||'').toLowerCase()] || 0), 0);
+    const pct = Math.round(pctSum / items.length);
+    const barW = pct;
+    const barColor = pct >= 80 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--blue)';
+    const completed = items.filter(t => ['completed','complete','done'].includes((t.status||'').toLowerCase())).length;
+    const inProg = items.filter(t => (t.status||'').toLowerCase() === 'in-progress').length;
+    const qd = items.filter(t => (t.status||'').toLowerCase() === 'queued').length;
+    breadEl.innerHTML += `<div style="margin-top:12px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:24px;font-weight:700">${pct}%</span>
+        <span style="font-size:12px;color:var(--text2)">${completed} done · ${inProg} active · ${qd} queued · ${items.length} total</span>
+      </div>
+      <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${barW}%;background:${barColor};border-radius:4px;transition:width 0.3s"></div>
+      </div>
+    </div>`;
+  }
+
+  const pOrder = {'P0':0,'P1':1,'P2':2};
+  const sOrder = {'in-progress':0,'queued':1,'open':2,'blocked':3};
+  items.sort((a,b) => {
+    const pa = pOrder[a.priority] ?? 3, pb = pOrder[b.priority] ?? 3;
+    if (pa !== pb) return pa - pb;
+    const sa = sOrder[(a.status||'').toLowerCase()] ?? 4, sb = sOrder[(b.status||'').toLowerCase()] ?? 4;
+    return sa - sb;
+  });
+
+  if (!items.length) {
+    drillEl.innerHTML = '<div class="card text2" style="text-align:center;padding:32px">No items at this level. <span style="cursor:pointer;color:var(--blue)" onclick="projDrillTo(_projDrillPath.length-1)">← Back</span></div>';
+    return;
+  }
+
+  const childCount = (id) => tasks.filter(t => t.parent === id && t.id !== id).length;
+  const completedChildCount = (id) => tasks.filter(t => t.parent === id && t.id !== id && isCompletedStatus(t.status)).length;
+  const totalPoints = (id) => { let s=0; tasks.filter(t => t.parent === id && t.id !== id).forEach(t => { s += getTaskPoints(t) || 0; }); return s; };
+
+  drillEl.innerHTML = items.map(t => {
+    const kids = childCount(t.id);
+    const doneKids = completedChildCount(t.id);
+    const pts = getTaskPoints(t);
+    const tPts = totalPoints(t.id);
+    const pBadge = t.priority === 'P0' ? 'badge-red' : t.priority === 'P1' ? 'badge-orange' : t.priority === 'P2' ? 'badge-blue' : 'badge-gray';
+    const canDrill = kids > 0;
+    const clickAttr = canDrill ? `onclick="projDrillInto('${t.id}','${escapeHtml(t.title).replace(/'/g,"\\'")}')" style="cursor:pointer"` : '';
+    const progress = kids > 0 ? Math.round((doneKids / kids) * 100) : (isCompletedStatus(t.status) ? 100 : 0);
+    const assignShort = (t.assigned||'').split('(')[0].split(' ')[0].trim();
+
+    return `
+      <div class="kanban-card ${t.priority === 'P0' ? 'p0' : t.priority === 'P1' ? 'p1' : t.priority === 'P2' ? 'p2' : 'backlog'}" ${clickAttr}>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+              <span style="font-size:14px">${typeIcon(t.type)}</span>
+              <span class="task-id">${escapeHtml(t.id)}</span>
+              <span class="badge ${pBadge}" style="font-size:10px">${escapeHtml(t.priority || '')}</span>
+              ${pts !== null ? `<span class="badge badge-blue" style="font-size:10px">${pts}pt${pts!==1?'s':''}</span>` : ''}
+              <span style="font-size:11px">${statusIcon(t.status)}</span>
+            </div>
+            <div style="font-size:14px;font-weight:500">${escapeHtml(t.title || '')}</div>
+          </div>
+          ${canDrill ? '<span style="color:var(--text2);font-size:18px;flex-shrink:0">›</span>' : ''}
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            ${assignShort ? `<span style="font-size:11px;color:var(--text2)">👤 ${escapeHtml(assignShort)}</span>` : ''}
+            ${kids > 0 ? `<span style="font-size:11px;color:var(--text2)">${doneKids}/${kids} items</span>` : ''}
+            ${tPts > 0 ? `<span style="font-size:11px;color:var(--text2)">Σ${tPts}pts</span>` : ''}
+          </div>
+          ${kids > 0 ? `<div style="width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${progress}%;background:${progress===100?'var(--green)':'var(--blue)'};border-radius:3px"></div></div>` : ''}
+        </div>
+        ${t.notes && !canDrill ? `<div class="task-desc" style="margin-top:6px">${escapeHtml((t.notes||'').substring(0,120))}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+async function loadProjects() {
+  const data = await api('./data/projects.json');
+  if (data) _projectsData = data.projects || [];
+  renderProjectsView();
+}
+
+// Memory
+async function loadMemory() {
+  const [daily, long] = await Promise.all([api('./data/memory.json'), api('./data/memory-long.json')]);
+
+  const dailyEl = document.getElementById('mem-daily');
+  if (daily && daily.daily && daily.daily.length) {
+    dailyEl.innerHTML = '<div class="mem-timeline">' + daily.daily.map(d => `
+      <div class="mem-entry card mb">
+        <div class="date">📅 ${d.date}</div>
+        <div class="mem-content">${renderMemMarkdown(d.content)}</div>
+      </div>
+    `).join('') + '</div>';
+  } else {
+    dailyEl.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No daily journal entries found.</div>';
+  }
+
+  const longEl = document.getElementById('mem-long');
+  if (long && long.sections && long.sections.length) {
+    longEl.innerHTML = long.sections.map(s => `
+      <div class="mem-section card mb">
+        <h3>${escapeHtml(s.title)}</h3>
+        <div class="mem-content">${escapeHtml(s.content)}</div>
+      </div>
+    `).join('');
+  } else {
+    longEl.innerHTML = '<div class="card text2" style="text-align:center;padding:40px">No long-term memory found.</div>';
+  }
+}
+
+function switchMemTab(tab) {
+  document.querySelectorAll('.mem-tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'daily') {
+    document.getElementById('mem-daily').style.display = '';
+    document.getElementById('mem-long').style.display = 'none';
+    document.querySelectorAll('.mem-tab')[0].classList.add('active');
+  } else {
+    document.getElementById('mem-daily').style.display = 'none';
+    document.getElementById('mem-long').style.display = '';
+    document.querySelectorAll('.mem-tab')[1].classList.add('active');
+  }
+}
+
+function escapeHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMemMarkdown(raw) {
+  let s = escapeHtml(raw);
+  // ### headers
+  s = s.replace(/^### (.+)$/gm, '<div class="md-header">$1</div>');
+  s = s.replace(/^## (.+)$/gm, '<div class="md-header" style="font-size:15px">$1</div>');
+  // **bold**
+  s = s.replace(/\*\*(.+?)\*\*/g, '<span class="md-bold">$1</span>');
+  // bullet lists: group consecutive - lines
+  s = s.replace(/(^- .+$(\n|$))+/gm, function(match) {
+    const items = match.trim().split('\n').map(l => '<li>' + l.replace(/^- /, '') + '</li>').join('');
+    return '<ul class="md-list">' + items + '</ul>';
+  });
+  return s;
+}
+
+// Docs
+async function loadDocs() {
+  const data = await api('./data/docs.json');
+  if (!data || !data.docs) return;
+
+  const groups = {};
+  for (const d of data.docs) {
+    if (!groups[d.group]) groups[d.group] = [];
+    groups[d.group].push(d);
+  }
+
+  const listEl = document.getElementById('docs-list');
+  let html = '';
+  for (const [group, docs] of Object.entries(groups)) {
+    html += `<div class="doc-group"><h3>${group} (${docs.length})</h3>`;
+    for (const d of docs) {
+      const mod = new Date(d.lastModified).toLocaleDateString();
+      html += `<div class="doc-row" onclick="showDoc(this, '${d.filename}')" data-filename="${d.filename}"><span>${d.filename}</span><span class="modified">${mod}</span></div>`;
+    }
+    html += '</div>';
+  }
+  listEl.innerHTML = html;
+  window._docsData = data.docs;
+}
+
+function showDoc(el, filename) {
+  document.querySelectorAll('.doc-row').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  const doc = (window._docsData || []).find(d => d.filename === filename);
+  if (doc) {
+    document.getElementById('doc-reader').textContent = doc.content;
+  }
+}
+
+// Model Ops — Redesign
+let _moData = null;
+
+function moFmtTokens(n) {
+  if (!n || n === 0) return '0';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return String(n);
+}
+
+function moCtxColor(pct) {
+  if (pct >= 90) return 'var(--red)';
+  if (pct >= 75) return 'var(--orange)';
+  if (pct >= 50) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+function moStatusDot(status) {
+  return `<span class="mo-status-dot ${status}"></span>`;
+}
+
+function moRenderSubCards(data) {
+  const el = document.getElementById('mo-sub-cards');
+  if (!el) return;
+  el.innerHTML = data.subscriptions.map(sub => {
+    const totalInput = sub.agents.reduce((s, a) => s + (a.tokensToday.input || 0), 0);
+    const totalOutput = sub.agents.reduce((s, a) => s + (a.tokensToday.output || 0), 0);
+    const totalTokens = totalInput + totalOutput;
+    const activeCount = sub.agents.filter(a => a.status === 'active').length;
+    const agentCount = sub.agents.filter(a => a.status !== 'future').length;
+
+    let costBadgeHtml = '';
+    if (sub.type === 'subscription') {
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">${sub.costLabel} sub</span>`;
+    } else if (sub.type === 'local') {
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">FREE</span>`;
+    } else {
+      const totalCost = sub.agents.reduce((s, a) => s + (a.costToday || 0), 0);
+      costBadgeHtml = `<span class="mo-cost-badge" style="background:rgba(${sub.colorRgb},0.15);color:${sub.color}">$${totalCost.toFixed(2)} today</span>`;
+    }
+
+    const pillsHtml = sub.agents.map(a =>
+      `<span class="mo-agent-pill ${a.status}" title="${a.model}">${a.emoji || ''} ${a.name}</span>`
+    ).join('');
+
+    // Usage metrics
+    let usageHtml = '';
+    if (sub.usage) {
+      const u = sub.usage;
+      const planBadge = u.plan ? `<span style="background:rgba(${sub.colorRgb},0.1);color:${sub.color};padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600">${u.plan}</span>` : '';
+      let limitBar = '', limitInfo = '';
+      if (sub.type === 'subscription' && sub.provider === 'Anthropic') {
+        const hits = u.current?.rateLimitHitsToday || 0;
+        const peak = u.current?.peakUsagePct || 0;
+        const bc = peak > 90 ? 'var(--red)' : peak > 75 ? 'var(--orange)' : peak > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Rate limit usage</span><span style="color:${bc};font-weight:600">${peak}%</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(peak,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Rate limit hits</span><span class="mo-sub-stat-val" style="color:${hits > 0 ? 'var(--red)' : 'var(--green)'}">${hits}</span></div>`;
+        if (u.billingCycle) { const dl = Math.max(0, Math.ceil((new Date(u.billingCycle.end) - new Date()) / 86400000)); limitInfo += `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Resets in</span><span class="mo-sub-stat-val">${dl}d</span></div>`; }
+      } else if (sub.type === 'subscription' && sub.provider === 'OpenAI') {
+        const hits = u.current?.rateLimitHitsToday || 0;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Rate limit hits</span><span class="mo-sub-stat-val" style="color:${hits > 0 ? 'var(--red)' : 'var(--green)'}">${hits}</span></div>`;
+        if (u.billingCycle) { const dl = Math.max(0, Math.ceil((new Date(u.billingCycle.end) - new Date()) / 86400000)); limitInfo += `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Resets in</span><span class="mo-sub-stat-val">${dl}d</span></div>`; }
+      } else if (sub.type === 'variable') {
+        const cap = u.limits?.monthlyCap || 0; const spent = u.limits?.spentThisMonth || 0; const pct = cap > 0 ? Math.round((spent / cap) * 100) : 0;
+        const bc = pct > 90 ? 'var(--red)' : pct > 75 ? 'var(--orange)' : pct > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Budget</span><span style="color:${bc};font-weight:600">$${spent} / $${cap}</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(pct,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+      } else if (sub.type === 'local') {
+        const avg = u.current?.avgContextUsePct || 0; const ov = u.current?.contextOverflows || 0;
+        const bc = avg > 90 ? 'var(--red)' : avg > 75 ? 'var(--orange)' : avg > 50 ? 'var(--yellow)' : 'var(--green)';
+        limitBar = `<div style="margin-top:6px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px"><span>Avg context</span><span style="color:${bc};font-weight:600">${avg}%</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(avg,100)}%;background:${bc};border-radius:2px;transition:width 0.3s"></div></div></div>`;
+        limitInfo = `<div class="mo-sub-stat"><span class="mo-sub-stat-label">Context overflows</span><span class="mo-sub-stat-val" style="color:${ov > 0 ? 'var(--red)' : 'var(--green)'}">${ov}</span></div>`;
+      }
+      usageHtml = `<div style="border-top:1px solid rgba(255,255,255,0.04);margin-top:8px;padding-top:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Usage & Limits</span>${planBadge}</div>${limitInfo}${limitBar}</div>`;
+    }
+
+    return `<div class="mo-sub-card" style="border-color:rgba(${sub.colorRgb},0.25);box-shadow:0 0 16px rgba(${sub.colorRgb},0.06)">
+      <div class="mo-sub-accent" style="background:${sub.color}"></div>
+      <div class="mo-sub-provider" style="color:${sub.color}">${sub.provider}</div>
+      <div class="mo-sub-cost">${sub.costLabel}</div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Agents</span><span class="mo-sub-stat-val">${agentCount} <span style="color:var(--text2);font-weight:400;font-size:11px">(${activeCount} active)</span></span></div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Tokens today</span><span class="mo-sub-stat-val">${moFmtTokens(totalTokens)}</span></div>
+      <div class="mo-sub-stat"><span class="mo-sub-stat-label">Cost</span><span>${costBadgeHtml}</span></div>
+      ${usageHtml}
+      <div class="mo-agent-pills">${pillsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function moRenderUsageBars(data) {
+  const el = document.getElementById('mo-usage-chart');
+  if (!el) return;
+
+  // Flatten agents with color, skip future
+  const agents = [];
+  data.subscriptions.forEach(sub => {
+    sub.agents.forEach(a => {
+      if (a.status === 'future') return;
+      agents.push({ ...a, color: sub.color, colorRgb: sub.colorRgb });
+    });
+  });
+
+  // Find max tokens for scale
+  const maxTokens = Math.max(...agents.map(a => (a.tokensToday.input || 0) + (a.tokensToday.output || 0)), 1);
+
+  el.innerHTML = agents.map(a => {
+    const total = (a.tokensToday.input || 0) + (a.tokensToday.output || 0);
+    const pct = Math.max((total / maxTokens) * 100, total > 0 ? 2 : 0);
+    const label = total > 0 ? moFmtTokens(total) : '';
+    const inputPct = total > 0 ? Math.round((a.tokensToday.input / total) * 100) : 0;
+    return `<div class="mo-bar-row" onclick="moSelectAgent('${a.id}')" style="cursor:pointer" title="Click to view ${a.name} details">
+      <div>
+        <div class="mo-bar-agent">${a.emoji || ''} ${a.name}</div>
+        <div class="mo-bar-agent-model">${a.modelShort}</div>
+      </div>
+      <div class="mo-bar-track">
+        <div class="mo-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,rgba(${a.colorRgb},0.9) ${inputPct}%,rgba(${a.colorRgb},0.5) ${inputPct}%)">
+          ${pct > 12 ? label : ''}
+        </div>
+      </div>
+      <div class="mo-bar-tokens">
+        ${total > 0 ? `<span style="color:${a.color}">${moFmtTokens(total)}</span><br><span style="font-size:10px">${moFmtTokens(a.tokensToday.input)}↑ ${moFmtTokens(a.tokensToday.output)}↓</span>` : '<span style="color:var(--border)">—</span>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Legend
+  el.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text2)">
+    <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:8px;background:rgba(88,166,255,0.9);border-radius:2px"></span>Input tokens</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:8px;background:rgba(88,166,255,0.45);border-radius:2px"></span>Output tokens</span>
+  </div>`);
+}
+
+function moRenderContextBars(data) {
+  const el = document.getElementById('mo-ctx-grid');
+  if (!el) return;
+
+  const agents = [];
+  data.subscriptions.forEach(sub => {
+    sub.agents.forEach(a => {
+      agents.push({ ...a, color: sub.color, colorRgb: sub.colorRgb, provider: sub.provider });
+    });
+  });
+
+  // Sort by pct desc so most-loaded appear first
+  agents.sort((a, b) => {
+    const pA = (a.contextUsed / a.contextWindow) * 100;
+    const pB = (b.contextUsed / b.contextWindow) * 100;
+    return pB - pA;
+  });
+
+  el.innerHTML = agents.map(a => {
+    const pct = a.contextWindow > 0 ? Math.round((a.contextUsed / a.contextWindow) * 100) : 0;
+    const barColor = moCtxColor(pct);
+    const isLocal = a.contextWindow <= 32768;
+    const warnBorder = pct >= 75 ? `border-left:3px solid ${barColor}` : `border-left:3px solid rgba(${a.colorRgb},0.3)`;
+    const futureStyle = a.status === 'future' ? 'opacity:0.45' : '';
+    return `<div class="mo-ctx-row" style="${warnBorder};${futureStyle}">
+      <div class="mo-ctx-header">
+        <div class="mo-ctx-name">
+          ${moStatusDot(a.status)}${a.emoji || ''} ${a.name}
+          ${isLocal ? '<span class="badge badge-teal" style="font-size:9px;padding:1px 5px">32K</span>' : ''}
+          ${a.status === 'future' ? '<span class="badge badge-gray" style="font-size:9px;padding:1px 5px">future</span>' : ''}
+        </div>
+        <div class="mo-ctx-info">
+          <span style="color:var(--text2)">${a.modelShort}</span> &nbsp;·&nbsp;
+          <span>${moFmtTokens(a.contextUsed)} / ${moFmtTokens(a.contextWindow)}</span>
+        </div>
+      </div>
+      <div class="mo-ctx-bar-track">
+        <div class="mo-ctx-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+      </div>
+      <div class="mo-ctx-pct" style="color:${barColor}">${pct}%${pct >= 75 ? ' ⚠️' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function moPopulateSelect(data) {
+  const sel = document.getElementById('mo-agent-select');
+  if (!sel) return;
+  // Clear existing options except placeholder
+  while (sel.options.length > 1) sel.remove(1);
+  data.subscriptions.forEach(sub => {
+    const grp = document.createElement('optgroup');
+    grp.label = sub.provider;
+    sub.agents.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a.id;
+      opt.textContent = `${a.emoji || ''} ${a.name} — ${a.modelShort}`;
+      grp.appendChild(opt);
+    });
+    sel.appendChild(grp);
+  });
+}
+
+function moSelectAgent(agentId) {
+  if (!_moData || !agentId) return;
+  const sel = document.getElementById('mo-agent-select');
+  if (sel) sel.value = agentId;
+
+  let found = null, sub = null;
+  for (const s of _moData.subscriptions) {
+    const a = s.agents.find(a => a.id === agentId);
+    if (a) { found = a; sub = s; break; }
+  }
+  if (!found) return;
+
+  const pct = found.contextWindow > 0 ? Math.round((found.contextUsed / found.contextWindow) * 100) : 0;
+  const barColor = moCtxColor(pct);
+  const totalTokens = (found.tokensToday.input || 0) + (found.tokensToday.output || 0);
+  const costDisplay = sub.type === 'subscription' ? `$0 (sub — ${sub.costLabel})` : (found.costToday > 0 ? `$${found.costToday.toFixed(4)}` : '$0.00');
+
+  const statusMap = { active: '<span style="color:var(--green)">● Active</span>', idle: '<span style="color:var(--text2)">● Idle</span>', future: '<span class="badge badge-gray">Future</span>' };
+
+  document.getElementById('mo-detail-panel').innerHTML = `
+    <div class="mo-detail-panel">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <span style="font-size:32px">${found.emoji || '🤖'}</span>
+        <div>
+          <div style="font-size:18px;font-weight:700;color:${sub.color}">${found.name}</div>
+          <div style="font-size:12px;color:var(--text2)">${found.role} · ${found.machine}</div>
+        </div>
+        <div style="margin-left:auto">${statusMap[found.status] || found.status}</div>
+      </div>
+      <div class="mo-detail-grid">
+        <div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Model</span><span class="mo-detail-val">${found.model}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Provider</span><span class="mo-detail-val" style="color:${sub.color}">${sub.provider}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Subscription</span><span class="mo-detail-val">${sub.costLabel} (${sub.type})</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Machine</span><span class="mo-detail-val">${found.machine}</span></div>
+        </div>
+        <div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Tokens today</span><span class="mo-detail-val">${moFmtTokens(totalTokens)}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Input / Output</span><span class="mo-detail-val">${moFmtTokens(found.tokensToday.input)} / ${moFmtTokens(found.tokensToday.output)}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Cost today</span><span class="mo-detail-val">${costDisplay}</span></div>
+          <div class="mo-detail-kv"><span class="mo-detail-label">Sessions</span><span class="mo-detail-val">${found.sessions}</span></div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Context Window — ${pct}% used</div>
+        <div class="mo-ctx-bar-track" style="height:12px">
+          <div class="mo-ctx-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px">
+          <span style="color:var(--text2)">${moFmtTokens(found.contextUsed)} used</span>
+          <span style="color:${barColor};font-weight:600">${moFmtTokens(found.contextWindow)} max</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function loadModelOps() {
+  const data = await api('./data/model-ops.json');
+  if (!data || !data.subscriptions) return;
+  _moData = data;
+
+  moRenderSubCards(data);
+  moRenderUsageBars(data);
+  moRenderContextBars(data);
+  moPopulateSelect(data);
+}
+
+// Office interactions
+function filterDesks(state) {
+  document.querySelectorAll('.office-filter-btns button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.agent-desk').forEach(d => {
+    if (state === 'all') { d.style.display = ''; return; }
+    const dState = Array.from(d.classList).find(c => c.startsWith('state-'))?.replace('state-','');
+    d.style.display = (dState === state) ? '' : 'none';
+  });
+}
+
+function selectDesk(agent) {
+  document.querySelectorAll('.agent-desk').forEach(d => d.classList.remove('desk-selected'));
+  const desk = document.getElementById('desk-' + agent);
+  if (desk) desk.classList.toggle('desk-selected');
+}
+
+// Init
+(async function init() {
+  activateTab(location.hash.slice(1) || 'tasks', { updateHash: false });
+  await Promise.all([verifyDataFiles(), loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
+  setCalView('week');
+
+  // Auto-refresh Model Ops every 60s when tab is active
+  setInterval(() => {
+    const panel = document.getElementById('tab-modelops');
+    if (panel && panel.classList.contains('active')) loadModelOps();
+  }, 60000);
+})();
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  var sidebar = document.querySelector('.sidebar');
+  var overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+}
+// Close sidebar when nav item clicked on mobile
+document.querySelectorAll('.nav-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      document.querySelector('.sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('active');
+    }
+  });
+});
+
+</script>
+</body>
+</html>

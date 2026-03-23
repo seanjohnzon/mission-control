@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "time": "2026-03-22T13:29:00.000Z",
+      "total_tasks": 186,
+      "completed_total": 92,
+      "in_progress": 19,
+      "epic_004_completed": 2,
+      "epic_004_in_progress": 12,
+      "velocity_per_10min": 0,
+      "trend": "baseline",
+      "notes": "BASELINE ESTABLISHED: 92/186 total completed, EPIC-004 has 2/14 stories done. Switching from agent monitoring to velocity tracking per Captain orders."
+    }
+  ],
+  "baseline": {
+    "established": "2026-03-22T13:29:00.000Z",
+    "healthy_velocity_target": 1,
+    "alert_threshold": 0.5,
+    "epic_004_focus": "Primary metric is EPIC-004 story completion rate"
+  }
+}
