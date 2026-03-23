@@ -1,6 +1,53 @@
-{"daily":[
-  {"date":"2026-03-21","content":"### Priority Shift\n- Captain ordered ALL 3D work stopped\n- EPIC-003 (Mission Control Dashboard) is now sole P0\n- Sprint 3 started: MC-001 through MC-004\n- Effort points system deployed (Fibonacci: 1/2/3/5/8/13)\n- Jinbe (Scrum Master) enforcing at 8:30 AM daily"},
-  {"date":"2026-03-20","content":"### Major Progress\n- Franky delivered hierarchy tree view + calendar week view\n- Task board cleaned: 158 → 110 tasks, then 50 active → 21 active\n- Priority points system applied to all tasks\n- Department loads calculated\n- Jinbe (Scrum Master) activated with daily 8:30 AM cron\n- Robin-ops anti-loop patched\n- Effort points system created and deployed"},
-  {"date":"2026-03-19","content":"### Crew Architecture Finalized\n- Full pipeline: Robin → Brook → Usopp → Franky → Brook UX → Chopper QA → Captain\n- Zoro security KT prepared, Jinbe scrum KT prepared\n- Security audit: tokens need rotation, no TLS between gateways\n- Session bloat cleanup: 302 sessions pruned"},
-  {"date":"2026-03-18","content":"### Sprint 2 Launch\n- 3D Office Tab work started (EPIC-002)\n- Sanji and Usopp agents onboarded\n- Crew roles and scopes defined by Captain mandate"}
-]}
+[
+  {
+    "date": "2026-03-23",
+    "title": "Local Models + Goal Tracking",
+    "summary": "Audited all 3 machines for local inference. Pulled qwen2.5:14b. Created 3 local agents (tangerine/helm/dock). Deployed crew-wide goal tracking protocol. Mock drill: 7/9 departments delivered. Sanji assigned to fix GPU3060+Desktop connections.",
+    "tags": [
+      "infra",
+      "local-models",
+      "goal-tracking",
+      "protocol"
+    ]
+  },
+  {
+    "date": "2026-03-22",
+    "title": "EPIC-005 Complete \u2014 One Gateway Migration",
+    "summary": "All agents consolidated to Mac Mini. 37/37 items done. D: drive mounted. Phones connected. Old gateways decommissioned. 4 new agents added with Telegram bots.",
+    "tags": [
+      "migration",
+      "epic-005",
+      "gateway"
+    ]
+  },
+  {
+    "date": "2026-03-21",
+    "title": "Agent Tree Build + EPIC-004",
+    "summary": "Communication reliability epic. Teams tab built by Franky. 13 stories completed. Department hierarchy restructured. All agents self-managing.",
+    "tags": [
+      "epic-004",
+      "teams-tab",
+      "communication"
+    ]
+  },
+  {
+    "date": "2026-03-20",
+    "title": "Thousand Sunny Ship + MC Dashboard",
+    "summary": "3D Office ship scene built. MC GitHub Pages live. Discord restructured. Vivi thread management deployed. Robin research patrol active.",
+    "tags": [
+      "3d-office",
+      "github-pages",
+      "discord"
+    ]
+  },
+  {
+    "date": "2026-03-19",
+    "title": "Crew Scaling + CI/CD",
+    "summary": "Sanji fixed CI. Brook UX reviews. Robin research. Usopp requirements. Multiple bridge repairs. Captain gave subagent scaling policy.",
+    "tags": [
+      "ci-cd",
+      "scaling",
+      "bridge-repair"
+    ]
+  }
+]

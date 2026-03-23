@@ -1,28 +1,77 @@
-{"items":[
-  {"title":"Daily Standup","kind":"cron","tier":"teal","start":"2026-03-21T13:00:00Z","end":"2026-03-21T13:15:00Z","recur":"daily 9AM EDT","agent":"Jinbe"},
-  {"title":"Daily Standup","kind":"cron","tier":"teal","start":"2026-03-22T13:00:00Z","end":"2026-03-22T13:15:00Z","recur":"daily 9AM EDT","agent":"Jinbe"},
-  {"title":"Daily Standup","kind":"cron","tier":"teal","start":"2026-03-23T13:00:00Z","end":"2026-03-23T13:15:00Z","recur":"daily 9AM EDT","agent":"Jinbe"},
-  {"title":"Jinbe Board Cleanup","kind":"cron","tier":"yellow","start":"2026-03-21T12:30:00Z","end":"2026-03-21T12:45:00Z","recur":"daily 8:30AM EDT","agent":"Jinbe"},
-  {"title":"Jinbe Board Cleanup","kind":"cron","tier":"yellow","start":"2026-03-22T12:30:00Z","end":"2026-03-22T12:45:00Z","recur":"daily 8:30AM EDT","agent":"Jinbe"},
-  {"title":"Jinbe Board Cleanup","kind":"cron","tier":"yellow","start":"2026-03-23T12:30:00Z","end":"2026-03-23T12:45:00Z","recur":"daily 8:30AM EDT","agent":"Jinbe"},
-  {"title":"Daily Cost Report","kind":"cron","tier":"pink","start":"2026-03-21T00:00:00Z","end":"2026-03-21T00:15:00Z","recur":"daily 8PM EDT","agent":"Zeus"},
-  {"title":"Daily Cost Report","kind":"cron","tier":"pink","start":"2026-03-22T00:00:00Z","end":"2026-03-22T00:15:00Z","recur":"daily 8PM EDT","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-21T14:00:00Z","end":"2026-03-21T14:02:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-21T14:30:00Z","end":"2026-03-21T14:32:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-21T15:00:00Z","end":"2026-03-21T15:02:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-21T15:30:00Z","end":"2026-03-21T15:32:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-21T16:00:00Z","end":"2026-03-21T16:02:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Heartbeat","kind":"cron","tier":"teal","start":"2026-03-22T14:00:00Z","end":"2026-03-22T14:02:00Z","recur":"every 30min","agent":"Zeus"},
-  {"title":"Crew Ops Check","kind":"cron","tier":"yellow","start":"2026-03-21T15:00:00Z","end":"2026-03-21T15:10:00Z","recur":"hourly","agent":"Zeus"},
-  {"title":"Crew Ops Check","kind":"cron","tier":"yellow","start":"2026-03-21T16:00:00Z","end":"2026-03-21T16:10:00Z","recur":"hourly","agent":"Zeus"},
-  {"title":"Crew Ops Check","kind":"cron","tier":"yellow","start":"2026-03-21T17:00:00Z","end":"2026-03-21T17:10:00Z","recur":"hourly","agent":"Zeus"},
-  {"title":"Vivi Thread Patrol","kind":"cron","tier":"teal","start":"2026-03-21T14:15:00Z","end":"2026-03-21T14:17:00Z","recur":"every 30min","agent":"Vivi"},
-  {"title":"Robin Research Patrol","kind":"cron","tier":"yellow","start":"2026-03-21T14:10:00Z","end":"2026-03-21T14:12:00Z","recur":"every 30min","agent":"Robin-Ops"},
-  {"title":"Brook Media Watch","kind":"cron","tier":"teal","start":"2026-03-21T15:05:00Z","end":"2026-03-21T15:07:00Z","recur":"hourly","agent":"Brook-Ops"},
-  {"title":"Session Bloat Cleanup","kind":"cron","tier":"red","start":"2026-03-22T08:00:00Z","end":"2026-03-22T08:05:00Z","recur":"daily 4AM EDT","agent":"System"},
-  {"title":"Sprint Review","kind":"event","start":"2026-03-28T21:00:00Z","end":"2026-03-28T21:30:00Z","recur":"Fri 5PM EDT","agent":"Zeus"},
-  {"title":"Chopper OAuth Expires","kind":"reminder","start":"2026-03-25T12:00:00Z","end":"2026-03-25T12:30:00Z","agent":"Captain"},
-  {"title":"EPIC-003 Target Complete","kind":"event","start":"2026-03-23T04:00:00Z","end":"2026-03-23T04:30:00Z","agent":"All Crew"},
-  {"title":"Relay Bridge Check","kind":"cron","tier":"teal","start":"2026-03-21T14:05:00Z","end":"2026-03-21T14:06:00Z","recur":"every 5min","agent":"Zeus"},
-  {"title":"Sanji Ops Cycle","kind":"cron","tier":"yellow","start":"2026-03-21T15:00:00Z","end":"2026-03-21T15:05:00Z","recur":"periodic","agent":"Sanji"}
-]}
+[
+  {
+    "title": "Daily Standup (Zeus)",
+    "time": "09:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Jinbe Board Cleanup",
+    "time": "08:30",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Jinbe"
+  },
+  {
+    "title": "Daily Cost Report (Zeus)",
+    "time": "20:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Sprint Review (Zeus)",
+    "time": "17:00",
+    "tz": "America/New_York",
+    "recurrence": "weekly-fri",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Session Bloat Cleanup",
+    "time": "04:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Nami"
+  },
+  {
+    "title": "Tangerine Health Check",
+    "time": "every 15min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Tangerine"
+  },
+  {
+    "title": "Helm Board Scan",
+    "time": "every 30min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Helm"
+  },
+  {
+    "title": "Dock Repo Check",
+    "time": "every 30min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Dock"
+  },
+  {
+    "title": "Local Agent Watchdog",
+    "time": "every 15min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Nami"
+  },
+  {
+    "title": "Nami Heartbeat",
+    "time": "every 1h",
+    "recurrence": "continuous",
+    "type": "heartbeat",
+    "agent": "Nami"
+  }
+]

@@ -1,1 +1,92 @@
-{"commits":[{"hash":"9349601","message":"AUTO-001: Add GitHub Actions CI/CD + Playwright QA pipeline"},{"hash":"9ba6511","message":"CREW-017 refinements: wider office 20x14, plants, whiteboard, bookshelf, improved layout"},{"hash":"e32bbfd","message":"Initial commit — Mission Control Dashboard"},{"hash":"0c99fa8","message":"CREW-017 visual redesign: isometric diorama office in space"},{"hash":"845aa18","message":"Mark CREW-009 complete"},{"hash":"5b533a7","message":"CREW-009 phase D2.2 complete"},{"hash":"92a9cb3","message":"Mark CREW-008, CREW-014, CREW-015 complete — Franky (completed 2026-03-16 ~22:17 EDT)"},{"hash":"4868f2a","message":"CREW-006: Update D1.6-LOCAL_INFERENCE_PLAN.md to actual state (Sprint 1)"},{"hash":"f6cd66a","message":"CREW-005: Update D1.5-MODEL_POLICY.md to actual routing (Sprint 1)"},{"hash":"eb8f1b1","message":"CREW-004: Update D1.4-ORG_MAP.md to crew model (Nami/Franky/Chopper)"}],"lastHeartbeat":null,"lastDigest":null}
+[
+  {
+    "agent": "Nami",
+    "action": "Deployed crew-wide goal tracking protocol",
+    "timestamp": "2026-03-23T11:00:00Z",
+    "type": "ops"
+  },
+  {
+    "agent": "Nami",
+    "action": "Board cleanup \u2014 8 stale tasks completed, pushed to remote",
+    "timestamp": "2026-03-23T10:44:00Z",
+    "type": "ops"
+  },
+  {
+    "agent": "Nami",
+    "action": "Pulled qwen2.5:14b on Mac Mini \u2014 13.2 tok/s",
+    "timestamp": "2026-03-23T09:56:00Z",
+    "type": "infra"
+  },
+  {
+    "agent": "Nami",
+    "action": "Created 3 local model agents: tangerine, helm, dock",
+    "timestamp": "2026-03-23T08:35:00Z",
+    "type": "infra"
+  },
+  {
+    "agent": "Franky",
+    "action": "Mock goal drill \u2014 delivered in 60s",
+    "timestamp": "2026-03-23T11:02:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Sanji",
+    "action": "Mock goal drill \u2014 delivered in 120s",
+    "timestamp": "2026-03-23T11:03:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Chopper",
+    "action": "Mock goal drill \u2014 delivered in 180s",
+    "timestamp": "2026-03-23T11:04:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Usopp",
+    "action": "Mock goal drill \u2014 delivered in 180s",
+    "timestamp": "2026-03-23T11:04:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Jinbe",
+    "action": "Mock goal drill \u2014 delivered in 210s",
+    "timestamp": "2026-03-23T11:05:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Vivi",
+    "action": "Mock goal drill \u2014 delivered in 240s",
+    "timestamp": "2026-03-23T11:05:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Zoro",
+    "action": "Mock goal drill \u2014 delivered in 210s",
+    "timestamp": "2026-03-23T11:04:00Z",
+    "type": "drill"
+  },
+  {
+    "agent": "Sanji",
+    "action": "Scoped GPU3060 + Desktop device connections",
+    "timestamp": "2026-03-23T11:20:00Z",
+    "type": "infra"
+  },
+  {
+    "agent": "Nami",
+    "action": "Created model prompting guides for all 6 model families",
+    "timestamp": "2026-03-23T07:30:00Z",
+    "type": "docs"
+  },
+  {
+    "agent": "Jinbe",
+    "action": "Daily board cleanup \u2014 pre-standup duty",
+    "timestamp": "2026-03-22T12:30:00Z",
+    "type": "ops"
+  },
+  {
+    "agent": "Zeus",
+    "action": "Daily cost report \u2014 Finances thread",
+    "timestamp": "2026-03-23T00:00:00Z",
+    "type": "finance"
+  }
+]

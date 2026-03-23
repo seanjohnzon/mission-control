@@ -1,1 +1,54 @@
-{"projects":[{"name":"Mission Control","desc":"Operational dashboard and governance system","status":"active","phase":"Phase 1","progress":60},{"name":"Bridge Runtime","desc":"OpenClaw autonomous agent on Mac Mini","status":"active","phase":"Operational","progress":90},{"name":"Telegram Integration","desc":"@CihanHawkBot ops-channel","status":"active","phase":"Connected","progress":100},{"name":"Discord Integration","desc":"Community/team channel","status":"planned","phase":"Awaiting decision (TASK-010)","progress":0},{"name":"One Piece","desc":"(placeholder project)","status":"planned","phase":"","progress":0},{"name":"Local Inference","desc":"Ollama qwen2.5 on Mac Mini","status":"active","phase":"2 models installed","progress":75},{"name":"Desktop Integration","desc":"Brain agent on Desktop machine","status":"planned","phase":"Blocked (TASK-011)","progress":0}]}
+[
+  {
+    "id": "PROJ-MC",
+    "name": "Mission Control",
+    "status": "in-progress",
+    "priority": "P0",
+    "owner": "Nami",
+    "epics": [
+      "EPIC-003"
+    ],
+    "description": "Dashboard, GitHub Pages, all tabs with live data"
+  },
+  {
+    "id": "PROJ-OPS",
+    "name": "Operations & Infrastructure",
+    "status": "in-progress",
+    "priority": "P1",
+    "owner": "Nami",
+    "epics": [
+      "EPIC-004",
+      "EPIC-005",
+      "EPIC-006",
+      "EPIC-007"
+    ],
+    "description": "Crew architecture, gateways, agent delivery, local models"
+  },
+  {
+    "id": "PROJ-RESEARCH",
+    "name": "Research & Knowledge",
+    "status": "in-progress",
+    "priority": "P2",
+    "owner": "Robin",
+    "epics": [],
+    "description": "X/Twitter research, market analysis, knowledge archiving"
+  },
+  {
+    "id": "PROJ-FUTURE",
+    "name": "Future & Backlog",
+    "status": "open",
+    "priority": "backlog",
+    "owner": "Nami",
+    "epics": [],
+    "description": "Desktop integration, Perplexity, n8n, Zoro security"
+  },
+  {
+    "id": "PROJ-OPENSOURCE",
+    "name": "Go OpenSource & Go Viral",
+    "status": "open",
+    "priority": "backlog",
+    "owner": "Nami",
+    "epics": [],
+    "description": "Straw Hat crew as open-source OpenClaw template"
+  }
+]

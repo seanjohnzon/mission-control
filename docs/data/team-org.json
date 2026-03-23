@@ -1,407 +1,109 @@
 {
-  "meta": {
-    "version": 2,
-    "lastUpdated": "",
-    "live": false,
-    "notes": [
-      "Schema defaults for Mission Control Team tab.",
-      "Server merges best-effort live status from gateway health + local .openclaw agent session registries.",
-      "v2 expands the org model to the 9-department Straw Hat crew architecture (navigation, engineering, automation, qa, business-intel, research, creative, thread-management, scrum)."
-    ]
-  },
   "departments": [
     {
-      "id": "navigation",
       "name": "Navigation",
-      "emoji": "🧭",
-      "color": "#60a5fa",
-      "chief": "bridge",
-      "scope": "Orchestration, routing, scheduling, gateway ops, cost/budget guardrails."
+      "chief": "Nami",
+      "model": "claude-opus-4-6",
+      "members": [
+        "Zeus",
+        "Vivi",
+        "Carina",
+        "Tangerine",
+        "Helm",
+        "Dock",
+        "Mikan"
+      ],
+      "scope": "Orchestration, budget, crew coordination, local model monitoring"
     },
     {
-      "id": "engineering",
       "name": "Engineering",
-      "emoji": "🔧",
-      "color": "#2dd4bf",
-      "chief": "franky",
-      "scope": "Frontend/backend engineering, dashboards, data pipelines, 3D/visualization."
+      "chief": "Franky",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Cola",
+        "Iceburg",
+        "Zeff",
+        "Cavendish",
+        "Pudding"
+      ],
+      "scope": "Building, CI/CD, deployments, Mission Control dashboard"
     },
     {
-      "id": "automation",
       "name": "Automation",
-      "emoji": "👨‍🍳",
-      "color": "#a78bfa",
-      "chief": "sanji",
-      "scope": "CI/CD, GitHub Pages deploys, cron scheduling, mobile device validation automation."
+      "chief": "Sanji",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Zeff (dating)",
+        "Cavendish (dating)"
+      ],
+      "scope": "Workflows, CI/CD, process automation, device management"
     },
     {
-      "id": "qa",
       "name": "QA",
-      "emoji": "🔬",
-      "color": "#fbbf24",
-      "chief": "chopper",
-      "scope": "Functional QA, regression checks, API tests, accessibility/mobile readiness."
+      "chief": "Chopper",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Sakura",
+        "Milky"
+      ],
+      "scope": "Verification, testing, QA pass/fail verdicts"
     },
     {
-      "id": "business-intel",
-      "name": "Business Intel",
-      "emoji": "🎯",
-      "color": "#34d399",
-      "chief": "usopp",
-      "scope": "Requirements, specs, analytics/metrics, product framing."
+      "name": "Business Intelligence",
+      "chief": "Usopp",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Perona"
+      ],
+      "scope": "Requirements validation, analytics, business-tech bridge"
     },
     {
-      "id": "research",
       "name": "Research",
-      "emoji": "📚",
-      "color": "#fb923c",
-      "chief": "robin",
-      "scope": "Web/X research, competitive analysis, knowledge/memory archiving, Discord organization."
+      "chief": "Robin",
+      "model": "grok-4",
+      "members": [
+        "Robin-Ops",
+        "Aokiji",
+        "Dragon"
+      ],
+      "scope": "X/Twitter research, knowledge synthesis, market analysis"
     },
     {
-      "id": "creative",
       "name": "Creative",
-      "emoji": "🎨",
-      "color": "#f472b6",
-      "chief": "brook",
-      "scope": "UX reviews, visual direction, avatar/asset guidance."
+      "chief": "Brook",
+      "model": "gemini-2.5-pro",
+      "members": [
+        "Brook-Ops",
+        "Shakky",
+        "Apoo"
+      ],
+      "scope": "UX reviews, visual design, creative direction"
     },
     {
-      "id": "thread-management",
-      "name": "Thread Mgmt",
-      "emoji": "🕊️",
-      "color": "#94a3b8",
-      "chief": "vivi",
-      "scope": "Thread patrol, assignment follow-ups, cross-workspace integration and handoff hygiene."
+      "name": "Operations",
+      "chief": "Jinbe",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Fisher Tiger",
+        "Otohime",
+        "Aladine"
+      ],
+      "scope": "Scrum mastery, board cleanup, sprint management"
     },
     {
-      "id": "scrum",
-      "name": "Scrum",
-      "emoji": "⚓",
-      "color": "#22c55e",
-      "chief": "jinbe",
-      "scope": "Standups, velocity/points, ceremonies, board cleanup and process enforcement."
+      "name": "Security",
+      "chief": "Zoro",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Tashigi",
+        "Smoker",
+        "Hina"
+      ],
+      "scope": "Security audits, hardening, threat assessment"
     }
   ],
-  "nodes": [
-    {
-      "id": "human",
-      "kind": "human",
-      "name": "Cihan",
-      "title": "Architect · Director · Judge",
-      "status": "online",
-      "roles": ["Architect", "Director", "Judge"],
-      "machine": { "name": "Human", "role": "Captain" }
-    },
-    {
-      "id": "mission-control",
-      "kind": "system",
-      "name": "Mission Control",
-      "title": "Source of truth",
-      "status": "online",
-      "machine": { "name": "Nami (Mac Mini)", "role": "State + docs" }
-    },
-
-    {
-      "id": "bridge",
-      "kind": "agent",
-      "name": "Nami",
-      "alias": "bridge",
-      "department": "navigation",
-      "title": "Navigator · Chief of Staff",
-      "status": "unknown",
-      "roles": ["Navigator", "Orchestrator", "Broker"],
-      "agentIds": ["nami", "bridge"],
-      "sessionKeyPrefix": "agent:nami:",
-      "machine": { "name": "Mac Mini", "ip": "10.0.0.152" },
-      "health": { "gateway": "unknown" }
-    },
-    {
-      "id": "franky",
-      "kind": "agent",
-      "name": "Franky",
-      "alias": "brain",
-      "department": "engineering",
-      "title": "Chief Engineer · Shipwright",
-      "status": "unknown",
-      "roles": ["Builder", "Engineer"],
-      "agentIds": ["franky", "brain"],
-      "sessionKeyPrefix": "agent:franky:",
-      "machine": { "name": "Desktop", "ip": "10.0.0.251" }
-    },
-    {
-      "id": "sanji",
-      "kind": "agent",
-      "name": "Sanji",
-      "alias": "automation",
-      "department": "automation",
-      "title": "Chief Automation Officer",
-      "status": "unknown",
-      "roles": ["Automation", "CI/CD", "Deployer"],
-      "agentIds": ["sanji"],
-      "sessionKeyPrefix": "agent:sanji:",
-      "machine": { "name": "Desktop", "ip": "10.0.0.251" }
-    },
-    {
-      "id": "chopper",
-      "kind": "agent",
-      "name": "Chopper",
-      "alias": "forge",
-      "department": "qa",
-      "title": "Chief QA Officer",
-      "status": "unknown",
-      "roles": ["QA", "Critic", "Security"],
-      "agentIds": ["chopper", "forge"],
-      "sessionKeyPrefix": "agent:chopper:",
-      "machine": { "name": "GPU3060 Laptop", "ip": "10.0.0.16" }
-    },
-    {
-      "id": "usopp",
-      "kind": "agent",
-      "name": "Usopp",
-      "alias": "biz-intel",
-      "department": "business-intel",
-      "title": "Chief Business Intelligence Officer",
-      "status": "unknown",
-      "roles": ["Requirements", "Specs", "Analytics"],
-      "agentIds": ["usopp"],
-      "sessionKeyPrefix": "agent:usopp:",
-      "machine": { "name": "GPU3060 Laptop", "ip": "10.0.0.16" }
-    },
-    {
-      "id": "robin",
-      "kind": "agent",
-      "name": "Robin",
-      "alias": "research",
-      "department": "research",
-      "title": "Chief Research Officer",
-      "status": "unknown",
-      "roles": ["Research", "Archivist"],
-      "agentIds": ["robin", "robin-ops"],
-      "sessionKeyPrefix": "agent:robin:",
-      "machine": { "name": "Mac Mini", "ip": "10.0.0.152" }
-    },
-    {
-      "id": "brook",
-      "kind": "agent",
-      "name": "Brook",
-      "alias": "creative",
-      "department": "creative",
-      "title": "Chief Creative Officer",
-      "status": "unknown",
-      "roles": ["UX", "Design", "Media"],
-      "agentIds": ["brook", "brook-ops"],
-      "sessionKeyPrefix": "agent:brook:",
-      "machine": { "name": "Mac Mini", "ip": "10.0.0.152" }
-    },
-    {
-      "id": "vivi",
-      "kind": "agent",
-      "name": "Vivi",
-      "alias": "thread-management",
-      "department": "thread-management",
-      "title": "Thread Manager",
-      "status": "unknown",
-      "roles": ["Thread Patrol", "Follow-ups", "Integration"],
-      "agentIds": ["vivi"],
-      "sessionKeyPrefix": "agent:vivi:",
-      "machine": { "name": "Mac Mini", "ip": "10.0.0.152" }
-    },
-    {
-      "id": "jinbe",
-      "kind": "agent",
-      "name": "Jinbe",
-      "alias": "scrum",
-      "department": "scrum",
-      "title": "Scrum Master",
-      "status": "unknown",
-      "roles": ["Standups", "Velocity", "Ceremonies"],
-      "agentIds": ["jinbe"],
-      "sessionKeyPrefix": "agent:jinbe:",
-      "machine": { "name": "Mac Mini", "ip": "10.0.0.152" }
-    },
-
-    {
-      "id": "zeus",
-      "kind": "subagent",
-      "name": "Zeus",
-      "department": "navigation",
-      "title": "Ops helper",
-      "status": "unknown",
-      "roles": ["Heartbeats", "Standup compilation", "Cost reporting"],
-      "agentIds": ["zeus"],
-      "sessionKeyPrefix": "agent:zeus:",
-      "machine": { "name": "Mac Mini" }
-    },
-    {
-      "id": "duvan",
-      "kind": "subagent",
-      "name": "Duvan",
-      "department": "automation",
-      "title": "Night ops helper",
-      "status": "unknown",
-      "roles": ["Ops cycles", "Automation follow-ups"],
-      "agentIds": ["duvan"],
-      "sessionKeyPrefix": "agent:duvan:",
-      "machine": { "name": "Desktop" }
-    },
-    {
-      "id": "robin-ops",
-      "kind": "subagent",
-      "name": "Robin-Ops",
-      "department": "research",
-      "title": "Patrol",
-      "status": "unknown",
-      "roles": ["Task patrol", "Simple execution"],
-      "agentIds": ["robin-ops"],
-      "sessionKeyPrefix": "agent:robin-ops:",
-      "machine": { "name": "Mac Mini" }
-    },
-    {
-      "id": "brook-ops",
-      "kind": "subagent",
-      "name": "Brook-Ops",
-      "department": "creative",
-      "title": "Media watch",
-      "status": "unknown",
-      "roles": ["Build detection", "Media watch"],
-      "agentIds": ["brook-ops"],
-      "sessionKeyPrefix": "agent:brook-ops:",
-      "machine": { "name": "Mac Mini" }
-    },
-    {
-      "id": "zeff",
-      "kind": "subagent",
-      "name": "Zeff",
-      "department": "automation",
-      "title": "Mobile QA helper",
-      "status": "unknown",
-      "roles": ["Device validation", "Scenarios"],
-      "agentIds": ["zeff"],
-      "sessionKeyPrefix": "agent:zeff:",
-      "machine": { "name": "Desktop" }
-    }
-  ],
-  "edges": [
-    { "from": "human", "to": "bridge", "kind": "directive" },
-    { "from": "bridge", "to": "mission-control", "kind": "stewardship" },
-
-    { "from": "bridge", "to": "franky", "kind": "dispatch", "department": "engineering" },
-    { "from": "bridge", "to": "sanji", "kind": "dispatch", "department": "automation" },
-    { "from": "bridge", "to": "chopper", "kind": "dispatch", "department": "qa" },
-    { "from": "bridge", "to": "usopp", "kind": "dispatch", "department": "business-intel" },
-    { "from": "bridge", "to": "robin", "kind": "dispatch", "department": "research" },
-    { "from": "bridge", "to": "brook", "kind": "dispatch", "department": "creative" },
-    { "from": "bridge", "to": "vivi", "kind": "dispatch", "department": "thread-management" },
-    { "from": "bridge", "to": "jinbe", "kind": "dispatch", "department": "scrum" },
-
-    { "from": "bridge", "to": "zeus", "kind": "delegate" },
-    { "from": "sanji", "to": "duvan", "kind": "delegate" },
-    { "from": "robin", "to": "robin-ops", "kind": "delegate" },
-    { "from": "brook", "to": "brook-ops", "kind": "delegate" },
-    { "from": "sanji", "to": "zeff", "kind": "delegate" }
-  ],
-  "comms": {
-    "links": [
-      {
-        "id": "human->bridge",
-        "from": "human",
-        "to": "bridge",
-        "channel": "Telegram/Discord",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Staged: requires broker instrumentation."
-      },
-      {
-        "id": "bridge->franky",
-        "from": "bridge",
-        "to": "franky",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->sanji",
-        "from": "bridge",
-        "to": "sanji",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->chopper",
-        "from": "bridge",
-        "to": "chopper",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->usopp",
-        "from": "bridge",
-        "to": "usopp",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->robin",
-        "from": "bridge",
-        "to": "robin",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->brook",
-        "from": "bridge",
-        "to": "brook",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->vivi",
-        "from": "bridge",
-        "to": "vivi",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      },
-      {
-        "id": "bridge->jinbe",
-        "from": "bridge",
-        "to": "jinbe",
-        "channel": "OpenClaw dispatch",
-        "status": "unknown",
-        "ok": null,
-        "lastOkAt": null,
-        "gapSeconds": null,
-        "notes": "Derived from gateway reachability on the current host; remote probes not yet instrumented."
-      }
-    ]
-  }
+  "totalAgents": 28,
+  "totalDepartments": 9,
+  "architecture": "Single gateway (Mac Mini M4), all agents local, remote inference nodes for local LLMs",
+  "updatedAt": "2026-03-23T13:00:00Z"
 }
