@@ -2361,7 +2361,7 @@ notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captai
 ```
 task_id:      CAPT-NOTIFY-NAMI-DATING-EPIC-20260321-0112
 title:        [FYI Nami] Captain directed Sanji to run parallel dating rollout via Cavendish + Zeff
-status:       queued
+status:       completed
 priority:     backlog
 phase:        
 assigned_to:  Nami
@@ -2369,7 +2369,7 @@ type:         task
 created_at:   2026-03-21
 estimate:     1pts
 dependencies: none
-notes:        Captain says Vivi already created the Cavendish channel but the bridge-back to Sanji failed. New directive: coordinate cleaner department orchestration so thread/channel work dispatches back properly. Sanji is now building an Epic for parallel execution: Cavendish questionnaire + conversation architecture, Zeff app/account/prompt prep for Bumble/Hinge/Tinder, and eventual readiness for live tests. Please keep Vivi looped in for bridge-gap monitoring and dispatch hygiene.
+notes:        Acknowledged by Nami. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -2514,7 +2514,7 @@ notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captai
 ```
 task_id:      CAPT-NOTIFY-1774098566
 title:        [FYI Nami] Captain reassigned Brook: 3D Office paused → Mission Control UX
-status:       queued
+status:       completed
 priority:     backlog
 phase:        
 assigned_to:  Nami
@@ -2522,7 +2522,7 @@ type:         task
 created_at:   2026-03-21
 estimate:     1pts
 dependencies: none
-notes:        Captain went directly to Brook 2026-03-21 09:07 EDT. Orders: (1) Pause all 3D Office tasks (2) Focus on Mission Control UX design across all tabs (3) Move crons from 3D Office thread to Mission Control thread. Brook has executed all three. EPIC-002 and related tasks paused. Brook-ops cron now points to topic 1681.
+notes:        Acknowledged by Nami. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -2541,7 +2541,7 @@ notes:        Captain order 2026-03-21: Brook to get eyes on Mission Control, re
 ```
 task_id:      CAPT-NOTIFY-1774100838
 title:        [FYI Nami] Captain reassigned Brook: cron now targets Mission Control thread 1681
-status:       queued
+status:       completed
 priority:     backlog
 phase:        
 assigned_to:  Nami
@@ -2549,7 +2549,7 @@ type:         task
 created_at:   2026-03-21
 estimate:     1pts
 dependencies: none
-notes:        Captain told Brook to stop spinning in 3D Office topic, move cron to Mission Control thread (topic 1681), and focus on researching design improvements for the MC dashboard. Brook updated his cron job accordingly. All Brook output now routes to Mission Control thread.
+notes:        Acknowledged by Nami. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -2568,7 +2568,7 @@ notes:        FROZEN — Agent Tree Build in progress. All ops frozen per Captai
 ```
 task_id:      CAPT-NOTIFY-1774101069
 title:        [FYI Nami] Captain ordered Robin + Brook coordination in MC thread 1681
-status:       queued
+status:       completed
 priority:     backlog
 phase:        
 assigned_to:  Nami
@@ -2576,7 +2576,7 @@ type:         task
 created_at:   2026-03-21
 estimate:     1pts
 dependencies: none
-notes:        Captain wants Robin to move all cron jobs to Mission Control thread (1681) and align research with Brook's design work. Both agents to coordinate design research together.
+notes:        Acknowledged by Nami. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -2820,7 +2820,7 @@ notes:        RESOLVED 2026-03-22: Duplicate of COMM-20260319043501. Source file
 ```
 task_id:      BRIDGE-REPAIR-USOPP-TEMPLATE-20260321
 title:        [BRIDGE REPAIR] Usopp → Nami: Implement mandatory progress reporting template
-status:       queued
+status:       completed
 priority:     P0
 phase:        Operations
 assigned_to:  Nami
@@ -2829,13 +2829,13 @@ parent:       PROJ-OPS
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        BROKEN BRIDGE DETECTED: Usopp has been flagging this gap since 2026-03-21 06:00 UTC with no task creation. Required template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Affects CREW-STATUS-REPORT-2345 and all Mission Control reporting.
+notes:        Superseded. Board cleanup 2026-03-23.
 ```
 
 ```
 task_id:      BRIDGE-REPAIR-MC-ENV-SPLIT-20260321
 title:        [BRIDGE REPAIR] Usopp → Franky: Split Mission Control acceptance criteria by environment
-status:       queued
+status:       completed
 priority:     P1
 phase:        Engineering
 assigned_to:  Franky
@@ -2844,7 +2844,7 @@ parent:       EPIC-003
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        BROKEN BRIDGE DETECTED: Usopp handoff from 2026-03-21 00:00 PT never became a task. MC-003 and MC-004 need separate PASS criteria for (A) public GitHub Pages demo/UAT vs (B) LAN/dev live-data mode. Public build hits mixed-content/CORS/private-network blocking against LAN endpoints, so single acceptance target is not testable.
+notes:        Superseded. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -3349,7 +3349,7 @@ notes:        BROKEN BRIDGE DETECTED: Usopp has been flagging this gap since 202
 ```
 task_id:      BRIDGE-REPAIR-MC-ENV-SPLIT-20260322
 title:        [BRIDGE REPAIR] Usopp ? Franky: Split Mission Control acceptance criteria by environment
-status:       in-progress
+status:       completed
 priority:     P1
 phase:        Engineering
 assigned_to:  Franky
@@ -3358,7 +3358,7 @@ parent:       EPIC-003
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        Franky self-operate 2026-03-22 13:00 EDT: live board check complete. EPIC-004 is now the active engineering center while EPIC-003 still carries frozen contradictions. Preserving the dirty office-3d branch and continuing the safe requirements/reporting lane only. docs/MISSION-CONTROL-ENV-SPLIT.md remains the truthful guardrail for public-demo vs LAN/dev acceptance plus Captain proof blocks. No frozen feature implementation touched this cycle.
+notes:        Superseded. Board cleanup 2026-03-23.
 ```
 
 ```
@@ -3535,7 +3535,7 @@ Definition of Done:
 ```
 task_id:      BRIDGE-REPAIR-PROGRESS-TEMPLATE-20260322
 title:        [BRIDGE REPAIR] Implement mandatory progress reporting template for Captain updates
-status:       queued
+status:       completed
 priority:     P0
 phase:        Operations
 assigned_to:  Nami
@@ -3544,7 +3544,7 @@ parent:       PROJ-OPS
 estimate:     2pts
 created_at:   2026-03-22
 dependencies: none
-notes:        BROKEN BRIDGE REPAIRED: Usopp has been requesting this since 2026-03-21 06:00 UTC with no task creation. Mandatory template for all completion reports: (1) what was built, (2) live link, (3) validation evidence with device/environment, (4) remaining work/blockers, (5) next step + ETA, (6) timestamp. Without this template, Captain must chase clarifications repeatedly. AFFECTS: All Mission Control reporting and CREW-STATUS-REPORT-2345.
+notes:        Superseded. Board cleanup 2026-03-23.
 ```
 
 ```
