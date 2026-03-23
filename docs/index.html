@@ -650,8 +650,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div class="card-row" id="mission-state">
         <div class="card"><h3>Phase</h3><div class="val">Phase 2</div><div class="text2" style="font-size:12px;margin-top:4px">Crew Operational</div></div>
         <div class="card"><h3>Autonomy Level</h3><div class="val">0</div><div class="text2" style="font-size:12px;margin-top:4px">Human-directed</div></div>
-        <div class="card"><h3>Active Machines</h3><div class="val">3<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Mac Mini + GPU3060 + Desktop</div></div>
-        <div class="card"><h3>Active Agents</h3><div class="val">28<span class="text2" style="font-size:16px"> agents</span></div><div class="text2" style="font-size:12px;margin-top:4px">9 departments operational</div></div>
+        <div class="card"><h3>Active Machines</h3><div class="val" id="m-machines">3<span class="text2" style="font-size:16px">/3</span></div><div class="text2" style="font-size:12px;margin-top:4px">Mac Mini + GPU3060 + Desktop</div></div>
+        <div class="card"><h3>Active Agents</h3><div class="val" id="m-agents">28<span class="text2" style="font-size:16px"> agents</span></div><div class="text2" style="font-size:12px;margin-top:4px" id="m-agents-desc">9 departments operational</div></div>
       </div>
       <div class="section-title">🔑 Key Priorities</div>
       <div id="mission-priorities" class="card mb" style="font-size:13px;line-height:2">Loading...</div>
@@ -1371,6 +1371,24 @@ async function loadHealth() {
   dkEl.innerHTML = `<span class="health-dot ${parseInt(h.disk.percent)>90?'err':'ok'}"></span>${h.disk.used} / ${h.disk.total} (${h.disk.percent})`;
   document.getElementById('health-status').innerHTML =
     `<span class="health-dot ${h.gateway.ok?'ok':'err'}"></span>Gateway ${h.gateway.ok?'OK':'Down'}`;
+
+  // Update mission state from health data
+  if (h.gateway && h.gateway.status) {
+    const agentMatch = h.gateway.status.match(/(\d+) agents/);
+    if (agentMatch) {
+      const agentCount = parseInt(agentMatch[1]);
+      const mAgentsEl = document.getElementById('m-agents');
+      const mAgentsDescEl = document.getElementById('m-agents-desc');
+      if (mAgentsEl) {
+        mAgentsEl.innerHTML = `${agentCount}<span class="text2" style="font-size:16px"> agents</span>`;
+      }
+      if (mAgentsDescEl) {
+        // Calculate departments based on agent count (rough estimate: ~3 agents per dept)
+        const deptCount = Math.max(1, Math.floor(agentCount / 3));
+        mAgentsDescEl.textContent = `${deptCount} departments operational`;
+      }
+    }
+  }
 
   // Git
   const act = await api('./data/activity.json');
