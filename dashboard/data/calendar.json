@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Daily Standup (Zeus)",
+    "time": "09:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Jinbe Board Cleanup",
+    "time": "08:30",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Jinbe"
+  },
+  {
+    "title": "Daily Cost Report (Zeus)",
+    "time": "20:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Sprint Review (Zeus)",
+    "time": "17:00",
+    "tz": "America/New_York",
+    "recurrence": "weekly-fri",
+    "type": "cron",
+    "agent": "Zeus"
+  },
+  {
+    "title": "Session Bloat Cleanup",
+    "time": "04:00",
+    "tz": "America/New_York",
+    "recurrence": "daily",
+    "type": "cron",
+    "agent": "Nami"
+  },
+  {
+    "title": "Tangerine Health Check",
+    "time": "every 15min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Tangerine"
+  },
+  {
+    "title": "Helm Board Scan",
+    "time": "every 30min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Helm"
+  },
+  {
+    "title": "Dock Repo Check",
+    "time": "every 30min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Dock"
+  },
+  {
+    "title": "Local Agent Watchdog",
+    "time": "every 15min",
+    "recurrence": "continuous",
+    "type": "cron",
+    "agent": "Nami"
+  },
+  {
+    "title": "Nami Heartbeat",
+    "time": "every 1h",
+    "recurrence": "continuous",
+    "type": "heartbeat",
+    "agent": "Nami"
+  }
+]

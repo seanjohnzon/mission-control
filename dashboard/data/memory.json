@@ -1,0 +1,53 @@
+[
+  {
+    "date": "2026-03-23",
+    "title": "Local Models + Goal Tracking",
+    "summary": "Audited all 3 machines for local inference. Pulled qwen2.5:14b. Created 3 local agents (tangerine/helm/dock). Deployed crew-wide goal tracking protocol. Mock drill: 7/9 departments delivered. Sanji assigned to fix GPU3060+Desktop connections.",
+    "tags": [
+      "infra",
+      "local-models",
+      "goal-tracking",
+      "protocol"
+    ]
+  },
+  {
+    "date": "2026-03-22",
+    "title": "EPIC-005 Complete \u2014 One Gateway Migration",
+    "summary": "All agents consolidated to Mac Mini. 37/37 items done. D: drive mounted. Phones connected. Old gateways decommissioned. 4 new agents added with Telegram bots.",
+    "tags": [
+      "migration",
+      "epic-005",
+      "gateway"
+    ]
+  },
+  {
+    "date": "2026-03-21",
+    "title": "Agent Tree Build + EPIC-004",
+    "summary": "Communication reliability epic. Teams tab built by Franky. 13 stories completed. Department hierarchy restructured. All agents self-managing.",
+    "tags": [
+      "epic-004",
+      "teams-tab",
+      "communication"
+    ]
+  },
+  {
+    "date": "2026-03-20",
+    "title": "Thousand Sunny Ship + MC Dashboard",
+    "summary": "3D Office ship scene built. MC GitHub Pages live. Discord restructured. Vivi thread management deployed. Robin research patrol active.",
+    "tags": [
+      "3d-office",
+      "github-pages",
+      "discord"
+    ]
+  },
+  {
+    "date": "2026-03-19",
+    "title": "Crew Scaling + CI/CD",
+    "summary": "Sanji fixed CI. Brook UX reviews. Robin research. Usopp requirements. Multiple bridge repairs. Captain gave subagent scaling policy.",
+    "tags": [
+      "ci-cd",
+      "scaling",
+      "bridge-repair"
+    ]
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "commits": [
+    {
+      "hash": "bd71459",
+      "msg": "data(nami): sync all dashboard data files",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "dbf7742",
+      "msg": "ops(nami): board cleanup \u2014 8 stale tasks completed",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "21ba2e2",
+      "msg": "ops(nami): model prompting guides for all agents",
+      "date": "2026-03-23",
+      "author": "Nami"
+    },
+    {
+      "hash": "dafe835",
+      "msg": "feat(franky): EPIC-004 Teams tab complete",
+      "date": "2026-03-22",
+      "author": "Franky"
+    },
+    {
+      "hash": "442cfc1",
+      "msg": "fix(sanji): MC live on GitHub Pages",
+      "date": "2026-03-20",
+      "author": "Sanji"
+    }
+  ],
+  "recent": [
+    {
+      "agent": "Nami",
+      "action": "Deployed crew-wide goal tracking protocol",
+      "time": "2026-03-23 07:08 EDT"
+    },
+    {
+      "agent": "Nami",
+      "action": "Pulled qwen2.5:14b, created 3 local model agents",
+      "time": "2026-03-23 05:30 EDT"
+    },
+    {
+      "agent": "Franky",
+      "action": "Mock goal drill delivered in 60s",
+      "time": "2026-03-23 07:02 EDT"
+    },
+    {
+      "agent": "Sanji",
+      "action": "Scoped GPU3060 + Desktop device connections",
+      "time": "2026-03-23 07:20 EDT"
+    },
+    {
+      "agent": "Jinbe",
+      "action": "Daily board cleanup pre-standup",
+      "time": "2026-03-22 08:30 EDT"
+    }
+  ]
+}

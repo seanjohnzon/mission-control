@@ -1,0 +1,109 @@
+{
+  "departments": [
+    {
+      "name": "Navigation",
+      "chief": "Nami",
+      "model": "claude-opus-4-6",
+      "members": [
+        "Zeus",
+        "Vivi",
+        "Carina",
+        "Tangerine",
+        "Helm",
+        "Dock",
+        "Mikan"
+      ],
+      "scope": "Orchestration, budget, crew coordination, local model monitoring"
+    },
+    {
+      "name": "Engineering",
+      "chief": "Franky",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Cola",
+        "Iceburg",
+        "Zeff",
+        "Cavendish",
+        "Pudding"
+      ],
+      "scope": "Building, CI/CD, deployments, Mission Control dashboard"
+    },
+    {
+      "name": "Automation",
+      "chief": "Sanji",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Zeff (dating)",
+        "Cavendish (dating)"
+      ],
+      "scope": "Workflows, CI/CD, process automation, device management"
+    },
+    {
+      "name": "QA",
+      "chief": "Chopper",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Sakura",
+        "Milky"
+      ],
+      "scope": "Verification, testing, QA pass/fail verdicts"
+    },
+    {
+      "name": "Business Intelligence",
+      "chief": "Usopp",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Perona"
+      ],
+      "scope": "Requirements validation, analytics, business-tech bridge"
+    },
+    {
+      "name": "Research",
+      "chief": "Robin",
+      "model": "grok-4",
+      "members": [
+        "Robin-Ops",
+        "Aokiji",
+        "Dragon"
+      ],
+      "scope": "X/Twitter research, knowledge synthesis, market analysis"
+    },
+    {
+      "name": "Creative",
+      "chief": "Brook",
+      "model": "gemini-2.5-pro",
+      "members": [
+        "Brook-Ops",
+        "Shakky",
+        "Apoo"
+      ],
+      "scope": "UX reviews, visual design, creative direction"
+    },
+    {
+      "name": "Operations",
+      "chief": "Jinbe",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Fisher Tiger",
+        "Otohime",
+        "Aladine"
+      ],
+      "scope": "Scrum mastery, board cleanup, sprint management"
+    },
+    {
+      "name": "Security",
+      "chief": "Zoro",
+      "model": "claude-sonnet-4",
+      "members": [
+        "Tashigi",
+        "Smoker",
+        "Hina"
+      ],
+      "scope": "Security audits, hardening, threat assessment"
+    }
+  ],
+  "totalAgents": 28,
+  "totalDepartments": 9,
+  "architecture": "Single gateway (Mac Mini M4), all agents local, remote inference nodes for local LLMs",
+  "updatedAt": "2026-03-23T13:00:00Z"
+}
