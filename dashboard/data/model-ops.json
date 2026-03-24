@@ -10,75 +10,33 @@
       "agents": [
         {
           "id": "nami",
-          "name": "Nami",
-          "emoji": "\ud83e\udded",
           "model": "claude-opus-4-6",
-          "modelShort": "Opus 4.6",
-          "role": "Orchestrator",
-          "contextWindow": 200000,
-          "contextUsed": 24500,
-          "tokensToday": {
-            "input": 48200,
-            "output": 12800
-          },
-          "costToday": 0,
-          "machine": "Mac Mini M4",
-          "sessions": 3,
-          "status": "active"
+          "role": "Orchestrator / Navigator"
         },
         {
           "id": "zeus",
-          "name": "Zeus",
-          "emoji": "\u26a1",
-          "model": "claude-sonnet-4-6",
-          "modelShort": "Sonnet 4.6",
-          "role": "Subagent / Heartbeat",
-          "contextWindow": 200000,
-          "contextUsed": 8200,
-          "tokensToday": {
-            "input": 18400,
-            "output": 4200
-          },
-          "costToday": 0,
-          "machine": "Mac Mini M4",
-          "sessions": 7,
-          "status": "active"
+          "model": "claude-sonnet-4",
+          "role": "Nami Assistant / Backup"
         },
         {
           "id": "vivi",
-          "name": "Vivi",
-          "emoji": "\u2728",
-          "model": "claude-sonnet-4-6",
-          "modelShort": "Sonnet 4.6",
-          "role": "Dispatcher",
-          "contextWindow": 200000,
-          "contextUsed": 3100,
-          "tokensToday": {
-            "input": 9600,
-            "output": 2100
-          },
-          "costToday": 0,
-          "machine": "Mac Mini M4",
-          "sessions": 2,
-          "status": "idle"
+          "model": "claude-sonnet-4",
+          "role": "Thread Manager"
         },
         {
           "id": "jinbe",
-          "name": "Jinbe",
-          "emoji": "\ud83d\udee1\ufe0f",
-          "model": "claude-sonnet-4-6",
-          "modelShort": "Sonnet 4.6",
-          "role": "Security / Infra",
-          "contextWindow": 200000,
-          "contextUsed": 1800,
-          "tokensToday": {
-            "input": 4200,
-            "output": 900
-          },
-          "costToday": 0,
-          "machine": "Mac Mini M4",
-          "sessions": 1,
-          "status": "idle"
+          "model": "claude-sonnet-4",
+          "role": "Operations / Scrum"
+        },
+        {
+          "id": "zoro",
+          "model": "claude-sonnet-4",
+          "role": "Security Chief"
+        },
+        {
+          "id": "carina",
+          "model": "claude-sonnet-4",
+          "role": "Support Agent"
         }
       ],
       "usage": {
@@ -112,75 +70,23 @@
       "agents": [
         {
           "id": "franky",
-          "name": "Franky",
-          "emoji": "\ud83d\udd27",
           "model": "gpt-5.4",
-          "modelShort": "GPT-5.4",
-          "role": "Chief Engineer",
-          "contextWindow": 128000,
-          "contextUsed": 41200,
-          "tokensToday": {
-            "input": 62400,
-            "output": 28600
-          },
-          "costToday": 0,
-          "machine": "Desktop",
-          "sessions": 5,
-          "status": "active"
+          "role": "Chief Engineer"
         },
         {
           "id": "sanji",
-          "name": "Sanji",
-          "emoji": "\ud83d\udc68\u200d\ud83c\udf73",
           "model": "gpt-5.4",
-          "modelShort": "GPT-5.4",
-          "role": "Automation / CI",
-          "contextWindow": 128000,
-          "contextUsed": 18700,
-          "tokensToday": {
-            "input": 31200,
-            "output": 14800
-          },
-          "costToday": 0,
-          "machine": "Desktop",
-          "sessions": 4,
-          "status": "active"
+          "role": "Chief Automation"
         },
         {
           "id": "chopper",
-          "name": "Chopper",
-          "emoji": "\ud83d\udd2c",
           "model": "gpt-5.4",
-          "modelShort": "GPT-5.4",
-          "role": "QA / Testing",
-          "contextWindow": 128000,
-          "contextUsed": 22100,
-          "tokensToday": {
-            "input": 28800,
-            "output": 11200
-          },
-          "costToday": 0,
-          "machine": "GPU3060",
-          "sessions": 6,
-          "status": "active"
+          "role": "Chief QA"
         },
         {
           "id": "usopp",
-          "name": "Usopp",
-          "emoji": "\ud83c\udfaf",
           "model": "gpt-5.4",
-          "modelShort": "GPT-5.4",
-          "role": "Business Intel",
-          "contextWindow": 128000,
-          "contextUsed": 9400,
-          "tokensToday": {
-            "input": 14600,
-            "output": 6200
-          },
-          "costToday": 0,
-          "machine": "GPU3060",
-          "sessions": 2,
-          "status": "idle"
+          "role": "Chief BI"
         }
       ],
       "usage": {
@@ -266,8 +172,8 @@
     {
       "provider": "Google / Gemini",
       "type": "variable",
-      "monthlyCost": 5,
-      "costLabel": "~$5/mo",
+      "monthlyCost": 50,
+      "costLabel": "~$50/mo cap",
       "color": "#F0883E",
       "colorRgb": "240,136,62",
       "agents": [
