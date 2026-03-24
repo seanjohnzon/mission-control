@@ -871,6 +871,38 @@ const server = http.createServer(async (req, res) => {
     ];
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ agents }));
+  } else if (p.startsWith('/data/')) {
+    // Static file serving for data JSON files (matches docs/ structure for GitHub Pages parity)
+    const relPath = p.replace(/^\/data\//, '');
+    const filePath = path.join(__dirname, 'data', relPath);
+    const safePath = path.resolve(filePath);
+    if (!safePath.startsWith(path.resolve(path.join(__dirname, 'data')))) {
+      res.writeHead(403); res.end('Forbidden'); return;
+    }
+    try {
+      const fileData = fs.readFileSync(safePath);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(fileData);
+    } catch {
+      res.writeHead(404); res.end('Not found');
+    }
+  } else if (p.startsWith('/crew-board/')) {
+    // Static file serving for crew-board files (improvements data etc)
+    const relPath = p.replace(/^\/crew-board\//, '');
+    const filePath = path.join(MC_ROOT, 'crew-board', relPath);
+    const safePath = path.resolve(filePath);
+    if (!safePath.startsWith(path.resolve(path.join(MC_ROOT, 'crew-board')))) {
+      res.writeHead(403); res.end('Forbidden'); return;
+    }
+    try {
+      const fileData = fs.readFileSync(safePath);
+      const ext = path.extname(safePath).toLowerCase();
+      const ct = ext === '.json' ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8';
+      res.writeHead(200, { 'Content-Type': ct, 'Cache-Control': 'no-store' });
+      res.end(fileData);
+    } catch {
+      res.writeHead(404); res.end('Not found');
+    }
   } else if (p.startsWith('/miniverse/')) {
     // Static file serving for vendored Miniverse assets
     const relPath = p.replace(/^\/miniverse\//, '');
