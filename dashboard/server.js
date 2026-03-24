@@ -872,19 +872,43 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ agents }));
   } else if (p.startsWith('/data/')) {
-    // Static file serving for data JSON files (matches docs/ structure for GitHub Pages parity)
-    const relPath = p.replace(/^\/data\//, '');
-    const filePath = path.join(__dirname, 'data', relPath);
-    const safePath = path.resolve(filePath);
-    if (!safePath.startsWith(path.resolve(path.join(__dirname, 'data')))) {
-      res.writeHead(403); res.end('Forbidden'); return;
-    }
+    // LIVE DATA routes — maps docs/ static paths to live API handlers
+    // This is what makes local different from remote: local serves LIVE data
+    const file = p.replace(/^\/data\//, '');
+    const headers = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
     try {
-      const fileData = fs.readFileSync(safePath);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-      res.end(fileData);
-    } catch {
-      res.writeHead(404); res.end('Not found');
+      let result;
+      if (file === 'health.json') result = await handleHealth();
+      else if (file === 'tasks.json') result = { tasks: parseTasks() };
+      else if (file === 'model-ops.json') result = await handleModelOps();
+      else if (file === 'activity.json') result = handleActivity();
+      else if (file === 'memory.json') result = parseMemoryDaily();
+      else if (file === 'memory-long.json') result = parseMemoryLong();
+      else if (file === 'docs.json') result = parseDocs();
+      else if (file === 'team-org.json') result = await handleTeamOrg();
+      else if (file === 'projects.json') result = { projects: PROJECTS };
+      else if (file === 'calendar.json') {
+        const start = url.searchParams.get('start');
+        const end = url.searchParams.get('end');
+        const view = url.searchParams.get('view') || 'week';
+        result = getCalendarData({ start, end, view });
+      }
+      else {
+        // Fallback to static file if no live handler
+        const filePath = path.join(__dirname, 'data', file);
+        const safePath = path.resolve(filePath);
+        if (!safePath.startsWith(path.resolve(path.join(__dirname, 'data')))) {
+          res.writeHead(403); res.end('Forbidden'); return;
+        }
+        const fileData = fs.readFileSync(safePath);
+        res.writeHead(200, headers);
+        res.end(fileData);
+        return;
+      }
+      res.writeHead(200, headers);
+      res.end(JSON.stringify(result));
+    } catch(e) {
+      res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
     }
   } else if (p.startsWith('/crew-board/')) {
     // Static file serving for crew-board files (improvements data etc)
