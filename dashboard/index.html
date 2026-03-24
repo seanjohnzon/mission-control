@@ -945,6 +945,8 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
       <div class="section-title" style="font-size:14px;margin-top:4px">🏋️ Department Loads</div>
       <div class="card-grid mb" id="dept-loads"></div>
 
+      <div class="section-title" style="font-size:14px;margin-top:4px">🌐 Organization Visualization</div>
+      <div class="card mb" id="orgviz" style="min-height:400px;overflow:hidden"></div>
 
       <!-- Task Flow -->
       <div class="card mb" style="text-align:center;padding:16px;background:linear-gradient(135deg,#161b22,#1a2332)">
@@ -1586,6 +1588,22 @@ function taskDept(t) {
 function isCompletedStatus(status) {
   const s = (status || '').toLowerCase();
   return s === 'completed' || s === 'cancelled' || s === 'done';
+}
+
+function typeIcon(type) {
+  const icons = { project: '📂', epic: '📌', story: '📖', task: '📝' };
+  return icons[(type || '').toLowerCase()] || '📝';
+}
+
+function statusIcon(status) {
+  const s = (status || '').toLowerCase();
+  if (s === 'completed' || s === 'done') return '✅';
+  if (s === 'in-progress') return '🔄';
+  if (s === 'queued') return '⏳';
+  if (s === 'blocked') return '🚫';
+  if (s === 'paused') return '⏸️';
+  if (s === 'cancelled') return '❌';
+  return '○';
 }
 
 function focusTask(taskId) {
