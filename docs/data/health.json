@@ -1,7 +1,9 @@
 {
   "gateway": {
     "ok": true,
-    "status": "Healthy \u2014 28 agents on 127.0.0.1:18789"
+    "status": "live",
+    "agentCount": 0,
+    "url": "http://127.0.0.1:18789/health"
   },
   "ollama": {
     "ok": true,
@@ -9,11 +11,24 @@
       "qwen2.5:14b",
       "qwen2.5:7b",
       "qwen2.5:3b"
-    ]
+    ],
+    "host": "http://127.0.0.1:11434"
   },
   "disk": {
-    "used": "12 GB",
-    "total": "228 GB",
-    "percent": "5%"
+    "used": "131Gi",
+    "total": "228Gi",
+    "percent": "67%",
+    "free": "66Gi"
+  },
+  "git": {
+    "ok": true,
+    "recentCommitCount": 43,
+    "lastCommitAt": "2026-03-28T20:12:14.000Z"
+  },
+  "meta": {
+    "generatedAt": "2026-03-28T20:28:56.659Z",
+    "source": "local-runtime",
+    "generator": "health-generator.js",
+    "generatorVersion": "1.0.0"
   }
 }

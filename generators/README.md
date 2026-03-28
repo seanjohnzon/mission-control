@@ -26,6 +26,12 @@ node generators/tasks-generator.js
 - **Features:** Calculates progress %, epic lists, story counts, status rollups
 - **Status:** Complete ✅
 
+### ✅ health-generator.js
+- **Source:** Live system checks (Gateway API, Ollama API, df, git)
+- **Output:** `docs/data/health.json`
+- **Features:** Gateway status, Ollama models, disk usage, git activity
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)
