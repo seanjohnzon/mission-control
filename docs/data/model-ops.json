@@ -10,307 +10,261 @@
       "agents": [
         {
           "id": "nami",
-          "model": "claude-opus-4-6",
-          "role": "Orchestrator / Navigator"
+          "name": "Nami",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Chief of Staff / Navigator",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": "Mac Mini (M4)",
+          "sessions": 1
         },
         {
-          "id": "zeus",
-          "model": "claude-sonnet-4",
-          "role": "Nami Assistant / Backup"
+          "id": "franky",
+          "name": "Franky",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Chief Engineer / Builder",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": "Desktop",
+          "sessions": 1
         },
         {
-          "id": "vivi",
-          "model": "claude-sonnet-4",
-          "role": "Thread Manager"
+          "id": "chopper",
+          "name": "Chopper",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "QA / Health / Security Manager",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": "GPU3060 Laptop",
+          "sessions": 1
         },
         {
-          "id": "jinbe",
-          "model": "claude-sonnet-4",
-          "role": "Operations / Scrum"
+          "id": "robin",
+          "name": "Robin",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Research / Documentation",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
+        },
+        {
+          "id": "brook",
+          "name": "Brook",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Creative / Content",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
         },
         {
           "id": "zoro",
-          "model": "claude-sonnet-4",
-          "role": "Security Chief"
+          "name": "Zoro",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Security / Defense",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
         },
         {
-          "id": "carina",
-          "model": "claude-sonnet-4",
-          "role": "Support Agent"
+          "id": "sanji",
+          "name": "Sanji",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Deployment / Operations",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
+        },
+        {
+          "id": "jinbe",
+          "name": "Jinbe",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Sprint Management",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
+        },
+        {
+          "id": "usopp",
+          "name": "Usopp",
+          "model": "claude-sonnet-4-6",
+          "modelShort": "Sonnet 4",
+          "role": "Specification / Requirements",
+          "contextWindow": 200000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": null,
+          "sessions": 1
         }
       ],
       "usage": {
-        "plan": "Max 5x",
-        "billingCycle": {
-          "start": "2026-03-01",
-          "end": "2026-03-31"
-        },
-        "limits": {
-          "opusTokensPerMin": 40000,
-          "sonnetTokensPerMin": 80000,
-          "opusRequestsPerDay": 1200,
-          "sonnetRequestsPerDay": 3600
-        },
-        "current": {
-          "opusRequestsToday": 0,
-          "sonnetRequestsToday": 0,
-          "rateLimitHitsToday": 0,
-          "lastRateLimitAt": null,
-          "peakUsagePct": 0
-        }
+        "totalInputTokens": 0,
+        "totalOutputTokens": 0,
+        "totalCost": 0,
+        "activeSessions": 9,
+        "totalAgents": 9
       }
     },
     {
       "provider": "OpenAI",
       "type": "subscription",
-      "monthlyCost": 200,
-      "costLabel": "$200/mo",
-      "color": "#3FB950",
-      "colorRgb": "63,185,80",
+      "monthlyCost": 150,
+      "costLabel": "$150/mo",
+      "color": "#10B981",
+      "colorRgb": "16,185,129",
       "agents": [
         {
-          "id": "franky",
+          "id": "chopper-codex",
+          "name": "Chopper (Codex)",
           "model": "gpt-5.4",
-          "role": "Chief Engineer"
-        },
-        {
-          "id": "sanji",
-          "model": "gpt-5.4",
-          "role": "Chief Automation"
-        },
-        {
-          "id": "chopper",
-          "model": "gpt-5.4",
-          "role": "Chief QA"
-        },
-        {
-          "id": "usopp",
-          "model": "gpt-5.4",
-          "role": "Chief BI"
+          "modelShort": "GPT-5.4",
+          "role": "Code QA / Technical Review",
+          "contextWindow": 128000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": "GPU3060 Laptop",
+          "sessions": 1
         }
       ],
       "usage": {
-        "plan": "ChatGPT Pro",
-        "billingCycle": {
-          "start": "2026-03-01",
-          "end": "2026-03-31"
-        },
-        "limits": {
-          "gpt54RequestsPerDay": "unlimited",
-          "note": "Pro plan \u2014 fair use policy"
-        },
-        "current": {
-          "requestsToday": 0,
-          "rateLimitHitsToday": 0,
-          "peakUsagePct": 0
-        }
+        "totalInputTokens": 0,
+        "totalOutputTokens": 0,
+        "totalCost": 0,
+        "activeSessions": 1,
+        "totalAgents": 1
       }
     },
     {
-      "provider": "xAI / Grok",
-      "type": "variable",
-      "monthlyCost": 50,
-      "costLabel": "~$50/mo cap",
-      "color": "#58A6FF",
-      "colorRgb": "88,166,255",
-      "agents": [
-        {
-          "id": "robin",
-          "name": "Robin",
-          "emoji": "\ud83d\udcda",
-          "model": "grok-4",
-          "modelShort": "Grok 4",
-          "role": "Research",
-          "contextWindow": 131072,
-          "contextUsed": 52800,
-          "tokensToday": {
-            "input": 38400,
-            "output": 9600
-          },
-          "costToday": 1.24,
-          "machine": "Mac Mini M4",
-          "sessions": 4,
-          "status": "active"
-        },
-        {
-          "id": "robin-ops",
-          "name": "Robin-Ops",
-          "emoji": "\ud83d\udd0e",
-          "model": "grok-3-fast",
-          "modelShort": "Grok 3 Fast",
-          "role": "Task Patrol",
-          "contextWindow": 131072,
-          "contextUsed": 14200,
-          "tokensToday": {
-            "input": 12800,
-            "output": 3400
-          },
-          "costToday": 0.18,
-          "machine": "Mac Mini M4",
-          "sessions": 9,
-          "status": "active"
-        }
-      ],
-      "usage": {
-        "plan": "API (pay-per-use)",
-        "billingCycle": {
-          "start": "2026-03-01",
-          "end": "2026-03-31"
-        },
-        "limits": {
-          "monthlyCap": 50,
-          "spentThisMonth": 0
-        },
-        "current": {
-          "requestsToday": 0,
-          "rateLimitHitsToday": 0,
-          "spendToday": 0,
-          "peakUsagePct": 0
-        }
-      }
-    },
-    {
-      "provider": "Google / Gemini",
-      "type": "variable",
-      "monthlyCost": 50,
-      "costLabel": "~$50/mo cap",
-      "color": "#F0883E",
-      "colorRgb": "240,136,62",
-      "agents": [
-        {
-          "id": "brook",
-          "name": "Brook",
-          "emoji": "\ud83c\udfa8",
-          "model": "gemini-2.5-pro",
-          "modelShort": "Gemini 2.5 Pro",
-          "role": "Creative / UX",
-          "contextWindow": 1000000,
-          "contextUsed": 186000,
-          "tokensToday": {
-            "input": 42600,
-            "output": 18400
-          },
-          "costToday": 0.31,
-          "machine": "Mac Mini M4",
-          "sessions": 3,
-          "status": "active"
-        },
-        {
-          "id": "brook-ops",
-          "name": "Brook-Ops",
-          "emoji": "\ud83c\udfb5",
-          "model": "gemini-2.5-flash",
-          "modelShort": "Gemini 2.5 Flash",
-          "role": "Quick Creative",
-          "contextWindow": 1000000,
-          "contextUsed": 48000,
-          "tokensToday": {
-            "input": 18200,
-            "output": 7800
-          },
-          "costToday": 0.04,
-          "machine": "Mac Mini M4",
-          "sessions": 5,
-          "status": "idle"
-        }
-      ],
-      "usage": {
-        "plan": "API (free tier)",
-        "billingCycle": {
-          "start": "2026-03-01",
-          "end": "2026-03-31"
-        },
-        "limits": {
-          "monthlyCap": 5,
-          "freeRequestsPerDay": 1500,
-          "spentThisMonth": 0
-        },
-        "current": {
-          "requestsToday": 0,
-          "rateLimitHitsToday": 0,
-          "spendToday": 0,
-          "peakUsagePct": 0
-        }
-      }
-    },
-    {
-      "provider": "Local / Ollama",
+      "provider": "Ollama (Local)",
       "type": "local",
       "monthlyCost": 0,
-      "costLabel": "$0",
-      "color": "#2DD4BF",
-      "colorRgb": "45,212,191",
+      "costLabel": "Hardware only",
+      "color": "#6366F1",
+      "colorRgb": "99,102,241",
       "agents": [
         {
-          "id": "mikan",
-          "name": "Mikan",
-          "emoji": "\ud83c\udf4a",
+          "id": "local-nano",
+          "name": "Local Nano",
+          "model": "qwen2.5:3b",
+          "modelShort": "Qwen 3B",
+          "role": "Fast local tasks",
+          "contextWindow": 32000,
+          "contextUsed": null,
+          "tokensToday": {
+            "input": 0,
+            "output": 0
+          },
+          "costToday": 0,
+          "machine": "Mac Mini (M4)",
+          "sessions": 0
+        },
+        {
+          "id": "local-mid",
+          "name": "Local Mid",
           "model": "qwen2.5:7b",
-          "modelShort": "qwen2.5:7b",
-          "role": "Local Workhorse",
-          "contextWindow": 32768,
-          "contextUsed": 18400,
+          "modelShort": "Qwen 7B",
+          "role": "Medium local tasks",
+          "contextWindow": 32000,
+          "contextUsed": null,
           "tokensToday": {
-            "input": 24800,
-            "output": 8200
+            "input": 0,
+            "output": 0
           },
           "costToday": 0,
-          "machine": "Mac Mini M4",
-          "sessions": 5,
-          "status": "active"
+          "machine": "Mac Mini (M4)",
+          "sessions": 0
         },
         {
-          "id": "cola",
-          "name": "Cola",
-          "emoji": "\ud83e\udd64",
-          "model": "qwen2.5-coder:7b",
-          "modelShort": "qwen2.5-coder:7b",
-          "role": "Light Patrol Local",
-          "contextWindow": 32768,
-          "contextUsed": 2600,
+          "id": "local-large",
+          "name": "Local Large",
+          "model": "qwen2.5:14b",
+          "modelShort": "Qwen 14B",
+          "role": "Heavy local tasks",
+          "contextWindow": 32000,
+          "contextUsed": null,
           "tokensToday": {
-            "input": 2200,
-            "output": 400
+            "input": 0,
+            "output": 0
           },
           "costToday": 0,
-          "machine": "Desktop",
-          "sessions": 1,
-          "status": "active"
-        },
-        {
-          "id": "sakura",
-          "name": "Sakura",
-          "emoji": "\ud83c\udf38",
-          "model": "llama3.1:8b",
-          "modelShort": "llama3.1:8b",
-          "role": "Light Patrol Local",
-          "contextWindow": 32768,
-          "contextUsed": 2100,
-          "tokensToday": {
-            "input": 1800,
-            "output": 300
-          },
-          "costToday": 0,
-          "machine": "Laptop",
-          "sessions": 1,
-          "status": "active"
+          "machine": "Mac Mini (M4)",
+          "sessions": 0
         }
       ],
       "usage": {
-        "plan": "Local compute",
-        "limits": {
-          "contextWindow": 32768,
-          "note": "Limited by RAM and context, not billing"
-        },
-        "current": {
-          "contextOverflows": 0,
-          "avgContextUsePct": 0
-        }
+        "totalInputTokens": 0,
+        "totalOutputTokens": 0,
+        "totalCost": 0,
+        "activeSessions": 0,
+        "totalAgents": 3
       }
     }
   ],
   "meta": {
-    "lastUpdated": "2026-03-21T00:00:00Z",
-    "refreshInterval": 60
+    "generatedAt": "2026-03-28T22:12:17.822Z",
+    "refreshInterval": 60,
+    "source": "model-ops-collector",
+    "generator": "model-ops-generator.js",
+    "generatorVersion": "1.0.0"
   }
 }
