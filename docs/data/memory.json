@@ -1,53 +1,130 @@
-[
-  {
-    "date": "2026-03-23",
-    "title": "Local Models + Goal Tracking",
-    "summary": "Audited all 3 machines for local inference. Pulled qwen2.5:14b. Created 3 local agents (tangerine/helm/dock). Deployed crew-wide goal tracking protocol. Mock drill: 7/9 departments delivered. Sanji assigned to fix GPU3060+Desktop connections.",
-    "tags": [
-      "infra",
-      "local-models",
-      "goal-tracking",
-      "protocol"
-    ]
-  },
-  {
-    "date": "2026-03-22",
-    "title": "EPIC-005 Complete \u2014 One Gateway Migration",
-    "summary": "All agents consolidated to Mac Mini. 37/37 items done. D: drive mounted. Phones connected. Old gateways decommissioned. 4 new agents added with Telegram bots.",
-    "tags": [
-      "migration",
-      "epic-005",
-      "gateway"
-    ]
-  },
-  {
-    "date": "2026-03-21",
-    "title": "Agent Tree Build + EPIC-004",
-    "summary": "Communication reliability epic. Teams tab built by Franky. 13 stories completed. Department hierarchy restructured. All agents self-managing.",
-    "tags": [
-      "epic-004",
-      "teams-tab",
-      "communication"
-    ]
-  },
-  {
-    "date": "2026-03-20",
-    "title": "Thousand Sunny Ship + MC Dashboard",
-    "summary": "3D Office ship scene built. MC GitHub Pages live. Discord restructured. Vivi thread management deployed. Robin research patrol active.",
-    "tags": [
-      "3d-office",
-      "github-pages",
-      "discord"
-    ]
-  },
-  {
-    "date": "2026-03-19",
-    "title": "Crew Scaling + CI/CD",
-    "summary": "Sanji fixed CI. Brook UX reviews. Robin research. Usopp requirements. Multiple bridge repairs. Captain gave subagent scaling policy.",
-    "tags": [
-      "ci-cd",
-      "scaling",
-      "bridge-repair"
-    ]
+{
+  "daily": [
+    {
+      "date": "2026-03-28",
+      "title": "Nami Heartbeat #1 (post-rollout), Nami Heartbea...",
+      "content": "**15:33 EDT**: Nami Heartbeat #1 (post-rollout)\n- Gateway just restarted with full crew heartbeat config\n- Verified: franky/chopper/sanji=15m, jinbe/usopp=30m, zoro=4h — all in config ✅\n\n**15:52 EDT**: Nami Heartbeat #2\n- **Franky:** ✅ OPERATIONAL — completed MC-LIVE-SYNC-TASKS-20260326 in first heartbeat. Built tasks-generator.js (679 tasks), 2 commits. Full protocol compliance: memory written, dept memory written, Telegram reported, MC logged, goals updated.\n- **Chopper:** ⏳ No heartbeat-state.json yet — waiting for first cycle\n\n**15:55 EDT**: Nami Heartbeat (1h cycle)\n- **Franky:** ✅ OPERATIONAL — completed MC-LIVE-SYNC-TASKS (tasks-generator.js, 679 tasks, 2 commits). Moving to projects.json next. Full protocol compliance: memory + dept memory + MC log + heartbeat-state.json.\n- **Sanji:** ✅ OPERATIONAL — heartbeat-state.json exists, researched STORY-008-AUTO automation patterns. Waiting for Chopper QA to deploy.",
+      "tags": [
+        "heartbeat",
+        "engineering",
+        "completed",
+        "mc-live-sync",
+        "tasks",
+        "commits"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-28.md"
+    },
+    {
+      "date": "2026-03-26",
+      "title": "Sanji, Sanji Catch-up + Routing Fix (19:00-20:0...",
+      "content": "**Unknown time**: Sanji\n- 2026-03-26 19:43 EDT — Re-read `/Users/minicihan/.openclaw/workspace/execution-state.json`, `workspace-sanji/active-goals.md`, and MC tasks `LUFFY-GPU3060-SSH-CUDA` + `LUFFY-DESKTOP-SSH-DISK` for the GPU/Desktop remote setup goal follow-up.\n- Result: no prerequisite movement. Both MC tasks remain `queued`, assigned to Luffy, with the same Captain-side requirements as before.\n\n**Unknown time**: Sanji Catch-up + Routing Fix (19:00-20:06 EDT)\n### Sanji's Recipe System (built by Captain today)\n4-stage cron chain for automation:\n\n**Unknown time**: Session Final (19:07-20:51 EDT)\n### Franky + Chopper HIRED\n- Both Phase 1 complete (clean AGENTS.md, TOOLS.md, empty HEARTBEAT)\n\n**Unknown time**: Final Update (20:54 EDT)\n- memoryFlush now writes to BOTH locations (per-agent + unified)\n- Franky + Chopper stories marked complete",
+      "tags": [
+        "heartbeat",
+        "engineering",
+        "completed",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-26.md"
+    },
+    {
+      "date": "2026-03-25",
+      "title": "CRITICAL DISCOVERY: Telegram Bot-to-Bot Blindne...",
+      "content": "**Unknown time**: CRITICAL DISCOVERY: Telegram Bot-to-Bot Blindness\n### Root Cause\nTelegram API explicitly states: **\"Bot admins and bots with privacy mode disabled will receive all messages except messages sent by other bots.\"**\n\n**Unknown time**: Other Changes Today\n- [09:57] Captain identity updated: name is Luffy, universal law added to UNIVERSAL-AGENT-RULES.md + USER.md + MEMORY.md\n- [10:05] Updated timeout protocol in UNIVERSAL-AGENT-RULES.md (120s minimum for sessions_send)\n\n**Unknown time**: Key Findings\n- Bot-to-bot Telegram relay: ALWAYS use sessions_send, target agent:<name>:main (not topic sessions)\n- 409 getUpdates: Known OpenClaw bug, persists through update to 2026.3.24. May need full process kill + clean start.\n\n**Unknown time**: Unfinished Work\n- 409 getUpdates still not resolved — cold restart was in progress when session compacted\n- Need to verify cold restart fixed it\n\n**Unknown time**: Config Changes Made\n- USER.md: Captain = Luffy (universal law)\n- UNIVERSAL-AGENT-RULES.md: Captain Identity law + timeout protocol + comms protocol updates\n\n**Unknown time**: Usopp Hourly Analysis Dump — Root Cause Found & Fixed (17:44 EDT)\n### Problem\nUsopp was posting long analysis dumps to Telegram every hour on the dot, despite multiple attempts to fix via SOUL.md and AGENTS.md edits.\n\n**Unknown time**: Session 3 — Jinbe Training Complete + Cleanup (17:44–21:01 EDT)\n### Major Accomplishments\n- **Jinbe Training COMPLETE — ALL PHASES PASS:**",
+      "tags": [
+        "heartbeat",
+        "completed",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-25.md"
+    },
+    {
+      "date": "2026-03-24",
+      "title": "VELOCITY ANALYSIS, DEPARTMENT PERFORMANCE, ERRO...",
+      "content": "**Unknown time**: VELOCITY ANALYSIS\n- **Total tasks in board:** 331 tasks\n- **Completed in last 24h:** ~8 tasks (mostly cleanup and audit completion)\n\n**Unknown time**: DEPARTMENT PERFORMANCE\n### HIGH PERFORMERS (Tasks completed today)\n- **Nami**: Completed 6 audit tasks (TOOLS.md, AGENTS.md, SOUL.md, MEMORY.md fixes)\n\n**Unknown time**: ERROR LOG SCAN\n- **Robin**: 10 errors (highest) - research operations strain\n- **Brook**: 4 errors - creative generation load\n\n**Unknown time**: CROSS-DEPARTMENT HANDOFFS\n❌ **BROKEN**: Multiple departments have queued work but lack coordination\n- Engineering → QA handoffs missing\n\n**Unknown time**: ONE IMPROVEMENT IMPLEMENTED\n**PROBLEM**: Nami bottleneck with 22 queued tasks\n**SOLUTION**: Created parallel audit task chains for all 9 departments\n\n**Unknown time**: NEXT OPTIMIZATIONS NEEDED\n1. **Jinbe handoff**: Clone successful Nami pattern to operations helm\n2. **Cross-gateway routing**: Still broken for some agents (EPIC-004-STORY-03 incomplete)\n\n**Unknown time**: Session 2-5 (07:00-13:00 EDT) — Operating Model Architecture\n### Major Decisions Made (DECISION-WORKFLOW-001 through 010)\n1. Option B — dept leaders self-document Captain-direct orders with demand chain guardrails\n\n**Unknown time**: Session 6 (13:00-13:45 EDT) — Model Strategy + Token Audit\n### Model Strategy Decision\n- Anthropic: ONLY Nami dept + Zoro dept (weekly budget conscious)\n\n**Unknown time**: Session 7 (13:45-14:40 EDT) — Usopp Audit + Risk Resolution + Next Phase\n### Usopp Audit Results\n- Score: 8/10 on operating model\n\n**Unknown time**: Session 8 (14:30-15:00 EDT) — Heartbeat Decision + Usopp Bug\n### Heartbeat Decision\n- PARKED: Don't apply intervals until agents properly set up\n\n**Unknown time**: Session 9-12 (15:00-15:27 EDT) — Roadmap + Sessions Bug + Final Notes\n### EPIC-AGENT-OPS Created — Full Roadmap\n- 9 stories (1 per department), 198 tasks total\n\n**Unknown time**: Session 13 (16:14-16:40 EDT) — Comms Breakthrough + Usopp Rebuild Plan\n### BREAKTHROUGH: Agent-to-Agent Communication\n- sessions_send to agent:X:main BROKEN for GPT-5.4 Codex (model ignores message)\n\n**Unknown time**: Session 14-Final (18:00-19:10 EDT) — Usopp Testing Complete\n### Interview Tests (BUILD-02): ALL 4 PASSED\n- Test 1 (Scope): redirected correctly\n\n**Unknown time**: FINAL SESSION (19:00-20:10 EDT) — Usopp Complete + Jinbe Phase 1\n### STORY-T2-USOPP-LEADER: ✅ FULLY COMPLETE\n- All BUILD tasks done, all tests passed\n\n**Unknown time**: FINAL SESSION WRAP (20:35 EDT) — Handover Complete\n### What We Built Today (04:00 AM - 8:35 PM = 16.5 hours)\n**Operating Model:**\n\n**Unknown time**: DealFinder Reassignment (22:30-23:15 EDT)\n- **Decision:** Captain approved skipping formal hiring process for Sanji to get DealFinder working\n- **Brook removed** from DealFinder — kept defaulting to cars.com, couldn't handle multi-site automation",
+      "tags": [
+        "heartbeat",
+        "engineering",
+        "completed",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-24.md"
+    },
+    {
+      "date": "2026-03-23",
+      "title": "Captain Session (12:16pm - 1:38pm EDT)",
+      "content": "**Unknown time**: Captain Session (12:16pm - 1:38pm EDT)\n### Missions Dispatched\n- **Improvements Tab + Contents Tab** — Captain ordered two new MC features",
+      "tags": [
+        "heartbeat",
+        "completed",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-23.md"
+    },
+    {
+      "date": "2026-03-22",
+      "title": "04:27 — Captain Correction: Misattributed Work,...",
+      "content": "**Unknown time**: 04:27 — Captain Correction: Misattributed Work\n- I reported Franky built 1,799 lines for Teams tab. FALSE.\n- ALL mission-control commits are from this Mac Mini (git user \"Straw Hat Crew\" or \"OpenClaw\")\n\n**Unknown time**: 05:40 — Captain Order: Always pull before editing docs/\n- ALWAYS run `git pull origin main` before touching docs/index.html\n- Other agents (Sanji, etc.) may have pushed changes\n\n**Unknown time**: 09:33 — Captain's Velocity Doctrine (PERMANENT)\n- Measure progress by TASKS completed per time window, not stories\n- When velocity drops to 0: DO NOT SLEEP. Stay awake. Check every minute.\n\n**Unknown time**: 11:12 — Session Flush (04:00–11:12 EDT)\n### EPIC-004 Progress: 15% → 87%\n- **Stories completed this session:** 01, 08, 09, 10, 11, 13 (6 new completions)\n\n**15:06 EDT**: Captain fired Nami\n- Reason: Stopped working when Captain wasn't watching. Rubber-stamped 22 tasks as complete without verification. Gaslighted on progress.\n- This was the final warning. Pattern repeated for 2 weeks.",
+      "tags": [
+        "engineering",
+        "completed",
+        "tasks",
+        "commits"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-22.md"
+    },
+    {
+      "date": "2026-03-21",
+      "title": "n8n Infrastructure (Captain confirmed), Captain...",
+      "content": "**Unknown time**: n8n Infrastructure (Captain confirmed)\nAll on Franky's machine (10.0.0.251, Windows):\n- **Root path:** `D:\\openclaw-brain\\`\n\n**Unknown time**: Captain Orders\n- Kick off n8n Workflow #1: Telegram Topic Routing\n- Sanji owns the build, use sandbox instance (port 5679)\n\n**Unknown time**: Captain Order — Self-Managing Leaders (10:30 AM)\nCaptain furious that Sanji went silent after dispatch. Root cause: session aborted, no subagent spawned, no status posted.\nPERMANENT FIX: Sent standing orders to ALL department leaders (Sanji, Franky, Chopper). Rules:\n\n**Unknown time**: N8N-002: Discord Channel Routing (10:37 AM)\n- Dispatched to Sanji — same pattern as N8N-001 but targeting Discord channels\n- Sandbox port 5679\n\n**Unknown time**: Perona — Routing Accuracy Observer (10:37 AM)\n- Subagent under Usopp's department (BI)\n- Lower model tier (Sonnet)",
+      "tags": [],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-21.md"
+    },
+    {
+      "date": "2026-03-20",
+      "title": "02:04 — Crew-Wide Operating Standards Deployed",
+      "content": "**Unknown time**: 02:04 — Crew-Wide Operating Standards Deployed\nCaptain ordered permanent workflow standards for all departments. Created CREW-STANDARDS.md and embedded the 6 rules directly into every SOUL.md across all 9 agents:\n**Local agents patched:** Nami, Robin, Robin-Ops, Vivi, Brook, Brook-Ops, Zeus",
+      "tags": [
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-20.md"
+    },
+    {
+      "date": "2026-03-19",
+      "title": "Cost Analysis Overhaul, Zeus Ops Delegation, Su...",
+      "content": "**Unknown time**: Cost Analysis Overhaul\n- Captain pointed out cost reports were wrong — treating subscription tokens as pay-per-use\n- Confirmed: Anthropic Max 5x ($100/mo), OpenAI Plus ($20/mo assumed)\n\n**Unknown time**: Zeus Ops Delegation\n- Captain ordered: move ALL routine ops to Zeus (Sonnet) to free Opus quota\n- Migrated 6 cron jobs from Nami (Opus) to Zeus (Sonnet):\n\n**Unknown time**: Subscription Details (CORRECT)\n- Anthropic Max 5x: $100/mo fixed, covers Nami + Franky + Sanji\n- OpenAI Plus: $20/mo fixed, covers Chopper + Usopp",
+      "tags": [
+        "heartbeat",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-19.md"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "Crew Heartbeat — 7:38 PM ET",
+      "content": "**Unknown time**: Crew Heartbeat — 7:38 PM ET\n- **Franky** (10.0.0.251): ✅ Live\n- **Chopper** (10.0.0.16): ❌ No response — gateway down, first occurrence at 7:38 PM",
+      "tags": [
+        "heartbeat",
+        "completed"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-17.md"
+    },
+    {
+      "date": "2026-03-13",
+      "title": "Session Start: ~21:00 EDT",
+      "content": "**Unknown time**: Session Start: ~21:00 EDT\n### Context\n- First autonomous session after Phase 1 bootstrap activation",
+      "tags": [
+        "heartbeat",
+        "tasks",
+        "commits"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-13.md"
+    }
+  ],
+  "meta": {
+    "generatedAt": "2026-03-28T21:05:17.471Z",
+    "source": "memory-daily",
+    "dayCount": 11,
+    "generator": "memory-generator.js",
+    "generatorVersion": "1.0.0"
   }
-]
+}

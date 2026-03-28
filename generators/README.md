@@ -38,6 +38,12 @@ node generators/tasks-generator.js
 - **Features:** Heartbeat schedules, task deadlines, event merging
 - **Status:** Complete ✅
 
+### ✅ memory-generator.js
+- **Source:** Workspace daily memory files (markdown parsing)
+- **Output:** `docs/data/memory.json`
+- **Features:** Section extraction, tag detection, date deduplication
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)

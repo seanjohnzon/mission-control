@@ -12,6 +12,7 @@ const { generateTasksJson } = require('./tasks-generator.js');
 const { generateProjectsJson } = require('./projects-generator.js');
 const { generateHealthJson } = require('./health-generator.js');
 const { generateCalendarJson } = require('./calendar-generator.js');
+const { generateMemoryJson } = require('./memory-generator.js');
 
 async function generateAll() {
   console.log('🔧 SUPER! Starting full data regeneration...');
@@ -28,6 +29,9 @@ async function generateAll() {
     
     // Generate calendar.json (implemented)
     await generateCalendarJson();
+    
+    // Generate memory.json (implemented)
+    await generateMemoryJson();
     
     // TODO: Add other generators as they're built
     // etc.
