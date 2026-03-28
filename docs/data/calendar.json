@@ -1,77 +1,108 @@
-[
-  {
-    "title": "Daily Standup (Zeus)",
-    "time": "09:00",
-    "tz": "America/New_York",
-    "recurrence": "daily",
-    "type": "cron",
-    "agent": "Zeus"
-  },
-  {
-    "title": "Jinbe Board Cleanup",
-    "time": "08:30",
-    "tz": "America/New_York",
-    "recurrence": "daily",
-    "type": "cron",
-    "agent": "Jinbe"
-  },
-  {
-    "title": "Daily Cost Report (Zeus)",
-    "time": "20:00",
-    "tz": "America/New_York",
-    "recurrence": "daily",
-    "type": "cron",
-    "agent": "Zeus"
-  },
-  {
-    "title": "Sprint Review (Zeus)",
-    "time": "17:00",
-    "tz": "America/New_York",
-    "recurrence": "weekly-fri",
-    "type": "cron",
-    "agent": "Zeus"
-  },
-  {
-    "title": "Session Bloat Cleanup",
-    "time": "04:00",
-    "tz": "America/New_York",
-    "recurrence": "daily",
-    "type": "cron",
-    "agent": "Nami"
-  },
-  {
-    "title": "Tangerine Health Check",
-    "time": "every 15min",
-    "recurrence": "continuous",
-    "type": "cron",
-    "agent": "Tangerine"
-  },
-  {
-    "title": "Helm Board Scan",
-    "time": "every 30min",
-    "recurrence": "continuous",
-    "type": "cron",
-    "agent": "Helm"
-  },
-  {
-    "title": "Dock Repo Check",
-    "time": "every 30min",
-    "recurrence": "continuous",
-    "type": "cron",
-    "agent": "Dock"
-  },
-  {
-    "title": "Local Agent Watchdog",
-    "time": "every 15min",
-    "recurrence": "continuous",
-    "type": "cron",
-    "agent": "Nami"
-  },
-  {
-    "title": "Nami Heartbeat",
-    "time": "every 1h",
-    "recurrence": "continuous",
-    "type": "heartbeat",
-    "agent": "Nami"
+{
+  "items": [
+    {
+      "id": "cron-franky-5",
+      "title": "Franky Heartbeat",
+      "start": "2026-03-28T20:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "red",
+      "agent": "Franky",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring continuous"
+    },
+    {
+      "id": "cron-jinbe-6",
+      "title": "Jinbe Heartbeat",
+      "start": "2026-03-28T20:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "red",
+      "agent": "Jinbe",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring continuous"
+    },
+    {
+      "id": "cron-nami-7",
+      "title": "Nami Heartbeat",
+      "start": "2026-03-28T20:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "red",
+      "agent": "Nami",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring continuous"
+    },
+    {
+      "id": "cron-zeus-2",
+      "title": "Daily Cost Report (Zeus)",
+      "start": "2026-03-29T00:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "teal",
+      "agent": "Zeus",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring daily"
+    },
+    {
+      "id": "cron-nami-4",
+      "title": "Session Bloat Cleanup",
+      "start": "2026-03-29T08:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "yellow",
+      "agent": "Nami",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring daily"
+    },
+    {
+      "id": "cron-jinbe-1",
+      "title": "Jinbe Board Cleanup",
+      "start": "2026-03-29T12:30:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "yellow",
+      "agent": "Jinbe",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring daily"
+    },
+    {
+      "id": "cron-zeus-0",
+      "title": "Daily Standup (Zeus)",
+      "start": "2026-03-29T13:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "teal",
+      "agent": "Zeus",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring daily"
+    },
+    {
+      "id": "cron-zeus-3",
+      "title": "Sprint Review (Zeus)",
+      "start": "2026-04-03T21:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "pink",
+      "agent": "Zeus",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring weekly-fri"
+    }
+  ],
+  "meta": {
+    "generatedAt": "2026-03-28T20:47:42.524Z",
+    "source": "cron+tasks+events",
+    "cronCount": 8,
+    "taskEventCount": 0,
+    "generator": "calendar-generator.js",
+    "generatorVersion": "1.0.0"
   }
-]
+}

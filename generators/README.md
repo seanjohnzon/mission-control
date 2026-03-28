@@ -32,6 +32,12 @@ node generators/tasks-generator.js
 - **Features:** Gateway status, Ollama models, disk usage, git activity
 - **Status:** Complete ✅
 
+### ✅ calendar-generator.js
+- **Source:** Cron schedules + task due dates + milestones
+- **Output:** `docs/data/calendar.json`
+- **Features:** Heartbeat schedules, task deadlines, event merging
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)
