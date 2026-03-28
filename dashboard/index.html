@@ -1582,7 +1582,35 @@ function getTaskPoints(t) {
 }
 
 function taskDept(t) {
-  return t.department || t.dept || t.team || '';
+  // First check if explicitly set
+  if (t.department || t.dept || t.team) {
+    return t.department || t.dept || t.team;
+  }
+  
+  // Auto-assign department based on agent assignment
+  const assigned = (t.assigned || '').toLowerCase();
+  
+  // Main crew departments
+  if (assigned.includes('nami')) return 'Navigation';
+  if (assigned.includes('usopp')) return 'Engineering';
+  if (assigned.includes('franky')) return 'Engineering';
+  if (assigned.includes('sanji')) return 'Operations';
+  if (assigned.includes('chopper')) return 'QA';
+  if (assigned.includes('robin')) return 'Research';
+  if (assigned.includes('brook')) return 'Creative';
+  if (assigned.includes('jinbe')) return 'PM';
+  if (assigned.includes('zoro')) return 'Security';
+  
+  // Sub-agent assignments
+  if (assigned.includes('cola') || assigned.includes('iceburg') || assigned.includes('zeff') || 
+      assigned.includes('cavendish') || assigned.includes('pudding')) {
+    return 'Engineering';
+  }
+  
+  // Legacy assignments
+  if (assigned.includes('human') && assigned.includes('openclaw')) return 'Legacy';
+  
+  return assigned ? 'Unassigned' : '';
 }
 
 function isCompletedStatus(status) {
