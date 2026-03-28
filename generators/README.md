@@ -56,6 +56,12 @@ node generators/tasks-generator.js
 - **Features:** Document groups (D1.x/D2.x/D5.x), title extraction, file metadata
 - **Status:** Complete ✅
 
+### ✅ team-org-generator.js
+- **Source:** Org registry + live task workload calculation
+- **Output:** `docs/data/team-org.json`
+- **Features:** Department structure, workload stats, agent counts, status tracking
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)

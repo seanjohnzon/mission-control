@@ -1,9 +1,10 @@
 {
   "departments": [
     {
+      "id": "navigation",
       "name": "Navigation",
       "chief": "Nami",
-      "model": "claude-opus-4-6",
+      "model": "claude-sonnet-4-6",
       "members": [
         "Zeus",
         "Vivi",
@@ -13,12 +14,17 @@
         "Dock",
         "Mikan"
       ],
-      "scope": "Orchestration, budget, crew coordination, local model monitoring"
+      "scope": "Orchestration, budget, crew coordination, local model monitoring",
+      "status": "degraded",
+      "activeTaskCount": 47,
+      "activePoints": 30,
+      "sessionKey": "agent:main:main"
     },
     {
+      "id": "engineering",
       "name": "Engineering",
       "chief": "Franky",
-      "model": "claude-sonnet-4",
+      "model": "claude-sonnet-4-6",
       "members": [
         "Cola",
         "Iceburg",
@@ -26,84 +32,147 @@
         "Cavendish",
         "Pudding"
       ],
-      "scope": "Building, CI/CD, deployments, Mission Control dashboard"
+      "scope": "Code, builds, deployments, infrastructure, generator automation",
+      "status": "degraded",
+      "activeTaskCount": 52,
+      "activePoints": 52,
+      "sessionKey": "agent:franky:main"
     },
     {
-      "name": "Automation",
-      "chief": "Sanji",
-      "model": "claude-sonnet-4",
-      "members": [
-        "Zeff (dating)",
-        "Cavendish (dating)"
-      ],
-      "scope": "Workflows, CI/CD, process automation, device management"
-    },
-    {
-      "name": "QA",
+      "id": "medicine",
+      "name": "Medicine",
       "chief": "Chopper",
-      "model": "claude-sonnet-4",
+      "model": "gpt-5.4",
       "members": [
-        "Sakura",
-        "Milky"
+        "Kureha",
+        "Doctorine",
+        "Hiriluk",
+        "Marco",
+        "Law"
       ],
-      "scope": "Verification, testing, QA pass/fail verdicts"
+      "scope": "QA, health monitoring, security audits, system verification",
+      "status": "degraded",
+      "activeTaskCount": 34,
+      "activePoints": 20,
+      "sessionKey": "agent:chopper:main"
     },
     {
-      "name": "Business Intelligence",
-      "chief": "Usopp",
-      "model": "claude-sonnet-4",
-      "members": [
-        "Perona"
-      ],
-      "scope": "Requirements validation, analytics, business-tech bridge"
-    },
-    {
-      "name": "Research",
+      "id": "archaeology",
+      "name": "Archaeology",
       "chief": "Robin",
-      "model": "grok-4",
+      "model": "claude-sonnet-4-6",
       "members": [
-        "Robin-Ops",
-        "Aokiji",
-        "Dragon"
+        "Olvia",
+        "Clover",
+        "Saul",
+        "Poneglyphs",
+        "Historia"
       ],
-      "scope": "X/Twitter research, knowledge synthesis, market analysis"
+      "scope": "Research, documentation, knowledge management, intake processing",
+      "status": "degraded",
+      "activeTaskCount": 27,
+      "activePoints": 8,
+      "sessionKey": "agent:robin:main"
     },
     {
-      "name": "Creative",
+      "id": "music",
+      "name": "Music",
       "chief": "Brook",
-      "model": "gemini-2.5-pro",
+      "model": "claude-sonnet-4-6",
       "members": [
-        "Brook-Ops",
-        "Shakky",
-        "Apoo"
+        "Soul",
+        "Laboon",
+        "Rumbar",
+        "Bink",
+        "Tone"
       ],
-      "scope": "UX reviews, visual design, creative direction"
+      "scope": "Creative direction, content generation, narrative design",
+      "status": "degraded",
+      "activeTaskCount": 36,
+      "activePoints": 27,
+      "sessionKey": "agent:brook:main"
     },
     {
-      "name": "Operations",
-      "chief": "Jinbe",
-      "model": "claude-sonnet-4",
-      "members": [
-        "Fisher Tiger",
-        "Otohime",
-        "Aladine"
-      ],
-      "scope": "Scrum mastery, board cleanup, sprint management"
-    },
-    {
-      "name": "Security",
+      "id": "swordsmanship",
+      "name": "Swordsmanship",
       "chief": "Zoro",
-      "model": "claude-sonnet-4",
+      "model": "claude-sonnet-4-6",
       "members": [
-        "Tashigi",
-        "Smoker",
-        "Hina"
+        "Wado",
+        "Sandai",
+        "Shusui",
+        "Enma",
+        "Asura"
       ],
-      "scope": "Security audits, hardening, threat assessment"
+      "scope": "Security, penetration testing, threat assessment, defense",
+      "status": "degraded",
+      "activeTaskCount": 29,
+      "activePoints": 11,
+      "sessionKey": "agent:zoro:main"
+    },
+    {
+      "id": "cooking",
+      "name": "Cooking",
+      "chief": "Sanji",
+      "model": "claude-sonnet-4-6",
+      "members": [
+        "Zeff",
+        "Baratie",
+        "All-Blue",
+        "Vinsmoke",
+        "Germa"
+      ],
+      "scope": "Deployment, CI/CD, production operations, service management",
+      "status": "degraded",
+      "activeTaskCount": 52,
+      "activePoints": 32,
+      "sessionKey": "agent:sanji:main"
+    },
+    {
+      "id": "helmsman",
+      "name": "Helmsman",
+      "chief": "Jinbe",
+      "model": "claude-sonnet-4-6",
+      "members": [
+        "Fishman",
+        "Whale",
+        "Current",
+        "Tide",
+        "Deep"
+      ],
+      "scope": "Sprint management, task routing, workflow optimization",
+      "status": "degraded",
+      "activeTaskCount": 15,
+      "activePoints": 9,
+      "sessionKey": "agent:jinbe:main"
+    },
+    {
+      "id": "marksmanship",
+      "name": "Marksmanship",
+      "chief": "Usopp",
+      "model": "claude-sonnet-4-6",
+      "members": [
+        "Slingshot",
+        "Kabuto",
+        "Pop-Green",
+        "Sogeking",
+        "Brave"
+      ],
+      "scope": "Specification writing, requirement gathering, story creation",
+      "status": "active",
+      "activeTaskCount": 7,
+      "activePoints": 1,
+      "sessionKey": "agent:usopp:main"
     }
   ],
-  "totalAgents": 28,
+  "totalAgents": 47,
   "totalDepartments": 9,
-  "architecture": "Single gateway (Mac Mini M4), all agents local, remote inference nodes for local LLMs",
-  "updatedAt": "2026-03-23T13:00:00Z"
+  "architecture": "Straw Hat Pirates crew model with 9 specialized departments. Each department led by a chief with sub-agents for specialized tasks. Current workload: 299 active tasks (190 points).",
+  "updatedAt": "2026-03-28T21:53:55.661Z",
+  "meta": {
+    "generatedAt": "2026-03-28T21:53:55.661Z",
+    "source": "org-registry+live-workload",
+    "generator": "team-org-generator.js",
+    "generatorVersion": "1.0.0"
+  }
 }
