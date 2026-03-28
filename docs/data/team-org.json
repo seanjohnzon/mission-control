@@ -168,9 +168,9 @@
   "totalAgents": 47,
   "totalDepartments": 9,
   "architecture": "Straw Hat Pirates crew model with 9 specialized departments. Each department led by a chief with sub-agents for specialized tasks. Current workload: 299 active tasks (190 points).",
-  "updatedAt": "2026-03-28T21:53:55.661Z",
+  "updatedAt": "2026-03-28T22:12:17.822Z",
   "meta": {
-    "generatedAt": "2026-03-28T21:53:55.661Z",
+    "generatedAt": "2026-03-28T22:12:17.822Z",
     "source": "org-registry+live-workload",
     "generator": "team-org-generator.js",
     "generatorVersion": "1.0.0"

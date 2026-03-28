@@ -3,7 +3,7 @@
     {
       "id": "cron-franky-5",
       "title": "Franky Heartbeat",
-      "start": "2026-03-28T20:00:00.000Z",
+      "start": "2026-03-28T22:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -15,7 +15,7 @@
     {
       "id": "cron-jinbe-6",
       "title": "Jinbe Heartbeat",
-      "start": "2026-03-28T20:00:00.000Z",
+      "start": "2026-03-28T22:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -27,7 +27,7 @@
     {
       "id": "cron-nami-7",
       "title": "Nami Heartbeat",
-      "start": "2026-03-28T20:00:00.000Z",
+      "start": "2026-03-28T22:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -98,7 +98,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T20:47:42.524Z",
+    "generatedAt": "2026-03-28T22:12:17.724Z",
     "source": "cron+tasks+events",
     "cronCount": 8,
     "taskEventCount": 0,

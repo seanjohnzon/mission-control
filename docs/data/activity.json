@@ -1,6 +1,24 @@
 {
   "commits": [
     {
+      "hash": "e96a776",
+      "msg": "SUPER! Add team-org.json live organization generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "af0fdd2",
+      "msg": "SUPER! Add docs.json repository document scanner",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "4ed7c32",
+      "msg": "SUPER! Add activity.json git + crew activity generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
       "hash": "d119c44",
       "msg": "SUPER! Add memory.json daily memory aggregator",
       "date": "2026-03-28",
@@ -71,32 +89,14 @@
       "msg": "🔄 Sync local dashboard to match remote — all 13 tabs + data files",
       "date": "2026-03-24",
       "author": "Straw Hat Crew"
-    },
-    {
-      "hash": "18c9d02",
-      "msg": "🔄 Auto-sync: 2026-03-24 02:17",
-      "date": "2026-03-24",
-      "author": "Straw Hat Crew"
-    },
-    {
-      "hash": "0fbf5e3",
-      "msg": "🔧 Franky: Implement Improvements & Contents Tabs (Phase 1)",
-      "date": "2026-03-23",
-      "author": "Straw Hat Crew"
-    },
-    {
-      "hash": "4f3d7f3",
-      "msg": "🔧 Franky: Implement clickable task details + Sprint Board",
-      "date": "2026-03-23",
-      "author": "Straw Hat Crew"
     }
   ],
   "recent": [
     {
-      "id": "heartbeat-franky-17",
+      "id": "heartbeat-franky-18",
       "agent": "Franky",
       "action": "MC Live Sync generator progress - 5/9 complete",
-      "time": "2026-03-28T21:19:13.890Z",
+      "time": "2026-03-28T22:12:17.750Z",
       "relatedTaskId": null,
       "source": "heartbeat-activity"
     },
@@ -214,7 +214,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T21:19:13.890Z",
+    "generatedAt": "2026-03-28T22:12:17.750Z",
     "source": "git+activity-feed",
     "commitCount": 15,
     "activityCount": 15,

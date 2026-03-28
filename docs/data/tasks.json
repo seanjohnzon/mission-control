@@ -11014,7 +11014,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build generator for docs/data/tasks.json from http://127.0.0.1:18800/api/tasks. Must preserve hierarchy fields (id, parent, type), normalize points, add department, and emit meta.generatedAt. Do not hand-edit snapshots. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. tasks.json contract: top-level {tasks, meta}; each task needs stable id, title, status, priority, assigned, type, parent, dependencies, notes, and opened/createdAt. Strongly recommended phase, points/estimate, department/dept/team, started, completed/completedAt, verifiedBy, sprint. Source: MC API /api/tasks. Preserve hierarchy and type fidelity; normalize nulls; emit unassigned when assignee missing. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build generator for docs/data/tasks.json from http://127.0.0.1:18800/api/tasks. Must preserve hierarchy fields (id, parent, type), normalize points, add department, and emit meta.generatedAt. Do not hand-edit snapshots. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. tasks.json contract: top-level {tasks, meta}; each task needs stable id, title, status, priority, assigned, type, parent, dependencies, notes, and opened/createdAt. Strongly recommended phase, points/estimate, department/dept/team, started, completed/completedAt, verifiedBy, sprint. Source: MC API /api/tasks. Preserve hierarchy and type fidelity; normalize nulls; emit unassigned when assignee missing. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 19:50] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-PROJECTS-20260326",
@@ -11031,7 +11031,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/projects.json as a derived view from live board data. Each project card must include owner/status/priority plus computed epic/story/open/in-progress/blocked/completed counts and progressPct. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. projects.json contract: top-level {projects, meta}; each project needs id, name, desc, status, owner/lead, progress, optional phase/priority/meta. Source derived from MC board project rows plus child completion rollup from tasks.json. Keep project ids aligned with task-board project ids so drill-down works. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/projects.json as a derived view from live board data. Each project card must include owner/status/priority plus computed epic/story/open/in-progress/blocked/completed counts and progressPct. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. projects.json contract: top-level {projects, meta}; each project needs id, name, desc, status, owner/lead, progress, optional phase/priority/meta. Source derived from MC board project rows plus child completion rollup from tasks.json. Keep project ids aligned with task-board project ids so drill-down works. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 20:12] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-HEALTH-20260326",
@@ -11048,7 +11048,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/health.json from live local checks: openclaw status/gateway health, Ollama models availability, disk usage, and git freshness. Keep backward-compatible keys gateway/ollama/disk and add meta.generatedAt. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. health.json contract: gateway{ok,status}, ollama{ok,models[]}, disk{used,total,percent}, meta{generatedAt,sources}. Sources: gateway /health, ollama list/API, disk usage command. Important UI dependency: gateway.status should contain readable text and ideally numeric agent count because Overview regex parses /(\\d+) agents/ from the string. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/health.json from live local checks: openclaw status/gateway health, Ollama models availability, disk usage, and git freshness. Keep backward-compatible keys gateway/ollama/disk and add meta.generatedAt. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. health.json contract: gateway{ok,status}, ollama{ok,models[]}, disk{used,total,percent}, meta{generatedAt,sources}. Sources: gateway /health, ollama list/API, disk usage command. Important UI dependency: gateway.status should contain readable text and ideally numeric agent count because Overview regex parses /(\\d+) agents/ from the string. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 20:29] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-TEAMORG-20260326",
@@ -11065,7 +11065,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/team-org.json with departments, chiefs, members, scope, status, activeTaskCount, activePoints, totalAgents, totalDepartments, architecture, updatedAt, and meta. This should become the live source for Team tab instead of stale hardcoded org data. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. team-org.json contract: departments[], totalAgents, totalDepartments, architecture, updatedAt. Each department requires name, chief, model, members[], scope. Source should be canonical org/agent config, not hand-maintained sample drift. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/team-org.json with departments, chiefs, members, scope, status, activeTaskCount, activePoints, totalAgents, totalDepartments, architecture, updatedAt, and meta. This should become the live source for Team tab instead of stale hardcoded org data. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. team-org.json contract: departments[], totalAgents, totalDepartments, architecture, updatedAt. Each department requires name, chief, model, members[], scope. Source should be canonical org/agent config, not hand-maintained sample drift. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 21:54] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-MODELOPS-20260326",
@@ -11099,7 +11099,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/calendar.json as a merged feed of cron schedules, task due/reminder events, and major org events. Each item must include id/title/start/end/kind/tier/agent/projectId/source/notes plus meta.generatedAt. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. calendar.json contract: top-level {items, meta}; each item needs title, start ISO datetime, end ISO datetime, kind(event|reminder|cron), recommended agent/tier/recur/sourceId/tz. Source: cron registry + scheduled board events. Important: week view requires real start and end timestamps; continuous cron items need synthetic visible duration. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/calendar.json as a merged feed of cron schedules, task due/reminder events, and major org events. Each item must include id/title/start/end/kind/tier/agent/projectId/source/notes plus meta.generatedAt. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. calendar.json contract: top-level {items, meta}; each item needs title, start ISO datetime, end ISO datetime, kind(event|reminder|cron), recommended agent/tier/recur/sourceId/tz. Source: cron registry + scheduled board events. Important: week view requires real start and end timestamps; continuous cron items need synthetic visible duration. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 20:48] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-MEMORY-20260326",
@@ -11116,7 +11116,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/memory.json from daily memory/journal sources with daily[] entries containing date/title/content/tags/sourcePath plus meta.generatedAt. IMPORTANT: Usopp flagged that Memory tab also loads memory-long.json; call out whether that companion file was also refreshed in your completion note. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. memory.json contract must be top-level {daily, meta} where each daily entry has date and content. Source: aggregated daily memory markdown entries. CRITICAL mismatch: current sample uses summary-style records, but dashboard code renders daily[].content. Fix generator and sample contract to prevent Memory tab empty-state drift. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/memory.json from daily memory/journal sources with daily[] entries containing date/title/content/tags/sourcePath plus meta.generatedAt. IMPORTANT: Usopp flagged that Memory tab also loads memory-long.json; call out whether that companion file was also refreshed in your completion note. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. memory.json contract must be top-level {daily, meta} where each daily entry has date and content. Source: aggregated daily memory markdown entries. CRITICAL mismatch: current sample uses summary-style records, but dashboard code renders daily[].content. Fix generator and sample contract to prevent Memory tab empty-state drift. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 21:05] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-ACTIVITY-20260326",
@@ -11133,7 +11133,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/activity.json with commits[] and recent[] from git log plus non-git crew activity/events. Include meta.generatedAt and source labels. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. activity.json contract: top-level {commits, recent, meta}. commits[] require hash, msg, date, author. recent[] require agent, action, time. Source: git log + crew activity feed/task/session summaries. Keep newest first. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/activity.json with commits[] and recent[] from git log plus non-git crew activity/events. Include meta.generatedAt and source labels. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. activity.json contract: top-level {commits, recent, meta}. commits[] require hash, msg, date, author. recent[] require agent, action, time. Source: git log + crew activity feed/task/session summaries. Keep newest first. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 21:19] agent: SUPER! Task completed successfully."
     },
     {
       "id": "MC-LIVE-SYNC-DOCS-20260326",
@@ -11150,7 +11150,7 @@
       "createdAt": "2026-03-27T12:00:00.000Z",
       "completedAt": null,
       "dependencies": "none",
-      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/docs.json by scanning repo docs/spec/policy markdown files. Each item must include filename/title/group/lastModified/content/path/sizeBytes plus meta.generatedAt. Keep current reader compatibility. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. docs.json contract: top-level {docs, meta}. Each doc requires filename, title, group, lastModified ISO datetime, content full text. Source: repository doc scan. group drives left-column grouping; content populates reader panel. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control)"
+      "notes": "Source spec: /Users/minicihan/.openclaw/workspace-usopp/MC-LIVE-SYNC-DATA-FILE-SPEC.md. Build docs/data/docs.json by scanning repo docs/spec/policy markdown files. Each item must include filename/title/group/lastModified/content/path/sizeBytes plus meta.generatedAt. Keep current reader compatibility. Proof required: generator path/command + sample output + commit hash. | [2026-03-27 03:15] usopp: Requirements logged by Usopp. docs.json contract: top-level {docs, meta}. Each doc requires filename, title, group, lastModified ISO datetime, content full text. Source: repository doc scan. group drives left-column grouping; content populates reader panel. | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 1681 (Mission Control) | [2026-03-28 21:38] agent: SUPER! Task completed successfully."
     },
     {
       "id": "CAVENDISH-INTERVIEW-001",
@@ -11542,12 +11542,29 @@
       "completedAt": null,
       "dependencies": "EPIC-011-STORY-003,EPIC-011-STORY-005",
       "notes": "### Context | [2026-03-28 16:19] nami: [routing] Report to: Telegram group -1003814818004, topic 10 (Research) | [2026-03-28 17:25] usopp: ### Context (Read Before Starting) - **Related work:** EPIC-011-STORY-005 (QA Harness) provides validation that all Paperclip improvements are ready for production - **Captain's words:** \"Process Robin Paperclip research into stories with full detail + assignments\"   - **Current state:** Paperclip improvements tested and validated, need safe production rollout strategy without disrupting crew operations - **Known constraints:** Rollout must be incremental with rollback capability. Cannot deploy all improvements simultaneously - too much risk  ### Requirements   - Create phased rollout plan for deploying Paperclip improvements to live crew operations - Implement staged deployment: start with least risky improvement, monitor, then add next - Build automation adoption strategy to ensure crew agents actually use new capabilities   - Create monitoring and rollback procedures for each rollout phase - Establish success metrics and rollback triggers for each improvement  ### Definition of Done - [ ] Phased rollout plan with 3 stages: Phase A (Task Dedup), Phase B (Escalation Wake), Phase C (Bridge Health) - [ ] Deployment procedures for each phase with pre-flight checks and go/no-go criteria   - [ ] Automation adoption strategy: training materials, workflow changes, agent onboarding for new capabilities - [ ] Proof: successful deployment of Phase A with monitoring data showing improvement effectiveness - [ ] Rollback procedures tested and documented for each phase (can revert cleanly if problems) - [ ] Success metrics defined and measured: crew velocity, escalation response time, duplicate task reduction - [ ] Monitoring dashboards for tracking improvement effectiveness post-deployment - [ ] Risk mitigation: fallback procedures if any improvement causes crew disruption   - [ ] Agent training documentation: how to use new capabilities, when to escalate, what changed - [ ] Documentation: complete rollout playbook + lessons learned in shared-memory/docs/ - [ ] Visual QA: Chopper validates each rollout phase works as intended, posts PASS/FAIL for production deployment  ### Dependencies - **Blocked by:** EPIC-011-STORY-005 (QA Harness) - rollout cannot proceed without QA validation   - **Blocks:** none (final story in chain) - **Handoff to:** All department leads for adoption training after Sanji rollout complete  ### Guardrails for Task Creation **Sanji: break this into tasks following these rules:** 1. **Planning task:** Create detailed 3-phase rollout plan with success criteria and rollback triggers 2. **Phase A task:** Deploy Task Deduplication with monitoring and validation   3. **Monitor task:** Measure Phase A effectiveness, document lessons learned, go/no-go for Phase B 4. **Phase B task:** Deploy Escalation Wake Events with monitoring and validation 5. **Phase C task:** Deploy Bridge Health Monitoring with full crew integration 6. **Adoption task:** Create training materials and workflow documentation for all improvements 7. **Validation task:** Final validation that all improvements work together in production **Each task = one session. Document rollback procedures and success metrics in task notes.**"
+    },
+    {
+      "id": "STORY-MEMORY-UPGRADES",
+      "title": "Memory Plugin Upgrades — Evaluate Mem0, Cognee, LanceDB",
+      "status": "queued",
+      "priority": "P2",
+      "assigned": "Usopp",
+      "type": "story",
+      "parent": "EPIC-011",
+      "sprint": null,
+      "estimate": null,
+      "points": null,
+      "department": null,
+      "createdAt": "2026-03-28T12:00:00.000Z",
+      "completedAt": null,
+      "dependencies": "none",
+      "notes": "Evaluate memory plugins: Mem0 (auto-capture, needs API key, $0 personal), Cognee (knowledge graphs, open source), LanceDB (vector search, local). Usopp: create sub-tasks per plugin for Franky to integrate, Chopper to test. Captain approves cloud dependencies. Report to: Telegram group -1003814818004, topic 10 (Research) | [2026-03-28 19:58] nami: [PLUGIN SPECS]"
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T19:49:27.156Z",
+    "generatedAt": "2026-03-28T22:12:17.617Z",
     "source": "mc-api",
-    "taskCount": 679,
+    "taskCount": 680,
     "generator": "tasks-generator.js",
     "generatorVersion": "1.0.0"
   }

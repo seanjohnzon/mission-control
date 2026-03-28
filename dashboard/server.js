@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const stringSimilarity = require('string-similarity');
 
 const PORT = 18800;
 const MC_ROOT = path.resolve(__dirname, '..');
@@ -211,6 +212,56 @@ function parseRouting() {
     guardrails,
     auditSummary: audit.split('## 2.')[0] || ''
   };
+}
+
+// Task Deduplication Gate (Paperclip Phase 1)
+function checkTaskDuplicate(newTitle, newDescription, skipCheck = false) {
+  if (skipCheck) {
+    return { isDuplicate: false, bypassed: true };
+  }
+
+  const existingTasks = parseTasks();
+  const normalizeText = (text) => (text || '').toLowerCase().trim();
+  
+  const newTitleNorm = normalizeText(newTitle);
+  const newDescNorm = normalizeText(newDescription);
+  
+  for (const task of existingTasks) {
+    // Skip completed tasks - they shouldn't block new work
+    if (task.status === 'completed') continue;
+    
+    const taskTitleNorm = normalizeText(task.title);
+    const taskNotesNorm = normalizeText(task.notes);
+    
+    // Calculate similarity scores using string-similarity (dice coefficient)
+    const titleSimilarity = stringSimilarity.compareTwoStrings(newTitleNorm, taskTitleNorm);
+    const descSimilarity = newDescNorm && taskNotesNorm 
+      ? stringSimilarity.compareTwoStrings(newDescNorm, taskNotesNorm)
+      : 0;
+    
+    // Combined score: title 70% weight, description 30% weight
+    const combinedScore = (titleSimilarity * 0.7) + (descSimilarity * 0.3);
+    
+    // 70% threshold for duplicate detection
+    if (combinedScore >= 0.70) {
+      return {
+        isDuplicate: true,
+        similarTask: {
+          id: task.id,
+          title: task.title,
+          status: task.status,
+          assigned: task.assigned,
+          priority: task.priority
+        },
+        similarity: Math.round(combinedScore * 100) / 100,
+        titleSimilarity: Math.round(titleSimilarity * 100) / 100,
+        descriptionSimilarity: Math.round(descSimilarity * 100) / 100,
+        threshold: 0.70
+      };
+    }
+  }
+  
+  return { isDuplicate: false, checkedAgainst: existingTasks.filter(t => t.status !== 'completed').length };
 }
 
 function parseMemoryDaily() {
@@ -708,6 +759,36 @@ const server = http.createServer(async (req, res) => {
 
   if (method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
+  // POST /api/tasks/check-duplicate — check for duplicate tasks (Paperclip Phase 1)
+  if (method === 'POST' && p === '/api/tasks/check-duplicate') {
+    try {
+      const body = await parseBody(req);
+      if (!body.title) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'title is required' }));
+        return;
+      }
+      
+      const result = checkTaskDuplicate(body.title, body.description, body.skipDuplicateCheck);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        ok: true,
+        ...result,
+        meta: {
+          algorithm: 'dice coefficient via string-similarity',
+          titleWeight: 0.7,
+          descriptionWeight: 0.3,
+          threshold: 0.7,
+          timestamp: new Date().toISOString()
+        }
+      }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   // POST /api/tasks — create new task
   if (method === 'POST' && p === '/api/tasks') {
     try {
@@ -717,6 +798,24 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'task_id and title are required' }));
         return;
       }
+
+      // Paperclip deduplication gate - check for duplicates unless bypassed
+      if (!body.skipDuplicateCheck) {
+        const dupCheck = checkTaskDuplicate(body.title, body.notes, false);
+        if (dupCheck.isDuplicate) {
+          res.writeHead(409, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            error: 'Duplicate task detected',
+            duplicate: true,
+            similarity: dupCheck.similarity,
+            similarTask: dupCheck.similarTask,
+            message: `Task similar to existing "${dupCheck.similarTask.title}" (${Math.round(dupCheck.similarity * 100)}% match). Use skipDuplicateCheck:true to bypass.`,
+            bypassHint: 'Add "skipDuplicateCheck": true to override this check'
+          }));
+          return;
+        }
+      }
+
       body.created_at = body.created_at || new Date().toISOString().slice(0, 10);
       const block = taskToBlock(body);
       const raw = safeRead(TASK_REGISTER_PATH);
@@ -724,7 +823,11 @@ const server = http.createServer(async (req, res) => {
       const tasks = parseTasks();
       const created = tasks.find(t => t.id === body.task_id);
       res.writeHead(201, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true, task: created }));
+      res.end(JSON.stringify({ 
+        ok: true, 
+        task: created,
+        duplicateCheckBypassed: !!body.skipDuplicateCheck 
+      }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));

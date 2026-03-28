@@ -2,15 +2,13 @@
   "daily": [
     {
       "date": "2026-03-28",
-      "title": "Nami Heartbeat #1 (post-rollout), Nami Heartbea...",
-      "content": "**15:33 EDT**: Nami Heartbeat #1 (post-rollout)\n- Gateway just restarted with full crew heartbeat config\n- Verified: franky/chopper/sanji=15m, jinbe/usopp=30m, zoro=4h — all in config ✅\n\n**15:52 EDT**: Nami Heartbeat #2\n- **Franky:** ✅ OPERATIONAL — completed MC-LIVE-SYNC-TASKS-20260326 in first heartbeat. Built tasks-generator.js (679 tasks), 2 commits. Full protocol compliance: memory written, dept memory written, Telegram reported, MC logged, goals updated.\n- **Chopper:** ⏳ No heartbeat-state.json yet — waiting for first cycle\n\n**15:55 EDT**: Nami Heartbeat (1h cycle)\n- **Franky:** ✅ OPERATIONAL — completed MC-LIVE-SYNC-TASKS (tasks-generator.js, 679 tasks, 2 commits). Moving to projects.json next. Full protocol compliance: memory + dept memory + MC log + heartbeat-state.json.\n- **Sanji:** ✅ OPERATIONAL — heartbeat-state.json exists, researched STORY-008-AUTO automation patterns. Waiting for Chopper QA to deploy.",
+      "title": "EPIC-011 Paperclip Adoption, Usopp Operational ...",
+      "content": "**12:02 EDT**: EPIC-011 Paperclip Adoption\n- Captain ordered epic creation for Paperclip Adoption based on Robin's research\n- Created EPIC-011 on MC board, dispatched to Usopp for story breakdown\n\n**12:18 EDT**: Usopp Operational Infrastructure\n- Set up Usopp's HEARTBEAT.md, active-goals.md, session end protocol\n- Enabled heartbeat at 15m (later tuned to 30m)\n\n**13:30 EDT**: Usopp E2E Audit\n- Verified Usopp completed all 3 goals across multiple sessions\n- GAP: memory not written (flush in AGENTS.md not HEARTBEAT.md)\n\n**13:40 EDT**: Heartbeat + Cron Guides Created\n- shared-memory/docs/HEARTBEAT-GUIDE.md — JSON state tracking, 6-phase flow, self-healing, anti-loop\n- shared-memory/docs/CRON-GUIDE.md — when to use cron vs heartbeat, patterns, hygiene\n\n**15:05 EDT**: Full Crew Heartbeat Rollout (Captain's Order)\n- Nami: 1h (navigator), Franky: 15m (builder), Chopper: 15m (QA), Sanji: 15m (automation)\n- Usopp: 30m (BI), Jinbe: 30m (scrum master), Zoro: 4h (security)\n\n**15:44 EDT**: Documentation System Built\n- shared-memory/docs/CREW-DOCUMENT-MAP.md — master file map, mission statements, sync points\n- Nami reads ONLY 4 files: Jinbe sprint-status.json, Jinbe daily, Usopp daily, blockers.md\n\n**15:50 EDT**: Memory Config Audit + Documentation Guide\n- Audited memory config against community best practices\n- Already had: QMD, session indexing, sessionMemory, custom flush prompt\n\n**17:09 EDT**: Moving to Crew Management\n- Captain ordered: observe Jinbe/Usopp outputs, think about navigation improvements\n- By tonight/tomorrow: assess if crew ops working, ready for subagent hires\n\n**Unknown time**: Key Decisions\n- Heartbeat intervals: 1h/30m/15m/4h tiers based on role\n- Robin/Brook reserved for Computer Use (no heartbeats)",
       "tags": [
         "heartbeat",
         "engineering",
         "completed",
-        "mc-live-sync",
-        "tasks",
-        "commits"
+        "tasks"
       ],
       "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-28.md"
     },
@@ -121,7 +119,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T21:05:17.471Z",
+    "generatedAt": "2026-03-28T22:12:17.734Z",
     "source": "memory-daily",
     "dayCount": 11,
     "generator": "memory-generator.js",

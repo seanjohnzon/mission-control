@@ -3587,7 +3587,7 @@ function setSprintView(view) {
 function renderSprint() {
   const tasks = _tasksData || [];
   // Filter to active sprint tasks only (in-progress + queued, NOT completed)
-  let filtered = tasks.filter(t => !isCompletedStatus(t.status));
+  let filtered = tasks.filter(t => t.status === 'in-progress');
 
   // Project filter
   const projectFilter = document.getElementById('sprint-project-filter')?.value || '';
