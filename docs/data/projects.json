@@ -3,54 +3,96 @@
     {
       "id": "PROJ-MC",
       "name": "Mission Control",
-      "status": "in-progress",
+      "status": "paused",
       "priority": "P0",
       "owner": "Nami",
+      "description": "All Mission Control dashboard work. GitHub Pages deployment, tabs, data, visualization.",
       "epics": [
-        "EPIC-003"
+        "EPIC-002",
+        "EPIC-003",
+        "EPIC-005"
       ],
-      "description": "Dashboard, GitHub Pages, all tabs with live data"
+      "storyCount": 41,
+      "openCount": 5,
+      "inProgressCount": 0,
+      "blockedCount": 0,
+      "completedCount": 64,
+      "progressPct": 86
     },
     {
       "id": "PROJ-OPS",
       "name": "Operations & Infrastructure",
-      "status": "in-progress",
+      "status": "paused",
       "priority": "P1",
       "owner": "Nami",
+      "description": "Crew architecture, gateway management, agent delivery systems, documentation.",
       "epics": [
+        "EPIC-001",
+        "CAPT-SANJI-DATING-EPIC-20260321-0112",
+        "EPIC-CAVENDISH-ZEFF-DATING-ROLL-20260321",
         "EPIC-004",
-        "EPIC-005",
         "EPIC-006",
-        "EPIC-007"
+        "EPIC-007",
+        "EPIC-005"
       ],
-      "description": "Crew architecture, gateways, agent delivery, local models"
+      "storyCount": 41,
+      "openCount": 6,
+      "inProgressCount": 1,
+      "blockedCount": 0,
+      "completedCount": 69,
+      "progressPct": 85
     },
     {
       "id": "PROJ-RESEARCH",
       "name": "Research & Knowledge",
-      "status": "in-progress",
+      "status": "paused",
       "priority": "P2",
       "owner": "Robin",
+      "description": "X/Twitter research, market analysis, knowledge archiving, Discord organization.",
       "epics": [],
-      "description": "X/Twitter research, market analysis, knowledge archiving"
+      "storyCount": 0,
+      "openCount": 0,
+      "inProgressCount": 0,
+      "blockedCount": 0,
+      "completedCount": 1,
+      "progressPct": 100
     },
     {
       "id": "PROJ-FUTURE",
       "name": "Future & Backlog",
-      "status": "open",
+      "status": "paused",
       "priority": "backlog",
       "owner": "Nami",
+      "description": "Deferred work: Desktop integration, Perplexity eval, n8n migration, Zoro security.",
       "epics": [],
-      "description": "Desktop integration, Perplexity, n8n, Zoro security"
+      "storyCount": 0,
+      "openCount": 6,
+      "inProgressCount": 0,
+      "blockedCount": 0,
+      "completedCount": 0,
+      "progressPct": 0
     },
     {
       "id": "PROJ-OPENSOURCE",
-      "name": "Go OpenSource & Go Viral",
-      "status": "open",
+      "name": "Go OpenSource & Go Viral — Straw Hat Crew for Everyone",
+      "status": "paused",
       "priority": "backlog",
-      "owner": "Nami",
+      "owner": "Nami (project owner)",
+      "description": "VISION: Turn the Straw Hat agent crew into an open-source, self-managing OpenClaw template. Any user installs a crew and becomes their own Captain. Scale by replicating departments across machines. Build viral fanbase: OpenClaw x One Piece. Prerequisites: EPIC-004 complete, agent tree operational, MC polished. Ownership model: Projects=Nami, Epics=Jinbe, Stories=Usopp, Tasks=Each dept, Verification=Chopper.",
       "epics": [],
-      "description": "Straw Hat crew as open-source OpenClaw template"
+      "storyCount": 0,
+      "openCount": 0,
+      "inProgressCount": 0,
+      "blockedCount": 0,
+      "completedCount": 0,
+      "progressPct": 0
     }
-  ]
+  ],
+  "meta": {
+    "generatedAt": "2026-03-28T20:11:58.297Z",
+    "source": "mc-api-derived",
+    "projectCount": 5,
+    "generator": "projects-generator.js",
+    "generatorVersion": "1.0.0"
+  }
 }

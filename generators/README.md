@@ -20,8 +20,13 @@ node generators/tasks-generator.js
 - **Features:** Normalizes points, converts dates to ISO format, includes metadata
 - **Status:** Complete ✅
 
+### ✅ projects-generator.js
+- **Source:** Derived from task hierarchy (type=project + descendants)
+- **Output:** `docs/data/projects.json`
+- **Features:** Calculates progress %, epic lists, story counts, status rollups
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
-- projects-generator.js (derives from tasks)
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)
 - memory-generator.js (daily memory files)

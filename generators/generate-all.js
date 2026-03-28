@@ -9,6 +9,7 @@
  */
 
 const { generateTasksJson } = require('./tasks-generator.js');
+const { generateProjectsJson } = require('./projects-generator.js');
 
 async function generateAll() {
   console.log('🔧 SUPER! Starting full data regeneration...');
@@ -17,8 +18,10 @@ async function generateAll() {
     // Generate tasks.json (implemented)
     await generateTasksJson();
     
+    // Generate projects.json (implemented)
+    await generateProjectsJson();
+    
     // TODO: Add other generators as they're built
-    // await generateProjectsJson();
     // await generateHealthJson();
     // etc.
     
