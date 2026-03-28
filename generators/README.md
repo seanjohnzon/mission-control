@@ -50,6 +50,12 @@ node generators/tasks-generator.js
 - **Features:** Commit history, task completions, heartbeat tracking
 - **Status:** Complete ✅
 
+### ✅ docs-generator.js
+- **Source:** Repository document scan (docs/ + registry/ markdown files)
+- **Output:** `docs/data/docs.json`
+- **Features:** Document groups (D1.x/D2.x/D5.x), title extraction, file metadata
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)
