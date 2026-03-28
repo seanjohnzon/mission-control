@@ -44,6 +44,12 @@ node generators/tasks-generator.js
 - **Features:** Section extraction, tag detection, date deduplication
 - **Status:** Complete ✅
 
+### ✅ activity-generator.js
+- **Source:** Git commits + MC task activity + crew actions
+- **Output:** `docs/data/activity.json`
+- **Features:** Commit history, task completions, heartbeat tracking
+- **Status:** Complete ✅
+
 ### 🚧 Coming Next
 - health-generator.js (system health checks)
 - calendar-generator.js (cron + events)

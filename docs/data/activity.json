@@ -1,61 +1,224 @@
 {
   "commits": [
     {
-      "hash": "bd71459",
-      "msg": "data(nami): sync all dashboard data files",
+      "hash": "d119c44",
+      "msg": "SUPER! Add memory.json daily memory aggregator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "4b41491",
+      "msg": "SUPER! Add calendar.json cron + events generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "f9f8e66",
+      "msg": "SUPER! Add health.json live system status generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "c20c896",
+      "msg": "SUPER! Add projects.json live data generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "9787584",
+      "msg": "Add generator automation infrastructure",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "6ad1db1",
+      "msg": "SUPER! Add tasks.json live data generator",
+      "date": "2026-03-28",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "478d041",
+      "msg": "ops(jinbe): daily board sync 2026-03-24",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "4f72603",
+      "msg": "🔧 Franky: Fix Team tab orgviz container + add missing typeIcon/statusIcon functions",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "ef7eb41",
+      "msg": "⚡ Wire /data/ routes to LIVE handlers — local dashboard shows real-time data",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "3342c5e",
+      "msg": "📊 Fix Model Ops data — add missing agents (Zoro, Carina), correct roles and costs",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "a6076ce",
+      "msg": "🔧 Add /data/ and /crew-board/ static serving to server.js — match docs/ structure",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "e154155",
+      "msg": "🔄 Sync local dashboard to match remote — all 13 tabs + data files",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "18c9d02",
+      "msg": "🔄 Auto-sync: 2026-03-24 02:17",
+      "date": "2026-03-24",
+      "author": "Straw Hat Crew"
+    },
+    {
+      "hash": "0fbf5e3",
+      "msg": "🔧 Franky: Implement Improvements & Contents Tabs (Phase 1)",
       "date": "2026-03-23",
-      "author": "Nami"
+      "author": "Straw Hat Crew"
     },
     {
-      "hash": "dbf7742",
-      "msg": "ops(nami): board cleanup \u2014 8 stale tasks completed",
+      "hash": "4f3d7f3",
+      "msg": "🔧 Franky: Implement clickable task details + Sprint Board",
       "date": "2026-03-23",
-      "author": "Nami"
-    },
-    {
-      "hash": "21ba2e2",
-      "msg": "ops(nami): model prompting guides for all agents",
-      "date": "2026-03-23",
-      "author": "Nami"
-    },
-    {
-      "hash": "dafe835",
-      "msg": "feat(franky): EPIC-004 Teams tab complete",
-      "date": "2026-03-22",
-      "author": "Franky"
-    },
-    {
-      "hash": "442cfc1",
-      "msg": "fix(sanji): MC live on GitHub Pages",
-      "date": "2026-03-20",
-      "author": "Sanji"
+      "author": "Straw Hat Crew"
     }
   ],
   "recent": [
     {
-      "agent": "Nami",
-      "action": "Deployed crew-wide goal tracking protocol",
-      "time": "2026-03-23 07:08 EDT"
-    },
-    {
-      "agent": "Nami",
-      "action": "Pulled qwen2.5:14b, created 3 local model agents",
-      "time": "2026-03-23 05:30 EDT"
-    },
-    {
+      "id": "heartbeat-franky-17",
       "agent": "Franky",
-      "action": "Mock goal drill delivered in 60s",
-      "time": "2026-03-23 07:02 EDT"
+      "action": "MC Live Sync generator progress - 5/9 complete",
+      "time": "2026-03-28T21:19:13.890Z",
+      "relatedTaskId": null,
+      "source": "heartbeat-activity"
     },
     {
+      "id": "task-created-EPIC-PAPERCLIP-ADOPTION",
+      "agent": "Usopp",
+      "action": "Created task: Paperclip Adoption — Research Analysis & Story Creation",
+      "time": "2026-03-28T00:00:00.000Z",
+      "relatedTaskId": "EPIC-PAPERCLIP-ADOPTION",
+      "source": "task-creation"
+    },
+    {
+      "id": "task-created-EPIC-011",
+      "agent": "usopp",
+      "action": "Created task: Paperclip Adoption — Integrate Maximizer Concepts into Crew Operations",
+      "time": "2026-03-28T00:00:00.000Z",
+      "relatedTaskId": "EPIC-011",
+      "source": "task-creation"
+    },
+    {
+      "id": "task-created-PAPERCLIP-STORY-001",
+      "agent": "Franky",
+      "action": "Created task: Task Deduplication Gate for MC Task Creation",
+      "time": "2026-03-28T00:00:00.000Z",
+      "relatedTaskId": "PAPERCLIP-STORY-001",
+      "source": "task-creation"
+    },
+    {
+      "id": "task-created-PAPERCLIP-STORY-002",
       "agent": "Sanji",
-      "action": "Scoped GPU3060 + Desktop device connections",
-      "time": "2026-03-23 07:20 EDT"
+      "action": "Created task: Escalation Wake Events + Bridge Health Monitoring",
+      "time": "2026-03-28T00:00:00.000Z",
+      "relatedTaskId": "PAPERCLIP-STORY-002",
+      "source": "task-creation"
     },
     {
-      "agent": "Jinbe",
-      "action": "Daily board cleanup pre-standup",
-      "time": "2026-03-22 08:30 EDT"
+      "id": "task-created-PAPERCLIP-STORY-003",
+      "agent": "Robin",
+      "action": "Created task: Research Output Persistence Protocol",
+      "time": "2026-03-28T00:00:00.000Z",
+      "relatedTaskId": "PAPERCLIP-STORY-003",
+      "source": "task-creation"
+    },
+    {
+      "id": "task-completed-TASK-001",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Git init and first commit (RB-01)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-001",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-002",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Mac Mini hardware survey (RAM, CPU, disk)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-002",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-003",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Select and install Mac Mini local inference model (Local-Nano)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-003",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-004",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Telegram bot setup and SEC-002 activation (RB-02)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-004",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-005",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Anthropic API key registration and activation (RB-03)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-005",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-006",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Mac Mini baseline verification (RB-04)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-006",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-007",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Bridge startup and Phase 1 activation (RB-05)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-007",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-008",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Install Local-Nano model on Mac Mini (bridge inference)",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-008",
+      "source": "task-completion"
+    },
+    {
+      "id": "task-completed-TASK-016",
+      "agent": "human + OpenClaw",
+      "action": "Completed: Activation Pack preparation (AP-00) before Phase 1 runbooks",
+      "time": "2026-03-13T00:00:00.000Z",
+      "relatedTaskId": "TASK-016",
+      "source": "task-completion"
     }
-  ]
+  ],
+  "meta": {
+    "generatedAt": "2026-03-28T21:19:13.890Z",
+    "source": "git+activity-feed",
+    "commitCount": 15,
+    "activityCount": 15,
+    "generator": "activity-generator.js",
+    "generatorVersion": "1.0.0"
+  }
 }
