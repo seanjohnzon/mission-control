@@ -4,10 +4,12 @@ import os
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from queue import Empty, Queue
 from threading import Event, Thread
 from typing import Protocol
 
+from .artifacts import persist_result_artifacts
 from .models import TaskRecord, TaskStatus
 from .storage import TaskStore
 
@@ -127,9 +129,15 @@ class TaskEnvelope:
 
 
 class BackgroundTaskWorker:
-    def __init__(self, store: TaskStore, runner: TaskRunner | None = None) -> None:
+    def __init__(
+        self,
+        store: TaskStore,
+        runner: TaskRunner | None = None,
+        artifacts_dir: Path | None = None,
+    ) -> None:
         self.store = store
         self.runner = runner or DemoTaskRunner()
+        self._artifacts_dir = artifacts_dir
         self._queue: Queue[TaskEnvelope] = Queue()
         self._stop = Event()
         self._thread = Thread(target=self._loop, name="bridge-task-worker", daemon=True)
@@ -206,7 +214,7 @@ class BackgroundTaskWorker:
             return
         completed.status = TaskStatus.completed
         completed.completed_at = datetime.now(timezone.utc)
-        completed.result = result
+        completed.result = persist_result_artifacts(task_id, result, self._artifacts_dir)
         completed.error = None
         self.store.update_task(completed)
 

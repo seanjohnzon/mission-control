@@ -1,6 +1,6 @@
 # Windows Computer Use Bridge
 
-Phase 3 – real Anthropic runner wired for EPIC-010-STORY-004.
+Phase 4 – artifact persistence added (EPIC-010-STORY-004).
 
 ## Endpoints
 - `GET /health` — includes active runner + storage backend
@@ -62,8 +62,19 @@ BRIDGE_STORAGE_BACKEND=memory pytest tests/ -v
 
 Tests that require the `anthropic` SDK are auto-skipped when the package is not installed.
 
+## Artifact Persistence
+
+When a task completes, any `artifacts` or `screenshots` entries in the runner result that carry inline content (`text`, `content`, `data`, or `base64_content`) are automatically written to disk:
+
+```
+data/tasks/<task_id>/<filename>
+```
+
+The stored result then references the saved file path instead of the raw inline content. All other metadata fields on each item are preserved. Items without a recognised content key pass through unchanged.
+
+Override the storage root by passing `artifacts_dir` to `BackgroundTaskWorker` (used in tests to point at a `tmp_path`).
+
 ## Next Build Slices
 1. Wire full Anthropic Computer Use agentic loop (tool_use, screenshots, actions).
-2. Add artifact/screenshot persistence.
-3. Harden auth, validation, and rate limiting.
-4. Expose queue/worker metrics for Mac-side orchestration.
+2. Harden auth, validation, and rate limiting.
+3. Expose queue/worker metrics for Mac-side orchestration.

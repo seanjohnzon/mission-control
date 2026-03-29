@@ -1,3 +1,4 @@
+import base64
 import os
 import time
 from pathlib import Path
@@ -6,6 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from bridge.api import create_app
+from bridge.artifacts import persist_result_artifacts
 from bridge.models import TaskCreateRequest
 from bridge.storage import InMemoryTaskStore, SqliteTaskStore
 from bridge.tasks import AnthropicTaskRunner, BackgroundTaskWorker, DemoTaskRunner, build_runner
@@ -186,6 +188,108 @@ def test_task_lifecycle_persists_in_sqlite(tmp_path: Path):
     assert persisted_task.result is not None
     assert persisted_task.result['echo']['description'] == 'Open calculator'
     assert 'Phase 2 worker scaffold' in persisted_task.result['message']
+
+
+# ---------------------------------------------------------------------------
+# Artifact persistence tests
+# ---------------------------------------------------------------------------
+
+
+def test_artifact_persistence_writes_files(tmp_path):
+    """persist_result_artifacts writes inline content to disk and rewrites entries."""
+    png_bytes = b"\x89PNG\r\n"
+    result = {
+        "message": "done",
+        "artifacts": [
+            {"filename": "output.txt", "text": "hello world", "kind": "log"},
+            {"filename": "data.json", "content": '{"key": "value"}'},
+        ],
+        "screenshots": [
+            {"filename": "screen.png", "base64_content": base64.b64encode(png_bytes).decode()},
+        ],
+    }
+
+    rewritten = persist_result_artifacts("task-abc", result, artifacts_root=tmp_path)
+
+    task_dir = tmp_path / "task-abc"
+    assert (task_dir / "output.txt").read_text() == "hello world"
+    assert (task_dir / "data.json").read_text() == '{"key": "value"}'
+    assert (task_dir / "screen.png").read_bytes() == png_bytes
+
+    art0 = rewritten["artifacts"][0]
+    assert "text" not in art0
+    assert art0["filename"] == "output.txt"
+    assert art0["kind"] == "log"  # unknown metadata preserved
+    assert str(task_dir / "output.txt") == art0["path"]
+
+    art1 = rewritten["artifacts"][1]
+    assert "content" not in art1
+    assert "path" in art1
+
+    ss0 = rewritten["screenshots"][0]
+    assert "base64_content" not in ss0
+    assert "path" in ss0
+
+    # Original result unchanged
+    assert result["artifacts"][0]["text"] == "hello world"
+    assert rewritten["message"] == "done"
+
+
+def test_artifact_persistence_items_without_content_are_unchanged(tmp_path):
+    """Items with no recognised content key pass through untouched."""
+    result = {
+        "artifacts": [
+            {"filename": "ref.txt", "path": "/some/existing/path"},
+            {"note": "no filename here", "text": "orphaned"},
+        ],
+        "screenshots": [],
+    }
+    rewritten = persist_result_artifacts("task-xyz", result, artifacts_root=tmp_path)
+    assert rewritten["artifacts"][0] == {"filename": "ref.txt", "path": "/some/existing/path"}
+    assert rewritten["artifacts"][1] == {"note": "no filename here", "text": "orphaned"}
+    assert not (tmp_path / "task-xyz").exists()
+
+
+def test_artifact_persistence_rewrite_sqlite(tmp_path):
+    """SQLite stores rewritten artifact paths (not inline content) after task completion."""
+    db_path = tmp_path / "bridge.db"
+    artifacts_dir = tmp_path / "artifacts"
+
+    class ArtifactRunner:
+        def run(self, task):
+            return {
+                "message": "with artifacts",
+                "artifacts": [{"filename": "out.txt", "text": "task output", "kind": "log"}],
+                "screenshots": [],
+            }
+
+    store = SqliteTaskStore(db_path)
+    worker = BackgroundTaskWorker(store, runner=ArtifactRunner(), artifacts_dir=artifacts_dir)
+    try:
+        task = store.create_task(TaskCreateRequest(description="artifact task"))
+        worker.enqueue(task.task_id)
+
+        deadline = time.time() + 1.5
+        while time.time() < deadline:
+            t = store.get_task(task.task_id)
+            if t and t.status.value == "completed":
+                break
+            time.sleep(0.02)
+        else:
+            raise AssertionError("Task never reached completed")
+    finally:
+        worker.shutdown()
+
+    assert (artifacts_dir / task.task_id / "out.txt").read_text() == "task output"
+
+    reopened = SqliteTaskStore(db_path).get_task(task.task_id)
+    assert reopened is not None
+    art = reopened.result["artifacts"][0]
+    assert "text" not in art
+    assert art["filename"] == "out.txt"
+    assert art["kind"] == "log"
+    assert "path" in art
+    assert "out.txt" in art["path"]
 
 
 # ---------------------------------------------------------------------------
