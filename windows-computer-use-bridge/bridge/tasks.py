@@ -88,6 +88,7 @@ class AnthropicTaskRunner:
         text_blocks: list[str] = []
         actions: list[dict] = []
         screenshots: list[dict] = []
+        tool_results: list[dict] = []
 
         for index, block in enumerate(content_blocks, start=1):
             block_type = self._block_attr(block, "type") or "text"
@@ -109,6 +110,9 @@ class AnthropicTaskRunner:
                     }
                 )
                 continue
+
+            if block_type == "tool_result":
+                tool_results.append(self._extract_tool_result(block, index=index))
 
             screenshots.extend(self._extract_screenshots(block, index=index))
 
@@ -137,6 +141,7 @@ class AnthropicTaskRunner:
                         "output_tokens": usage["output_tokens"],
                         "content_blocks": len(content_blocks),
                         "action_count": len(actions),
+                        "tool_result_count": len(tool_results),
                         "screenshot_count": len(screenshots),
                     },
                     indent=2,
@@ -151,6 +156,15 @@ class AnthropicTaskRunner:
                     "filename": "actions.json",
                     "content": json.dumps(actions, indent=2) + "\n",
                     "kind": "computer-use-actions",
+                    "content_type": "application/json",
+                }
+            )
+        if tool_results:
+            artifacts.append(
+                {
+                    "filename": "tool-results.json",
+                    "content": json.dumps(tool_results, indent=2) + "\n",
+                    "kind": "computer-use-tool-results",
                     "content_type": "application/json",
                 }
             )
@@ -193,6 +207,74 @@ class AnthropicTaskRunner:
             if screenshot:
                 screenshots.append(screenshot)
         return screenshots
+
+    def _extract_tool_result(self, block: object, *, index: int) -> dict:
+        content = self._block_attr(block, "content")
+        text_entries: list[str] = []
+        structured_entries: list[object] = []
+        image_count = 0
+
+        if isinstance(content, (str, bytes, dict)):
+            rendered = self._render_content_value(content)
+            if rendered:
+                text_entries.append(rendered)
+            if isinstance(content, dict):
+                structured_entries.append(content)
+        elif isinstance(content, list):
+            for child in content:
+                child_type = self._block_attr(child, "type") or "text"
+                if child_type == "image":
+                    image_count += 1
+                    continue
+                if child_type == "text":
+                    child_text = self._block_attr(child, "text")
+                    rendered = self._render_content_value(child_text)
+                    if rendered:
+                        text_entries.append(rendered)
+                    continue
+                if child_type == "tool_result":
+                    nested_content = self._block_attr(child, "content")
+                    rendered = self._render_content_value(nested_content)
+                    if rendered:
+                        text_entries.append(rendered)
+                    if isinstance(nested_content, (dict, list)):
+                        structured_entries.append(nested_content)
+                    continue
+                child_text = self._block_attr(child, "content")
+                payload = child_text if child_text is not None else child
+                rendered = self._render_content_value(payload)
+                if rendered:
+                    text_entries.append(rendered)
+                if isinstance(payload, (dict, list)):
+                    structured_entries.append(payload)
+        elif content is not None:
+            rendered = self._render_content_value(content)
+            if rendered:
+                text_entries.append(rendered)
+
+        result = {
+            "index": index,
+            "tool_use_id": self._block_attr(block, "tool_use_id"),
+            "is_error": bool(self._block_attr(block, "is_error")),
+            "text": "\n\n".join(entry.strip() for entry in text_entries if str(entry).strip()),
+            "image_count": image_count,
+            "kind": "anthropic-tool-result",
+        }
+        if structured_entries:
+            result["structured"] = structured_entries
+        return result
+
+    @staticmethod
+    def _render_content_value(value: object) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, bytes):
+            return value.decode(errors="replace")
+        if isinstance(value, str):
+            return value
+        if isinstance(value, (dict, list)):
+            return json.dumps(value, indent=2, sort_keys=True)
+        return str(value)
 
     def _screenshot_from_image_block(
         self,

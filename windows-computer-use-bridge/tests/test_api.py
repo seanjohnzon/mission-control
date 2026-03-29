@@ -401,7 +401,9 @@ def test_anthropic_runner_extracts_tool_actions_and_screenshots():
 
     tool_result_block = {
         'type': 'tool_result',
+        'tool_use_id': 'toolu_123',
         'content': [
+            {'type': 'text', 'text': 'Observed the Calculator window and captured a screenshot.'},
             {
                 'type': 'image',
                 'source': {'type': 'base64', 'media_type': 'image/png', 'data': screenshot_b64},
@@ -428,12 +430,14 @@ def test_anthropic_runner_extracts_tool_actions_and_screenshots():
         result = runner.run(task)
 
     artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
-    assert set(artifacts) == {'plan.md', 'response-summary.json', 'actions.json'}
+    assert set(artifacts) == {'plan.md', 'response-summary.json', 'actions.json', 'tool-results.json'}
     assert 'left_click' in artifacts['actions.json']['content']
     assert 'computer' in artifacts['actions.json']['content']
-    assert result['screenshots'][0]['filename'] == 'screenshot-3-1.png'
+    assert 'toolu_123' in artifacts['tool-results.json']['content']
+    assert result['screenshots'][0]['filename'] == 'screenshot-3-2.png'
     assert result['screenshots'][0]['kind'] == 'computer-use-screenshot'
     assert result['screenshots'][0]['base64_content'] == screenshot_b64
+    assert 'Observed the Calculator window' in artifacts['tool-results.json']['content']
     assert 'Launch Calculator' in result['plan']
     assert result['stop_reason'] == 'tool_use'
 
@@ -480,3 +484,87 @@ def test_anthropic_runner_extracts_top_level_image_blocks_with_mime_type_bytes()
         }
     ]
     assert result['plan'] == 'Open Paint and inspect the canvas.'
+
+
+def test_anthropic_runner_extracts_string_tool_results_without_screenshots():
+    """AnthropicTaskRunner captures plain-string tool_result payloads for later inspection."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    text_block = {'type': 'text', 'text': 'Open Notepad and type hello.'}
+    tool_result_block = {
+        'type': 'tool_result',
+        'tool_use_id': 'toolu_note',
+        'content': 'Typed hello into Notepad successfully.',
+        'is_error': False,
+    }
+
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'end_turn'
+    mock_response.content = [text_block, tool_result_block]
+    mock_response.usage.input_tokens = 9
+    mock_response.usage.output_tokens = 12
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Type hello in Notepad'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
+    assert 'tool-results.json' in artifacts
+    assert 'Typed hello into Notepad successfully.' in artifacts['tool-results.json']['content']
+    assert 'toolu_note' in artifacts['tool-results.json']['content']
+    assert result['screenshots'] == []
+
+
+def test_anthropic_runner_preserves_structured_tool_result_payloads():
+    """AnthropicTaskRunner renders structured tool_result payloads as JSON for later inspection."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    text_block = {'type': 'text', 'text': 'Inspect the desktop state.'}
+    tool_result_block = {
+        'type': 'tool_result',
+        'tool_use_id': 'toolu_structured',
+        'content': [
+            {
+                'type': 'json',
+                'content': {
+                    'window_title': 'Calculator',
+                    'cursor': {'x': 44, 'y': 91},
+                    'controls': ['clear', 'equals'],
+                },
+            }
+        ],
+        'is_error': False,
+    }
+
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'end_turn'
+    mock_response.content = [text_block, tool_result_block]
+    mock_response.usage.input_tokens = 14
+    mock_response.usage.output_tokens = 18
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Inspect calculator state'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
+    tool_results = artifacts['tool-results.json']['content']
+    assert 'toolu_structured' in tool_results
+    assert '"window_title": "Calculator"' in tool_results
+    assert '"cursor": {' in tool_results
+    assert '"controls": [' in tool_results
