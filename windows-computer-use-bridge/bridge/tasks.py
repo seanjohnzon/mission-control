@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
@@ -81,17 +82,41 @@ class AnthropicTaskRunner:
         )
         content_block = message.content[0]
         plan_text = content_block.text if hasattr(content_block, "text") else str(content_block)
+        usage = {
+            "input_tokens": message.usage.input_tokens,
+            "output_tokens": message.usage.output_tokens,
+        }
         return {
             "message": "Anthropic runner completed task.",
             "model": message.model,
             "stop_reason": message.stop_reason,
             "plan": plan_text,
-            "artifacts": [],
+            "artifacts": [
+                {
+                    "filename": "plan.md",
+                    "content": plan_text,
+                    "kind": "execution-plan",
+                    "content_type": "text/markdown",
+                },
+                {
+                    "filename": "response-summary.json",
+                    "content": json.dumps(
+                        {
+                            "task_id": task.task_id,
+                            "description": task.description,
+                            "model": message.model,
+                            "stop_reason": message.stop_reason,
+                            "input_tokens": usage["input_tokens"],
+                            "output_tokens": usage["output_tokens"],
+                        },
+                        indent=2,
+                    ) + "\n",
+                    "kind": "anthropic-response-summary",
+                    "content_type": "application/json",
+                },
+            ],
             "screenshots": [],
-            "usage": {
-                "input_tokens": message.usage.input_tokens,
-                "output_tokens": message.usage.output_tokens,
-            },
+            "usage": usage,
         }
 
 

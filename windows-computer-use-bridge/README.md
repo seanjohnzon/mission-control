@@ -15,9 +15,10 @@ The background worker now has a pluggable runner with two implementations, and t
 | Runner | When active | Behaviour |
 |---|---|---|
 | `DemoTaskRunner` | No `ANTHROPIC_API_KEY` set, or `BRIDGE_RUNNER=demo` | Returns placeholder result – no API calls |
-| `AnthropicTaskRunner` | `ANTHROPIC_API_KEY` set (or `BRIDGE_RUNNER=anthropic`) | Calls `claude-opus-4-6` via the Anthropic SDK to plan the task |
+| `AnthropicTaskRunner` | `ANTHROPIC_API_KEY` set (or `BRIDGE_RUNNER=anthropic`) | Calls `claude-opus-4-6` via the Anthropic SDK to plan the task and emits persisted planning artifacts |
 
 The full agentic computer-use loop (tool_use, screenshot capture, action execution) is the next build slice.
+Anthropic task results now also include `plan.md` and `response-summary.json` artifacts so Mac-side orchestration can persist and inspect the generated execution plan without depending on inline payload storage.
 
 ## Local Run (demo mode – no API key required)
 ```bash

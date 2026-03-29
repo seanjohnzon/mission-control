@@ -370,7 +370,14 @@ def test_anthropic_runner_run_calls_sdk_without_network():
     assert result['model'] == 'claude-opus-4-6'
     assert result['stop_reason'] == 'end_turn'
     assert 'Open Start menu' in result['plan']
-    assert result['artifacts'] == []
     assert result['screenshots'] == []
     assert result['usage']['input_tokens'] == 10
     assert result['usage']['output_tokens'] == 20
+
+    artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
+    assert set(artifacts) == {'plan.md', 'response-summary.json'}
+    assert artifacts['plan.md']['kind'] == 'execution-plan'
+    assert 'Open Start menu' in artifacts['plan.md']['content']
+    assert artifacts['response-summary.json']['kind'] == 'anthropic-response-summary'
+    assert 'Open Calculator' in artifacts['response-summary.json']['content']
+    assert 'claude-opus-4-6' in artifacts['response-summary.json']['content']
