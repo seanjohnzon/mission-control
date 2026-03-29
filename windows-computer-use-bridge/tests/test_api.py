@@ -51,6 +51,27 @@ def test_health_endpoint():
     assert payload['storage'] == 'InMemoryTaskStore'
 
 
+def test_api_key_guard_rejects_missing_key(monkeypatch):
+    monkeypatch.setenv('BRIDGE_API_KEY', 'super-secret')
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
+    client = app.test_client()
+
+    response = client.get('/health')
+
+    assert response.status_code == 401
+    assert response.get_json()['error'] == 'Invalid API key'
+
+
+def test_api_key_guard_accepts_matching_key(monkeypatch):
+    monkeypatch.setenv('BRIDGE_API_KEY', 'super-secret')
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
+    client = app.test_client()
+
+    response = client.get('/health', headers={'x-api-key': 'super-secret'})
+
+    assert response.status_code == 200
+
+
 def test_task_lifecycle_scaffold_memory_store():
     app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
     client = app.test_client()
@@ -114,6 +135,19 @@ def test_list_tasks_filters_by_status():
     assert payload['metrics']['counts']['failed'] == 1
 
 
+def test_list_tasks_rejects_invalid_status_filter():
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
+    client = app.test_client()
+
+    response = client.get('/tasks?status=banana')
+
+    assert response.status_code == 400
+    payload = response.get_json()
+    assert payload['error'] == 'Invalid status filter'
+    assert 'completed' in payload['allowed']
+    assert payload['status'] == 'banana'
+
+
 def test_task_failure_surfaces_error_state():
     app = create_app(store=InMemoryTaskStore(), runner=FailingRunner())
     client = app.test_client()
@@ -132,6 +166,23 @@ def test_task_failure_surfaces_error_state():
     assert result_response.get_json()['status'] == 'failed'
     assert result_response.get_json()['result'] is None
     assert 'runner exploded' in result_response.get_json()['error']
+
+
+
+def test_task_creation_rate_limit_returns_429(monkeypatch):
+    monkeypatch.setenv('BRIDGE_RATE_LIMIT_TASKS_PER_MINUTE', '2')
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
+    client = app.test_client()
+    headers = {'x-forwarded-for': '203.0.113.10'}
+
+    first = client.post('/task', json={'description': 'Open calculator'}, headers=headers)
+    second = client.post('/task', json={'description': 'Open paint'}, headers=headers)
+    third = client.post('/task', json={'description': 'Open notepad'}, headers=headers)
+
+    assert first.status_code == 202
+    assert second.status_code == 202
+    assert third.status_code == 429
+    assert third.get_json()['error'] == 'Task creation rate limit exceeded'
 
 
 

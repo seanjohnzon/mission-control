@@ -8,8 +8,8 @@ from typing import Optional
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
 
-from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse
-from .security import require_api_key
+from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse, TaskStatus
+from .security import check_task_creation_rate_limit, require_api_key
 from .storage import InMemoryTaskStore, SqliteTaskStore, TaskStore
 from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner, build_runner, describe_runner
 
@@ -47,6 +47,7 @@ def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] =
 
     @app.post("/task")
     def create_task() -> tuple[dict, int]:
+        check_task_creation_rate_limit()
         payload = TaskCreateRequest.model_validate_json(json.dumps(request.get_json(force=True, silent=False)))
         task = task_store.create_task(payload)
         worker.enqueue(task.task_id)
@@ -74,6 +75,13 @@ def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] =
         status_filter = request.args.get("status")
         tasks = task_store.list_tasks()
         if status_filter:
+            allowed_statuses = {status.value for status in TaskStatus}
+            if status_filter not in allowed_statuses:
+                return jsonify({
+                    "error": "Invalid status filter",
+                    "allowed": sorted(allowed_statuses),
+                    "status": status_filter,
+                }), 400
             tasks = [task for task in tasks if task.status.value == status_filter]
         payload = [
             {
