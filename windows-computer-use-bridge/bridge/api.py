@@ -1,18 +1,32 @@
 from __future__ import annotations
 
+import json
+import os
+from pathlib import Path
 from typing import Optional
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from werkzeug.exceptions import HTTPException
 
 from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse
 from .security import require_api_key
-from .storage import TaskStore
+from .storage import InMemoryTaskStore, SqliteTaskStore, TaskStore
+
+
+DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "bridge.db"
+
+
+def build_task_store() -> TaskStore:
+    backend = os.getenv("BRIDGE_STORAGE_BACKEND", "sqlite").lower()
+    if backend == "memory":
+        return InMemoryTaskStore()
+    db_path = os.getenv("BRIDGE_DB_PATH", str(DEFAULT_DB_PATH))
+    return SqliteTaskStore(db_path)
 
 
 def create_app(store: Optional[TaskStore] = None) -> Flask:
     app = Flask(__name__)
-    task_store = store or TaskStore()
+    task_store = store or build_task_store()
 
     @app.before_request
     def _auth_guard() -> None:
@@ -24,9 +38,7 @@ def create_app(store: Optional[TaskStore] = None) -> Flask:
 
     @app.post("/task")
     def create_task() -> tuple[dict, int]:
-        payload = TaskCreateRequest.model_validate_json(
-            __import__("json").dumps(__import__("flask").request.get_json(force=True, silent=False))
-        )
+        payload = TaskCreateRequest.model_validate_json(json.dumps(request.get_json(force=True, silent=False)))
         task = task_store.create_task(payload)
         task_store.seed_demo_result(task.task_id)
         response = TaskCreateResponse(task_id=task.task_id, status=task.status)
