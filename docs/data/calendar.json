@@ -3,7 +3,7 @@
     {
       "id": "cron-franky-5",
       "title": "Franky Heartbeat",
-      "start": "2026-03-28T22:00:00.000Z",
+      "start": "2026-03-29T12:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -15,7 +15,7 @@
     {
       "id": "cron-jinbe-6",
       "title": "Jinbe Heartbeat",
-      "start": "2026-03-28T22:00:00.000Z",
+      "start": "2026-03-29T12:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -27,7 +27,7 @@
     {
       "id": "cron-nami-7",
       "title": "Nami Heartbeat",
-      "start": "2026-03-28T22:00:00.000Z",
+      "start": "2026-03-29T12:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "red",
@@ -37,9 +37,21 @@
       "notes": "Recurring continuous"
     },
     {
+      "id": "cron-zeus-0",
+      "title": "Daily Standup (Zeus)",
+      "start": "2026-03-29T13:00:00.000Z",
+      "end": null,
+      "kind": "cron",
+      "tier": "teal",
+      "agent": "Zeus",
+      "projectId": null,
+      "source": "cron-schedule",
+      "notes": "Recurring daily"
+    },
+    {
       "id": "cron-zeus-2",
       "title": "Daily Cost Report (Zeus)",
-      "start": "2026-03-29T00:00:00.000Z",
+      "start": "2026-03-30T00:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "teal",
@@ -51,7 +63,7 @@
     {
       "id": "cron-nami-4",
       "title": "Session Bloat Cleanup",
-      "start": "2026-03-29T08:00:00.000Z",
+      "start": "2026-03-30T08:00:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "yellow",
@@ -63,23 +75,11 @@
     {
       "id": "cron-jinbe-1",
       "title": "Jinbe Board Cleanup",
-      "start": "2026-03-29T12:30:00.000Z",
+      "start": "2026-03-30T12:30:00.000Z",
       "end": null,
       "kind": "cron",
       "tier": "yellow",
       "agent": "Jinbe",
-      "projectId": null,
-      "source": "cron-schedule",
-      "notes": "Recurring daily"
-    },
-    {
-      "id": "cron-zeus-0",
-      "title": "Daily Standup (Zeus)",
-      "start": "2026-03-29T13:00:00.000Z",
-      "end": null,
-      "kind": "cron",
-      "tier": "teal",
-      "agent": "Zeus",
       "projectId": null,
       "source": "cron-schedule",
       "notes": "Recurring daily"
@@ -98,7 +98,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T22:12:17.724Z",
+    "generatedAt": "2026-03-29T12:50:19.878Z",
     "source": "cron+tasks+events",
     "cronCount": 8,
     "taskEventCount": 0,

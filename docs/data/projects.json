@@ -13,11 +13,11 @@
         "EPIC-005"
       ],
       "storyCount": 41,
-      "openCount": 5,
+      "openCount": 4,
       "inProgressCount": 0,
       "blockedCount": 0,
-      "completedCount": 64,
-      "progressPct": 86
+      "completedCount": 65,
+      "progressPct": 88
     },
     {
       "id": "PROJ-OPS",
@@ -89,7 +89,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T22:12:17.640Z",
+    "generatedAt": "2026-03-29T12:50:19.787Z",
     "source": "mc-api-derived",
     "projectCount": 5,
     "generator": "projects-generator.js",

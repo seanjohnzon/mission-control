@@ -1,143 +1,143 @@
 {
   "commits": [
     {
-      "hash": "e96a776",
-      "msg": "SUPER! Add team-org.json live organization generator",
-      "date": "2026-03-28",
+      "hash": "b9a827d",
+      "msg": "SUPER! handle single-image tool result payloads",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "af0fdd2",
-      "msg": "SUPER! Add docs.json repository document scanner",
-      "date": "2026-03-28",
+      "hash": "1fcf0d2",
+      "msg": "SUPER! enrich bridge action artifact summaries",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "4ed7c32",
-      "msg": "SUPER! Add activity.json git + crew activity generator",
-      "date": "2026-03-28",
+      "hash": "f684476",
+      "msg": "SUPER! preserve structured bridge tool results",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "d119c44",
-      "msg": "SUPER! Add memory.json daily memory aggregator",
-      "date": "2026-03-28",
+      "hash": "f16e8b7",
+      "msg": "SUPER! harden bridge screenshot artifact parsing",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "4b41491",
-      "msg": "SUPER! Add calendar.json cron + events generator",
-      "date": "2026-03-28",
+      "hash": "ee816cb",
+      "msg": "SUPER! extract bridge computer-use actions and screenshots",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "f9f8e66",
-      "msg": "SUPER! Add health.json live system status generator",
-      "date": "2026-03-28",
+      "hash": "ae05f8b",
+      "msg": "SUPER! persist Anthropic bridge planning artifacts",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "c20c896",
-      "msg": "SUPER! Add projects.json live data generator",
-      "date": "2026-03-28",
+      "hash": "24699ca",
+      "msg": "EPIC-010-STORY-004: add artifact persistence for task results",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "9787584",
-      "msg": "Add generator automation infrastructure",
-      "date": "2026-03-28",
+      "hash": "221a3a7",
+      "msg": "SUPER! enforce explicit Anthropic runner selection",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "6ad1db1",
-      "msg": "SUPER! Add tasks.json live data generator",
-      "date": "2026-03-28",
+      "hash": "4af5cde",
+      "msg": "SUPER! expose bridge runner health metadata",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "478d041",
-      "msg": "ops(jinbe): daily board sync 2026-03-24",
-      "date": "2026-03-24",
+      "hash": "3dc47a5",
+      "msg": "SUPER! expose bridge task queue summary",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "4f72603",
-      "msg": "🔧 Franky: Fix Team tab orgviz container + add missing typeIcon/statusIcon functions",
-      "date": "2026-03-24",
+      "hash": "23e3314",
+      "msg": "SUPER! wire Anthropic-backed runner into Windows bridge worker",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "ef7eb41",
-      "msg": "⚡ Wire /data/ routes to LIVE handlers — local dashboard shows real-time data",
-      "date": "2026-03-24",
+      "hash": "6418aed",
+      "msg": "SUPER! harden bridge worker task execution states",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "3342c5e",
-      "msg": "📊 Fix Model Ops data — add missing agents (Zoro, Carina), correct roles and costs",
-      "date": "2026-03-24",
+      "hash": "dd33ce2",
+      "msg": "SUPER! add Windows bridge background worker scaffold",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "a6076ce",
-      "msg": "🔧 Add /data/ and /crew-board/ static serving to server.js — match docs/ structure",
-      "date": "2026-03-24",
+      "hash": "48d164f",
+      "msg": "SUPER! stabilize Windows bridge Phase 2 scaffold tests",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     },
     {
-      "hash": "e154155",
-      "msg": "🔄 Sync local dashboard to match remote — all 13 tabs + data files",
-      "date": "2026-03-24",
+      "hash": "bf2dfb9",
+      "msg": "Phase 1 Windows Computer Use bridge scaffold",
+      "date": "2026-03-29",
       "author": "Straw Hat Crew"
     }
   ],
   "recent": [
     {
-      "id": "heartbeat-franky-18",
+      "id": "heartbeat-franky-8",
       "agent": "Franky",
       "action": "MC Live Sync generator progress - 5/9 complete",
-      "time": "2026-03-28T22:12:17.750Z",
+      "time": "2026-03-29T12:50:19.906Z",
       "relatedTaskId": null,
       "source": "heartbeat-activity"
     },
     {
-      "id": "task-created-EPIC-PAPERCLIP-ADOPTION",
+      "id": "task-created-EPIC-012",
       "agent": "Usopp",
-      "action": "Created task: Paperclip Adoption — Research Analysis & Story Creation",
-      "time": "2026-03-28T00:00:00.000Z",
-      "relatedTaskId": "EPIC-PAPERCLIP-ADOPTION",
+      "action": "Created task: EPIC-012: Subagent Hires — First Wave Department Scaling",
+      "time": "2026-03-29T00:00:00.000Z",
+      "relatedTaskId": "EPIC-012",
       "source": "task-creation"
     },
     {
-      "id": "task-created-EPIC-011",
-      "agent": "usopp",
-      "action": "Created task: Paperclip Adoption — Integrate Maximizer Concepts into Crew Operations",
-      "time": "2026-03-28T00:00:00.000Z",
-      "relatedTaskId": "EPIC-011",
+      "id": "task-created-EPIC-012-STORY-001",
+      "agent": "Usopp",
+      "action": "Created task: STORY: Hire Franky's 3 Builder Subagents — GPT-5.2 (P0)",
+      "time": "2026-03-29T00:00:00.000Z",
+      "relatedTaskId": "EPIC-012-STORY-001",
       "source": "task-creation"
     },
     {
-      "id": "task-created-PAPERCLIP-STORY-001",
-      "agent": "Franky",
-      "action": "Created task: Task Deduplication Gate for MC Task Creation",
-      "time": "2026-03-28T00:00:00.000Z",
-      "relatedTaskId": "PAPERCLIP-STORY-001",
+      "id": "task-created-EPIC-012-STORY-002",
+      "agent": "Usopp",
+      "action": "Created task: STORY: Hire Chopper's First QA Tester Subagent (P1)",
+      "time": "2026-03-29T00:00:00.000Z",
+      "relatedTaskId": "EPIC-012-STORY-002",
       "source": "task-creation"
     },
     {
-      "id": "task-created-PAPERCLIP-STORY-002",
-      "agent": "Sanji",
-      "action": "Created task: Escalation Wake Events + Bridge Health Monitoring",
-      "time": "2026-03-28T00:00:00.000Z",
-      "relatedTaskId": "PAPERCLIP-STORY-002",
+      "id": "task-created-EPIC-012-STORY-003",
+      "agent": "Usopp",
+      "action": "Created task: STORY: Hire Zoro's First Security Subagent (P2)",
+      "time": "2026-03-29T00:00:00.000Z",
+      "relatedTaskId": "EPIC-012-STORY-003",
       "source": "task-creation"
     },
     {
-      "id": "task-created-PAPERCLIP-STORY-003",
-      "agent": "Robin",
-      "action": "Created task: Research Output Persistence Protocol",
-      "time": "2026-03-28T00:00:00.000Z",
-      "relatedTaskId": "PAPERCLIP-STORY-003",
+      "id": "task-created-EPIC-012-STORY-004",
+      "agent": "Usopp",
+      "action": "Created task: STORY: Hire Usopp's 3 BI Subagents (P0)",
+      "time": "2026-03-29T00:00:00.000Z",
+      "relatedTaskId": "EPIC-012-STORY-004",
       "source": "task-creation"
     },
     {
@@ -214,7 +214,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T22:12:17.750Z",
+    "generatedAt": "2026-03-29T12:50:19.906Z",
     "source": "git+activity-feed",
     "commitCount": 15,
     "activityCount": 15,

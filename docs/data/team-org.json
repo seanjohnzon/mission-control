@@ -4,175 +4,913 @@
       "id": "navigation",
       "name": "Navigation",
       "chief": "Nami",
-      "model": "claude-sonnet-4-6",
+      "model": null,
+      "scope": "Orchestration, budget, crew coordination, routing oversight",
+      "status": "degraded",
+      "sessionKey": "agent:main:main",
+      "activeTaskCount": 47,
+      "activePoints": 30,
+      "parentDept": null,
+      "leader": {
+        "id": "main",
+        "name": "Nami",
+        "model": null,
+        "scope": "Orchestration, budget, crew coordination, routing oversight",
+        "status": "active",
+        "parentDept": "navigation",
+        "sessionKey": "agent:main:main",
+        "workspace": null,
+        "agentDir": null
+      },
       "members": [
+        {
+          "id": "zeus",
+          "name": "Zeus",
+          "model": "anthropic/claude-sonnet-4-20250514",
+          "scope": "Executive aide / rapid support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-zeus",
+          "agentDir": "/Users/minicihan/.openclaw/agents/zeus/agent"
+        },
+        {
+          "id": "robin",
+          "name": "Robin",
+          "model": "xai/grok-4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-robin",
+          "agentDir": "/Users/minicihan/.openclaw/agents/robin/agent"
+        },
+        {
+          "id": "brook",
+          "name": "Brook",
+          "model": "google/gemini-2.5-pro-preview",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-brook",
+          "agentDir": "/Users/minicihan/.openclaw/agents/brook/agent"
+        },
+        {
+          "id": "vivi",
+          "name": "Vivi",
+          "model": "anthropic/claude-sonnet-4-20250514",
+          "scope": "Diplomatic support / coordination",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-vivi",
+          "agentDir": "/Users/minicihan/.openclaw/agents/vivi/agent"
+        },
+        {
+          "id": "jinbe",
+          "name": "Jinbe",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-jinbe",
+          "agentDir": "/Users/minicihan/.openclaw/agents/jinbe/agent"
+        },
+        {
+          "id": "mikan",
+          "name": "Mikan",
+          "model": "ollama/qwen2.5:14b",
+          "scope": "Local model monitoring",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-mikan",
+          "agentDir": "/Users/minicihan/.openclaw/agents/mikan/agent"
+        },
+        {
+          "id": "zoro",
+          "name": "Zoro",
+          "model": "anthropic/claude-opus-4-6",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-zoro",
+          "agentDir": "/Users/minicihan/.openclaw/agents/zoro/agent"
+        },
+        {
+          "id": "carina",
+          "name": "Carina",
+          "model": "anthropic/claude-sonnet-4-20250514",
+          "scope": "Operations and budget support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-carina",
+          "agentDir": "/Users/minicihan/.openclaw/agents/carina/agent"
+        },
+        {
+          "id": "fisher-tiger",
+          "name": "Fisher Tiger",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-fisher-tiger",
+          "agentDir": "/Users/minicihan/.openclaw/agents/fisher-tiger/agent"
+        },
+        {
+          "id": "tashigi",
+          "name": "Tashigi",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-tashigi",
+          "agentDir": "/Users/minicihan/.openclaw/agents/tashigi/agent"
+        },
+        {
+          "id": "smoker",
+          "name": "Smoker",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-smoker",
+          "agentDir": "/Users/minicihan/.openclaw/agents/smoker/agent"
+        },
+        {
+          "id": "hina",
+          "name": "Hina",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-hina",
+          "agentDir": "/Users/minicihan/.openclaw/agents/hina/agent"
+        },
+        {
+          "id": "otohime",
+          "name": "Otohime",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-otohime",
+          "agentDir": "/Users/minicihan/.openclaw/agents/otohime/agent"
+        },
+        {
+          "id": "aladine",
+          "name": "Aladine",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-aladine",
+          "agentDir": "/Users/minicihan/.openclaw/agents/aladine/agent"
+        },
+        {
+          "id": "aokiji",
+          "name": "Aokiji",
+          "model": "xai/grok-3-fast",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-aokiji",
+          "agentDir": "/Users/minicihan/.openclaw/agents/aokiji/agent"
+        },
+        {
+          "id": "dragon",
+          "name": "Dragon",
+          "model": "xai/grok-3-fast",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-dragon",
+          "agentDir": "/Users/minicihan/.openclaw/agents/dragon/agent"
+        },
+        {
+          "id": "shakky",
+          "name": "Shakky",
+          "model": "openrouter/google/gemini-3-pro-image-preview",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-shakky",
+          "agentDir": "/Users/minicihan/.openclaw/agents/shakky/agent"
+        },
+        {
+          "id": "apoo",
+          "name": "Apoo",
+          "model": "openrouter/openai/gpt-audio",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-apoo",
+          "agentDir": "/Users/minicihan/.openclaw/agents/apoo/agent"
+        },
+        {
+          "id": "franky",
+          "name": "Franky",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-franky",
+          "agentDir": "/Users/minicihan/.openclaw/agents/franky/agent"
+        },
+        {
+          "id": "sanji",
+          "name": "Sanji",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-sanji",
+          "agentDir": "/Users/minicihan/.openclaw/agents/sanji/agent"
+        },
+        {
+          "id": "chopper",
+          "name": "Chopper",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-chopper",
+          "agentDir": "/Users/minicihan/.openclaw/agents/chopper/agent"
+        },
+        {
+          "id": "usopp",
+          "name": "Usopp",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-usopp",
+          "agentDir": "/Users/minicihan/.openclaw/agents/usopp/agent"
+        },
+        {
+          "id": "tangerine",
+          "name": "Tangerine",
+          "model": "ollama/qwen2.5:7b",
+          "scope": "Local model support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-tangerine",
+          "agentDir": "/Users/minicihan/.openclaw/agents/tangerine/agent"
+        },
+        {
+          "id": "helm",
+          "name": "Helm",
+          "model": "ollama/qwen2.5:14b",
+          "scope": "Local model support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-helm",
+          "agentDir": "/Users/minicihan/.openclaw/agents/helm/agent"
+        },
+        {
+          "id": "dock",
+          "name": "Dock",
+          "model": "ollama/qwen2.5:14b",
+          "scope": "Local model support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-dock",
+          "agentDir": "/Users/minicihan/.openclaw/agents/dock/agent"
+        },
+        {
+          "id": "cavendish",
+          "name": "Cavendish",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "navigation",
+          "parentLeaderId": "main",
+          "workspace": "/Users/minicihan/.openclaw/workspace-cavendish",
+          "agentDir": "/Users/minicihan/.openclaw/agents/cavendish/agent"
+        }
+      ],
+      "memberNames": [
         "Zeus",
+        "Robin",
+        "Brook",
         "Vivi",
+        "Jinbe",
+        "Mikan",
+        "Zoro",
         "Carina",
+        "Fisher Tiger",
+        "Tashigi",
+        "Smoker",
+        "Hina",
+        "Otohime",
+        "Aladine",
+        "Aokiji",
+        "Dragon",
+        "Shakky",
+        "Apoo",
+        "Franky",
+        "Sanji",
+        "Chopper",
+        "Usopp",
         "Tangerine",
         "Helm",
         "Dock",
-        "Mikan"
+        "Cavendish"
       ],
-      "scope": "Orchestration, budget, crew coordination, local model monitoring",
-      "status": "degraded",
-      "activeTaskCount": 47,
-      "activePoints": 30,
-      "sessionKey": "agent:main:main"
+      "memberCount": 26
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "chief": "Franky",
-      "model": "claude-sonnet-4-6",
+      "model": "openai-codex/gpt-5.4",
+      "scope": "Code, builds, automation, infrastructure, generators",
+      "status": "degraded",
+      "sessionKey": "agent:franky:main",
+      "activeTaskCount": 61,
+      "activePoints": 58,
+      "parentDept": null,
+      "leader": {
+        "id": "franky",
+        "name": "Franky",
+        "model": "openai-codex/gpt-5.4",
+        "scope": "Code, builds, automation, infrastructure, generators",
+        "status": "active",
+        "parentDept": "engineering",
+        "sessionKey": "agent:franky:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-franky",
+        "agentDir": "/Users/minicihan/.openclaw/agents/franky/agent"
+      },
       "members": [
+        {
+          "id": "franky-ops",
+          "name": "Franky Ops",
+          "model": null,
+          "scope": "Specialized department support",
+          "status": "missing",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": null,
+          "agentDir": null
+        },
+        {
+          "id": "cola",
+          "name": "Cola",
+          "model": null,
+          "scope": "General builder execution",
+          "status": "missing",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": null,
+          "agentDir": null
+        },
+        {
+          "id": "iceburg",
+          "name": "Iceburg",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Senior builder / data pipeline builder",
+          "status": "active",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": "/Users/minicihan/.openclaw/workspace-iceburg",
+          "agentDir": "/Users/minicihan/.openclaw/agents/iceburg/agent"
+        },
+        {
+          "id": "zeff",
+          "name": "Zeff",
+          "model": null,
+          "scope": "Specialized execution support",
+          "status": "missing",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": null,
+          "agentDir": null
+        },
+        {
+          "id": "cavendish",
+          "name": "Cavendish",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized execution support",
+          "status": "active",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": "/Users/minicihan/.openclaw/workspace-cavendish",
+          "agentDir": "/Users/minicihan/.openclaw/agents/cavendish/agent"
+        },
+        {
+          "id": "pudding",
+          "name": "Pudding",
+          "model": null,
+          "scope": "Specialized execution support",
+          "status": "missing",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": null,
+          "agentDir": null
+        },
+        {
+          "id": "kaku",
+          "name": "Kaku",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Dashboard component builder",
+          "status": "active",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": "/Users/minicihan/.openclaw/workspace-kaku",
+          "agentDir": "/Users/minicihan/.openclaw/agents/kaku/agent"
+        },
+        {
+          "id": "pauly",
+          "name": "Pauly",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Docs cleanup and config builder",
+          "status": "active",
+          "parentDept": "engineering",
+          "parentLeaderId": "franky",
+          "workspace": "/Users/minicihan/.openclaw/workspace-pauly",
+          "agentDir": "/Users/minicihan/.openclaw/agents/pauly/agent"
+        }
+      ],
+      "memberNames": [
+        "Franky Ops",
         "Cola",
         "Iceburg",
         "Zeff",
         "Cavendish",
-        "Pudding"
+        "Pudding",
+        "Kaku",
+        "Pauly"
       ],
-      "scope": "Code, builds, deployments, infrastructure, generator automation",
-      "status": "degraded",
-      "activeTaskCount": 52,
-      "activePoints": 52,
-      "sessionKey": "agent:franky:main"
+      "memberCount": 8
     },
     {
       "id": "medicine",
       "name": "Medicine",
       "chief": "Chopper",
-      "model": "gpt-5.4",
-      "members": [
-        "Kureha",
-        "Doctorine",
-        "Hiriluk",
-        "Marco",
-        "Law"
-      ],
-      "scope": "QA, health monitoring, security audits, system verification",
+      "model": "openai-codex/gpt-5.4",
+      "scope": "QA, testing, verification, health monitoring",
       "status": "degraded",
-      "activeTaskCount": 34,
+      "sessionKey": "agent:chopper:main",
+      "activeTaskCount": 36,
       "activePoints": 20,
-      "sessionKey": "agent:chopper:main"
+      "parentDept": null,
+      "leader": {
+        "id": "chopper",
+        "name": "Chopper",
+        "model": "openai-codex/gpt-5.4",
+        "scope": "QA, testing, verification, health monitoring",
+        "status": "active",
+        "parentDept": "medicine",
+        "sessionKey": "agent:chopper:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-chopper",
+        "agentDir": "/Users/minicihan/.openclaw/agents/chopper/agent"
+      },
+      "members": [
+        {
+          "id": "chopper-ops",
+          "name": "Chopper Ops",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Operational QA support",
+          "status": "active",
+          "parentDept": "medicine",
+          "parentLeaderId": "chopper",
+          "workspace": "/Users/minicihan/.openclaw/workspace-chopper-ops",
+          "agentDir": "/Users/minicihan/.openclaw/agents/chopper-ops/agent"
+        },
+        {
+          "id": "sakura",
+          "name": "Sakura",
+          "model": null,
+          "scope": "Testing support",
+          "status": "missing",
+          "parentDept": "medicine",
+          "parentLeaderId": "chopper",
+          "workspace": null,
+          "agentDir": null
+        }
+      ],
+      "memberNames": [
+        "Chopper Ops",
+        "Sakura"
+      ],
+      "memberCount": 2
     },
     {
       "id": "archaeology",
       "name": "Archaeology",
       "chief": "Robin",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Olvia",
-        "Clover",
-        "Saul",
-        "Poneglyphs",
-        "Historia"
-      ],
+      "model": "xai/grok-4",
       "scope": "Research, documentation, knowledge management, intake processing",
       "status": "degraded",
+      "sessionKey": "agent:robin:main",
       "activeTaskCount": 27,
       "activePoints": 8,
-      "sessionKey": "agent:robin:main"
+      "parentDept": null,
+      "leader": {
+        "id": "robin",
+        "name": "Robin",
+        "model": "xai/grok-4",
+        "scope": "Research, documentation, knowledge management, intake processing",
+        "status": "active",
+        "parentDept": "archaeology",
+        "sessionKey": "agent:robin:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-robin",
+        "agentDir": "/Users/minicihan/.openclaw/agents/robin/agent"
+      },
+      "members": [
+        {
+          "id": "robin-ops",
+          "name": "Robin Ops",
+          "model": "xai/grok-3-fast",
+          "scope": "Research operations support",
+          "status": "active",
+          "parentDept": "archaeology",
+          "parentLeaderId": "robin",
+          "workspace": "/Users/minicihan/.openclaw/workspace-robin-ops",
+          "agentDir": "/Users/minicihan/.openclaw/agents/robin-ops/agent"
+        },
+        {
+          "id": "aokiji",
+          "name": "Aokiji",
+          "model": "xai/grok-3-fast",
+          "scope": "Investigation and research support",
+          "status": "active",
+          "parentDept": "archaeology",
+          "parentLeaderId": "robin",
+          "workspace": "/Users/minicihan/.openclaw/workspace-aokiji",
+          "agentDir": "/Users/minicihan/.openclaw/agents/aokiji/agent"
+        },
+        {
+          "id": "dragon",
+          "name": "Dragon",
+          "model": "xai/grok-3-fast",
+          "scope": "Strategic research support",
+          "status": "active",
+          "parentDept": "archaeology",
+          "parentLeaderId": "robin",
+          "workspace": "/Users/minicihan/.openclaw/workspace-dragon",
+          "agentDir": "/Users/minicihan/.openclaw/agents/dragon/agent"
+        }
+      ],
+      "memberNames": [
+        "Robin Ops",
+        "Aokiji",
+        "Dragon"
+      ],
+      "memberCount": 3
     },
     {
       "id": "music",
       "name": "Music",
       "chief": "Brook",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Soul",
-        "Laboon",
-        "Rumbar",
-        "Bink",
-        "Tone"
-      ],
+      "model": "google/gemini-2.5-pro-preview",
       "scope": "Creative direction, content generation, narrative design",
       "status": "degraded",
+      "sessionKey": "agent:brook:main",
       "activeTaskCount": 36,
       "activePoints": 27,
-      "sessionKey": "agent:brook:main"
+      "parentDept": null,
+      "leader": {
+        "id": "brook",
+        "name": "Brook",
+        "model": "google/gemini-2.5-pro-preview",
+        "scope": "Creative direction, content generation, narrative design",
+        "status": "active",
+        "parentDept": "music",
+        "sessionKey": "agent:brook:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-brook",
+        "agentDir": "/Users/minicihan/.openclaw/agents/brook/agent"
+      },
+      "members": [
+        {
+          "id": "brook-ops",
+          "name": "Brook Ops",
+          "model": "openrouter/google/gemini-2.5-flash",
+          "scope": "Creative ops support",
+          "status": "active",
+          "parentDept": "music",
+          "parentLeaderId": "brook",
+          "workspace": "/Users/minicihan/.openclaw/workspace-brook-ops",
+          "agentDir": "/Users/minicihan/.openclaw/agents/brook-ops/agent"
+        },
+        {
+          "id": "shakky",
+          "name": "Shakky",
+          "model": "openrouter/google/gemini-3-pro-image-preview",
+          "scope": "Creative support",
+          "status": "active",
+          "parentDept": "music",
+          "parentLeaderId": "brook",
+          "workspace": "/Users/minicihan/.openclaw/workspace-shakky",
+          "agentDir": "/Users/minicihan/.openclaw/agents/shakky/agent"
+        },
+        {
+          "id": "apoo",
+          "name": "Apoo",
+          "model": "openrouter/openai/gpt-audio",
+          "scope": "Audio support",
+          "status": "active",
+          "parentDept": "music",
+          "parentLeaderId": "brook",
+          "workspace": "/Users/minicihan/.openclaw/workspace-apoo",
+          "agentDir": "/Users/minicihan/.openclaw/agents/apoo/agent"
+        },
+        {
+          "id": "riff",
+          "name": "Riff",
+          "model": "openrouter/google/gemini-2.5-flash",
+          "scope": "Fast creative support",
+          "status": "active",
+          "parentDept": "music",
+          "parentLeaderId": "brook",
+          "workspace": "/Users/minicihan/.openclaw/workspace-riff",
+          "agentDir": "/Users/minicihan/.openclaw/agents/riff/agent"
+        }
+      ],
+      "memberNames": [
+        "Brook Ops",
+        "Shakky",
+        "Apoo",
+        "Riff"
+      ],
+      "memberCount": 4
     },
     {
       "id": "swordsmanship",
       "name": "Swordsmanship",
       "chief": "Zoro",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Wado",
-        "Sandai",
-        "Shusui",
-        "Enma",
-        "Asura"
-      ],
-      "scope": "Security, penetration testing, threat assessment, defense",
+      "model": "anthropic/claude-opus-4-6",
+      "scope": "Security, threat review, defense posture",
       "status": "degraded",
+      "sessionKey": "agent:zoro:main",
       "activeTaskCount": 29,
       "activePoints": 11,
-      "sessionKey": "agent:zoro:main"
+      "parentDept": null,
+      "leader": {
+        "id": "zoro",
+        "name": "Zoro",
+        "model": "anthropic/claude-opus-4-6",
+        "scope": "Security, threat review, defense posture",
+        "status": "active",
+        "parentDept": "swordsmanship",
+        "sessionKey": "agent:zoro:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-zoro",
+        "agentDir": "/Users/minicihan/.openclaw/agents/zoro/agent"
+      },
+      "members": [
+        {
+          "id": "tashigi",
+          "name": "Tashigi",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Security execution support",
+          "status": "active",
+          "parentDept": "swordsmanship",
+          "parentLeaderId": "zoro",
+          "workspace": "/Users/minicihan/.openclaw/workspace-tashigi",
+          "agentDir": "/Users/minicihan/.openclaw/agents/tashigi/agent"
+        },
+        {
+          "id": "smoker",
+          "name": "Smoker",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Security execution support",
+          "status": "active",
+          "parentDept": "swordsmanship",
+          "parentLeaderId": "zoro",
+          "workspace": "/Users/minicihan/.openclaw/workspace-smoker",
+          "agentDir": "/Users/minicihan/.openclaw/agents/smoker/agent"
+        },
+        {
+          "id": "hina",
+          "name": "Hina",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Security execution support",
+          "status": "active",
+          "parentDept": "swordsmanship",
+          "parentLeaderId": "zoro",
+          "workspace": "/Users/minicihan/.openclaw/workspace-hina",
+          "agentDir": "/Users/minicihan/.openclaw/agents/hina/agent"
+        }
+      ],
+      "memberNames": [
+        "Tashigi",
+        "Smoker",
+        "Hina"
+      ],
+      "memberCount": 3
     },
     {
       "id": "cooking",
       "name": "Cooking",
       "chief": "Sanji",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Zeff",
-        "Baratie",
-        "All-Blue",
-        "Vinsmoke",
-        "Germa"
-      ],
-      "scope": "Deployment, CI/CD, production operations, service management",
+      "model": "openai-codex/gpt-5.4",
+      "scope": "Deployment, CI/CD, production operations, automation",
       "status": "degraded",
+      "sessionKey": "agent:sanji:main",
       "activeTaskCount": 52,
       "activePoints": 32,
-      "sessionKey": "agent:sanji:main"
+      "parentDept": null,
+      "leader": {
+        "id": "sanji",
+        "name": "Sanji",
+        "model": "openai-codex/gpt-5.4",
+        "scope": "Deployment, CI/CD, production operations, automation",
+        "status": "active",
+        "parentDept": "cooking",
+        "sessionKey": "agent:sanji:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-sanji",
+        "agentDir": "/Users/minicihan/.openclaw/agents/sanji/agent"
+      },
+      "members": [
+        {
+          "id": "cavendish",
+          "name": "Cavendish",
+          "model": "openai-codex/gpt-5.4",
+          "scope": "Specialized support",
+          "status": "active",
+          "parentDept": "cooking",
+          "parentLeaderId": "sanji",
+          "workspace": "/Users/minicihan/.openclaw/workspace-cavendish",
+          "agentDir": "/Users/minicihan/.openclaw/agents/cavendish/agent"
+        },
+        {
+          "id": "zeff",
+          "name": "Zeff",
+          "model": null,
+          "scope": "Operations support",
+          "status": "missing",
+          "parentDept": "cooking",
+          "parentLeaderId": "sanji",
+          "workspace": null,
+          "agentDir": null
+        }
+      ],
+      "memberNames": [
+        "Cavendish",
+        "Zeff"
+      ],
+      "memberCount": 2
     },
     {
       "id": "helmsman",
       "name": "Helmsman",
       "chief": "Jinbe",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Fishman",
-        "Whale",
-        "Current",
-        "Tide",
-        "Deep"
-      ],
+      "model": "openai-codex/gpt-5.4",
       "scope": "Sprint management, task routing, workflow optimization",
       "status": "degraded",
+      "sessionKey": "agent:jinbe:main",
       "activeTaskCount": 15,
       "activePoints": 9,
-      "sessionKey": "agent:jinbe:main"
+      "parentDept": null,
+      "leader": {
+        "id": "jinbe",
+        "name": "Jinbe",
+        "model": "openai-codex/gpt-5.4",
+        "scope": "Sprint management, task routing, workflow optimization",
+        "status": "active",
+        "parentDept": "helmsman",
+        "sessionKey": "agent:jinbe:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-jinbe",
+        "agentDir": "/Users/minicihan/.openclaw/agents/jinbe/agent"
+      },
+      "members": [
+        {
+          "id": "fisher-tiger",
+          "name": "Fisher-Tiger",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Execution support",
+          "status": "active",
+          "parentDept": "helmsman",
+          "parentLeaderId": "jinbe",
+          "workspace": "/Users/minicihan/.openclaw/workspace-fisher-tiger",
+          "agentDir": "/Users/minicihan/.openclaw/agents/fisher-tiger/agent"
+        },
+        {
+          "id": "otohime",
+          "name": "Otohime",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Execution support",
+          "status": "active",
+          "parentDept": "helmsman",
+          "parentLeaderId": "jinbe",
+          "workspace": "/Users/minicihan/.openclaw/workspace-otohime",
+          "agentDir": "/Users/minicihan/.openclaw/agents/otohime/agent"
+        },
+        {
+          "id": "aladine",
+          "name": "Aladine",
+          "model": "anthropic/claude-haiku-3-5-20241022",
+          "scope": "Execution support",
+          "status": "active",
+          "parentDept": "helmsman",
+          "parentLeaderId": "jinbe",
+          "workspace": "/Users/minicihan/.openclaw/workspace-aladine",
+          "agentDir": "/Users/minicihan/.openclaw/agents/aladine/agent"
+        }
+      ],
+      "memberNames": [
+        "Fisher-Tiger",
+        "Otohime",
+        "Aladine"
+      ],
+      "memberCount": 3
     },
     {
       "id": "marksmanship",
       "name": "Marksmanship",
       "chief": "Usopp",
-      "model": "claude-sonnet-4-6",
-      "members": [
-        "Slingshot",
-        "Kabuto",
-        "Pop-Green",
-        "Sogeking",
-        "Brave"
-      ],
-      "scope": "Specification writing, requirement gathering, story creation",
-      "status": "active",
-      "activeTaskCount": 7,
+      "model": "openai-codex/gpt-5.4",
+      "scope": "Specification writing, requirements, story creation",
+      "status": "degraded",
+      "sessionKey": "agent:usopp:main",
+      "activeTaskCount": 26,
       "activePoints": 1,
-      "sessionKey": "agent:usopp:main"
+      "parentDept": null,
+      "leader": {
+        "id": "usopp",
+        "name": "Usopp",
+        "model": "openai-codex/gpt-5.4",
+        "scope": "Specification writing, requirements, story creation",
+        "status": "active",
+        "parentDept": "marksmanship",
+        "sessionKey": "agent:usopp:main",
+        "workspace": "/Users/minicihan/.openclaw/workspace-usopp",
+        "agentDir": "/Users/minicihan/.openclaw/agents/usopp/agent"
+      },
+      "members": [
+        {
+          "id": "kaya",
+          "name": "Kaya",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Story template writer / requirements drafter",
+          "status": "active",
+          "parentDept": "marksmanship",
+          "parentLeaderId": "usopp",
+          "workspace": "/Users/minicihan/.openclaw/workspace-kaya",
+          "agentDir": "/Users/minicihan/.openclaw/agents/kaya/agent"
+        },
+        {
+          "id": "heracles",
+          "name": "Heracles",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "marksmanship",
+          "parentLeaderId": "usopp",
+          "workspace": "/Users/minicihan/.openclaw/workspace-heracles",
+          "agentDir": "/Users/minicihan/.openclaw/agents/heracles/agent"
+        },
+        {
+          "id": "cricket",
+          "name": "Cricket",
+          "model": "openai-codex/gpt-5.2",
+          "scope": "Specialized department support",
+          "status": "active",
+          "parentDept": "marksmanship",
+          "parentLeaderId": "usopp",
+          "workspace": "/Users/minicihan/.openclaw/workspace-cricket",
+          "agentDir": "/Users/minicihan/.openclaw/agents/cricket/agent"
+        }
+      ],
+      "memberNames": [
+        "Kaya",
+        "Heracles",
+        "Cricket"
+      ],
+      "memberCount": 3
     }
   ],
-  "totalAgents": 47,
+  "totalAgents": 63,
   "totalDepartments": 9,
-  "architecture": "Straw Hat Pirates crew model with 9 specialized departments. Each department led by a chief with sub-agents for specialized tasks. Current workload: 299 active tasks (190 points).",
-  "updatedAt": "2026-03-28T22:12:17.822Z",
+  "architecture": "Live Straw Hat org sync from OpenClaw gateway config. 9 departments, 63 configured agents, 329 active tasks (196 points).",
+  "updatedAt": "2026-03-29T12:50:19.990Z",
   "meta": {
-    "generatedAt": "2026-03-28T22:12:17.822Z",
-    "source": "org-registry+live-workload",
+    "generatedAt": "2026-03-29T12:50:19.990Z",
+    "source": "openclaw.json+live-workload",
     "generator": "team-org-generator.js",
-    "generatorVersion": "1.0.0"
+    "generatorVersion": "2.0.0",
+    "configPath": "/Users/minicihan/.openclaw/openclaw.json",
+    "taskApi": "http://127.0.0.1:18800/api/tasks"
   }
 }

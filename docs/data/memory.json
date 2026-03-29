@@ -1,9 +1,19 @@
 {
   "daily": [
     {
+      "date": "2026-03-29",
+      "title": "Captain Vision Session + Navigator Lesson, Spri...",
+      "content": "**00:32 EDT**: Captain Vision Session + Navigator Lesson\n### What Captain said (4 threads extracted):\n**Thread 1 → MC Dashboard (PRODUCT):** Live agent tree in Mission Control. When subagents get hired, they should visually appear under their dept leader. Dynamic, not static. Presentable to any user.\n\n**Unknown time**: Sprint Framework Launch (04:50 EDT)\n- Created SPRINT-FRAMEWORK.md with full scrum process\n- Sprint 1-10 files created (1 active, 2 planning, 3-10 placeholder)\n\n**Unknown time**: Scrum Ceremonies Framework (05:30 EDT)\nCaptain's order: ALL operations are manual activation. No auto-resume.\nSprint lifecycle:\n\n**07:42 EDT**: Browser Port Conflict Fixed + Hiring Registry Updated\n**Chopper escalation (LOOP_DETECTED, consecutiveSameTask=7 on MC-004):**\n- Root cause: Browser CDP port defaulted to 18800, same as MC API server. Chrome couldn't start.\n\n**08:27 EDT**: Franky Builder-Hire Interview Stall Fixed\n**Usopp escalation (LOOP_DETECTED x4 on EPIC-012-STORY-001):**\n- Root cause: Franky using `sessions_send` to reach iceburg/kaku/pauly, but subagents don't have persistent main sessions\n\n**08:47 EDT**: Heartbeat (Sprint 3 Kickoff)\n- Sprint 3 is live per Captain's order. MC ships today.\n- Sanji was stuck in Sprint 2 logic (waiting for QA before deploy). Corrected — deploy first, QA after.",
+      "tags": [
+        "heartbeat",
+        "tasks"
+      ],
+      "sourcePath": "/Users/minicihan/.openclaw/workspace/memory/2026-03-29.md"
+    },
+    {
       "date": "2026-03-28",
       "title": "EPIC-011 Paperclip Adoption, Usopp Operational ...",
-      "content": "**12:02 EDT**: EPIC-011 Paperclip Adoption\n- Captain ordered epic creation for Paperclip Adoption based on Robin's research\n- Created EPIC-011 on MC board, dispatched to Usopp for story breakdown\n\n**12:18 EDT**: Usopp Operational Infrastructure\n- Set up Usopp's HEARTBEAT.md, active-goals.md, session end protocol\n- Enabled heartbeat at 15m (later tuned to 30m)\n\n**13:30 EDT**: Usopp E2E Audit\n- Verified Usopp completed all 3 goals across multiple sessions\n- GAP: memory not written (flush in AGENTS.md not HEARTBEAT.md)\n\n**13:40 EDT**: Heartbeat + Cron Guides Created\n- shared-memory/docs/HEARTBEAT-GUIDE.md — JSON state tracking, 6-phase flow, self-healing, anti-loop\n- shared-memory/docs/CRON-GUIDE.md — when to use cron vs heartbeat, patterns, hygiene\n\n**15:05 EDT**: Full Crew Heartbeat Rollout (Captain's Order)\n- Nami: 1h (navigator), Franky: 15m (builder), Chopper: 15m (QA), Sanji: 15m (automation)\n- Usopp: 30m (BI), Jinbe: 30m (scrum master), Zoro: 4h (security)\n\n**15:44 EDT**: Documentation System Built\n- shared-memory/docs/CREW-DOCUMENT-MAP.md — master file map, mission statements, sync points\n- Nami reads ONLY 4 files: Jinbe sprint-status.json, Jinbe daily, Usopp daily, blockers.md\n\n**15:50 EDT**: Memory Config Audit + Documentation Guide\n- Audited memory config against community best practices\n- Already had: QMD, session indexing, sessionMemory, custom flush prompt\n\n**17:09 EDT**: Moving to Crew Management\n- Captain ordered: observe Jinbe/Usopp outputs, think about navigation improvements\n- By tonight/tomorrow: assess if crew ops working, ready for subagent hires\n\n**Unknown time**: Key Decisions\n- Heartbeat intervals: 1h/30m/15m/4h tiers based on role\n- Robin/Brook reserved for Computer Use (no heartbeats)",
+      "content": "**12:02 EDT**: EPIC-011 Paperclip Adoption\n- Captain ordered epic creation for Paperclip Adoption based on Robin's research\n- Created EPIC-011 on MC board, dispatched to Usopp for story breakdown\n\n**12:18 EDT**: Usopp Operational Infrastructure\n- Set up Usopp's HEARTBEAT.md, active-goals.md, session end protocol\n- Enabled heartbeat at 15m (later tuned to 30m)\n\n**13:30 EDT**: Usopp E2E Audit\n- Verified Usopp completed all 3 goals across multiple sessions\n- GAP: memory not written (flush in AGENTS.md not HEARTBEAT.md)\n\n**13:40 EDT**: Heartbeat + Cron Guides Created\n- shared-memory/docs/HEARTBEAT-GUIDE.md — JSON state tracking, 6-phase flow, self-healing, anti-loop\n- shared-memory/docs/CRON-GUIDE.md — when to use cron vs heartbeat, patterns, hygiene\n\n**15:05 EDT**: Full Crew Heartbeat Rollout (Captain's Order)\n- Nami: 1h (navigator), Franky: 15m (builder), Chopper: 15m (QA), Sanji: 15m (automation)\n- Usopp: 30m (BI), Jinbe: 30m (scrum master), Zoro: 4h (security)\n\n**15:44 EDT**: Documentation System Built\n- shared-memory/docs/CREW-DOCUMENT-MAP.md — master file map, mission statements, sync points\n- Nami reads ONLY 4 files: Jinbe sprint-status.json, Jinbe daily, Usopp daily, blockers.md\n\n**15:50 EDT**: Memory Config Audit + Documentation Guide\n- Audited memory config against community best practices\n- Already had: QMD, session indexing, sessionMemory, custom flush prompt\n\n**17:09 EDT**: Moving to Crew Management\n- Captain ordered: observe Jinbe/Usopp outputs, think about navigation improvements\n- By tonight/tomorrow: assess if crew ops working, ready for subagent hires\n\n**Unknown time**: Key Decisions\n- Heartbeat intervals: 1h/30m/15m/4h tiers based on role\n- Robin/Brook reserved for Computer Use (no heartbeats)\n\n**23:47 EDT**: Captain Working Session (Mission Control topic 1681)\n### Decisions Made\n- **Model-ops.json fixed** — corrected all provider assignments: Anthropic (Nami/Zeus/Vivi/Zoro/Jinbe), OpenAI (Franky/Sanji/Chopper/Usopp), xAI (Robin), Google (Brook). Token usage still static zeros — needs Franky to wire live gateway data.\n\n**Unknown time**: Captain's Vision — CRITICAL (stored at docs/captain/VISION.md)\nThe One Piece = an open-source game-like AI crew system that gives everyone the power to become Luffy.\nCore philosophy: Mind into Matter. Luffy's Devil Fruit = AI agent powers. Hextech (Arcane) = AI. The box is open — give the power to the people before corporations take it.",
       "tags": [
         "heartbeat",
         "engineering",
@@ -119,9 +129,9 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-28T22:12:17.734Z",
+    "generatedAt": "2026-03-29T12:50:19.888Z",
     "source": "memory-daily",
-    "dayCount": 11,
+    "dayCount": 12,
     "generator": "memory-generator.js",
     "generatorVersion": "1.0.0"
   }
