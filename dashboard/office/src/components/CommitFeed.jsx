@@ -3,8 +3,12 @@ import useGitHubCommits from '../hooks/useGitHubCommits'
 import useIsMobile from '../hooks/useIsMobile'
 
 function timeAgo(dateStr) {
-  const diff = Date.now() - new Date(dateStr).getTime()
-  const s = Math.floor(diff / 1000)
+  const ts = new Date(dateStr).getTime()
+  if (!Number.isFinite(ts)) return '—'
+
+  const diff = Date.now() - ts
+  // Guard against future timestamps / clock skew.
+  const s = Math.max(0, Math.floor(diff / 1000))
   if (s < 60) return `${s}s ago`
   const m = Math.floor(s / 60)
   if (m < 60) return `${m}m ago`
