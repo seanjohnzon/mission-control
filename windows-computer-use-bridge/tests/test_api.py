@@ -63,6 +63,50 @@ def test_task_lifecycle_scaffold_memory_store():
     assert 'Phase 2 worker scaffold' in result_response.get_json()['result']['message']
 
 
+def test_list_tasks_returns_summary_metrics():
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
+    client = app.test_client()
+
+    task_ids = []
+    for description in ('Take a screenshot', 'Open calculator'):
+        create_response = client.post('/task', json={'description': description})
+        assert create_response.status_code == 202
+        task_ids.append(create_response.get_json()['task_id'])
+
+    for task_id in task_ids:
+        wait_for_status(client, task_id, 'completed')
+
+    response = client.get('/tasks')
+    assert response.status_code == 200
+
+    payload = response.get_json()
+    assert len(payload['tasks']) == 2
+    assert {task['task_id'] for task in payload['tasks']} == set(task_ids)
+    assert payload['metrics']['total'] == 2
+    assert payload['metrics']['counts']['completed'] == 2
+    assert payload['metrics']['worker_alive'] is True
+
+
+def test_list_tasks_filters_by_status():
+    app = create_app(store=InMemoryTaskStore(), runner=FailingRunner())
+    client = app.test_client()
+
+    create_response = client.post('/task', json={'description': 'Explode the runner'})
+    assert create_response.status_code == 202
+    task_id = create_response.get_json()['task_id']
+
+    wait_for_status(client, task_id, 'failed')
+
+    response = client.get('/tasks?status=failed')
+    assert response.status_code == 200
+
+    payload = response.get_json()
+    assert len(payload['tasks']) == 1
+    assert payload['tasks'][0]['task_id'] == task_id
+    assert payload['tasks'][0]['status'] == 'failed'
+    assert payload['metrics']['counts']['failed'] == 1
+
+
 def test_task_failure_surfaces_error_state():
     app = create_app(store=InMemoryTaskStore(), runner=FailingRunner())
     client = app.test_client()

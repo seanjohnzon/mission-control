@@ -131,6 +131,18 @@ class BackgroundTaskWorker:
         self._stop.set()
         self._thread.join(timeout=timeout)
 
+    def metrics(self) -> dict:
+        tasks = self.store.list_tasks()
+        counts = {status.value: 0 for status in TaskStatus}
+        for task in tasks:
+            counts[task.status.value] = counts.get(task.status.value, 0) + 1
+        return {
+            "queued": self._queue.qsize(),
+            "counts": counts,
+            "total": len(tasks),
+            "worker_alive": self._thread.is_alive(),
+        }
+
     def _loop(self) -> None:
         while not self._stop.is_set():
             try:

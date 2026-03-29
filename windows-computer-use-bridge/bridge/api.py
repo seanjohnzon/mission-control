@@ -64,6 +64,28 @@ def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] =
         )
         return response.model_dump(mode="json"), 200
 
+    @app.get("/tasks")
+    def list_tasks():
+        status_filter = request.args.get("status")
+        tasks = task_store.list_tasks()
+        if status_filter:
+            tasks = [task for task in tasks if task.status.value == status_filter]
+        payload = [
+            {
+                "task_id": task.task_id,
+                "description": task.description,
+                "status": task.status.value,
+                "priority": task.priority,
+                "created_at": task.created_at.isoformat(),
+                "updated_at": task.updated_at.isoformat(),
+                "started_at": task.started_at.isoformat() if task.started_at else None,
+                "completed_at": task.completed_at.isoformat() if task.completed_at else None,
+                "error": task.error,
+            }
+            for task in tasks
+        ]
+        return jsonify({"tasks": payload, "metrics": worker.metrics()}), 200
+
     @app.get("/result/<task_id>")
     def get_result(task_id: str):
         task = task_store.get_task(task_id)
