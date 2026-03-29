@@ -1,10 +1,14 @@
+import os
 import time
 from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 from bridge.api import create_app
 from bridge.models import TaskCreateRequest
 from bridge.storage import InMemoryTaskStore, SqliteTaskStore
-from bridge.tasks import BackgroundTaskWorker
+from bridge.tasks import AnthropicTaskRunner, BackgroundTaskWorker, DemoTaskRunner, build_runner
 
 
 class FailingRunner:
@@ -32,7 +36,7 @@ def wait_for_status(client, task_id: str, expected: str, timeout: float = 1.5):
 
 
 def test_health_endpoint():
-    app = create_app(store=InMemoryTaskStore())
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
     client = app.test_client()
 
     response = client.get('/health')
@@ -42,7 +46,7 @@ def test_health_endpoint():
 
 
 def test_task_lifecycle_scaffold_memory_store():
-    app = create_app(store=InMemoryTaskStore())
+    app = create_app(store=InMemoryTaskStore(), runner=DemoTaskRunner())
     client = app.test_client()
 
     create_response = client.post('/task', json={'description': 'Take a screenshot'})
@@ -112,7 +116,7 @@ def test_task_timeout_sets_timeout_state():
 def test_task_lifecycle_persists_in_sqlite(tmp_path: Path):
     db_path = tmp_path / 'bridge.db'
 
-    app = create_app(store=SqliteTaskStore(db_path))
+    app = create_app(store=SqliteTaskStore(db_path), runner=DemoTaskRunner())
     client = app.test_client()
 
     create_response = client.post('/task', json={'description': 'Open calculator', 'metadata': {'source': 'pytest'}})
@@ -133,3 +137,79 @@ def test_task_lifecycle_persists_in_sqlite(tmp_path: Path):
     assert persisted_task.result is not None
     assert persisted_task.result['echo']['description'] == 'Open calculator'
     assert 'Phase 2 worker scaffold' in persisted_task.result['message']
+
+
+# ---------------------------------------------------------------------------
+# Runner selection tests (no network calls)
+# ---------------------------------------------------------------------------
+
+def test_build_runner_returns_demo_without_api_key():
+    """build_runner returns DemoTaskRunner when no ANTHROPIC_API_KEY is configured."""
+    clean_env = {k: v for k, v in os.environ.items() if k not in ('ANTHROPIC_API_KEY', 'BRIDGE_RUNNER')}
+    with patch.dict(os.environ, clean_env, clear=True):
+        runner = build_runner()
+    assert isinstance(runner, DemoTaskRunner)
+
+
+def test_build_runner_forced_demo_overrides_key():
+    """BRIDGE_RUNNER=demo forces DemoTaskRunner even when ANTHROPIC_API_KEY is set."""
+    with patch.dict(os.environ, {'BRIDGE_RUNNER': 'demo', 'ANTHROPIC_API_KEY': 'sk-ant-fake'}):
+        runner = build_runner()
+    assert isinstance(runner, DemoTaskRunner)
+
+
+def test_build_runner_returns_anthropic_when_key_set():
+    """build_runner returns AnthropicTaskRunner when ANTHROPIC_API_KEY is present (SDK installed)."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+    clean_env = {k: v for k, v in os.environ.items() if k != 'BRIDGE_RUNNER'}
+    clean_env['ANTHROPIC_API_KEY'] = 'sk-ant-fake-key-for-runner-selection-test'
+    with patch.dict(os.environ, clean_env, clear=True):
+        runner = build_runner()
+    assert isinstance(runner, AnthropicTaskRunner)
+
+
+def test_build_runner_falls_back_to_demo_on_import_error():
+    """build_runner falls back to DemoTaskRunner when the anthropic SDK is not installed."""
+    with patch.dict(os.environ, {'ANTHROPIC_API_KEY': 'sk-ant-fake'}):
+        with patch('bridge.tasks.AnthropicTaskRunner', side_effect=ImportError("No module named 'anthropic'")):
+            runner = build_runner()
+    assert isinstance(runner, DemoTaskRunner)
+
+
+def test_anthropic_runner_run_calls_sdk_without_network():
+    """AnthropicTaskRunner.run calls the SDK client and returns a structured result (mocked)."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    mock_content = MagicMock()
+    mock_content.text = '1. Open Start menu\n2. Type Calculator\n3. Press Enter'
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'end_turn'
+    mock_response.content = [mock_content]
+    mock_response.usage.input_tokens = 10
+    mock_response.usage.output_tokens = 20
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Open Calculator'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    mock_client.messages.create.assert_called_once()
+    call_kwargs = mock_client.messages.create.call_args
+    assert call_kwargs.kwargs['model'] == 'claude-opus-4-6'
+    assert 'Open Calculator' in call_kwargs.kwargs['messages'][0]['content']
+
+    assert result['message'] == 'Anthropic runner completed task.'
+    assert result['model'] == 'claude-opus-4-6'
+    assert result['stop_reason'] == 'end_turn'
+    assert 'Open Start menu' in result['plan']
+    assert result['artifacts'] == []
+    assert result['screenshots'] == []
+    assert result['usage']['input_tokens'] == 10
+    assert result['usage']['output_tokens'] == 20

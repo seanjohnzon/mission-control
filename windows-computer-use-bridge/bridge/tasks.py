@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -28,6 +29,85 @@ class DemoTaskRunner:
                 "metadata": task.metadata,
             },
         }
+
+
+class AnthropicTaskRunner:
+    """Production runner that calls the Anthropic API to plan computer-use tasks.
+
+    Requires the ``anthropic`` Python SDK (``pip install anthropic``) and
+    ``ANTHROPIC_API_KEY`` in the environment (or pass ``api_key`` explicitly).
+
+    This build slice issues a single Messages API call asking Claude to plan
+    the requested task.  A future slice will wire the full computer-use loop
+    (tool_use, screenshot capture, action execution).
+    """
+
+    MODEL = "claude-opus-4-6"
+
+    def __init__(self, api_key: str | None = None) -> None:
+        try:
+            import anthropic as _anthropic  # deferred – not a hard dependency
+        except ImportError as exc:
+            raise ImportError(
+                "The 'anthropic' package is required for AnthropicTaskRunner. "
+                "Install it with: pip install anthropic"
+            ) from exc
+        self._client = _anthropic.Anthropic(api_key=api_key)
+
+    def run(self, task: TaskRecord) -> dict:
+        message = self._client.messages.create(
+            model=self.MODEL,
+            max_tokens=1024,
+            messages=[
+                {
+                    "role": "user",
+                    "content": (
+                        "You are a Windows computer-use assistant. "
+                        "Plan the exact steps required to complete this task "
+                        f"on a Windows desktop: {task.description}"
+                    ),
+                }
+            ],
+        )
+        content_block = message.content[0]
+        plan_text = content_block.text if hasattr(content_block, "text") else str(content_block)
+        return {
+            "message": "Anthropic runner completed task.",
+            "model": message.model,
+            "stop_reason": message.stop_reason,
+            "plan": plan_text,
+            "artifacts": [],
+            "screenshots": [],
+            "usage": {
+                "input_tokens": message.usage.input_tokens,
+                "output_tokens": message.usage.output_tokens,
+            },
+        }
+
+
+def build_runner(api_key: str | None = None) -> TaskRunner:
+    """Select a TaskRunner based on environment configuration.
+
+    Selection priority:
+    1. ``BRIDGE_RUNNER=demo``        → DemoTaskRunner (forced, regardless of key)
+    2. ``BRIDGE_RUNNER=anthropic``   → AnthropicTaskRunner (errors if SDK missing)
+    3. ``ANTHROPIC_API_KEY`` set     → AnthropicTaskRunner (falls back if SDK missing)
+    4. default                       → DemoTaskRunner
+    """
+    runner_env = os.getenv("BRIDGE_RUNNER", "").lower()
+
+    if runner_env == "demo":
+        return DemoTaskRunner()
+
+    resolved_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+    if resolved_key or runner_env == "anthropic":
+        try:
+            return AnthropicTaskRunner(api_key=resolved_key)
+        except ImportError:
+            # anthropic SDK not installed – fall back to demo runner
+            pass
+
+    return DemoTaskRunner()
 
 
 @dataclass

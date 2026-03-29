@@ -11,7 +11,7 @@ from werkzeug.exceptions import HTTPException
 from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse
 from .security import require_api_key
 from .storage import InMemoryTaskStore, SqliteTaskStore, TaskStore
-from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner
+from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner, build_runner
 
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "bridge.db"
@@ -28,7 +28,8 @@ def build_task_store() -> TaskStore:
 def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] = None) -> Flask:
     app = Flask(__name__)
     task_store = store or build_task_store()
-    worker = BackgroundTaskWorker(task_store, runner=runner or DemoTaskRunner())
+    effective_runner = runner if runner is not None else build_runner()
+    worker = BackgroundTaskWorker(task_store, runner=effective_runner)
     app.extensions["task_worker"] = worker
 
     @app.before_request
