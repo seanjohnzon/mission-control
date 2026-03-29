@@ -571,3 +571,55 @@ def test_anthropic_runner_preserves_structured_tool_result_payloads():
     assert '"window_title": "Calculator"' in tool_results
     assert '"cursor": {' in tool_results
     assert '"controls": [' in tool_results
+
+
+def test_anthropic_runner_extracts_single_dict_image_tool_results():
+    """AnthropicTaskRunner handles tool_result payloads whose content is a single image dict."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    screenshot_b64 = base64.b64encode(b'fake-webp-bytes').decode()
+    text_block = {'type': 'text', 'text': 'Inspect the desktop wallpaper.'}
+    tool_result_block = {
+        'type': 'tool_result',
+        'tool_use_id': 'toolu_single_image',
+        'content': {
+            'type': 'image',
+            'source': {
+                'type': 'base64',
+                'media_type': 'image/webp',
+                'data': screenshot_b64,
+            },
+        },
+        'is_error': False,
+    }
+
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'tool_use'
+    mock_response.content = [text_block, tool_result_block]
+    mock_response.usage.input_tokens = 21
+    mock_response.usage.output_tokens = 34
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Inspect wallpaper'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
+    assert 'tool-results.json' in artifacts
+    assert 'toolu_single_image' in artifacts['tool-results.json']['content']
+    assert '"image_count": 1' in artifacts['tool-results.json']['content']
+    assert result['screenshots'] == [
+        {
+            'filename': 'screenshot-2-1.webp',
+            'base64_content': screenshot_b64,
+            'kind': 'computer-use-screenshot',
+            'content_type': 'image/webp',
+        }
+    ]

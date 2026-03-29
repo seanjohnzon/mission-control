@@ -236,6 +236,14 @@ class AnthropicTaskRunner:
         if isinstance(content, (str, bytes)):
             return []
 
+        if isinstance(content, dict):
+            screenshot = self._screenshot_from_image_block(
+                content,
+                index=index,
+                child_index=1,
+            )
+            return [screenshot] if screenshot else []
+
         screenshots: list[dict] = []
         for child_index, child in enumerate(content, start=1):
             screenshot = self._screenshot_from_image_block(
@@ -254,11 +262,14 @@ class AnthropicTaskRunner:
         image_count = 0
 
         if isinstance(content, (str, bytes, dict)):
-            rendered = self._render_content_value(content)
-            if rendered:
-                text_entries.append(rendered)
-            if isinstance(content, dict):
-                structured_entries.append(content)
+            if isinstance(content, dict) and (self._block_attr(content, "type") or "") == "image":
+                image_count += 1
+            else:
+                rendered = self._render_content_value(content)
+                if rendered:
+                    text_entries.append(rendered)
+                if isinstance(content, dict):
+                    structured_entries.append(content)
         elif isinstance(content, list):
             for child in content:
                 child_type = self._block_attr(child, "type") or "text"
