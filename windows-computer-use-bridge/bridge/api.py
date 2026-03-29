@@ -11,6 +11,7 @@ from werkzeug.exceptions import HTTPException
 from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse
 from .security import require_api_key
 from .storage import InMemoryTaskStore, SqliteTaskStore, TaskStore
+from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner
 
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "bridge.db"
@@ -24,9 +25,11 @@ def build_task_store() -> TaskStore:
     return SqliteTaskStore(db_path)
 
 
-def create_app(store: Optional[TaskStore] = None) -> Flask:
+def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] = None) -> Flask:
     app = Flask(__name__)
     task_store = store or build_task_store()
+    worker = BackgroundTaskWorker(task_store, runner=runner or DemoTaskRunner())
+    app.extensions["task_worker"] = worker
 
     @app.before_request
     def _auth_guard() -> None:
@@ -40,7 +43,7 @@ def create_app(store: Optional[TaskStore] = None) -> Flask:
     def create_task() -> tuple[dict, int]:
         payload = TaskCreateRequest.model_validate_json(json.dumps(request.get_json(force=True, silent=False)))
         task = task_store.create_task(payload)
-        task_store.seed_demo_result(task.task_id)
+        worker.enqueue(task.task_id)
         response = TaskCreateResponse(task_id=task.task_id, status=task.status)
         return response.model_dump(mode="json"), 202
 
