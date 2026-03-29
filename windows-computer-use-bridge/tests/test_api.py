@@ -433,6 +433,9 @@ def test_anthropic_runner_extracts_tool_actions_and_screenshots():
     assert set(artifacts) == {'plan.md', 'response-summary.json', 'actions.json', 'tool-results.json'}
     assert 'left_click' in artifacts['actions.json']['content']
     assert 'computer' in artifacts['actions.json']['content']
+    assert 'left_click at (42, 99)' in artifacts['actions.json']['content']
+    assert '"action": "left_click"' in artifacts['actions.json']['content']
+    assert '"summary": "left_click at (42, 99)"' in artifacts['actions.json']['content']
     assert 'toolu_123' in artifacts['tool-results.json']['content']
     assert result['screenshots'][0]['filename'] == 'screenshot-3-2.png'
     assert result['screenshots'][0]['kind'] == 'computer-use-screenshot'

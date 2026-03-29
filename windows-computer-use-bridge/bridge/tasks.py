@@ -100,12 +100,15 @@ class AnthropicTaskRunner:
                 continue
 
             if block_type == "tool_use":
+                action_input = self._block_attr(block, "input") or {}
                 actions.append(
                     {
                         "index": index,
                         "id": self._block_attr(block, "id"),
                         "name": self._block_attr(block, "name"),
-                        "input": self._block_attr(block, "input") or {},
+                        "action": self._extract_action_name(action_input),
+                        "summary": self._summarize_action(action_input),
+                        "input": action_input,
                         "kind": "anthropic-tool-use",
                     }
                 )
@@ -184,6 +187,42 @@ class AnthropicTaskRunner:
         if isinstance(block, dict):
             return block.get(name)
         return getattr(block, name, None)
+
+    @staticmethod
+    def _extract_action_name(action_input: object) -> str | None:
+        if not isinstance(action_input, dict):
+            return None
+        action = action_input.get("action")
+        return str(action) if action is not None else None
+
+    @classmethod
+    def _summarize_action(cls, action_input: object) -> str | None:
+        if not isinstance(action_input, dict) or not action_input:
+            return None
+
+        action = cls._extract_action_name(action_input)
+        if not action:
+            return cls._render_content_value(action_input)
+
+        details: list[str] = []
+        coordinate = action_input.get("coordinate")
+        if isinstance(coordinate, (list, tuple)) and len(coordinate) == 2:
+            details.append(f"at ({coordinate[0]}, {coordinate[1]})")
+
+        text = action_input.get("text")
+        if text is not None:
+            details.append(f"text={text!r}")
+
+        keys = action_input.get("keys")
+        if isinstance(keys, list) and keys:
+            details.append("keys=" + "+".join(str(key) for key in keys))
+
+        for field in ("button", "x", "y", "scroll_x", "scroll_y", "duration_ms"):
+            value = action_input.get(field)
+            if value is not None:
+                details.append(f"{field}={value}")
+
+        return " ".join([action, *details]).strip()
 
     def _extract_screenshots(self, block: object, *, index: int) -> list[dict]:
         screenshot = self._screenshot_from_image_block(block, index=index)
