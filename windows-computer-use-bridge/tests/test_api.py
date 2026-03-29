@@ -342,6 +342,7 @@ def test_anthropic_runner_run_calls_sdk_without_network():
     pytest.importorskip('anthropic', reason='anthropic SDK not installed')
 
     mock_content = MagicMock()
+    mock_content.type = 'text'
     mock_content.text = '1. Open Start menu\n2. Type Calculator\n3. Press Enter'
     mock_response = MagicMock()
     mock_response.model = 'claude-opus-4-6'
@@ -381,3 +382,57 @@ def test_anthropic_runner_run_calls_sdk_without_network():
     assert artifacts['response-summary.json']['kind'] == 'anthropic-response-summary'
     assert 'Open Calculator' in artifacts['response-summary.json']['content']
     assert 'claude-opus-4-6' in artifacts['response-summary.json']['content']
+
+
+def test_anthropic_runner_extracts_tool_actions_and_screenshots():
+    """AnthropicTaskRunner persists tool-use actions and image blocks as artifacts."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    screenshot_b64 = base64.b64encode(b'fake-png-bytes').decode()
+    text_block = MagicMock()
+    text_block.type = 'text'
+    text_block.text = '1. Open Start menu\n2. Launch Calculator'
+
+    tool_block = MagicMock()
+    tool_block.type = 'tool_use'
+    tool_block.id = 'toolu_123'
+    tool_block.name = 'computer'
+    tool_block.input = {'action': 'left_click', 'coordinate': [42, 99]}
+
+    tool_result_block = {
+        'type': 'tool_result',
+        'content': [
+            {
+                'type': 'image',
+                'source': {'type': 'base64', 'media_type': 'image/png', 'data': screenshot_b64},
+            }
+        ],
+    }
+
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'tool_use'
+    mock_response.content = [text_block, tool_block, tool_result_block]
+    mock_response.usage.input_tokens = 111
+    mock_response.usage.output_tokens = 222
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Open Calculator'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    artifacts = {artifact['filename']: artifact for artifact in result['artifacts']}
+    assert set(artifacts) == {'plan.md', 'response-summary.json', 'actions.json'}
+    assert 'left_click' in artifacts['actions.json']['content']
+    assert 'computer' in artifacts['actions.json']['content']
+    assert result['screenshots'][0]['filename'] == 'screenshot-3-1.png'
+    assert result['screenshots'][0]['kind'] == 'computer-use-screenshot'
+    assert result['screenshots'][0]['base64_content'] == screenshot_b64
+    assert 'Launch Calculator' in result['plan']
+    assert result['stop_reason'] == 'tool_use'

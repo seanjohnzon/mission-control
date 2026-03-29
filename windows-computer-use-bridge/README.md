@@ -19,6 +19,7 @@ The background worker now has a pluggable runner with two implementations, and t
 
 The full agentic computer-use loop (tool_use, screenshot capture, action execution) is the next build slice.
 Anthropic task results now also include `plan.md` and `response-summary.json` artifacts so Mac-side orchestration can persist and inspect the generated execution plan without depending on inline payload storage.
+When Anthropic responses include richer content blocks, the bridge now also extracts `tool_use` actions into `actions.json` and rewrites image payloads into persisted screenshot artifacts for later inspection.
 
 ## Local Run (demo mode – no API key required)
 ```bash

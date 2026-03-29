@@ -48,9 +48,10 @@ class AnthropicTaskRunner:
     Requires the ``anthropic`` Python SDK (``pip install anthropic``) and
     ``ANTHROPIC_API_KEY`` in the environment (or pass ``api_key`` explicitly).
 
-    This build slice issues a single Messages API call asking Claude to plan
-    the requested task.  A future slice will wire the full computer-use loop
-    (tool_use, screenshot capture, action execution).
+    This build slice still starts with a single Messages API request, but it now
+    parses richer response blocks so tool-use actions and screenshot-style image
+    payloads can be persisted as artifacts when the Anthropic response includes
+    them. A future slice will execute the full remote computer-use loop.
     """
 
     MODEL = "claude-opus-4-6"
@@ -80,43 +81,145 @@ class AnthropicTaskRunner:
                 }
             ],
         )
-        content_block = message.content[0]
-        plan_text = content_block.text if hasattr(content_block, "text") else str(content_block)
+        return self._build_result(task, message)
+
+    def _build_result(self, task: TaskRecord, message: object) -> dict:
+        content_blocks = list(getattr(message, "content", []) or [])
+        text_blocks: list[str] = []
+        actions: list[dict] = []
+        screenshots: list[dict] = []
+
+        for index, block in enumerate(content_blocks, start=1):
+            block_type = self._block_attr(block, "type") or "text"
+
+            if block_type == "text":
+                text = self._block_attr(block, "text")
+                if text:
+                    text_blocks.append(str(text))
+                continue
+
+            if block_type == "tool_use":
+                actions.append(
+                    {
+                        "index": index,
+                        "id": self._block_attr(block, "id"),
+                        "name": self._block_attr(block, "name"),
+                        "input": self._block_attr(block, "input") or {},
+                        "kind": "anthropic-tool-use",
+                    }
+                )
+                continue
+
+            screenshots.extend(self._extract_screenshots(block, index=index))
+
+        plan_text = "\n\n".join(text_blocks).strip() or "No textual plan returned."
         usage = {
-            "input_tokens": message.usage.input_tokens,
-            "output_tokens": message.usage.output_tokens,
+            "input_tokens": getattr(getattr(message, "usage", None), "input_tokens", 0),
+            "output_tokens": getattr(getattr(message, "usage", None), "output_tokens", 0),
         }
+
+        artifacts = [
+            {
+                "filename": "plan.md",
+                "content": plan_text,
+                "kind": "execution-plan",
+                "content_type": "text/markdown",
+            },
+            {
+                "filename": "response-summary.json",
+                "content": json.dumps(
+                    {
+                        "task_id": task.task_id,
+                        "description": task.description,
+                        "model": getattr(message, "model", self.MODEL),
+                        "stop_reason": getattr(message, "stop_reason", None),
+                        "input_tokens": usage["input_tokens"],
+                        "output_tokens": usage["output_tokens"],
+                        "content_blocks": len(content_blocks),
+                        "action_count": len(actions),
+                        "screenshot_count": len(screenshots),
+                    },
+                    indent=2,
+                ) + "\n",
+                "kind": "anthropic-response-summary",
+                "content_type": "application/json",
+            },
+        ]
+        if actions:
+            artifacts.append(
+                {
+                    "filename": "actions.json",
+                    "content": json.dumps(actions, indent=2) + "\n",
+                    "kind": "computer-use-actions",
+                    "content_type": "application/json",
+                }
+            )
+
         return {
             "message": "Anthropic runner completed task.",
-            "model": message.model,
-            "stop_reason": message.stop_reason,
+            "model": getattr(message, "model", self.MODEL),
+            "stop_reason": getattr(message, "stop_reason", None),
             "plan": plan_text,
-            "artifacts": [
-                {
-                    "filename": "plan.md",
-                    "content": plan_text,
-                    "kind": "execution-plan",
-                    "content_type": "text/markdown",
-                },
-                {
-                    "filename": "response-summary.json",
-                    "content": json.dumps(
-                        {
-                            "task_id": task.task_id,
-                            "description": task.description,
-                            "model": message.model,
-                            "stop_reason": message.stop_reason,
-                            "input_tokens": usage["input_tokens"],
-                            "output_tokens": usage["output_tokens"],
-                        },
-                        indent=2,
-                    ) + "\n",
-                    "kind": "anthropic-response-summary",
-                    "content_type": "application/json",
-                },
-            ],
-            "screenshots": [],
+            "artifacts": artifacts,
+            "screenshots": screenshots,
             "usage": usage,
+        }
+
+    @staticmethod
+    def _block_attr(block: object, name: str):
+        if isinstance(block, dict):
+            return block.get(name)
+        return getattr(block, name, None)
+
+    def _extract_screenshots(self, block: object, *, index: int) -> list[dict]:
+        screenshot = self._screenshot_from_image_block(block, index=index)
+        if screenshot:
+            return [screenshot]
+
+        if (self._block_attr(block, "type") or "") != "tool_result":
+            return []
+
+        content = self._block_attr(block, "content") or []
+        if isinstance(content, (str, bytes)):
+            return []
+
+        screenshots: list[dict] = []
+        for child_index, child in enumerate(content, start=1):
+            screenshot = self._screenshot_from_image_block(
+                child,
+                index=index,
+                child_index=child_index,
+            )
+            if screenshot:
+                screenshots.append(screenshot)
+        return screenshots
+
+    def _screenshot_from_image_block(
+        self,
+        block: object,
+        *,
+        index: int,
+        child_index: int | None = None,
+    ) -> dict | None:
+        if (self._block_attr(block, "type") or "") != "image":
+            return None
+
+        source = self._block_attr(block, "source") or {}
+        if not isinstance(source, dict):
+            return None
+
+        image_data = source.get("data") or source.get("base64") or source.get("base64_data")
+        if not image_data:
+            return None
+
+        suffix = f"-{child_index}" if child_index is not None else ""
+        media_type = source.get("media_type", "image/png")
+        extension = media_type.split("/")[-1] if "/" in media_type else "png"
+        return {
+            "filename": f"screenshot-{index}{suffix}.{extension}",
+            "base64_content": image_data,
+            "kind": "computer-use-screenshot",
+            "content_type": media_type,
         }
 
 
