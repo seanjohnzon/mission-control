@@ -38,13 +38,18 @@ Full responsive layout — hamburger sidebar collapse, touch-friendly nav.
 
 ## Refreshing Data
 
-To update snapshots from the live server (run from Mac Mini):
-`ash
-cd /Users/minicihan/Cursor\ Projects/mission-control
+To update snapshots from the live server (run from the Mac Mini):
+
+```bash
+set -euo pipefail
+
+cd "/Users/minicihan/Cursor Projects/mission-control"
+
 for api in health tasks projects activity memory memory-long docs model-ops; do
-  curl -s http://127.0.0.1:18800/api/ > docs/data/.json
+  curl -sSf "http://127.0.0.1:18800/api/${api}" > "docs/data/${api}.json"
 done
+
 git add docs/data/
-git commit -m chore: refresh static JSON snapshots
+git commit -m "chore(docs): refresh static JSON snapshots"
 git push
-`
+```
