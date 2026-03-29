@@ -108,11 +108,14 @@ def build_runner(api_key: str | None = None) -> TaskRunner:
         return DemoTaskRunner()
 
     resolved_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-    if resolved_key or runner_env == "anthropic":
+    if runner_env == "anthropic":
+        return AnthropicTaskRunner(api_key=resolved_key)
+
+    if resolved_key:
         try:
             return AnthropicTaskRunner(api_key=resolved_key)
         except ImportError:
-            # anthropic SDK not installed – fall back to demo runner
+            # anthropic SDK not installed – fall back to demo runner when auto-selecting
             pass
 
     return DemoTaskRunner()

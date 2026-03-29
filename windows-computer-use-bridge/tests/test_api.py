@@ -225,6 +225,14 @@ def test_build_runner_falls_back_to_demo_on_import_error():
     assert isinstance(runner, DemoTaskRunner)
 
 
+def test_build_runner_forced_anthropic_raises_on_import_error():
+    """BRIDGE_RUNNER=anthropic should fail loudly when the SDK is unavailable."""
+    with patch.dict(os.environ, {'BRIDGE_RUNNER': 'anthropic', 'ANTHROPIC_API_KEY': 'sk-ant-fake'}):
+        with patch('bridge.tasks.AnthropicTaskRunner', side_effect=ImportError("No module named 'anthropic'")):
+            with pytest.raises(ImportError, match="anthropic"):
+                build_runner()
+
+
 def test_anthropic_runner_run_calls_sdk_without_network():
     """AnthropicTaskRunner.run calls the SDK client and returns a structured result (mocked)."""
     pytest.importorskip('anthropic', reason='anthropic SDK not installed')
