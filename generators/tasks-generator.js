@@ -51,14 +51,33 @@ function normalizeTask(task) {
 
   // Normalize date fields to ISO format where possible
   function normalizeDate(dateField) {
-    if (!dateField) return null;
-    if (typeof dateField === 'string' && dateField.includes('T')) {
-      return dateField; // Already ISO format
+    // Treat explicit string sentinels as null (these appear in some legacy task rows)
+    if (dateField === null || dateField === undefined) return null;
+    if (typeof dateField === 'string') {
+      const trimmed = dateField.trim();
+      if (trimmed === '' || trimmed.toLowerCase() === 'null' || trimmed.toLowerCase() === 'undefined') {
+        return null;
+      }
+      if (trimmed.includes('T')) {
+        return trimmed; // Already ISO-ish
+      }
+      if (trimmed.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return `${trimmed}T12:00:00.000Z`; // Convert YYYY-MM-DD to ISO
+      }
+      return trimmed; // Keep as clean string if unrecognized
     }
-    if (typeof dateField === 'string' && dateField.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      return `${dateField}T12:00:00.000Z`; // Convert YYYY-MM-DD to ISO
+    return dateField;
+  }
+
+  // Normalize dependency field: collapse "none"/empty to null
+  function normalizeDependencies(dep) {
+    if (dep === null || dep === undefined) return null;
+    if (typeof dep !== 'string') return dep;
+    const trimmed = dep.trim();
+    if (trimmed === '' || trimmed.toLowerCase() === 'none' || trimmed.toLowerCase() === 'null') {
+      return null;
     }
-    return dateField; // Return as-is if unrecognized format
+    return trimmed;
   }
 
   return {
@@ -75,7 +94,7 @@ function normalizeTask(task) {
     department: task.department || null,
     createdAt: normalizeDate(task.opened || task.createdAt),
     completedAt: normalizeDate(task.completed || task.completedAt),
-    dependencies: task.dependencies || null,
+    dependencies: normalizeDependencies(task.dependencies),
     notes: task.notes || null
   };
 }
