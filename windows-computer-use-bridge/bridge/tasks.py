@@ -208,19 +208,39 @@ class AnthropicTaskRunner:
         if not isinstance(source, dict):
             return None
 
-        image_data = source.get("data") or source.get("base64") or source.get("base64_data")
+        image_data = (
+            source.get("data")
+            or source.get("base64")
+            or source.get("base64_data")
+            or source.get("bytes")
+        )
         if not image_data:
             return None
 
         suffix = f"-{child_index}" if child_index is not None else ""
-        media_type = source.get("media_type", "image/png")
-        extension = media_type.split("/")[-1] if "/" in media_type else "png"
+        media_type = source.get("media_type") or source.get("mime_type") or "image/png"
+        extension = self._extension_for_media_type(media_type)
         return {
             "filename": f"screenshot-{index}{suffix}.{extension}",
             "base64_content": image_data,
             "kind": "computer-use-screenshot",
             "content_type": media_type,
         }
+
+    @staticmethod
+    def _extension_for_media_type(media_type: str) -> str:
+        normalized = (media_type or "").split(";", 1)[0].strip().lower()
+        if normalized in {"image/jpeg", "image/jpg"}:
+            return "jpg"
+        if normalized == "image/png":
+            return "png"
+        if normalized == "image/webp":
+            return "webp"
+        if normalized == "image/gif":
+            return "gif"
+        if "/" in normalized:
+            return normalized.split("/")[-1] or "png"
+        return "png"
 
 
 def build_runner(api_key: str | None = None) -> TaskRunner:

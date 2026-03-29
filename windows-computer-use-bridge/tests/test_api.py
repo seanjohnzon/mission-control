@@ -436,3 +436,47 @@ def test_anthropic_runner_extracts_tool_actions_and_screenshots():
     assert result['screenshots'][0]['base64_content'] == screenshot_b64
     assert 'Launch Calculator' in result['plan']
     assert result['stop_reason'] == 'tool_use'
+
+
+def test_anthropic_runner_extracts_top_level_image_blocks_with_mime_type_bytes():
+    """AnthropicTaskRunner accepts image blocks that use bytes + mime_type fields."""
+    pytest.importorskip('anthropic', reason='anthropic SDK not installed')
+
+    screenshot_b64 = base64.b64encode(b'fake-jpeg-bytes').decode()
+    text_block = {'type': 'text', 'text': 'Open Paint and inspect the canvas.'}
+    image_block = {
+        'type': 'image',
+        'source': {
+            'type': 'base64',
+            'mime_type': 'image/jpeg; charset=binary',
+            'bytes': screenshot_b64,
+        },
+    }
+
+    mock_response = MagicMock()
+    mock_response.model = 'claude-opus-4-6'
+    mock_response.stop_reason = 'end_turn'
+    mock_response.content = [text_block, image_block]
+    mock_response.usage.input_tokens = 15
+    mock_response.usage.output_tokens = 30
+
+    store = InMemoryTaskStore()
+    task = store.create_task(TaskCreateRequest(description='Inspect Paint canvas'))
+
+    with patch('anthropic.Anthropic') as mock_cls:
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        mock_client.messages.create.return_value = mock_response
+
+        runner = AnthropicTaskRunner(api_key='sk-ant-fake')
+        result = runner.run(task)
+
+    assert result['screenshots'] == [
+        {
+            'filename': 'screenshot-2.jpg',
+            'base64_content': screenshot_b64,
+            'kind': 'computer-use-screenshot',
+            'content_type': 'image/jpeg; charset=binary',
+        }
+    ]
+    assert result['plan'] == 'Open Paint and inspect the canvas.'
