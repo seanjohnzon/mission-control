@@ -1308,17 +1308,49 @@ th { color: var(--text2); font-weight: 500; font-size: 11px; text-transform: upp
 
     <!-- Ship -->
     <div class="tab-panel" id="tab-ship">
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;gap:16px;">
-        <div style="font-size:72px;line-height:1;">🚢</div>
-        <div style="font-size:28px;font-weight:700;letter-spacing:-0.5px;">The Thousand Sunny</div>
-        <div style="font-size:15px;color:var(--text2);max-width:420px;line-height:1.6;">
-          Ship systems, logs, and voyage telemetry are being prepared.<br>
-          This tab will display live ship status, crew positions, and operational metrics.
+      <div class="hero">
+        <h2>🚢 The Thousand Sunny</h2>
+        <p>Static public telemetry for the ship lane. Public GitHub Pages shows the latest known systems snapshot and voyage log without requiring live LAN access.</p>
+      </div>
+
+      <div class="card-row" id="ship-systems-row">
+        <div class="card">
+          <h3>Gateway Health</h3>
+          <div class="val" id="ship-gateway-status">Loading…</div>
+          <div class="text2" style="font-size:12px;margin-top:4px" id="ship-gateway-detail">Checking latest snapshot</div>
         </div>
-        <div style="margin-top:8px;">
-          <span style="background:rgba(88,166,255,0.12);color:var(--blue);border:1px solid rgba(88,166,255,0.25);padding:6px 20px;border-radius:20px;font-size:13px;font-weight:600;letter-spacing:0.5px;">
-            ⚓ COMING SOON
-          </span>
+        <div class="card">
+          <h3>Crew Uptime</h3>
+          <div class="val" id="ship-uptime-status">Loading…</div>
+          <div class="text2" style="font-size:12px;margin-top:4px" id="ship-uptime-detail">Reading activity log</div>
+        </div>
+        <div class="card">
+          <h3>Voyage State</h3>
+          <div class="val" id="ship-voyage-status">Loading…</div>
+          <div class="text2" style="font-size:12px;margin-top:4px" id="ship-voyage-detail">Mission Control public snapshot</div>
+        </div>
+        <div class="card">
+          <h3>Task Traffic</h3>
+          <div class="val" id="ship-task-status">Loading…</div>
+          <div class="text2" style="font-size:12px;margin-top:4px" id="ship-task-detail">Counting active work</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>Ship Systems</h3>
+          <table>
+            <tbody>
+              <tr><td>Gateway</td><td id="ship-system-gateway">Loading…</td></tr>
+              <tr><td>Ollama</td><td id="ship-system-ollama">Loading…</td></tr>
+              <tr><td>Disk</td><td id="ship-system-disk">Loading…</td></tr>
+              <tr><td>Git Feed</td><td id="ship-system-git">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Latest Voyage Log</h3>
+          <div id="ship-voyage-log" class="text2" style="font-size:13px;line-height:1.7">Loading latest entries…</div>
         </div>
       </div>
     </div>
@@ -1560,6 +1592,52 @@ async function loadHealth() {
     gitEl.innerHTML = `<span class="health-dot ok"></span>${act.commits.length} recent commits`;
   } else {
     gitEl.innerHTML = `<span class="health-dot warn"></span>No data`;
+  }
+}
+
+async function loadShip() {
+  const [health, activity, taskData] = await Promise.all([
+    api('./data/health.json'),
+    api('./data/activity.json'),
+    api('./data/tasks.json')
+  ]);
+
+  const tasks = Array.isArray(taskData?.tasks) ? taskData.tasks : [];
+  const activeTasks = tasks.filter(t => ['in-progress', 'queued', 'blocked', 'open'].includes((t.status || '').toLowerCase()));
+  const blockedTasks = tasks.filter(t => (t.status || '').toLowerCase() === 'blocked');
+  const commitCount = Array.isArray(activity?.commits) ? activity.commits.length : 0;
+  const latestCommits = (activity?.commits || []).slice(0, 3);
+  const gatewayOk = !!health?.gateway?.ok;
+  const ollamaOk = !!health?.ollama?.ok;
+  const diskPercent = parseInt(health?.disk?.percent || '0', 10);
+  const safeDisk = Number.isFinite(diskPercent) ? diskPercent < 90 : true;
+  const voyageState = gatewayOk && blockedTasks.length === 0 ? 'Stable' : gatewayOk ? 'Watch' : 'Alert';
+
+  const byId = id => document.getElementById(id);
+  if (byId('ship-gateway-status')) byId('ship-gateway-status').textContent = gatewayOk ? 'Online' : 'Offline';
+  if (byId('ship-gateway-detail')) byId('ship-gateway-detail').textContent = health?.gateway?.status || 'No gateway snapshot';
+  if (byId('ship-uptime-status')) byId('ship-uptime-status').textContent = commitCount ? `${commitCount} logs` : 'Quiet';
+  if (byId('ship-uptime-detail')) byId('ship-uptime-detail').textContent = commitCount ? 'Recent commit feed visible' : 'No recent activity found';
+  if (byId('ship-voyage-status')) byId('ship-voyage-status').textContent = voyageState;
+  if (byId('ship-voyage-detail')) byId('ship-voyage-detail').textContent = blockedTasks.length ? `${blockedTasks.length} blocked task(s) need watch` : 'No blocked tasks in snapshot';
+  if (byId('ship-task-status')) byId('ship-task-status').textContent = String(activeTasks.length);
+  if (byId('ship-task-detail')) byId('ship-task-detail').textContent = blockedTasks.length ? `${blockedTasks.length} blocked / ${activeTasks.length} active` : `${activeTasks.length} active tasks in public snapshot`;
+
+  if (byId('ship-system-gateway')) byId('ship-system-gateway').innerHTML = `<span class="health-dot ${gatewayOk ? 'ok' : 'err'}"></span>${health?.gateway?.status || 'Unavailable'}`;
+  if (byId('ship-system-ollama')) byId('ship-system-ollama').innerHTML = `<span class="health-dot ${ollamaOk ? 'ok' : 'err'}"></span>${ollamaOk ? `${health?.ollama?.models?.length || 0} models ready` : 'Unavailable'}`;
+  if (byId('ship-system-disk')) byId('ship-system-disk').innerHTML = `<span class="health-dot ${safeDisk ? 'ok' : 'warn'}"></span>${health?.disk?.used || '—'} / ${health?.disk?.total || '—'} (${health?.disk?.percent || 'n/a'})`;
+  if (byId('ship-system-git')) byId('ship-system-git').innerHTML = `<span class="health-dot ${commitCount ? 'ok' : 'warn'}"></span>${commitCount ? `${commitCount} recent commits` : 'No commit feed available'}`;
+
+  if (byId('ship-voyage-log')) {
+    if (latestCommits.length) {
+      byId('ship-voyage-log').innerHTML = latestCommits.map(commit => {
+        const title = commit.message || commit.title || 'Unnamed log entry';
+        const meta = [commit.author, commit.date].filter(Boolean).join(' • ');
+        return `<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="color:var(--text)">${escapeHtml(title)}</div><div style="font-size:11px;color:var(--text2);margin-top:4px">${escapeHtml(meta)}</div></div>`;
+      }).join('');
+    } else {
+      byId('ship-voyage-log').innerHTML = 'No voyage log entries found in the public snapshot.';
+    }
   }
 }
 
@@ -3561,7 +3639,7 @@ function selectDesk(agent) {
 // Init
 (async function init() {
   activateTab(location.hash.slice(1) || 'tasks', { updateHash: false });
-  await Promise.all([verifyDataFiles(), loadHealth(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
+  await Promise.all([verifyDataFiles(), loadHealth(), loadShip(), loadTasks(), loadProjects(), loadMemory(), loadDocs(), loadModelOps()]);
   setCalView('week');
 
   // Auto-refresh Model Ops every 60s when tab is active
