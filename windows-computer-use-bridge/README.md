@@ -17,7 +17,7 @@ This is a local development scaffold only. It provides:
 - Pydantic request/response models
 - Pytest coverage for memory + SQLite lifecycle
 
-It does **not** yet execute Anthropic Computer Use tasks. The POST `/task` endpoint currently seeds a demo completed result so Mac-side integration can begin against a stable contract.
+It does **not** yet execute Anthropic Computer Use tasks. The POST `/task` endpoint now runs through a background worker scaffold that marks tasks `running`, `completed`, `failed`, or `timeout`, while the default demo runner still returns a placeholder completed result so Mac-side integration can begin against a stable contract.
 
 ## Local Run
 ```bash
@@ -37,7 +37,7 @@ export BRIDGE_DB_PATH=./data/bridge.db
 The SQLite database path defaults to `./data/bridge.db` inside the project root.
 
 ## Next Build Slices
-1. Add background task worker.
-2. Wire Anthropic Computer Use execution.
-3. Add artifact/screenshot persistence.
-4. Harden auth, validation, and rate limiting.
+1. Wire Anthropic Computer Use execution into the worker.
+2. Add artifact/screenshot persistence.
+3. Harden auth, validation, and rate limiting.
+4. Expose queue/worker metrics for Mac-side orchestration.

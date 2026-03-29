@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from queue import Empty, Queue
@@ -74,7 +75,17 @@ class BackgroundTaskWorker:
         self.store.update_task(task)
 
         try:
-            result = self.runner.run(task)
+            result = self._run_with_timeout(task)
+        except TimeoutError as exc:
+            timed_out = self.store.get_task(task_id)
+            if not timed_out:
+                return
+            timed_out.status = TaskStatus.timeout
+            timed_out.completed_at = datetime.now(timezone.utc)
+            timed_out.error = str(exc)
+            timed_out.result = None
+            self.store.update_task(timed_out)
+            return
         except Exception as exc:  # pragma: no cover - defensive fallback
             failed = self.store.get_task(task_id)
             if not failed:
@@ -82,6 +93,7 @@ class BackgroundTaskWorker:
             failed.status = TaskStatus.failed
             failed.completed_at = datetime.now(timezone.utc)
             failed.error = str(exc)
+            failed.result = None
             self.store.update_task(failed)
             return
 
@@ -93,3 +105,14 @@ class BackgroundTaskWorker:
         completed.result = result
         completed.error = None
         self.store.update_task(completed)
+
+    def _run_with_timeout(self, task: TaskRecord) -> dict:
+        with ThreadPoolExecutor(max_workers=1, thread_name_prefix="bridge-task-runner") as executor:
+            future = executor.submit(self.runner.run, task)
+            try:
+                return future.result(timeout=task.timeout)
+            except FuturesTimeoutError as exc:
+                future.cancel()
+                raise TimeoutError(
+                    f"Task exceeded timeout of {task.timeout} seconds before completion."
+                ) from exc
