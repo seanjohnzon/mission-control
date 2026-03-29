@@ -31,6 +31,14 @@ class DemoTaskRunner:
         }
 
 
+def describe_runner(runner: TaskRunner) -> dict[str, str]:
+    if isinstance(runner, AnthropicTaskRunner):
+        return {"name": "anthropic", "mode": "live"}
+    if isinstance(runner, DemoTaskRunner):
+        return {"name": "demo", "mode": "placeholder"}
+    return {"name": runner.__class__.__name__, "mode": "custom"}
+
+
 class AnthropicTaskRunner:
     """Production runner that calls the Anthropic API to plan computer-use tasks.
 
@@ -141,6 +149,7 @@ class BackgroundTaskWorker:
             "counts": counts,
             "total": len(tasks),
             "worker_alive": self._thread.is_alive(),
+            "runner": describe_runner(self.runner),
         }
 
     def _loop(self) -> None:

@@ -11,7 +11,7 @@ from werkzeug.exceptions import HTTPException
 from .models import TaskCreateRequest, TaskCreateResponse, TaskResultResponse, TaskStatusResponse
 from .security import require_api_key
 from .storage import InMemoryTaskStore, SqliteTaskStore, TaskStore
-from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner, build_runner
+from .tasks import BackgroundTaskWorker, DemoTaskRunner, TaskRunner, build_runner, describe_runner
 
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "bridge.db"
@@ -37,8 +37,13 @@ def create_app(store: Optional[TaskStore] = None, runner: Optional[TaskRunner] =
         require_api_key()
 
     @app.get("/health")
-    def health() -> tuple[dict[str, str], int]:
-        return {"status": "ok", "service": "windows-computer-use-bridge"}, 200
+    def health() -> tuple[dict[str, object], int]:
+        return {
+            "status": "ok",
+            "service": "windows-computer-use-bridge",
+            "runner": describe_runner(effective_runner),
+            "storage": task_store.__class__.__name__,
+        }, 200
 
     @app.post("/task")
     def create_task() -> tuple[dict, int]:

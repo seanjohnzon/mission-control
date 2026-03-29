@@ -3,13 +3,14 @@
 Phase 3 – real Anthropic runner wired for EPIC-010-STORY-004.
 
 ## Endpoints
-- `GET /health`
+- `GET /health` — includes active runner + storage backend
 - `POST /task`
 - `GET /status/<task_id>`
 - `GET /result/<task_id>`
+- `GET /tasks` — includes queue summary + runner metrics
 
 ## Current Status
-The background worker now has a pluggable runner with two implementations:
+The background worker now has a pluggable runner with two implementations, and the API reports the active runner/storage in `/health` plus queue metrics in `/tasks` for orchestration visibility:
 
 | Runner | When active | Behaviour |
 |---|---|---|

@@ -42,7 +42,11 @@ def test_health_endpoint():
     response = client.get('/health')
 
     assert response.status_code == 200
-    assert response.get_json()['status'] == 'ok'
+    payload = response.get_json()
+    assert payload['status'] == 'ok'
+    assert payload['service'] == 'windows-computer-use-bridge'
+    assert payload['runner'] == {'name': 'demo', 'mode': 'placeholder'}
+    assert payload['storage'] == 'InMemoryTaskStore'
 
 
 def test_task_lifecycle_scaffold_memory_store():
@@ -85,6 +89,7 @@ def test_list_tasks_returns_summary_metrics():
     assert payload['metrics']['total'] == 2
     assert payload['metrics']['counts']['completed'] == 2
     assert payload['metrics']['worker_alive'] is True
+    assert payload['metrics']['runner'] == {'name': 'demo', 'mode': 'placeholder'}
 
 
 def test_list_tasks_filters_by_status():
