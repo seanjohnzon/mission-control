@@ -1,0 +1,17 @@
+
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Straw Hat -->
+  <path d="M 50,70 C 50,50 150,50 150,70 C 170,70 180,90 150,90 L 50,90 C 20,90 30,70 50,70 Z" fill="#D4A017"/>
+  <path d="M 70,50 C 70,30 130,30 130,50" fill="#D4A017" stroke="black" stroke-width="2"/>
+  <rect x="50" y="70" width="100" height="5" fill="#C08C10"/>
+
+  <!-- Skull -->
+  <path d="M 80,90 C 60,110 60,140 80,160 L 120,160 C 140,140 140,110 120,90 Z" fill="white"/>
+  <circle cx="90" cy="115" r="8" fill="black" />
+  <circle cx="110" cy="115" r="8" fill="black" />
+  <path d="M 95,130 C 100,140 105,140 110,130" stroke="black" stroke-width="2" fill="none"/>
+
+  <!-- Crossbones -->
+  <rect x="70" y="155" width="60" height="8" rx="2" transform="rotate(20 100 159)" fill="white"/>
+  <rect x="70" y="155" width="60" height="8" rx="2" transform="rotate(-20 100 159)" fill="white"/>
+</svg>
